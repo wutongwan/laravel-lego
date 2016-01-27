@@ -17,4 +17,5 @@ php >= 7.0
 1. Laravel @ 5.2
 2. Mac && Ubuntu 
 
-
+## Laravel下安装
+composer require wutongwan/lego
