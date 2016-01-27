@@ -1,4 +1,11 @@
 ## Laravel-Lego
+<a href="https://packagist.org/packages/wutongwan/lego">
+    <img src="http://img.shields.io/packagist/v/wutongwan/lego.svg?style=flat" style="vertical-align: text-top">
+</a>
+<a href="https://packagist.org/packages/wutongwan/lego">
+    <img src="http://img.shields.io/packagist/dt/wutongwan/lego.svg?style=flat" style="vertical-align: text-top">
+</a>
+
 用了快一年的zofe/rapyd-laravel,整体觉得非常好用,但内部确实不少代码年久失修,比较脏，有的组件也不适合中国的情况（比如google map）。
 
 所以我们几个小伙伴想了很久，还是决定重新造个轮子，参考rapyd的思路,做一个我们自己用着更顺手的脚手架库。
