@@ -1,10 +1,6 @@
 ## Laravel-Lego
-<a href="https://packagist.org/packages/wutongwan/lego">
-    <img src="http://img.shields.io/packagist/v/wutongwan/lego.svg?style=flat" style="vertical-align: text-top">
-</a>
-<a href="https://packagist.org/packages/wutongwan/lego">
-    <img src="http://img.shields.io/packagist/dt/wutongwan/lego.svg?style=flat" style="vertical-align: text-top">
-</a>
+[![Latest Stable Version](https://poser.pugx.org/wutongwan/lego/version.png)](https://packagist.org/packages/wutongwan/lego) 
+[![Total Downloads](https://poser.pugx.org/wutongwan/lego/d/total.png)](https://packagist.org/packages/wutongwan/lego)
 
 用了快一年的zofe/rapyd-laravel,整体觉得非常好用,但内部确实不少代码年久失修,比较脏，有的组件也不适合中国的情况（比如google map）。
 
