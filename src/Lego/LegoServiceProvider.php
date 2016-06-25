@@ -2,6 +2,9 @@
 
 use Illuminate\Support\ServiceProvider;
 
+/**
+ * Laravel 注册类
+ */
 class LegoServiceProvider extends ServiceProvider
 {
 

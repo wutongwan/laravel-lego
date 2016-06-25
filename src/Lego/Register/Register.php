@@ -1,5 +1,8 @@
 <?php namespace Lego\Register;
 
+/**
+ * Lego 内部的注册器基类
+ */
 abstract class Register
 {
     private static $registered = []; // register data

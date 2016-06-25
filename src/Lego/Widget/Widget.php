@@ -1,5 +1,8 @@
 <?php namespace Lego\Widget;
 
+/**
+ * Lego中所有大型控件的基类
+ */
 abstract class Widget
 {
     public static function source($source = [])

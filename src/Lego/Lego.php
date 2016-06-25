@@ -4,6 +4,9 @@ use Lego\Widget\Filter;
 use Lego\Widget\Form;
 use Lego\Widget\Grid;
 
+/**
+ * Lego 主要接口类
+ */
 class Lego
 {
     /**
