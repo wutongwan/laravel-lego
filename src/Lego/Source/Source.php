@@ -3,11 +3,7 @@
 /**
  * Lego 数据源 接口
  */
-interface Source
+abstract class Source
 {
-    public function __construct($data);
-
-    public function set($key, $value);
-
-    public function get($key, $default = null);
+    abstract public function __construct($data);
 }

@@ -33,6 +33,6 @@ class Lego
      */
     public static function form($source = [])
     {
-
+        return new Form($source);
     }
 }
