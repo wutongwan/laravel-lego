@@ -3,7 +3,7 @@
 use Illuminate\Support\ServiceProvider;
 
 /**
- * Laravel 注册类
+ * Lego Service Provider for Laravel
  */
 class LegoServiceProvider extends ServiceProvider
 {
@@ -16,8 +16,16 @@ class LegoServiceProvider extends ServiceProvider
     public function register()
     {
         // config file
-        $config = __DIR__ . '/../../config/lego.php';
+        $config = $this->path('config/lego.php');
         $this->publishes([$config => config_path('lego.php')]);
         $this->mergeConfigFrom($config, 'lego');
+
+        // views
+        $this->loadViewsFrom($this->path('views'), 'lego');
+    }
+
+    private function path($path = '')
+    {
+        return __DIR__ . '/../../' . $path;
     }
 }
