@@ -15,6 +15,9 @@ class LegoServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // TODO: Implement register() method.
+        // config file
+        $config = __DIR__ . '/../../config/lego.php';
+        $this->publishes([$config => config_path('lego.php')]);
+        $this->mergeConfigFrom($config, 'lego');
     }
 }
