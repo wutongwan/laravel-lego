@@ -1,14 +1,9 @@
 <?php namespace Lego\Widget;
 
-use Lego\LegoException;
+use Lego\Field\Field;
+use Lego\Field\Group;
+use Lego\Field\Provider\Text;
 use Lego\Source\Source;
-use Lego\Source\ArraySource;
-use Lego\Source\EloquentSource;
-use Lego\Source\ObjectSource;
-
-use Illuminate\Support\Collection as Collection;
-use Illuminate\Database\Eloquent\Model as Eloquent;
-use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 
 /**
  * Lego中所有大型控件的基类
@@ -21,34 +16,44 @@ abstract class Widget
      */
     private $source;
 
-    public function __construct($source)
+    private $fields = [];
+    private $groups = [];
+
+
+    public function __construct($data)
     {
-        $first = $source[0] ?? array();
-
-        switch (true) {
-            // Eloquent Source
-            case $first instanceof Eloquent:
-            case $source instanceof EloquentCollection:
-                $this->source = new EloquentSource($source);
-                break;
-
-            // Array Source
-            case is_array($first):
-                $this->source = new ArraySource($source);
-                break;
-
-            // Object Source
-            case is_object($first):
-                $this->source = new ObjectSource($source);
-                break;
-
-            default:
-                throw new LegoException('Illegal $source type');
-        }
+        $this->source = lego_source($data);
     }
 
-    protected function getSource() : Source
+    protected function source() : Source
     {
         return $this->source;
+    }
+
+
+    protected function fields()
+    {
+        return $this->fields;
+    }
+
+    protected function add($fieldType, $fieldName, $fieldSubject) : Field
+    {
+        // 为避免人肉拼接namespace, 所以写了下面一坨
+        $delimiter = '\\';
+        $namespace = join($delimiter, array_slice(explode($delimiter, Text::class), 0, -1));
+        $field = $namespace . $delimiter . $fieldType;
+
+        lego_assert(class_exists($field), 'Undefined Field ' . $field);
+
+        /** @var Field $field */
+        $field = new $field;
+
+        $this->fields [$fieldName] = $field;
+        return $field;
+    }
+
+    public function addGroup($groupName, \Closure $callback = null) : Group
+    {
+        return new Group(); // TODO
     }
 }

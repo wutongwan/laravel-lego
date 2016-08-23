@@ -3,9 +3,15 @@
     "description": "Yet another CRUD widgets for laravel 5.x",
     "homepage": "https://github.com/wutongwan/laravel-lego",
     "license": "MIT",
-    "keywords": ["crud","admin", "widget"],
+    "keywords": [
+        "crud",
+        "admin",
+        "widget"
+    ],
     "require": {
         "php": ">=7.0.0",
+        "laravel/framework": "5.2.*",
+        "laravelcollective/html": "5.2.*",
         "maatwebsite/excel": "~2.1.0",
         "mews/purifier": "~2.0"
     },
@@ -15,6 +21,7 @@
     "autoload": {
         "psr-4": {
             "Lego\\": "src/Lego/"
-        }
+        },
+        "files": ["src/helpers.php"]
     }
 }
