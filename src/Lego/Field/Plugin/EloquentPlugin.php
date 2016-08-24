@@ -1,6 +1,6 @@
 <?php namespace Lego\Field\Plugin;
 
-use Lego\Source\EloquentSource;
+use Lego\Source\Table\EloquentTable;
 
 /**
  * Class EloquentPlugin
@@ -11,7 +11,7 @@ trait EloquentPlugin
     private function assertIsEloquentRecord()
     {
         lego_assert(
-            $this->source() instanceof EloquentSource,
+            $this->source() instanceof EloquentTable,
             'Unsupported Rule on ' . class_basename($this->source())
         );
     }
