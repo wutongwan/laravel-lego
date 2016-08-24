@@ -13,9 +13,9 @@ class Lego
      * @param array $source
      * @return Filter
      */
-    public static function filter($source = [])
+    public static function filter($source)
     {
-
+        return new Filter($source);
     }
 
     /**

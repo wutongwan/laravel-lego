@@ -1,19 +1,11 @@
 <?php namespace Lego\Source\Record;
 
-abstract class Record
+use Lego\Source\Source;
+
+abstract class Record extends Source
 {
-    protected $original;
-
-    public function load($data)
+    protected function initialize()
     {
-        $this->original = $data;
-
-        return $this;
-    }
-
-    public function original()
-    {
-        return $this->original;
     }
 
     abstract public function get($attribute, $default = null);

@@ -2,17 +2,21 @@
 
 use Illuminate\Support\MessageBag;
 
-use Lego\Field\Plugin\BootstrapField;
-use Lego\Field\Plugin\EloquentField;
+use Lego\Helper\HtmlHelper;
 use Lego\Source\Record\Record;
+use Lego\Source\Source;
+use Lego\Source\Table\Table;
 
 /**
  * 输入输出控件的基类
  */
 abstract class Field
 {
-    use EloquentField;
-    use BootstrapField;
+    use Plugin\HtmlPlugin;
+    use Plugin\RecordPlugin;
+    use Plugin\EloquentPlugin;
+    use Plugin\MessagePlugin;
+    use Plugin\ValidationPlugin;
 
     const MODE_EDITABLE = 'editable';
     const MODE_DISABLED = 'disabled';
@@ -39,32 +43,14 @@ abstract class Field
     /**
      * 当前字段所属 Record
      *
-     * @var Record
+     * @var Source|Record|Table
      */
-    private $record;
-
-    /**
-     * 改 Field 所有 Validation
-     * eg: ['required', 'email']
-     */
-    private $rules = [];
-
-    /**
-     * 所有提示信息
-     * @var MessageBag
-     */
-    private $messages;
-
-    /**
-     * 所有错误信息
-     * @var MessageBag
-     */
-    private $errors;
+    private $source;
 
     /**
      * 模式, eg:editable、readonly、disabled
      */
-    private $mode;
+    private $mode = self::MODE_EDITABLE;
 
     /**
      * value 显示前的处理器数组
@@ -73,32 +59,28 @@ abstract class Field
     private $decorators = [];
 
     /**
-     * Placeholder
-     * @var string
-     */
-    private $placeholder;
-
-    /**
-     * Html element attributes.
-     * @var array
-     */
-    private $attributes = [];
-
-    /**
      * Field constructor.
      * @param string $name 该字段的唯一标记, 同一个控件中不能存在相同name的field
      * @param string $description 描述、标签
-     * @param Record $record 对应 Record
+     * @param Source $source 对应 Record
      */
-    public function __construct(string $name, string $description, Record $record)
+    public function __construct(string $name, string $description, Source $source = null)
     {
         $this->name = $name;
         $this->description = $description;
-        $this->record = $record;
+        $this->source = $source;
 
-        // 初始化相关属性
-        $this->messages = new MessageBag();
-        $this->errors = new MessageBag();
+        /**
+         * 初始化插件
+         *
+         * 如果插件实现了 initializePluginName() 函数, 会在此处调用
+         */
+        foreach (class_uses_recursive(static::class) as $trait) {
+            $method = 'initialize' . class_basename($trait);
+            if (method_exists($this, $method)) {
+                call_user_func_array([$this, $method], []);
+            }
+        }
     }
 
     /**
@@ -121,25 +103,11 @@ abstract class Field
         return $this->description;
     }
 
-    public function record() : Record
+    public function source()
     {
-        return $this->record;
+        return $this->source;
     }
 
-    public function rules() : array
-    {
-        return $this->rules;
-    }
-
-    public function messages() : MessageBag
-    {
-        return $this->messages;
-    }
-
-    public function errors() : MessageBag
-    {
-        return $this->errors;
-    }
 
     public function isMode($mode)
     {
@@ -161,27 +129,9 @@ abstract class Field
         return $this->isMode(self::MODE_DISABLED);
     }
 
-    public function getPlaceholder()
-    {
-        return $this->placeholder;
-    }
-
-    public function getAttributes()
-    {
-        return $this->attributes;
-    }
-
     /** Getter.End */
 
     /** Setter.Start */
-
-    public function rule($rule, $condition = true)
-    {
-        if (value($condition) && !in_array($rule, $this->rules)) {
-            $this->rules [] = $rule;
-        }
-        return $this;
-    }
 
     protected function mode($mode, $condition = true)
     {
@@ -214,22 +164,16 @@ abstract class Field
         return $this;
     }
 
-    public function placeholder($placeholder = null)
-    {
-        $this->placeholder = $placeholder;
-
-        return $this;
-    }
-
     /**
-     * 设置此字段为必填
-     *
-     * @param bool $condition
-     * @return Field
+     * 供前端使用的
+     * @param array $merge 在子类中重写时, 方便merge widget中的属性
+     * @return array
      */
-    public function required($condition = true)
+    public function getMetaAttributes($merge = [])
     {
-        return $this->rule('required', $condition);
+        return HtmlHelper::mergeAttributes($merge, [
+            'lego-field-mode' => $this->mode
+        ]);
     }
 
     public function readonly($condition = true)
@@ -245,28 +189,6 @@ abstract class Field
     public function disabled($condition = true)
     {
         return $this->mode(self::MODE_DISABLED, $condition);
-    }
-
-    /**
-     * 设置 Field 的 html 属性
-     *
-     * 第一个参数类型可以为字符串或数组
-     *      - 数组, 将merge到现有attributes中
-     *      - 字符串, 和对应的 value 放入 attributes
-     *
-     * @param array|string $attributesOrAttributes
-     * @param string|null $value
-     * @return $this
-     */
-    public function attr($attributesOrAttributes, $value = null)
-    {
-        if (is_array($attributesOrAttributes)) {
-            $this->attributes = array_merge($this->attributes, $attributesOrAttributes);
-            return $this;
-        }
-
-        $this->attributes [$attributesOrAttributes] = $value;
-        return $this;
     }
 
     /** Setter.End */
@@ -286,7 +208,7 @@ abstract class Field
         $value = $this->getOriginalValue();
 
         foreach ($this->decorators as $processor) {
-            $value = call_user_func_array($processor, [$value, $this->record()->original()]);
+            $value = call_user_func_array($processor, [$value, $this->source()->original()]);
         }
 
         return $value;
@@ -298,37 +220,20 @@ abstract class Field
      */
     public function getOriginalValue()
     {
-        return $this->record()->get($this->name());
+        if ($this->isRecordField()) {
+            return $this->source()->get($this->name());
+        }
+
+        return $this->getNewValue();
     }
 
     /**
      * 获取修改后的值
      * @return mixed
      */
-    abstract protected function getNewValue();
-
-    /**
-     * 验证当前值是否符合 rules
-     *
-     * 验证失败时, 报错信息会写到 $this->errors
-     *
-     * @return bool 是否通过验证
-     */
-    public function validate()
+    protected function getNewValue()
     {
-        $validator = \Validator::make(
-            [$this->column => $this->getNewValue()],
-            [$this->column => $this->rules()],
-            [],
-            [$this->column => $this->description]
-        );
-
-        if ($validator->fails()) {
-            $this->errors()->merge($validator->messages());
-            return false;
-        }
-
-        return true;
+        return \Request::input($this->elementName());
     }
 
     /**
@@ -336,34 +241,37 @@ abstract class Field
      */
     public function updateValue()
     {
-        $this->record->set($this->column(), $this->getNewValue());
+        $this->source->set($this->column(), $this->getNewValue());
     }
 
     /** 数据操作.End */
-
-    protected function inputType()
-    {
-        return 'text';
-    }
 
     /**
      * view 文件路径
      * @return string
      */
-    protected function view() : string
+    protected function viewName()
     {
+        return null;
     }
 
-    protected function render() : string
+    public function render() : string
     {
         // 1、如果实现上面的view函数, 直接渲染 view
-        if ($view = $this->view()) {
+        if ($view = $this->viewName()) {
             return view($view, ['field' => $this]);
         }
 
         // 2、渲染默认 input 控件
-
-        return '';
+        return lego_form_builder()->input(
+            'text',
+            $this->elementName(),
+            $this->getOriginalValue(),
+            HtmlHelper::mergeAttributes([
+                $this->getConfiguredAttributes(),
+                $this->getAttributes()
+            ])
+        );
     }
 
     /** 辅助函数 */

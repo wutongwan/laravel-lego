@@ -1,4 +1,4 @@
-<?php namespace Lego\Source;
+<?php namespace Lego\Source\Table;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Query\Builder as QueryBuilder;
@@ -8,19 +8,13 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 /**
  * Laravel ORM Source
  */
-class EloquentSource extends Source
+class EloquentTable extends Table
 {
     /**
+     * 方便补全
      * @var Eloquent|EloquentBuilder|QueryBuilder|Collection $query
      */
     protected $query;
-
-    /**
-     * 根据数据类型做相关的初始化, 方便进行 Query 等操作
-     */
-    protected function initialize()
-    {
-    }
 
     /**
      * 当前属性是否等于某值

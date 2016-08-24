@@ -18,7 +18,7 @@
     },
     "autoload": {
         "files": [
-            "src/Lego/helpers.php"
+            "src/Lego/Helper/functions.php"
         ],
         "psr-4": {
             "Lego\\": "src/Lego/"

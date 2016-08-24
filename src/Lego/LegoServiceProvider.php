@@ -8,7 +8,6 @@ use Illuminate\Support\ServiceProvider;
  */
 class LegoServiceProvider extends ServiceProvider
 {
-
     /**
      * Register the service provider.
      *
@@ -16,15 +15,20 @@ class LegoServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // config file
+        // config
         $config = $this->path('config/lego.php');
         $this->publishes([$config => config_path('lego.php')]);
         $this->mergeConfigFrom($config, 'lego');
 
+        // assets
+        $this->publishes([
+            $this->path('public/assets') => public_path('packages/wutongwan/lego/assets')
+        ], 'assets');
+
         // views
         $this->loadViewsFrom($this->path('views'), 'lego');
 
-        // 第三方库
+        // ** 第三方库 **
         $this->registerHtmlServices();
     }
 

@@ -3,6 +3,7 @@
 use Lego\Field\Field;
 use Lego\Field\Group;
 use Lego\Field\Provider\Text;
+use Lego\LegoException;
 use Lego\Source\Source;
 
 /**
@@ -30,13 +31,12 @@ abstract class Widget
         return $this->source;
     }
 
-
-    protected function fields()
+    public function fields()
     {
         return $this->fields;
     }
 
-    protected function add($fieldType, $fieldName, $fieldSubject) : Field
+    protected function add($fieldType, $fieldName, $fieldDescription) : Field
     {
         // 为避免人肉拼接namespace, 所以写了下面一坨
         $delimiter = '\\';
@@ -46,9 +46,10 @@ abstract class Widget
         lego_assert(class_exists($field), 'Undefined Field ' . $field);
 
         /** @var Field $field */
-        $field = new $field;
+        $field = new $field($fieldName, $fieldDescription, $this->source());
 
         $this->fields [$fieldName] = $field;
+
         return $field;
     }
 
@@ -56,4 +57,16 @@ abstract class Widget
     {
         return new Group(); // TODO
     }
+
+    public function __call($name, $arguments)
+    {
+        if (starts_with($name, 'add')) {
+            array_unshift($arguments, substr($name, 3));
+            return call_user_func_array([$this, 'add'], $arguments);
+        }
+
+        throw new LegoException('Undefined method ' . $name);
+    }
+
+    abstract public function render() : string;
 }

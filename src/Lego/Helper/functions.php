@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
 use Lego\LegoException;
-use Lego\Source\Record\EloquentRecord;
-use Lego\Source\Record\Record;
 use Lego\Source\Source;
-use Lego\Source\EloquentSource;
+use Lego\Source\Record\Record;
+use Lego\Source\Record\EloquentRecord;
+use Lego\Source\Table\EloquentTable;
 
 
 /**
@@ -28,7 +28,11 @@ function lego_source($data)
         // Laravel Eloquent Source
         case in_array($class, [QueryBuilder::class, EloquentBuilder::class, EloquentCollection::class]):
         case $first instanceof Eloquent:
-            $source = EloquentSource::class;
+            $source = EloquentTable::class;
+            break;
+
+        case $data instanceof Eloquent:
+            $source = EloquentRecord::class;
             break;
 
         default:
@@ -73,4 +77,20 @@ function lego_assert($condition, $description)
     if (!$condition) {
         throw new LegoException($description);
     }
+}
+
+/**
+ * @return \Collective\Html\HtmlBuilder
+ */
+function lego_html_builder()
+{
+    return app('html');
+}
+
+/**
+ * @return \Collective\Html\FormBuilder
+ */
+function lego_form_builder()
+{
+    return app('form');
 }

@@ -3,16 +3,16 @@
 use Lego\Source\EloquentSource;
 
 /**
- * Class EloquentField
+ * Class EloquentPlugin
  * @package Lego\Field\Plugin
  */
-trait EloquentField
+trait EloquentPlugin
 {
     private function assertIsEloquentRecord()
     {
         lego_assert(
-            $this->record() instanceof EloquentSource,
-            'Unsupported Rule on ' . class_basename($this->record())
+            $this->source() instanceof EloquentSource,
+            'Unsupported Rule on ' . class_basename($this->source())
         );
     }
 
@@ -28,7 +28,7 @@ trait EloquentField
         $this->assertIsEloquentRecord();
 
         /** @var \Eloquent $model */
-        $model = $this->record()->original();
+        $model = $this->source()->original();
 
         $id = $id ?: $model->id ?: 'NULL';
         $idColumn = $idColumn ?: $model->getKeyName();

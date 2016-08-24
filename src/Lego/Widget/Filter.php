@@ -1,6 +1,6 @@
 <?php namespace Lego\Widget;
 
-class Filter
+class Filter extends Widget
 {
 
 }
