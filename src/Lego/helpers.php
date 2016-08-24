@@ -27,7 +27,7 @@ function lego_source($data)
 
         // Laravel Eloquent Source
         case in_array($class, [QueryBuilder::class, EloquentBuilder::class, EloquentCollection::class]):
-        case $first instanceof Eloquent::class:
+        case $first instanceof Eloquent:
             $source = EloquentSource::class;
             break;
 
@@ -49,7 +49,7 @@ function lego_source($data)
 function lego_record($data)
 {
     switch ($data) {
-        case $data instanceof Eloquent::class:
+        case $data instanceof Eloquent:
             $record = EloquentRecord::class;
             break;
 
@@ -73,9 +73,4 @@ function lego_assert($condition, $description)
     if (!$condition) {
         throw new LegoException($description);
     }
-}
-
-function lego_html()
-{
-    return app('html');
 }
