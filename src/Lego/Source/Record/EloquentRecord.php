@@ -10,9 +10,9 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 class EloquentRecord extends Record
 {
     /**
-     * @var Eloquent $record
+     * @var Eloquent $original
      */
-    protected $record;
+    protected $original;
 
     /**
      * 获取属性值
@@ -23,7 +23,7 @@ class EloquentRecord extends Record
      */
     public function get($attribute, $default = null)
     {
-        return $this->record->getAttribute($attribute, $default);
+        return $this->original->getAttribute($attribute, $default);
     }
 
     /**
@@ -33,7 +33,17 @@ class EloquentRecord extends Record
      */
     public function set($attribute, $value)
     {
-        $this->record->{$attribute} = $value;
+        $this->original->{$attribute} = $value;
+    }
+
+    /**
+     * 存储操作, 针对 Eloquent 等场景
+     * @param array $options
+     * @return mixed
+     */
+    public function save($options = [])
+    {
+        return $this->original->save($options);
     }
 
     /**

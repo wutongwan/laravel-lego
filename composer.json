@@ -19,9 +19,11 @@
         "phpunit/phpunit": "5.*"
     },
     "autoload": {
+        "files": [
+            "src/Lego/helpers.php"
+        ],
         "psr-4": {
             "Lego\\": "src/Lego/"
-        },
-        "files": ["src/helpers.php"]
+        }
     }
 }

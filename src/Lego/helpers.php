@@ -74,3 +74,8 @@ function lego_assert($condition, $description)
         throw new LegoException($description);
     }
 }
+
+function lego_html()
+{
+    return app('html');
+}
