@@ -1,8 +1,8 @@
-<?php namespace Lego\Field\Plugin;
+<?php namespace Lego\Helper;
 
 use Illuminate\Support\MessageBag;
 
-trait MessagePlugin
+trait MessageHelper
 {
     /**
      * 所有提示信息
@@ -16,7 +16,7 @@ trait MessagePlugin
      */
     private $errors;
 
-    protected function initializeMessagePlugin()
+    protected function initializeMessageHelper()
     {
         $this->messages = new MessageBag();
         $this->errors = new MessageBag();

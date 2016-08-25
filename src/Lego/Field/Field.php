@@ -1,8 +1,8 @@
 <?php namespace Lego\Field;
 
-use Illuminate\Support\MessageBag;
-
-use Lego\Helper\HtmlHelper;
+use Lego\Helper\MessageHelper;
+use Lego\Helper\StringRenderHelper;
+use Lego\Helper\TraitInitializeHelper;
 use Lego\Source\Record\Record;
 use Lego\Source\Source;
 use Lego\Source\Table\Table;
@@ -12,10 +12,14 @@ use Lego\Source\Table\Table;
  */
 abstract class Field
 {
+    use MessageHelper;
+    use StringRenderHelper;
+    use TraitInitializeHelper;
+
+    // Plugins
     use Plugin\HtmlPlugin;
     use Plugin\RecordPlugin;
     use Plugin\EloquentPlugin;
-    use Plugin\MessagePlugin;
     use Plugin\ValidationPlugin;
 
     const MODE_EDITABLE = 'editable';
@@ -67,20 +71,11 @@ abstract class Field
     public function __construct(string $name, string $description, Source $source = null)
     {
         $this->name = $name;
+        $this->column = $name;
         $this->description = $description;
         $this->source = $source;
 
-        /**
-         * 初始化插件
-         *
-         * 如果插件实现了 initializePluginName() 函数, 会在此处调用
-         */
-        foreach (class_uses_recursive(static::class) as $trait) {
-            $method = 'initialize' . class_basename($trait);
-            if (method_exists($this, $method)) {
-                call_user_func_array([$this, $method], []);
-            }
-        }
+        $this->initializeTraits();
     }
 
     /**
@@ -100,7 +95,7 @@ abstract class Field
 
     public function description()
     {
-        return $this->description;
+        return ($this->isRequired() ? '*' : '') . $this->description;
     }
 
     public function source()
@@ -164,18 +159,6 @@ abstract class Field
         return $this;
     }
 
-    /**
-     * 供前端使用的
-     * @param array $merge 在子类中重写时, 方便merge widget中的属性
-     * @return array
-     */
-    public function getMetaAttributes($merge = [])
-    {
-        return HtmlHelper::mergeAttributes($merge, [
-            'lego-field-mode' => $this->mode
-        ]);
-    }
-
     public function readonly($condition = true)
     {
         return $this->mode(self::MODE_READONLY, $condition);
@@ -208,7 +191,7 @@ abstract class Field
         $value = $this->getOriginalValue();
 
         foreach ($this->decorators as $processor) {
-            $value = call_user_func_array($processor, [$value, $this->source()->original()]);
+            $value = call_user_func_array($processor, [$value, $this->source()->data()]);
         }
 
         return $value;
@@ -246,38 +229,7 @@ abstract class Field
 
     /** 数据操作.End */
 
-    /**
-     * view 文件路径
-     * @return string
-     */
-    protected function viewName()
+    protected function beforeRender()
     {
-        return null;
-    }
-
-    public function render() : string
-    {
-        // 1、如果实现上面的view函数, 直接渲染 view
-        if ($view = $this->viewName()) {
-            return view($view, ['field' => $this]);
-        }
-
-        // 2、渲染默认 input 控件
-        return lego_form_builder()->input(
-            'text',
-            $this->elementName(),
-            $this->getOriginalValue(),
-            HtmlHelper::mergeAttributes([
-                $this->getConfiguredAttributes(),
-                $this->getAttributes()
-            ])
-        );
-    }
-
-    /** 辅助函数 */
-
-    public function __toString()
-    {
-        return $this->render();
     }
 }

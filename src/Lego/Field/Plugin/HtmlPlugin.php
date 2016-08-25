@@ -30,6 +30,18 @@ trait HtmlPlugin
     }
 
     /**
+     * 供前端使用的
+     * @param array $merge 在子类中重写时, 方便merge widget中的属性
+     * @return array
+     */
+    public function getMetaAttributes($merge = [])
+    {
+        return HtmlHelper::mergeAttributes($merge, [
+            'lego-field-mode' => $this->mode
+        ]);
+    }
+
+    /**
      * 获取所有属性
      * @return array
      */

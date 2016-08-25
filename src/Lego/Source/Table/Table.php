@@ -11,7 +11,7 @@ abstract class Table extends Source
      */
     protected function initialize()
     {
-        $this->query = clone $this->original();
+        $this->query = clone $this->data();
     }
 
     /**

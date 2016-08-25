@@ -30,7 +30,7 @@ trait EloquentPlugin
 
         /** @var Field $this */
         /** @var \Eloquent $model */
-        $model = $this->source()->original();
+        $model = $this->source()->data();
 
         $id = $id ?: $model->getKey() ?: 'NULL';
         $idColumn = $idColumn ?: $model->getKeyName();

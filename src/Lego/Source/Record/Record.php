@@ -33,6 +33,6 @@ abstract class Record extends Source
 
     public function __call($name, $arguments)
     {
-        return call_user_func_array([$this->original, $name], $arguments);
+        return call_user_func_array([$this->data, $name], $arguments);
     }
 }

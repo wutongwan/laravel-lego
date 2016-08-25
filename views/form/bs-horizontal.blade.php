@@ -1,22 +1,28 @@
 <form method="post" class="form-horizontal">
+    @include('lego::messages', ['messages' => $form->messages(), 'errors' => $form->errors()])
     @foreach($form->fields() as $field)
-        <div class="form-group">
+        <div class="form-group {{ $field->errors()->any() ? 'has-error' : '' }}">
             <label for="{{ $field->elementId() }}" class="col-sm-2 control-label">{{ $field->description() }}</label>
             <div class="col-sm-10">
-                {!! $field->render() !!}
+                {!! $field !!}
                 @if($field->messages()->any())
-                    @foreach($field->messages() as $message)
-                        <p class="help-block"><i class="icon-info-sign"></i> {!! $message !!}</p>
+                    @foreach($field->messages()->all() as $message)
+                        <p class="text-info">{!! $message !!}</p>
                     @endforeach
                 @endif
                 @if($field->errors()->any())
-                    @foreach($field->errors() as $error)
-                        <p class="help-block text-danger"><i class="icon-remove-sign"></i> {!! $error !!}</p>
+                    @foreach($field->errors()->all() as $error)
+                        <p class="text-danger">
+                            <i class="glyphicon glyphicon-remove-sign"></i>
+                            {!! $error !!}
+                        </p>
                     @endforeach
                 @endif
             </div>
         </div>
     @endforeach
+
+    {{ csrf_field() }}
 
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">

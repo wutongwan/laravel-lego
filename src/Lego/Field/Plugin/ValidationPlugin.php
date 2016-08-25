@@ -34,6 +34,11 @@ trait ValidationPlugin
         return $this->rule('required', $condition);
     }
 
+    public function isRequired()
+    {
+        return in_array('required', $this->rules);
+    }
+
     /**
      * 验证当前值是否符合 rules
      *
@@ -58,5 +63,10 @@ trait ValidationPlugin
         }
 
         return true;
+    }
+
+    public function validateFailed()
+    {
+        return !$this->validate();
     }
 }

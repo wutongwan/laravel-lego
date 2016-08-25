@@ -8,11 +8,11 @@ abstract class Source
     /**
      * 传入的原始数据
      */
-    protected $original;
+    protected $data;
 
     final public function load($queryOrData)
     {
-        $this->original = $queryOrData;
+        $this->data = $queryOrData;
 
         $this->initialize();
 
@@ -23,9 +23,9 @@ abstract class Source
      * 获取录入的原始数据对象
      * @return mixed
      */
-    final public function original()
+    final public function data()
     {
-        return $this->original;
+        return $this->data;
     }
 
     abstract protected function initialize();
