@@ -1,5 +1,7 @@
 <?php namespace Lego;
 
+use Lego\Helper\HtmlUtility;
+
 class LegoAsset
 {
     private static $styles = [];
@@ -44,7 +46,7 @@ class LegoAsset
     {
         return join("\n", array_map(
             function ($script) {
-                return lego_html_builder()->script($script);
+                return HtmlUtility::html()->script($script);
             },
             $scripts
         ));
@@ -54,7 +56,7 @@ class LegoAsset
     {
         return join("\n", array_map(
             function ($style) {
-                return lego_html_builder()->style($style);
+                return HtmlUtility::html()->style($style);
             },
             $styles
         ));

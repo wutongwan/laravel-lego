@@ -87,10 +87,7 @@ function lego_html_builder()
     return app('html');
 }
 
-/**
- * @return \Collective\Html\FormBuilder
- */
-function lego_form_builder()
+function lego_register()
 {
-    return app('form');
+
 }

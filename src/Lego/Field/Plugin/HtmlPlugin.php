@@ -1,6 +1,6 @@
 <?php namespace Lego\Field\Plugin;
 
-use Lego\Helper\HtmlHelper;
+use Lego\Helper\HtmlUtility;
 
 trait HtmlPlugin
 {
@@ -36,7 +36,7 @@ trait HtmlPlugin
      */
     public function getMetaAttributes($merge = [])
     {
-        return HtmlHelper::mergeAttributes($merge, [
+        return HtmlUtility::mergeAttributes($merge, [
             'lego-field-mode' => $this->mode
         ]);
     }
@@ -47,7 +47,7 @@ trait HtmlPlugin
      */
     public function getAttributes()
     {
-        return HtmlHelper::mergeAttributes(
+        return HtmlUtility::mergeAttributes(
             $this->getConfiguredAttributes(),
             $this->getMetaAttributes(),
             $this->attributes
