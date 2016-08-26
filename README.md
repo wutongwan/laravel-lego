@@ -1,5 +1,6 @@
 ## Laravel-Lego
 
+[![Build Status](https://travis-ci.org/wutongwan/laravel-lego.svg?branch=master)](https://travis-ci.org/wutongwan/laravel-lego)
 [![Latest Stable Version](https://poser.pugx.org/wutongwan/lego/version.png)](https://packagist.org/packages/wutongwan/lego) 
 [![Total Downloads](https://poser.pugx.org/wutongwan/lego/d/total.png)](https://packagist.org/packages/wutongwan/lego)
 
