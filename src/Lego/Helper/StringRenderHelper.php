@@ -18,10 +18,13 @@ trait StringRenderHelper
     abstract public function render() : string;
 
     /**
-     * 渲染 Response view 前调用
+     * 渲染 Response view 前调用, 返回非null值时, 会作为本次请求的 Response
      */
     abstract protected function beforeRender();
 
+    /**
+     * 渲染 Response view 后调用
+     */
     protected function afterRender()
     {
         // do nothing.

@@ -3,7 +3,6 @@
 use Lego\Helper\InitializeHelper;
 use Lego\Helper\MessageHelper;
 use Lego\Helper\StringRenderHelper;
-use Lego\Helper\TraitInitializeHelper;
 use Lego\Source\Source;
 
 /**
@@ -14,7 +13,6 @@ abstract class Widget
     use MessageHelper;
     use InitializeHelper;
     use StringRenderHelper;
-    use TraitInitializeHelper;
 
     // Plugins
     use Plugin\FieldPlugin;
@@ -30,11 +28,8 @@ abstract class Widget
     {
         $this->source = lego_source($data);
 
-        // 初始化控件
-        $this->initialize();
-
-        // 初始化 traits (plugins)
-        $this->initializeTraits();
+        // 初始化
+        $this->triggerInitialize();
     }
 
     protected function source() : Source

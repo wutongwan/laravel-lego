@@ -1,8 +1,8 @@
 <?php namespace Lego\Field;
 
+use Lego\Helper\InitializeHelper;
 use Lego\Helper\MessageHelper;
 use Lego\Helper\StringRenderHelper;
-use Lego\Helper\TraitInitializeHelper;
 use Lego\Source\Record\Record;
 use Lego\Source\Source;
 use Lego\Source\Table\Table;
@@ -13,8 +13,8 @@ use Lego\Source\Table\Table;
 abstract class Field
 {
     use MessageHelper;
+    use InitializeHelper;
     use StringRenderHelper;
-    use TraitInitializeHelper;
 
     // Plugins
     use Plugin\HtmlPlugin;
@@ -75,7 +75,7 @@ abstract class Field
         $this->description = $description;
         $this->source = $source;
 
-        $this->initializeTraits();
+        $this->triggerInitialize();
     }
 
     /**

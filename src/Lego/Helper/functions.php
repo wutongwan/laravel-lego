@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
 use Lego\LegoException;
+use Lego\Register\Register;
 use Lego\Source\Source;
 use Lego\Source\Record\Record;
 use Lego\Source\Record\EloquentRecord;
@@ -87,7 +88,41 @@ function lego_html_builder()
     return app('html');
 }
 
-function lego_register()
+/**
+ * Alias to Register Methods
+ *
+ * - $data 为 null => \Lego\Register\Register::get
+ * - $data 不为 null => \Lego\Register\Register::register
+ *
+ * @param $key
+ * @param null $type
+ * @param array $data
+ * @return \Lego\Register\Data\Data
+ */
+function lego_register($key, $type = null, array $data = null)
 {
+    if (is_null($data)) {
+        return Register::get($key, $type);
+    }
 
+    return Register::register($key, $type, $data);
+}
+
+if (!function_exists('class_namespace')) {
+    /**
+     * \Lego\Field\Text => \Lego\Field
+     *
+     * @param $class
+     * @return string
+     */
+    function class_namespace($class, $appendClassName = null)
+    {
+        $namespace = (new \ReflectionClass($class))->getNamespaceName();
+
+        if (!is_null($appendClassName)) {
+            return $namespace . '\\' . $appendClassName;
+        }
+
+        return $namespace;
+    }
 }

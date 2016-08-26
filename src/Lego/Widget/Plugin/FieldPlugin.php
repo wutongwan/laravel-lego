@@ -41,9 +41,7 @@ trait FieldPlugin
     protected function add($fieldType, $fieldName, $fieldDescription) : Field
     {
         // 为避免人肉拼接namespace, 所以写了下面一坨
-        $delimiter = '\\';
-        $namespace = join($delimiter, array_slice(explode($delimiter, Text::class), 0, -1));
-        $field = $namespace . $delimiter . $fieldType;
+        $field = class_namespace(Text::class, $fieldType);
 
         lego_assert(class_exists($field), 'Undefined Field ' . $field);
 
