@@ -27,7 +27,7 @@ class Register
 
         /** @var RegisterData $provider */
         $provider = new $class($type, $data);
-        array_set(static::$registered, self::key($class, $type), $provider);
+        array_set(static::$registered, self::registerKey($class, $type), $provider);
         $provider->afterRegistered();
 
         return $provider;
@@ -51,19 +51,33 @@ class Register
      */
     public static function get($key, $type = null)
     {
-        $class = self::dataClass($key);
-        return array_get(self::$registered, self::key($class, $type), []);
+        return array_get(
+            self::$registered,
+            self::registerKey(self::dataClass($key), $type),
+            []
+        );
     }
 
-    private static function key($class, $type)
-    {
-        return $class . '.' . $type;
-    }
-
+    /**
+     * key 转换为 RegisterData 类
+     *
+     * - field.data => \Lego\Register\Data\FieldData
+     * - \Lego\Register\Data\FieldData => \Lego\Register\Data\FieldData
+     *
+     * @param $key
+     * @return mixed|string
+     */
     private static function dataClass($key)
     {
         if (is_subclass_of(RegisterData::class, $key)) {
             return $key;
+        }
+
+        static $cache = [];
+
+        // 避免多次进行父类判定
+        if (isset($cache[$key])) {
+            return $cache[$key];
         }
 
         // abc.def.ghi => AbcDefGhi
@@ -75,6 +89,16 @@ class Register
             "Unsupported Register data {$class}(key: {$key})"
         );
 
+        $cache[$key] = $class;
+
         return $class;
+    }
+
+    /**
+     * 根据 RegisterData::class 和 type 拼接出 注册数据的 key
+     */
+    private static function registerKey($class, $type)
+    {
+        return $class . '.' . $type;
     }
 }

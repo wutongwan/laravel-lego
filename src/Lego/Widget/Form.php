@@ -1,11 +1,13 @@
 <?php namespace Lego\Widget;
 
-use Illuminate\Support\Facades\Input;
 use Lego\Field\Field;
+use Lego\Helper\ModeHelper;
 use Lego\Source\Record\Record;
 
 class Form extends Widget
 {
+    use ModeHelper;
+
     use Plugin\RecordSourcePlugin;
     use Plugin\RequestPlugin;
 

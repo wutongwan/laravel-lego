@@ -1,7 +1,12 @@
 <?php namespace Lego\Field\Plugin;
 
+use Lego\Field\Field;
 use Lego\Helper\HtmlUtility;
 
+/**
+ * Class HtmlPlugin
+ * @package Lego\Field\Plugin
+ */
 trait HtmlPlugin
 {
     /**
@@ -89,5 +94,11 @@ trait HtmlPlugin
     public function getPlaceholder($default = null)
     {
         return $this->getAttribute('placeholder', $default);
+    }
+
+    public function note($message)
+    {
+        /** @var Field $this */
+        return $this->messages()->add('note', $message);
     }
 }

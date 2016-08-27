@@ -45,7 +45,8 @@ lego_register('field.data', Room::class, [
 ## 使用注册的数据
 
 ```php
-$data = \Lego\Register\Register::get('field.data', Room::class);
+
+$data = lego_register('field.data', Room::class);
 
 // $data instanceof \Lego\Register\Data\FieldData
 ```

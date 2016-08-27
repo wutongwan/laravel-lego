@@ -1,7 +1,10 @@
 <?php namespace Lego\Field;
 
+use Illuminate\Support\Facades\Request;
+use Lego\Helper\HasMode;
 use Lego\Helper\InitializeHelper;
 use Lego\Helper\MessageHelper;
+use Lego\Helper\ModeHelper;
 use Lego\Helper\StringRenderHelper;
 use Lego\Source\Record\Record;
 use Lego\Source\Source;
@@ -10,8 +13,9 @@ use Lego\Source\Table\Table;
 /**
  * 输入输出控件的基类
  */
-abstract class Field
+abstract class Field implements HasMode
 {
+    use ModeHelper;
     use MessageHelper;
     use InitializeHelper;
     use StringRenderHelper;
@@ -22,9 +26,6 @@ abstract class Field
     use Plugin\EloquentPlugin;
     use Plugin\ValidationPlugin;
 
-    const MODE_EDITABLE = 'editable';
-    const MODE_DISABLED = 'disabled';
-    const MODE_READONLY = 'readonly';
 
     /**
      * 字段的唯一标记
@@ -50,11 +51,6 @@ abstract class Field
      * @var Source|Record|Table
      */
     private $source;
-
-    /**
-     * 模式, eg:editable、readonly、disabled
-     */
-    private $mode = self::MODE_EDITABLE;
 
     /**
      * value 显示前的处理器数组
@@ -103,44 +99,9 @@ abstract class Field
         return $this->source;
     }
 
-
-    public function isMode($mode)
-    {
-        return $this->mode === $mode;
-    }
-
-    public function isReadonly()
-    {
-        return $this->isMode(self::MODE_READONLY);
-    }
-
-    public function isEditable()
-    {
-        return $this->mode(self::MODE_EDITABLE);
-    }
-
-    public function isDisabled()
-    {
-        return $this->isMode(self::MODE_DISABLED);
-    }
-
     /** Getter.End */
 
     /** Setter.Start */
-
-    protected function mode($mode, $condition = true)
-    {
-        lego_assert(
-            in_array($mode, [self::MODE_EDITABLE, self::MODE_READONLY, self::MODE_DISABLED]),
-            'illegal mode'
-        );
-
-        if (value($condition)) {
-            $this->mode = $mode;
-        }
-
-        return $this;
-    }
 
     /**
      * 处理字段显示内容的装饰器
@@ -157,21 +118,6 @@ abstract class Field
         $this->decorators[] = $closure;
 
         return $this;
-    }
-
-    public function readonly($condition = true)
-    {
-        return $this->mode(self::MODE_READONLY, $condition);
-    }
-
-    public function editable($condition = true)
-    {
-        return $this->mode(self::MODE_READONLY, $condition);
-    }
-
-    public function disabled($condition = true)
-    {
-        return $this->mode(self::MODE_DISABLED, $condition);
     }
 
     /** Setter.End */
@@ -216,7 +162,7 @@ abstract class Field
      */
     protected function getNewValue()
     {
-        return \Request::input($this->elementName());
+        return Request::input($this->elementName());
     }
 
     /**
