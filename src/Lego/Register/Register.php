@@ -75,7 +75,7 @@ class Register
      */
     private static function translateClass($key)
     {
-        if (is_subclass_of(RegisterData::class, $key)) {
+        if (is_subclass_of($key, RegisterData::class)) {
             return $key;
         }
 
@@ -100,7 +100,7 @@ class Register
         return $class;
     }
 
-    private function translatePath($path)
+    private static function translatePath($path)
     {
         return is_object($path) ? get_class($path) : $path;
     }
