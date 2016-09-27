@@ -53,8 +53,11 @@ trait ValidationPlugin
             return true;
         }
 
-        /** @var Field $this */
-        /** @var \Illuminate\Validation\Validator $validator */
+        /**
+         * ide-helper comment
+         * @var Field $this
+         * @var \Illuminate\Validation\Validator $validator
+         */
 
         $validator = Validator::make(
             [$this->column => $this->value()->current()],

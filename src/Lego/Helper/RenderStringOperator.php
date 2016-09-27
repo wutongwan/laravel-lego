@@ -16,16 +16,9 @@ trait RenderStringOperator
      */
     abstract public function render() : string;
 
-    public function __toString()
+    final public function __toString()
     {
-        // 如果 use ModelHelper
-        if (in_array(ModeOperator::class, class_uses_recursive(static::class))) {
-            $string = $this->renderByMode();
-        } else {
-            $string = $this->render();
-        }
-
-        return $string;
+        return $this->render();
     }
 
     /**
@@ -33,8 +26,8 @@ trait RenderStringOperator
      *
      * @return HtmlString
      */
-    public function toHtmlString()
+    final public function toHtmlString()
     {
-        return new HtmlString(strval($this));
+        return new HtmlString($this->render());
     }
 }

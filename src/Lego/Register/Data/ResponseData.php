@@ -27,6 +27,10 @@ class ResponseData extends Data
         }
 
         $provider = Register::get(self::class, self::class);
+        if (!$provider) {
+            return null;
+        }
+
         $response = $provider->data($path);
         if (is_null($response)) {
             return null;

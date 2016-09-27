@@ -15,9 +15,6 @@ use Lego\Source\Row\Row;
 class Form extends Widget implements HasMode
 {
     use ModeOperator;
-    use MagicCallOperator;
-
-    use Plugin\RequestPlugin;
 
     /**
      * 成功后的回调 or 跳转链接

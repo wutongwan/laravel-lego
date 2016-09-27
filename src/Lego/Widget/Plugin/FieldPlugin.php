@@ -73,6 +73,13 @@ trait FieldPlugin
         ];
     }
 
+    protected function processFields()
+    {
+        $this->fields()->each(function (Field $field) {
+            $field->process();
+        });
+    }
+
     protected function syncFieldsValue()
     {
         $this->fields()->each(function (Field $field) {
