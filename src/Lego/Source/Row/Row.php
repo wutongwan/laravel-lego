@@ -1,8 +1,8 @@
-<?php namespace Lego\Source\Record;
+<?php namespace Lego\Source\Row;
 
 use Lego\Source\Source;
 
-abstract class Record extends Source
+abstract class Row extends Source
 {
     protected function initialize()
     {

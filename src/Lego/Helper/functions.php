@@ -8,8 +8,8 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
 use Lego\LegoException;
 use Lego\Register\Register;
 use Lego\Source\Source;
-use Lego\Source\Record\Record;
-use Lego\Source\Record\EloquentRecord;
+use Lego\Source\Row\Row;
+use Lego\Source\Row\EloquentRow;
 use Lego\Source\Table\Table;
 use Lego\Source\Table\EloquentTable;
 
@@ -17,7 +17,7 @@ use Lego\Source\Table\EloquentTable;
 /**
  * 根据数据类型加载 Source
  * @param $data
- * @return Source|Record|Table
+ * @return Source|Row|Table
  * @throws LegoException
  */
 function lego_source($data)
@@ -34,7 +34,7 @@ function lego_source($data)
             break;
 
         case $data instanceof Eloquent:
-            $source = EloquentRecord::class;
+            $source = EloquentRow::class;
             break;
 
         default:
