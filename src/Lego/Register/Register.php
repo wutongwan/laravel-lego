@@ -14,20 +14,25 @@ class Register
     /**
      * 注册函数, 推荐使用全局函数 `lego_register()`
      *
-     * @param string $key 匹配到`Lego/Register/Data`目录中的注册数据类, 支持两种格式:
+     * @param string $class 匹配到`Lego/Register/Data`目录中的注册数据类, 支持两种格式:
      *      1、\Lego\Register\Data\FieldData::class, 类的全名
      *      2、`field.data`, 类名, 以点号分隔, eg: field.data => FieldData
-     * @param string|null $type 源数据类型, eg: \Room::class
-     * @param array $data 注册数据, 数组
+     * @param string|null $path 源数据类型, eg: \Room::class
+     * @param mixed $data 注册数据, 数组
      * @return RegisterData
      */
-    public static function register($key, $type = null, array $data = [])
+    public static function register($class, $path = null, $data = null)
     {
-        $class = self::dataClass($key);
+        $class = self::translateClass($class);
+        $path = self::translatePath($path);
 
-        /** @var RegisterData $provider */
-        $provider = new $class($type, $data);
-        array_set(static::$registered, self::registerKey($class, $type), $provider);
+        if ($provider = self::get($class, $path)) {
+            $provider->merge($data);
+        } else {
+            $provider = new $class($path, $data);
+            array_set(self::$registered, self::key($class, $path), $provider);
+        }
+
         $provider->afterRegistered();
 
         return $provider;
@@ -45,16 +50,17 @@ class Register
     /**
      * 获取特定注册项
      *
-     * @param $key
-     * @param null $type
-     * @return mixed
+     * @param $class
+     * @param string|null $path
+     * @param mixed $default
+     * @return RegisterData
      */
-    public static function get($key, $type = null)
+    public static function get($class, $path = null, $default = [])
     {
         return array_get(
-            self::$registered,
-            self::registerKey(self::dataClass($key), $type),
-            []
+            self::registered(),
+            self::key(self::translateClass($class), self::translatePath($path)),
+            $default
         );
     }
 
@@ -67,7 +73,7 @@ class Register
      * @param $key
      * @return mixed|string
      */
-    private static function dataClass($key)
+    private static function translateClass($key)
     {
         if (is_subclass_of(RegisterData::class, $key)) {
             return $key;
@@ -94,11 +100,16 @@ class Register
         return $class;
     }
 
+    private function translatePath($path)
+    {
+        return is_object($path) ? get_class($path) : $path;
+    }
+
     /**
      * 根据 RegisterData::class 和 type 拼接出 注册数据的 key
      */
-    private static function registerKey($class, $type)
+    private static function key($class, $path)
     {
-        return $class . '.' . $type;
+        return join('.', func_get_args());
     }
 }

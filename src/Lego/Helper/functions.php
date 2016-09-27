@@ -65,18 +65,18 @@ function lego_assert($condition, $description)
  * - $data 为 null => \Lego\Register\Register::get
  * - $data 不为 null => \Lego\Register\Register::register
  *
- * @param $key
- * @param null $type
+ * @param $class
+ * @param string|null $path
  * @param array $data
  * @return \Lego\Register\Data\Data
  */
-function lego_register($key, $type = null, array $data = null)
+function lego_register($class, $path = null, array $data = null)
 {
     if (is_null($data)) {
-        return Register::get($key, $type);
+        return Register::get($class, $path);
     }
 
-    return Register::register($key, $type, $data);
+    return Register::register($class, $path, $data);
 }
 
 if (!function_exists('class_namespace')) {

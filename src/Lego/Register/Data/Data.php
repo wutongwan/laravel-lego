@@ -37,6 +37,17 @@ abstract class Data
     }
 
     /**
+     * @param Data|array $data
+     */
+    public function merge($data)
+    {
+        $this->data = array_merge_recursive(
+            $this->data(),
+            is_array($data) ? $data : $data->data()
+        );
+    }
+
+    /**
      * 校验注册的数据是否合法, 不合法时抛出异常
      * @param array $data
      */
