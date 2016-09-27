@@ -1,14 +1,22 @@
 <?php namespace Lego\Widget;
 
+use Illuminate\Support\Facades\Request;
 use Lego\Field\Field;
+use Lego\Helper\HasMode;
+use Lego\Helper\MagicCallOperator;
 use Lego\Helper\ModeHelper;
-use Lego\Source\Record\Record;
+use Lego\LegoException;
+use Lego\Source\Row\Row;
 
-class Form extends Widget
+/**
+ * Class Form
+ * @package Lego\Widget
+ */
+class Form extends Widget implements HasMode
 {
     use ModeHelper;
+    use MagicCallOperator;
 
-    use Plugin\RecordSourcePlugin;
     use Plugin\RequestPlugin;
 
     /**
@@ -21,7 +29,7 @@ class Form extends Widget
      */
     protected function initialize()
     {
-        lego_assert($this->source() instanceof Record, 'Unsupported source.');
+        lego_assert($this->source() instanceof Row, 'Unsupported source.');
     }
 
     /**
@@ -36,63 +44,103 @@ class Form extends Widget
         return $this;
     }
 
-    /**
-     * 渲染 Response view 前调用
-     */
-    protected function beforeRender()
+    private function validate()
     {
-        // 处理 POST 请求
-        if ($this->isPost()) {
-            $this->syncFieldsNewValue();
-            $this->validateFields();
-
-            if ($this->errors()->any()) {
-                return null;
+        $this->fields()->each(
+            function (Field $field) {
+                if ($field->validateFailed()) {
+                    $this->errors()->merge($field->errors());
+                }
             }
-
-            $this->source()->save();
-            $this->messages()->add('success', '操作成功');
-            return $this->successResponse();
-        }
-
-        return null;
+        );
     }
 
-    private function validateFields()
+    protected function afterModeChanged($mode)
     {
-        $this->eachField(function (Field $field) {
-            if ($field->validateFailed()) {
-                $this->errors()->merge($field->errors());
+        $this->fields()->each(
+            function (Field $field) use ($mode) {
+                $field->mode($mode);
             }
-        });
+        );
+    }
+
+    protected function renderEditable() : string
+    {
+        return view('lego::default.form.horizontal', ['form' => $this])->render();
+    }
+
+    protected function renderReadonly() : string
+    {
+        return $this->renderEditable();
+    }
+
+    protected function renderDisabled() : string
+    {
+        return $this->renderEditable();
+    }
+
+    /**
+     * @param Field $field
+     */
+    protected function fieldAdded(Field $field)
+    {
+        // Field 原始值来源
+        $field->value()->setOriginal(
+            function () use ($field) {
+                return $field->source()->get($field->column());
+            }
+        );
+
+        // Field 当前值来源
+        $field->value()->setCurrent(
+            function () use ($field) {
+                if ($this->isPost() && $field->isEditable()) {
+                    return Request::input($field->elementName());
+                }
+
+                return $field->value()->original();
+            }
+        );
+    }
+
+    public function process()
+    {
+        if (!$this->isPost()) {
+            return;
+        }
+
+        // 处理 POST 请求
+        $this->syncFieldsValue();
+        $this->validate();
+
+        if ($this->errors()->any()) {
+            return;
+        }
+
+        $this->source()->save();
+        $this->messages()->add('success', '操作成功');
+        $this->returnSuccessResponse();
     }
 
     /**
      * 数据处理成功后的回调
      */
-    private function successResponse()
+    private function returnSuccessResponse()
     {
         if (!$this->success) {
-            return null;
+            return;
         }
 
-        if (is_callable($this->success)) {
-            return call_user_func($this->success, $this->source()->data());
-        }
+        $this->rewriteResponse(function () {
+            if (is_callable($this->success)) {
+                return call_user_func($this->success, $this->source()->data());
+            }
 
-        if (is_string($this->success)) {
-            return redirect($this->success);
-        }
+            if (is_string($this->success)) {
+                return redirect($this->success);
+            }
 
-        return null;
-    }
-
-    /**
-     * 渲染当前对象
-     * @return string
-     */
-    public function render() : string
-    {
-        return view('lego::form.bs-horizontal', ['form' => $this])->render();
+            throw new LegoException('Unsupported `success` response.');
+        });
     }
 }

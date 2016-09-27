@@ -2,10 +2,9 @@
 
 use Lego\Helper\HasMode;
 use Lego\Helper\ModeHelper;
-use Lego\Helper\RequestHelper;
 use Lego\Helper\MessageOperator;
 use Lego\Helper\InitializeOperator;
-use Lego\Helper\StringRenderHelper;
+use Lego\Helper\RenderStringOperator;
 use Lego\Source\Row\Row;
 use Lego\Source\Source;
 use Lego\Source\Table\Table;
@@ -17,9 +16,8 @@ abstract class Field implements HasMode
 {
     use MessageOperator;
     use InitializeOperator;
-    use StringRenderHelper;
-    use ModeHelper; // 必须放在 `StringRenderHelper`后面
-    use RequestHelper;
+    use RenderStringOperator;
+    use ModeHelper; // 必须放在 `RenderStringOperator`后面
 
     // Plugins
     use Plugin\HtmlPlugin;
