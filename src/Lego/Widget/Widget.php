@@ -3,6 +3,7 @@
 use Lego\Helper\InitializeOperator;
 use Lego\Helper\MessageOperator;
 use Lego\Helper\RenderStringOperator;
+use Lego\Register\Data\ResponseData;
 use Lego\Source\Source;
 use Lego\Source\Row\Row;
 use Lego\Source\Table\Table;
@@ -83,6 +84,17 @@ abstract class Widget
     {
         $this->process();
 
+        /**
+         * 全局重写 Response.
+         */
+        $registeredResponse = ResponseData::response();
+        if (!is_null($registeredResponse)) {
+            return $registeredResponse;
+        }
+
+        /**
+         * 通过 rewriteResponse() 重写的 Response.
+         */
         if (!is_null($this->response)) {
             return value($this->response);
         }

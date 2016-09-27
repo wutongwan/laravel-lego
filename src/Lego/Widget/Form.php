@@ -64,21 +64,6 @@ class Form extends Widget implements HasMode
         );
     }
 
-    protected function renderEditable() : string
-    {
-        return view('lego::default.form.horizontal', ['form' => $this])->render();
-    }
-
-    protected function renderReadonly() : string
-    {
-        return $this->renderEditable();
-    }
-
-    protected function renderDisabled() : string
-    {
-        return $this->renderEditable();
-    }
-
     /**
      * @param Field $field
      */
@@ -142,5 +127,14 @@ class Form extends Widget implements HasMode
 
             throw new LegoException('Unsupported `success` response.');
         });
+    }
+
+    /**
+     * 渲染当前对象
+     * @return string
+     */
+    public function render() : string
+    {
+        return view('lego::default.form.horizontal', ['form' => $this])->render();
     }
 }

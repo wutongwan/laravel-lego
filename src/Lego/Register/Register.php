@@ -106,7 +106,7 @@ class Register
     }
 
     /**
-     * 根据 RegisterData::class 和 type 拼接出 注册数据的 key
+     * 根据 RegisterData::class 和 path 拼接出 注册数据的 key
      */
     private static function key($class, $path)
     {
