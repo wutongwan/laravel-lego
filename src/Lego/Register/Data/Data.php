@@ -6,7 +6,7 @@ abstract class Data
      * 注册数据适用对象的类名
      * @var string|null
      */
-    private $type = null;
+    private $path= null;
 
     /**
      * 注册的数据
@@ -14,18 +14,18 @@ abstract class Data
      */
     private $data;
 
-    public function __construct($type = null, array $data = [])
+    public function __construct($path = null, array $data = [])
     {
-        $this->type = $type;
+        $this->path = $path;
 
         $this->validate($data);
 
         $this->data = $data;
     }
 
-    protected function type()
+    protected function path()
     {
-        return $this->type;
+        return $this->path;
     }
 
     public function data($attribute = null, $default = null)

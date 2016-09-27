@@ -5,14 +5,16 @@ use Lego\Helper\HtmlUtility;
 
 class Text extends Field
 {
+    /**
+     * 初始化对象
+     */
+    protected function initialize()
+    {
+    }
+
     public function render() : string
     {
-        return HtmlUtility::form()->input(
-            'text',
-            $this->elementName(),
-            $this->value()->original(),
-            $this->getAttributes()
-        );
+        return $this->renderByMode();
     }
 
     protected function renderEditable() : string

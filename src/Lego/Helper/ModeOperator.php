@@ -75,19 +75,22 @@ trait ModeOperator
         return $this->mode(self::MODE_DISABLED, $condition);
     }
 
-    public function renderByMode() : string
+    protected function renderByMode() : string
     {
         return call_user_func_array([$this, 'render' . ucfirst($this->mode)], []);
     }
-
-    public function render() : string
+    protected function renderEditable() : string
     {
-        return $this->renderByMode();
+        return '';
     }
 
-    abstract protected function renderEditable() : string;
+    protected function renderReadonly() : string
+    {
+        return '';
+    }
 
-    abstract protected function renderReadonly() : string;
-
-    abstract protected function renderDisabled() : string;
+    protected function renderDisabled() : string
+    {
+        return '';
+    }
 }

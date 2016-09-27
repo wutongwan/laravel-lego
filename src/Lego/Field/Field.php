@@ -92,13 +92,6 @@ abstract class Field implements HasMode
     }
 
     /**
-     * Field 初始化时调用
-     */
-    protected function initialize()
-    {
-    }
-
-    /**
      * 更新数据到 Row
      */
     public function updateValue()
