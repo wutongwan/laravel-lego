@@ -41,7 +41,7 @@ abstract class Data
      */
     public function merge($data)
     {
-        $this->data = array_merge_recursive(
+        $this->data = array_merge(
             $this->data(),
             is_array($data) ? $data : $data->data()
         );
