@@ -3,8 +3,8 @@
 use Lego\Helper\InitializeOperator;
 use Lego\Helper\MessageOperator;
 use Lego\Helper\RenderStringOperator;
-use Lego\Source\Row\Row;
 use Lego\Source\Source;
+use Lego\Source\Row\Row;
 use Lego\Source\Table\Table;
 
 /**
@@ -46,8 +46,6 @@ abstract class Widget
     {
         return $this->source;
     }
-
-    abstract public function process();
 
     /**
      * 对 view() 的封装
@@ -91,4 +89,9 @@ abstract class Widget
 
         return $response;
     }
+
+    /**
+     * Widget 的所有数据处理都放在此函数中, 渲染 view 前调用
+     */
+    abstract public function process();
 }
