@@ -1,6 +1,8 @@
 <?php namespace Lego\Widget;
 
+use Lego\Field\Field;
 use Lego\Helper\InitializeOperator;
+use Lego\Helper\MagicCallOperator;
 use Lego\Helper\MessageOperator;
 use Lego\Helper\RenderStringOperator;
 use Lego\Register\Data\ResponseData;
@@ -16,10 +18,12 @@ abstract class Widget
     use MessageOperator;
     use InitializeOperator;
     use RenderStringOperator;
+    use MagicCallOperator;
 
     // Plugins
     use Plugin\FieldPlugin;
     use Plugin\GroupPlugin;
+    use Plugin\RequestPlugin;
 
     /**
      * 数据源
@@ -82,6 +86,8 @@ abstract class Widget
      */
     final public function response($response)
     {
+        $this->processFields();
+
         $this->process();
 
         /**

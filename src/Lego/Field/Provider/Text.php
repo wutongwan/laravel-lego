@@ -2,6 +2,7 @@
 
 use Lego\Field\Field;
 use Lego\Helper\HtmlUtility;
+use Lego\Source\Table\Table;
 
 class Text extends Field
 {
@@ -40,5 +41,17 @@ class Text extends Field
             $this->value()->original(),
             ['disabled' => 'disabled']
         );
+    }
+
+    public function filter(Table $query) : Table
+    {
+        return $query->whereContains($this->column(), $this->value()->current());
+    }
+
+    /**
+     * 数据处理逻辑
+     */
+    public function process()
+    {
     }
 }

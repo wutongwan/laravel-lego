@@ -92,14 +92,14 @@ abstract class Field implements HasMode
     }
 
     /**
-     * 更新数据到 Row
+     * Filter 检索数据时, 构造此字段的查询
+     * @param Table $query
+     * @return Table
      */
-    public function updateValue()
-    {
-        $this->source->set($this->column(), $this->value()->current());
-    }
+    abstract public function filter(Table $query) : Table;
 
-    public function process()
-    {
-    }
+    /**
+     * 数据处理逻辑
+     */
+    abstract public function process();
 }

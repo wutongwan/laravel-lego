@@ -9,28 +9,16 @@ use Lego\Widget\Grid;
  */
 class Lego
 {
-    /**
-     * @param array $source
-     * @return Filter
-     */
     public static function filter($source)
     {
         return new Filter($source);
     }
 
-    /**
-     * @param array $source
-     * @return Grid
-     */
     public static function grid($source = [])
     {
         return new Grid($source);
     }
 
-    /**
-     * @param array $source
-     * @return Form
-     */
     public static function form($source = [])
     {
         return new Form($source);
