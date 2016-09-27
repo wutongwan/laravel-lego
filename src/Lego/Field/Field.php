@@ -83,7 +83,7 @@ abstract class Field implements HasMode
 
     public function description()
     {
-        return ($this->isRequired() ? '*' : '') . $this->description;
+        return ($this->isRequired() ? '* ' : '') . $this->description;
     }
 
     public function source()
