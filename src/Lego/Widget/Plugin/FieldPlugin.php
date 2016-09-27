@@ -50,36 +50,39 @@ trait FieldPlugin
 
         $this->fields [$fieldName] = $field;
 
+        $this->fieldAdded($field);
+
         return $field;
     }
 
     /**
-     * 捕获 addXXX 函数, eg: addText($fieldName, $fieldDescription, $source)
-     *
-     * @param $name
-     * @param $arguments
-     * @return mixed
-     * @throws LegoException
+     * @param Field $field
      */
-    public function __call($name, $arguments)
-    {
-        if (starts_with($name, 'add')) {
-            array_unshift($arguments, substr($name, 3));
-            return call_user_func_array([$this, 'add'], $arguments);
-        }
+    abstract protected function fieldAdded(Field $field);
 
-        throw new LegoException('Undefined method ' . $name);
+    protected function registerFieldPluginMagicCall()
+    {
+        return [
+            /**
+             * 捕获 addXXX 函数, eg: addText($fieldName, $fieldDescription, $source)
+             */
+            'add*' => function () {
+                $arguments = func_get_args(); // eg: [addText, 'name', '描述']
+                $arguments[0] = substr($arguments[0], 3); // addText => text
+                return call_user_func_array([$this, 'add'], $arguments);
+            }
+        ];
     }
 
-    public function eachField(\Closure $closure)
+    protected function syncFieldsValue()
     {
-        $this->fields()->each($closure);
-    }
-
-    protected function syncFieldsNewValue()
-    {
-        $this->eachField(function (Field $field) {
-            $field->updateValue();
-        });
+        $this->fields()->each(
+            function (Field $field) {
+                $field->source()->set(
+                    $this->column(),
+                    $this->value()->current()
+                );
+            }
+        );
     }
 }

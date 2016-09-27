@@ -1,17 +1,22 @@
-@if(isset($errors) && $errors->any())
+{{-- 信息展示控件
+
+Params: $object, object with trait \Lego\Helper\MessageOperator
+--}}
+
+@if($object->errors()->any())
     <div class="alert alert-danger">
         <ul>
-            @foreach($errors->all() as $error)
+            @foreach($object->errors()->all() as $error)
                 <li>{{ $error }}</li>
             @endforeach
         </ul>
     </div>
 @endif
 
-@if(isset($messages) && $messages->any())
+@if($object->messages()->any())
     <div class="alert alert-info">
         <ul>
-            @foreach($messages->all() as $message)
+            @foreach($object->messages()->all() as $message)
                 <li>{{ $message }}</li>
             @endforeach
         </ul>
