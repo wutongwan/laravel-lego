@@ -7,12 +7,36 @@ class Text extends Field
 {
     public function render() : string
     {
-        // TODO mode
         return HtmlUtility::form()->input(
             'text',
             $this->elementName(),
-            $this->getOriginalValue(),
+            $this->value()->original(),
             $this->getAttributes()
+        );
+    }
+
+    protected function renderEditable() : string
+    {
+        return HtmlUtility::form()->input(
+            'text',
+            $this->elementName(),
+            $this->value()->original(),
+            $this->getAttributes()
+        );
+    }
+
+    protected function renderReadonly() : string
+    {
+        return $this->value() ?? '';
+    }
+
+    protected function renderDisabled() : string
+    {
+        return HtmlUtility::form()->input(
+            'text',
+            $this->elementName(),
+            $this->value()->original(),
+            ['disabled' => 'disabled']
         );
     }
 }
