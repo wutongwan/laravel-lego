@@ -1,13 +1,13 @@
-<?php namespace Lego\Source\Record;
+<?php namespace Lego\Source\Row;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
 /**
- * Class EloquentRecord
+ * Class EloquentRow
  * @package Lego\Source\Item
  * @mixin Eloquent
  */
-class EloquentRecord extends Record
+class EloquentRow extends Row
 {
     /**
      * @var Eloquent $data
@@ -23,7 +23,8 @@ class EloquentRecord extends Record
      */
     public function get($attribute, $default = null)
     {
-        return $this->data->getAttribute($attribute, $default);
+        $value = $this->data->getAttribute($attribute);
+        return is_null($value) ? $default : $value;
     }
 
     /**
