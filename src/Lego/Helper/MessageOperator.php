@@ -2,7 +2,7 @@
 
 use Illuminate\Support\MessageBag;
 
-trait MessageHelper
+trait MessageOperator
 {
     /**
      * 所有提示信息
@@ -16,7 +16,7 @@ trait MessageHelper
      */
     private $errors;
 
-    protected function initializeMessageHelper()
+    protected function initializeMessageOperator()
     {
         $this->messages = new MessageBag();
         $this->errors = new MessageBag();

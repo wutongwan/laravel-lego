@@ -1,5 +1,6 @@
 <?php namespace Lego\Field\Plugin;
 
+use Illuminate\Support\Facades\Validator;
 use Lego\Field\Field;
 
 trait ValidationPlugin
@@ -48,14 +49,20 @@ trait ValidationPlugin
      */
     public function validate()
     {
-        $validator = \Validator::make(
-            [$this->column => $this->getNewValue()],
+        if ($this->isReadonly()) {
+            return true;
+        }
+
+        /** @var Field $this */
+        /** @var \Illuminate\Validation\Validator $validator */
+
+        $validator = Validator::make(
+            [$this->column => $this->value()->current()],
             [$this->column => $this->rules()],
             [],
             [$this->column => $this->description]
         );
 
-        /** @var Field $this */
 
         if ($validator->fails()) {
             $this->errors()->merge($validator->messages());

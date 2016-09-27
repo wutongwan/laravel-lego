@@ -1,6 +1,6 @@
 <?php namespace Lego\Helper;
 
-trait InitializeHelper
+trait InitializeOperator
 {
     /**
      * 触发函数, 推荐在构造函数中调用
