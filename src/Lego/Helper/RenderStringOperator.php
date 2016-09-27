@@ -19,7 +19,7 @@ trait RenderStringOperator
     public function __toString()
     {
         // 如果 use ModelHelper
-        if (in_array(ModeHelper::class, class_uses_recursive(static::class))) {
+        if (in_array(ModeOperator::class, class_uses_recursive(static::class))) {
             $string = $this->renderByMode();
         } else {
             $string = $this->render();
