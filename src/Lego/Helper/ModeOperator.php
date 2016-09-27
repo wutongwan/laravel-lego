@@ -5,10 +5,10 @@
  *
  * use 时, 必须放在 `RenderStringOperator`后面
  *
- * Class ModeHelper
+ * Class ModeOperator
  * @package Lego\Helper
  */
-trait ModeHelper
+trait ModeOperator
 {
     /**
      * 模式, eg:editable、readonly、disabled

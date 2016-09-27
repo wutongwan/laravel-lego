@@ -1,7 +1,7 @@
 <?php namespace Lego\Field;
 
 use Lego\Helper\HasMode;
-use Lego\Helper\ModeHelper;
+use Lego\Helper\ModeOperator;
 use Lego\Helper\MessageOperator;
 use Lego\Helper\InitializeOperator;
 use Lego\Helper\RenderStringOperator;
@@ -17,7 +17,7 @@ abstract class Field implements HasMode
     use MessageOperator;
     use InitializeOperator;
     use RenderStringOperator;
-    use ModeHelper; // 必须放在 `RenderStringOperator`后面
+    use ModeOperator; // 必须放在 `RenderStringOperator`后面
 
     // Plugins
     use Plugin\HtmlPlugin;

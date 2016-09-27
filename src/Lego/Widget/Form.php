@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Request;
 use Lego\Field\Field;
 use Lego\Helper\HasMode;
 use Lego\Helper\MagicCallOperator;
-use Lego\Helper\ModeHelper;
+use Lego\Helper\ModeOperator;
 use Lego\LegoException;
 use Lego\Source\Row\Row;
 
@@ -14,7 +14,7 @@ use Lego\Source\Row\Row;
  */
 class Form extends Widget implements HasMode
 {
-    use ModeHelper;
+    use ModeOperator;
     use MagicCallOperator;
 
     use Plugin\RequestPlugin;

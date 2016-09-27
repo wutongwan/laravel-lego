@@ -1,7 +1,7 @@
 <?php namespace Lego\Helper;
 
 /**
- * ModeHelper 的接口类
+ * ModeOperator 的接口类
  * Interface HasMode
  * @package Lego\Helper
  */
