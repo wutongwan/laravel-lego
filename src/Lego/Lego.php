@@ -24,7 +24,7 @@ class Lego
      */
     public static function grid($source = [])
     {
-
+        return new Grid($source);
     }
 
     /**

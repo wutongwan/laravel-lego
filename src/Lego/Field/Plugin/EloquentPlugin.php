@@ -1,7 +1,8 @@
 <?php namespace Lego\Field\Plugin;
 
+use Illuminate\Database\Eloquent\Model;
 use Lego\Field\Field;
-use Lego\Source\Table\EloquentTable;
+use Lego\Source\Row\EloquentRow;
 
 /**
  * Class EloquentPlugin
@@ -9,10 +10,10 @@ use Lego\Source\Table\EloquentTable;
  */
 trait EloquentPlugin
 {
-    private function assertIsEloquentRecord()
+    private function assertIsEloquentRow()
     {
         lego_assert(
-            $this->source() instanceof EloquentTable,
+            $this->source() instanceof EloquentRow,
             'Unsupported Rule on ' . class_basename($this->source())
         );
     }
@@ -26,10 +27,10 @@ trait EloquentPlugin
      */
     public function unique($id = null, $idColumn = null, $extra = null)
     {
-        $this->assertIsEloquentRecord();
+        $this->assertIsEloquentRow();
 
         /** @var Field $this */
-        /** @var \Eloquent $model */
+        /** @var Model $model */
         $model = $this->source()->data();
 
         $id = $id ?: $model->getKey() ?: 'NULL';

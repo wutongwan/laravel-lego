@@ -3,7 +3,6 @@
 use Illuminate\Support\Collection;
 use Lego\Field\Field;
 use Lego\Field\Provider\Text;
-use Lego\LegoException;
 
 /**
  * Field 相关逻辑
@@ -76,13 +75,11 @@ trait FieldPlugin
 
     protected function syncFieldsValue()
     {
-        $this->fields()->each(
-            function (Field $field) {
-                $field->source()->set(
-                    $this->column(),
-                    $this->value()->current()
-                );
-            }
-        );
+        $this->fields()->each(function (Field $field) {
+            $field->source()->set(
+                $field->column(),
+                $field->value()->current()
+            );
+        });
     }
 }

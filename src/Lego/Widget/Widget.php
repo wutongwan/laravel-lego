@@ -81,7 +81,7 @@ abstract class Widget
      * @param mixed $response
      * @return mixed
      */
-    public function response($response)
+    final public function response($response)
     {
         $this->process();
 
