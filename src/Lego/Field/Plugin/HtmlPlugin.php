@@ -17,12 +17,12 @@ trait HtmlPlugin
 
     public function elementId()
     {
-        return 'lego-el-id-' . $this->name();
+        return $this->name();
     }
 
     public function elementName()
     {
-        return 'lego-el-name-' . $this->name();
+        return $this->name();
     }
 
     /**
@@ -52,6 +52,10 @@ trait HtmlPlugin
      */
     public function getAttributes()
     {
+        if (!array_key_exists('placeholder', $this->attributes)) {
+            $this->attr('placeholder', $this->description());
+        }
+
         return HtmlUtility::mergeAttributes(
             $this->getConfiguredAttributes(),
             $this->getMetaAttributes(),
