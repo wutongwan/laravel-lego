@@ -6,9 +6,9 @@ use Lego\Helper\MagicCallOperator;
 use Lego\Helper\MessageOperator;
 use Lego\Helper\RenderStringOperator;
 use Lego\Register\Data\ResponseData;
-use Lego\Source\Source;
-use Lego\Source\Row\Row;
-use Lego\Source\Table\Table;
+use Lego\Data\Data;
+use Lego\Data\Row\Row;
+use Lego\Data\Table\Table;
 
 /**
  * Lego中所有大型控件的基类
@@ -27,9 +27,9 @@ abstract class Widget
 
     /**
      * 数据源
-     * @var Source $source
+     * @var Data $data
      */
-    private $source;
+    private $data;
 
     /**
      * 响应内容
@@ -38,18 +38,18 @@ abstract class Widget
 
     public function __construct($data)
     {
-        $this->source = lego_source($data);
+        $this->data = lego_data($data);
 
         // 初始化
         $this->triggerInitialize();
     }
 
     /**
-     * @return Source|Table|Row
+     * @return Data|Table|Row
      */
-    protected function source() : Source
+    protected function data() : Data
     {
-        return $this->source;
+        return $this->data;
     }
 
     /**

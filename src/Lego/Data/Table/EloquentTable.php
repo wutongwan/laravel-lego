@@ -1,4 +1,4 @@
-<?php namespace Lego\Source\Table;
+<?php namespace Lego\Data\Table;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Query\Builder as QueryBuilder;
@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 
 /**
- * Laravel ORM Source
+ * Laravel ORM Data
  */
 class EloquentTable extends Table
 {
@@ -160,7 +160,7 @@ class EloquentTable extends Table
      * @param array $columns 默认获取全部字段
      * @return mixed
      */
-    public function fetch(array $columns = ['*'])
+    protected function selectQuery(array $columns = []): \Illuminate\Support\Collection
     {
         return $this->query->get($columns);
     }

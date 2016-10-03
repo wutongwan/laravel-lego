@@ -2,7 +2,7 @@
 
 use Lego\Field\Field;
 use Lego\Helper\HtmlUtility;
-use Lego\Source\Table\Table;
+use Lego\Data\Table\Table;
 
 class Text extends Field
 {

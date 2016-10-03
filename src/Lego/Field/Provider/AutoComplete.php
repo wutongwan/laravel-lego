@@ -56,7 +56,7 @@ class AutoComplete extends Field
 
         Register::register(
             AutoCompleteData::class,
-            $this->source()->data(),
+            $this->source()->original(),
             [$responsePath => $callable]
         );
 
@@ -65,7 +65,7 @@ class AutoComplete extends Field
 
     private function responsePath()
     {
-        return md5(get_class($this->source()->data()) . $this->name());
+        return md5(get_class($this->source()->original()) . $this->name());
     }
 
     public function process()

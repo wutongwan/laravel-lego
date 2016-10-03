@@ -51,7 +51,7 @@ class Filter extends Widget
     public function process()
     {
         $this->fields()->each(function (Field $field) {
-            $field->filter($this->source());
+            $field->filter($this->data());
         });
     }
 

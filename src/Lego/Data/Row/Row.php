@@ -1,8 +1,8 @@
-<?php namespace Lego\Source\Row;
+<?php namespace Lego\Data\Row;
 
-use Lego\Source\Source;
+use Lego\Data\Data;
 
-abstract class Row extends Source
+abstract class Row extends Data
 {
     protected function initialize()
     {
@@ -33,6 +33,6 @@ abstract class Row extends Source
 
     public function __call($name, $arguments)
     {
-        return call_user_func_array([$this->data, $name], $arguments);
+        return call_user_func_array([$this->original, $name], $arguments);
     }
 }
