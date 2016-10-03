@@ -51,16 +51,12 @@ class Filter extends Widget
     public function process()
     {
         $this->fields()->each(function (Field $field) {
-            if (is_null($field->value()->current())) {
-                return;
-            }
-
             $field->filter($this->source());
         });
     }
 
     public function grid()
     {
-        return new Grid($this->source());
+        return new Grid($this);
     }
 }
