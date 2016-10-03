@@ -14,6 +14,11 @@ abstract class Table extends Source
         $this->query = clone $this->data();
     }
 
+    public function query()
+    {
+        return $this->query;
+    }
+
     /**
      * 当前属性是否等于某值
      * @param $attribute

@@ -22,14 +22,12 @@ use Lego\Source\Table\EloquentTable;
  */
 function lego_source($data)
 {
-    $first = isset($data[0]) ? $data[0] : [];
     $class = is_object($data) ? get_class($data) : null;
 
     switch (true) {
 
         // Laravel Eloquent Source
         case in_array($class, [QueryBuilder::class, EloquentBuilder::class, EloquentCollection::class]):
-        case $first instanceof Eloquent:
             $source = EloquentTable::class;
             break;
 
