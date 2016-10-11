@@ -14,7 +14,7 @@ class EloquentTable extends Table
      * 方便补全
      * @var Eloquent|EloquentBuilder|QueryBuilder|Collection $query
      */
-    protected $query;
+    protected $original;
 
     /**
      * 当前属性是否等于某值
@@ -24,7 +24,7 @@ class EloquentTable extends Table
      */
     public function whereEquals($attribute, $value)
     {
-        $this->query->where($attribute, '=', $value);
+        $this->original->where($attribute, '=', $value);
 
         return $this;
     }
@@ -38,7 +38,7 @@ class EloquentTable extends Table
      */
     public function whereGt($attribute, $value, bool $equals = false)
     {
-        $this->query->where($attribute, $equals ? '>=' : '>', $value);
+        $this->original->where($attribute, $equals ? '>=' : '>', $value);
 
         return $this;
     }
@@ -52,7 +52,7 @@ class EloquentTable extends Table
      */
     public function whereLt($attribute, $value, bool $equals = false)
     {
-        $this->query->where($attribute, $equals ? '<=' : '<', $value);
+        $this->original->where($attribute, $equals ? '<=' : '<', $value);
 
         return $this;
     }
@@ -65,7 +65,7 @@ class EloquentTable extends Table
      */
     public function whereContains($attribute, string $value)
     {
-        $this->query->where($attribute, 'like', '%' . trim($value, '%') . '%');
+        $this->original->where($attribute, 'like', '%' . trim($value, '%') . '%');
 
         return $this;
     }
@@ -78,7 +78,7 @@ class EloquentTable extends Table
      */
     public function whereStartsWith($attribute, string $value)
     {
-        $this->query->where($attribute, 'like', trim($value, '%') . '%');
+        $this->original->where($attribute, 'like', trim($value, '%') . '%');
 
         return $this;
     }
@@ -91,7 +91,7 @@ class EloquentTable extends Table
      */
     public function whereEndsWith($attribute, string $value)
     {
-        $this->query->where($attribute, 'like', '%' . trim($value, '%'));
+        $this->original->where($attribute, 'like', '%' . trim($value, '%'));
 
         return $this;
     }
@@ -109,7 +109,7 @@ class EloquentTable extends Table
             return $this->whereEquals(0, 1);
         }
 
-        $this->query->whereBetween($attribute, [$min, $max]);
+        $this->original->whereBetween($attribute, [$min, $max]);
 
         return $this;
     }
@@ -122,7 +122,7 @@ class EloquentTable extends Table
      */
     public function whereHas($relation, $callback)
     {
-        $this->query->whereHas($relation, $callback);
+        $this->original->whereHas($relation, $callback);
 
         return $this;
     }
@@ -135,7 +135,7 @@ class EloquentTable extends Table
      */
     public function orderBy($attribute, bool $desc = false)
     {
-        $this->query->orderBy($attribute, $desc ? 'desc' : 'asc');
+        $this->original->orderBy($attribute, $desc ? 'desc' : 'asc');
 
         return $this;
     }
@@ -149,7 +149,7 @@ class EloquentTable extends Table
      */
     public function paginate(int $perPage, string $pageName = 'page', int $page = null)
     {
-        $this->query->paginate($perPage, ['*'], $pageName, $page);
+        $this->original->paginate($perPage, ['*'], $pageName, $page);
 
         return $this;
     }
@@ -162,6 +162,6 @@ class EloquentTable extends Table
      */
     protected function selectQuery(array $columns = []): \Illuminate\Support\Collection
     {
-        return $this->query->get($columns);
+        return $this->original->get($columns);
     }
 }

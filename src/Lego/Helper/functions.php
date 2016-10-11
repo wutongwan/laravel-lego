@@ -22,6 +22,10 @@ use Lego\Data\Table\EloquentTable;
  */
 function lego_data($data)
 {
+    if ($data instanceof Data) {
+        return $data;
+    }
+
     $class = is_object($data) ? get_class($data) : null;
 
     switch (true) {

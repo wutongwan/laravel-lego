@@ -8,8 +8,6 @@ use Traversable;
 
 abstract class Table extends Data implements \ArrayAccess, Arrayable, \Countable, \IteratorAggregate, Jsonable, \JsonSerializable
 {
-    protected $query;
-
     /** @var Collection $rows */
     private $rows;
 
@@ -18,7 +16,6 @@ abstract class Table extends Data implements \ArrayAccess, Arrayable, \Countable
      */
     protected function initialize()
     {
-        $this->query = clone $this->original();
     }
 
     /**
@@ -121,7 +118,10 @@ abstract class Table extends Data implements \ArrayAccess, Arrayable, \Countable
      */
     final public function fetch(array $columns = ['*'])
     {
-        $this->rows = $this->selectQuery($columns);
+        $this->rows = $this->selectQuery($columns)
+            ->map(function ($row) {
+                return lego_data($row);
+            });
 
         return $this->rows;
     }
