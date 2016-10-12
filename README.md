@@ -26,19 +26,19 @@ return $form->view('layout', ['form' => $form]);
 
 ## 安装
 
-1. 使用 Composer 添加依赖
+1、使用 Composer 添加依赖
 
 ```bash
 composer require wutongwan/lego
 ```
 
-2. 添加 Service Provider ，将下面的内容添加到 `config/app.php` 的 `providers` 数组中
+2、添加 Service Provider ，将下面的内容添加到 `config/app.php` 的 `providers` 数组中
 
 ```php
 \Lego\LegoServiceProvider::class,
 ```
 
-3. 发布项目相关文件
+3、发布项目相关文件
 
 ```bash
 php artisan vendor:publish
