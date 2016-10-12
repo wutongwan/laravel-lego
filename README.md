@@ -6,15 +6,42 @@
 
 * * *
 
+## Example
+
+```php
+$form = Lego::form(new User());
+
+$form->addText('number', '编号')->required()->rule('numeric')->unique();
+$form->addText('email', '邮箱')->required()->rule('email')->unique();
+
+return $form->view('layout', ['form' => $form]);
+```
+
+![image](http://ww1.sinaimg.cn/large/801b780agw1f8pjbovte0j20n80h4jrz.jpg)
+
 
 ## 系统需求：
-  - php >= 7.0 (短时间很多人肯定还没用上php7,but who cares? 一切向前看！)
-  - Laravel >= 5.3
+  - php >= 7.0 (短时间很多人肯定还没用上 PHP7, but who cares ? 一切向前看！)
+  - Laravel >= 5.2
 
 ## 安装
 
+1. 使用 Composer 添加依赖
+
 ```bash
 composer require wutongwan/lego
+```
+
+2. 添加 Service Provider ，将下面的内容添加到 `config/app.php` 的 `providers` 数组中
+
+```php
+\Lego\LegoServiceProvider::class,
+```
+
+3. 发布项目相关文件
+
+```bash
+php artisan vendor:publish
 ```
 
 ## 文档
