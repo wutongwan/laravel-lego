@@ -17,6 +17,12 @@ class Form extends Widget implements HasMode
     use ModeOperator;
 
     /**
+     * 此属性设置后将不再调用默认的数据处理逻辑
+     * @var \Closure
+     */
+    private $submit;
+
+    /**
      * 成功后的回调 or 跳转链接
      */
     private $success;
@@ -45,7 +51,7 @@ class Form extends Widget implements HasMode
     {
         $this->fields()->each(
             function (Field $field) {
-                if ($field->validateFailed()) {
+                if (!$field->validate()) {
                     $this->errors()->merge($field->errors());
                 }
             }
@@ -85,21 +91,47 @@ class Form extends Widget implements HasMode
         );
     }
 
+
+    /**
+     * 通过此函数传入数据处理逻辑，使用此函数后，将不再调用默认的数据处理逻辑（保存到 Model）
+     *
+     * @param \Closure $closure
+     * @return $this
+     */
+    public function onSubmit(\Closure $closure)
+    {
+        $this->submit = $closure;
+
+        return $this;
+    }
+
     public function process()
     {
         if (!$this->isPost()) {
             return;
         }
 
-        // 处理 POST 请求
-        $this->syncFieldsValue();
-        $this->validate();
+        /**
+         * 处理 POST 请求
+         */
 
+        $this->validate();
         if ($this->errors()->any()) {
             return;
         }
 
-        $this->data()->save();
+        if ($this->submit) {
+            // 调用自定义的数据处理逻辑
+            if ($response = call_user_func($this->submit, $this)) {
+                $this->success($response);
+                return;
+            }
+        } else {
+            // 使用默认的数据处理逻辑
+            $this->syncFieldsValue();
+            $this->data()->save();
+        }
+
         $this->messages()->add('success', '操作成功');
         $this->returnSuccessResponse();
     }
@@ -118,11 +150,11 @@ class Form extends Widget implements HasMode
                 return call_user_func($this->success, $this->data()->original());
             }
 
-            if (is_string($this->success)) {
+            if (is_string($this->success) && starts_with($this->success, ['http://', '/'])) {
                 return redirect($this->success);
             }
 
-            throw new LegoException('Unsupported `success` response.');
+            return $this->success;
         });
     }
 

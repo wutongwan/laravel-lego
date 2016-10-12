@@ -23,14 +23,14 @@ class Text extends Field
         return HtmlUtility::form()->input(
             'text',
             $this->elementName(),
-            $this->value()->original(),
+            $this->value()->current() ?? $this->value()->original(),
             $this->getAttributes()
         );
     }
 
     protected function renderReadonly() : string
     {
-        return $this->value() ?? '';
+        return $this->value()->original() ?? '';
     }
 
     protected function renderDisabled() : string

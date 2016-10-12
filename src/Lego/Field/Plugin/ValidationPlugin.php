@@ -74,9 +74,4 @@ trait ValidationPlugin
 
         return true;
     }
-
-    public function validateFailed()
-    {
-        return !$this->validate();
-    }
 }
