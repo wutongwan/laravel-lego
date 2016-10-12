@@ -7,26 +7,30 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
 
 use Lego\LegoException;
 use Lego\Register\Register;
-use Lego\Source\Source;
-use Lego\Source\Row\Row;
-use Lego\Source\Row\EloquentRow;
-use Lego\Source\Table\Table;
-use Lego\Source\Table\EloquentTable;
+use Lego\Data\Data;
+use Lego\Data\Row\Row;
+use Lego\Data\Row\EloquentRow;
+use Lego\Data\Table\Table;
+use Lego\Data\Table\EloquentTable;
 
 
 /**
- * 根据数据类型加载 Source
+ * 根据数据类型加载 Data
  * @param $data
- * @return Source|Row|Table
+ * @return Data|Row|Table
  * @throws LegoException
  */
-function lego_source($data)
+function lego_data($data)
 {
+    if ($data instanceof Data) {
+        return $data;
+    }
+
     $class = is_object($data) ? get_class($data) : null;
 
     switch (true) {
 
-        // Laravel Eloquent Source
+        // Laravel Eloquent Data
         case in_array($class, [QueryBuilder::class, EloquentBuilder::class, EloquentCollection::class]):
             $source = EloquentTable::class;
             break;
@@ -39,7 +43,7 @@ function lego_source($data)
             throw new LegoException('Illegal $data type');
     }
 
-    /** @var Source $source */
+    /** @var Data $source */
     $source = new $source;
     return $source->load($data);
 }

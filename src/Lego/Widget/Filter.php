@@ -40,7 +40,7 @@ class Filter extends Widget
      * 渲染当前对象
      * @return string
      */
-    public function render() : string
+    public function render(): string
     {
         return view('lego::default.filter.inline', ['filter' => $this])->render();
     }
@@ -51,12 +51,33 @@ class Filter extends Widget
     public function process()
     {
         $this->fields()->each(function (Field $field) {
-            $field->filter($this->source());
+            if (is_null($field->value()->current())) {
+                return;
+            }
+
+            $field->filter($this->data());
         });
     }
 
-    public function grid()
+    /** @var Grid $grid */
+    private $grid;
+
+    public function grid($syncFields = false)
     {
-        return new Grid($this);
+        $this->grid = $this->grid ?: new Grid($this);
+
+        if ($syncFields) {
+            $this->fields()->each(
+                function (Field $field) {
+                    $this->grid->add(
+                        class_basename($field),
+                        $field->name(),
+                        $field->description()
+                    );
+                }
+            );
+        }
+
+        return $this->grid;
     }
 }

@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Lego\Field\Field;
-use Lego\Source\Row\EloquentRow;
+use Lego\Data\Row\EloquentRow;
 
 /**
  * Class EloquentPlugin
@@ -31,7 +31,7 @@ trait EloquentPlugin
 
         /** @var Field $this */
         /** @var Model $model */
-        $model = $this->source()->data();
+        $model = $this->source()->original();
 
         $id = $id ?: $model->getKey() ?: 'NULL';
         $idColumn = $idColumn ?: $model->getKeyName();

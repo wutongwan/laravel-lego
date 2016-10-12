@@ -31,14 +31,14 @@ class LegoAsset
     public static function basicStyles()
     {
         return [
-            self::path('css/bootstrap.min.css'),
+            self::path('default/css/bootstrap.min.css'),
         ];
     }
 
     public static function basicScripts()
     {
         return [
-            self::path('js/bootstrap.min.js'),
+            self::path('default/js/bootstrap.min.js'),
         ];
     }
 

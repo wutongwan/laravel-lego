@@ -1,18 +1,18 @@
-<?php namespace Lego\Source\Row;
+<?php namespace Lego\Data\Row;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
 /**
  * Class EloquentRow
- * @package Lego\Source\Item
+ * @package Lego\Data\Row
  * @mixin Eloquent
  */
 class EloquentRow extends Row
 {
     /**
-     * @var Eloquent $data
+     * @var Eloquent $original
      */
-    protected $data;
+    protected $original;
 
     /**
      * 获取属性值
@@ -23,7 +23,7 @@ class EloquentRow extends Row
      */
     public function get($attribute, $default = null)
     {
-        $value = $this->data->getAttribute($attribute);
+        $value = $this->original->getAttribute($attribute);
         return is_null($value) ? $default : $value;
     }
 
@@ -34,7 +34,7 @@ class EloquentRow extends Row
      */
     public function set($attribute, $value)
     {
-        $this->data->{$attribute} = $value;
+        $this->original->{$attribute} = $value;
     }
 
     /**
@@ -44,7 +44,7 @@ class EloquentRow extends Row
      */
     public function save($options = [])
     {
-        return $this->data->save($options);
+        return $this->original->save($options);
     }
 
     /**

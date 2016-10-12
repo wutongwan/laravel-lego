@@ -45,7 +45,7 @@ trait FieldPlugin
         lego_assert(class_exists($field), 'Undefined Field ' . $field);
 
         /** @var Field $field */
-        $field = new $field($fieldName, $fieldDescription, $this->source());
+        $field = new $field($fieldName, $fieldDescription, $this->data());
 
         $this->fields [$fieldName] = $field;
 
@@ -63,7 +63,7 @@ trait FieldPlugin
     {
         return [
             /**
-             * 捕获 addXXX 函数, eg: addText($fieldName, $fieldDescription, $source)
+             * 捕获 addXXX 函数, eg: addText($fieldName, $fieldDescription, $data)
              */
             'add*' => function () {
                 $arguments = func_get_args(); // eg: [addText, 'name', '描述']

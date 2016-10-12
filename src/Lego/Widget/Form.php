@@ -6,7 +6,7 @@ use Lego\Helper\HasMode;
 use Lego\Helper\MagicCallOperator;
 use Lego\Helper\ModeOperator;
 use Lego\LegoException;
-use Lego\Source\Row\Row;
+use Lego\Data\Row\Row;
 
 /**
  * Class Form
@@ -26,7 +26,7 @@ class Form extends Widget implements HasMode
      */
     protected function initialize()
     {
-        lego_assert($this->source() instanceof Row, 'Unsupported source.');
+        lego_assert($this->data() instanceof Row, 'Unsupported data.');
     }
 
     /**
@@ -99,7 +99,7 @@ class Form extends Widget implements HasMode
             return;
         }
 
-        $this->source()->save();
+        $this->data()->save();
         $this->messages()->add('success', '操作成功');
         $this->returnSuccessResponse();
     }
@@ -115,7 +115,7 @@ class Form extends Widget implements HasMode
 
         $this->rewriteResponse(function () {
             if (is_callable($this->success)) {
-                return call_user_func($this->success, $this->source()->data());
+                return call_user_func($this->success, $this->data()->original());
             }
 
             if (is_string($this->success)) {

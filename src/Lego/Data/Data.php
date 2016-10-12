@@ -1,18 +1,18 @@
-<?php namespace Lego\Source;
+<?php namespace Lego\Data;
 
 /**
  * Lego 数据源 接口
  */
-abstract class Source
+abstract class Data
 {
     /**
      * 传入的原始数据
      */
-    protected $data;
+    protected $original;
 
     final public function load($queryOrData)
     {
-        $this->data = $queryOrData;
+        $this->original = $queryOrData;
 
         $this->initialize();
 
@@ -23,9 +23,9 @@ abstract class Source
      * 获取录入的原始数据对象
      * @return mixed
      */
-    final public function data()
+    final public function original()
     {
-        return $this->data;
+        return $this->original;
     }
 
     abstract protected function initialize();

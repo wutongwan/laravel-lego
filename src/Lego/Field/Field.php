@@ -5,9 +5,9 @@ use Lego\Helper\ModeOperator;
 use Lego\Helper\MessageOperator;
 use Lego\Helper\InitializeOperator;
 use Lego\Helper\RenderStringOperator;
-use Lego\Source\Row\Row;
-use Lego\Source\Source;
-use Lego\Source\Table\Table;
+use Lego\Data\Row\Row;
+use Lego\Data\Data;
+use Lego\Data\Table\Table;
 
 /**
  * 输入输出控件的基类
@@ -46,7 +46,7 @@ abstract class Field implements HasMode
     /**
      * 当前字段所属 Row
      *
-     * @var Source|Row|Table
+     * @var Data|Row|Table
      */
     private $source;
 
@@ -54,9 +54,9 @@ abstract class Field implements HasMode
      * Field constructor.
      * @param string $name 该字段的唯一标记, 同一个控件中不能存在相同name的field
      * @param string $description 描述、标签
-     * @param Source $source 对应 Row
+     * @param Data $source 对应 Row
      */
-    public function __construct(string $name, string $description, Source $source = null)
+    public function __construct(string $name, string $description, Data $source = null)
     {
         $this->name = $name;
         $this->column = $name;
