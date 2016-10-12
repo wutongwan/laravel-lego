@@ -14,8 +14,4 @@
             </tr>
         @endforeach
     </table>
-
-    <hr>
-
-    {{ $grid->rows()->data()->links() }}
 </div>
