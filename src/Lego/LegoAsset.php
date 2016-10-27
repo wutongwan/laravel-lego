@@ -2,15 +2,31 @@
 
 use Lego\Helper\HtmlUtility;
 
+/**
+ * Lego 中静态文件的依赖维护类
+ *
+ * 用例，例如在 AutoComplete Field 中需要添加自己的脚本文件
+ *
+ *      \Lego\LegoAsset::script('path-to-script.js')
+ *
+ * 使用 Lego 的页面需要在
+ *
+ *  - 页面 header 中添加
+ *      \Lego\LegoAsset::styles();
+ *
+ *  - 页面底部，body 标签内添加
+ *
+ *      \Lego\LegoAsset::scripts();
+ *
+ * Class LegoAsset
+ * @package Lego
+ */
 class LegoAsset
 {
+    const ASSET_PATH = 'packages/wutongwan/lego/assets';
+
     private static $styles = [];
     private static $scripts = [];
-
-    private static function path($path)
-    {
-        return 'packages/wutongwan/lego/assets/' . trim($path, '/');
-    }
 
     public static function css($path)
     {
@@ -28,47 +44,28 @@ class LegoAsset
         }
     }
 
-    public static function basicStyles()
+    private static function path($path)
     {
-        return [
-            self::path('default/css/bootstrap.min.css'),
-        ];
+        return self::ASSET_PATH . '/' . trim($path, '/');
     }
 
-    public static function basicScripts()
-    {
-        return [
-            self::path('default/js/bootstrap.min.js'),
-        ];
-    }
-
-    public static function renderScripts($scripts = [])
+    public static function scripts()
     {
         return join("\n", array_map(
             function ($script) {
                 return HtmlUtility::html()->script($script);
             },
-            $scripts
+            self::$scripts
         ));
     }
 
-    public static function renderStyles($styles = [])
+    public static function styles()
     {
         return join("\n", array_map(
             function ($style) {
                 return HtmlUtility::html()->style($style);
             },
-            $styles
+            self::$styles
         ));
-    }
-
-    public static function scripts()
-    {
-        return self::renderScripts(array_merge(self::basicScripts(), self::$scripts));
-    }
-
-    public static function styles()
-    {
-        return self::renderStyles(array_merge(self::basicStyles(), self::$styles));
     }
 }

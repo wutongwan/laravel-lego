@@ -22,7 +22,7 @@ class LegoServiceProvider extends ServiceProvider
 
         // assets
         $this->publishes([
-            $this->path('public/assets') => public_path('packages/wutongwan/lego/assets')
+            $this->path('public/assets') => public_path(LegoAsset::ASSET_PATH)
         ], 'assets');
 
         // views
