@@ -23,7 +23,7 @@ use Lego\Helper\HtmlUtility;
  */
 class LegoAsset
 {
-    const ASSET_PATH = 'packages/wutongwan/lego/assets';
+    const ASSET_PATH = 'packages/wutongwan/lego';
 
     private static $styles = [];
     private static $scripts = [];

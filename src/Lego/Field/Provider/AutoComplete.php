@@ -2,6 +2,7 @@
 
 use Lego\Data\Table\Table;
 use Lego\Field\Field;
+use Lego\LegoAsset;
 use Lego\Register\Data\ResponseData;
 use Lego\Register\Register;
 use Lego\Register\Data\AutoCompleteData;
@@ -15,7 +16,10 @@ class AutoComplete extends Field
         // 默认自动补全列表
         $this->match(function ($arguments) {
             $keyword = array_get($arguments, self::KEYWORD_KEY);
-            // todo: default relation complete.
+            return [
+                'items' => [['id' => 1, 'text' => $keyword]],
+                'total_count' => 1,
+            ];
         });
     }
 
@@ -71,6 +75,14 @@ class AutoComplete extends Field
 
     public function process()
     {
+        LegoAsset::css('default/select2/select2.min.css');
+        LegoAsset::css('default/select2/select2-bootstrap.min.css');
+        LegoAsset::js('default/select2/select2.full.min.js');
+
+        $locale = config('app.locale');
+        if ($locale !== 'en') {
+            LegoAsset::js("default/select2/i18n/{$locale}.js");
+        }
     }
 
     /**
@@ -79,7 +91,7 @@ class AutoComplete extends Field
      */
     public function render() : string
     {
-        return 'todo ...';
+        return view('lego::default.field.auto-complete', ['field' => $this]);
     }
 
     /**

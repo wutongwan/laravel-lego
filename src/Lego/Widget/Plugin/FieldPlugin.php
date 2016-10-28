@@ -1,6 +1,7 @@
 <?php namespace Lego\Widget\Plugin;
 
 use Illuminate\Support\Collection;
+
 use Lego\Field\Field;
 use Lego\Field\Provider\Text;
 
@@ -8,6 +9,7 @@ use Lego\Field\Provider\Text;
  * Field 相关逻辑
  * ** Magic Add **
  * @method Text addText(string $fieldName, $fieldDescription)
+ * @method \Lego\Field\Provider\AutoComplete addAutoComplete(string $fieldName, $fieldDescription)
  */
 trait FieldPlugin
 {
@@ -37,7 +39,7 @@ trait FieldPlugin
         return $this->fields()->get($fieldName);
     }
 
-    protected function add($fieldType, $fieldName, $fieldDescription) : Field
+    protected function add($fieldType, $fieldName, $fieldDescription): Field
     {
         // 为避免人肉拼接namespace, 所以写了下面一坨
         $field = class_namespace(Text::class, $fieldType);

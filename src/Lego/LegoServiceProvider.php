@@ -22,8 +22,8 @@ class LegoServiceProvider extends ServiceProvider
 
         // assets
         $this->publishes([
-            $this->path('public/assets') => public_path(LegoAsset::ASSET_PATH)
-        ], 'assets');
+            $this->path('public/') => public_path(LegoAsset::ASSET_PATH)
+        ]);
 
         // views
         $this->loadViewsFrom($this->path('views'), 'lego');
