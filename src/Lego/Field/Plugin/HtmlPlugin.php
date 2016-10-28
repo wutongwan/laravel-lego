@@ -52,10 +52,6 @@ trait HtmlPlugin
      */
     public function getAttributes()
     {
-        if (!array_key_exists('placeholder', $this->attributes)) {
-            $this->attr('placeholder', $this->description());
-        }
-
         return HtmlUtility::mergeAttributes(
             $this->getConfiguredAttributes(),
             $this->getMetaAttributes(),

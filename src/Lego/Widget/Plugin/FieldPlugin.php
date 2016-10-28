@@ -3,11 +3,13 @@
 use Illuminate\Support\Collection;
 use Lego\Field\Field;
 use Lego\Field\Provider\Text;
+use Lego\Field\Provider\Select;
 
 /**
  * Field 相关逻辑
  * ** Magic Add **
  * @method Text addText(string $fieldName, $fieldDescription)
+ * @method Select addSelect(string $fieldName, $fieldDescription)
  */
 trait FieldPlugin
 {
