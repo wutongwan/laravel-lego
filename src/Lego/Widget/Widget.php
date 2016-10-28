@@ -1,6 +1,5 @@
 <?php namespace Lego\Widget;
 
-use Lego\Field\Field;
 use Lego\Helper\InitializeOperator;
 use Lego\Helper\MagicCallOperator;
 use Lego\Helper\MessageOperator;

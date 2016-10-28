@@ -3,9 +3,7 @@
 use Illuminate\Support\Facades\Request;
 use Lego\Field\Field;
 use Lego\Helper\HasMode;
-use Lego\Helper\MagicCallOperator;
 use Lego\Helper\ModeOperator;
-use Lego\LegoException;
 use Lego\Data\Row\Row;
 
 /**
