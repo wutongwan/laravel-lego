@@ -9,7 +9,7 @@
         $("#{{ $field->elementId() }}").select2({
             placeholder: "{{ $field->getPlaceholder() }}",
             theme: "bootstrap",
-            language: "{{ config('app.locale') }}",
+            language: "{{ \App::getLocale() }}",
             ajax: {
                 url: "{{ $field->remote() }}",
                 dataType: 'json',

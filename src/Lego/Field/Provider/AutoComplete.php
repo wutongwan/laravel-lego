@@ -79,9 +79,8 @@ class AutoComplete extends Field
         LegoAsset::css('default/select2/select2-bootstrap.min.css');
         LegoAsset::js('default/select2/select2.full.min.js');
 
-        $locale = config('app.locale');
-        if ($locale !== 'en') {
-            LegoAsset::js("default/select2/i18n/{$locale}.js");
+        if (!\App::isLocale('en')) {
+            LegoAsset::js("default/select2/i18n/" . \App::getLocale() . ".js");
         }
     }
 
@@ -89,7 +88,7 @@ class AutoComplete extends Field
      * 渲染当前对象
      * @return string
      */
-    public function render() : string
+    public function render(): string
     {
         return view('lego::default.field.auto-complete', ['field' => $this]);
     }
