@@ -23,8 +23,7 @@ class EloquentRow extends Row
      */
     public function get($attribute, $default = null)
     {
-        $value = $this->original->getAttribute($attribute);
-        return is_null($value) ? $default : $value;
+        return object_get($this->original, $attribute, $default);
     }
 
     /**
@@ -34,7 +33,7 @@ class EloquentRow extends Row
      */
     public function set($attribute, $value)
     {
-        $this->original->{$attribute} = $value;
+        data_set($this->original, $attribute, $value);
     }
 
     /**
