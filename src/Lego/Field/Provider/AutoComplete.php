@@ -1,10 +1,10 @@
 <?php namespace Lego\Field\Provider;
 
-use Lego\Data\Table\Table;
 use Lego\Field\Field;
+use Lego\Data\Table\Table;
 use Lego\LegoAsset;
-use Lego\Register\Data\ResponseData;
 use Lego\Register\Register;
+use Lego\Register\Data\ResponseData;
 use Lego\Register\Data\AutoCompleteData;
 
 class AutoComplete extends Field
@@ -15,29 +15,71 @@ class AutoComplete extends Field
     {
         // 默认自动补全列表
         $this->match(function ($arguments) {
-            $keyword = array_get($arguments, self::KEYWORD_KEY);
-            return [
-                'items' => [['id' => 1, 'text' => $keyword]],
-                'total_count' => 1,
-            ];
+            return self::result($this->defaultMatch($arguments));
         });
     }
 
     /**
-     * @var integer 自动补全的最低字符数
+     * 默认的自动补全逻辑
+     *
+     * @param $arguments
+     * @return array
      */
-    private $minChar;
-
-    public function minChar(int $length)
+    private function defaultMatch($arguments)
     {
-        $this->minChar = $length;
+        $keyword = array_get($arguments, self::KEYWORD_KEY);
+        if (is_empty_string($keyword)) {
+            return [];
+        }
+
+        if (!$related = $this->getRelated()) {
+            return [];
+        }
+
+        return $related
+            ->where($this->column(), 'like', '%' . trim($keyword) . '%')
+            ->limit($this->getLimit())
+            ->pluck($this->column(), $related->getKeyName())
+            ->map(function ($column, $id) {
+                return ['text' => $column, 'id' => $id];
+            })
+            ->values()
+            ->all();
+    }
+
+    /**
+     * 自动补全结果的数目
+     * @var int
+     */
+    private $limit = 20;
+
+    public function limit(int $limit)
+    {
+        $this->limit = $limit;
 
         return $this;
     }
 
-    public function getMinChar()
+    public function getLimit()
     {
-        return $this->minChar;
+        return $this->limit;
+    }
+
+    /**
+     * @var integer 触发自动补全的最低字符数
+     */
+    private $min;
+
+    public function min(int $length)
+    {
+        $this->min = $length;
+
+        return $this;
+    }
+
+    public function getMin()
+    {
+        return $this->min;
     }
 
     /**
@@ -82,6 +124,13 @@ class AutoComplete extends Field
         if (!\App::isLocale('en')) {
             LegoAsset::js("default/select2/i18n/" . \App::getLocale() . ".js");
         }
+
+        if (($current = $this->value()->current()) && ($related = $this->getRelated())) {
+            $model = $related->where($related->getKeyName(), $current)->first([$this->column()]);
+            if ($model) {
+                $this->value()->setShow($model->{$this->column()});
+            }
+        }
     }
 
     /**
@@ -100,6 +149,33 @@ class AutoComplete extends Field
      */
     public function filter(Table $query): Table
     {
-        return $query->whereEquals($this->column(), $this->value()->current());
+        return $query->whereEquals(
+            $query->original()->getModel()->getKeyName(),
+            $this->value()->current()
+        );
+    }
+
+    /**
+     * 自动补全结果的构建函数
+     *
+     * @param array $items [ ['id' => 1, 'text' => 'Some Text', ...], ... ]
+     * @return array
+     */
+    public static function result(array $items)
+    {
+        $count = count($items);
+        if ($count > 0) {
+            // 简单的接口校验
+            $first = $items[0];
+            lego_assert(
+                array_key_exists('id', $first) && array_key_exists('text', $first),
+                'AutoComplete items illegal.'
+            );
+        }
+
+        return [
+            'items' => $items,
+            'total_count' => $count,
+        ];
     }
 }

@@ -1,6 +1,7 @@
-<select name="{{ $field->elementName() }}" id="{{ $field->elementId() }}" class="form-control">
+<select name="{{ $field->elementName() }}" id="{{ $field->elementId() }}" class="form-control"
+        style="width: 100%; min-width: 100%;">
     @if($value = $field->value()->current())
-        <option value="{{ $value }}">{{ $value }}</option>
+        <option value="{{ $value }}">{{ $field->value()->show() }}</option>
     @endif
 </select>
 
@@ -9,11 +10,15 @@
         $("#{{ $field->elementId() }}").select2({
             placeholder: "{{ $field->getPlaceholder() }}",
             theme: "bootstrap",
+            width: "100%",
             language: "{{ \App::getLocale() }}",
+            allowClear: eval("{{ $field->isRequired() ? 'false' : 'true' }}"),
+            minimumInputLength: eval("{{ $field->getMin() }}"),
             ajax: {
-                url: "{{ $field->remote() }}",
+                url: "{!! $field->remote() !!}",
                 dataType: 'json',
                 delay: 250,
+                cache: true,
                 data: function (params) {
                     return {
                         "{{ \Lego\Field\Provider\AutoComplete::KEYWORD_KEY }}": params.term,
@@ -29,13 +34,11 @@
                             more: (params.page * 30) < data.total_count
                         }
                     };
-                },
-                cache: true
+                }
             },
             escapeMarkup: function (markup) {
                 return markup;
-            }, // let our custom formatter work
-            minimumInputLength: 1
+            } // let our custom formatter work
         });
     });
 </script>
