@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Lego\Field\Field;
-use Lego\Data\Row\EloquentRow;
 
 /**
  * Class EloquentPlugin
@@ -10,12 +9,20 @@ use Lego\Data\Row\EloquentRow;
  */
 trait EloquentPlugin
 {
-    private function assertIsEloquentRow()
+    private $relation;
+
+    public function relation()
     {
-        lego_assert(
-            $this->source() instanceof EloquentRow,
-            'Unsupported Rule on ' . class_basename($this->source())
-        );
+        return $this->relation;
+    }
+
+    protected function initializeEloquentPlugin()
+    {
+        $names = explode('.', $this->name());
+        if (count($names) > 1) {
+            $this->column = last($names);
+            $this->relation = join('.', array_slice($names, 0, -1));
+        }
     }
 
     /**
@@ -27,8 +34,6 @@ trait EloquentPlugin
      */
     public function unique($id = null, $idColumn = null, $extra = null)
     {
-        $this->assertIsEloquentRow();
-
         /** @var Field $this */
         /** @var Model $model */
         $model = $this->source()->original();

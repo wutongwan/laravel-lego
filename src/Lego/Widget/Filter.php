@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Request;
+use Lego\Data\Table\EloquentTable;
 use Lego\Field\Field;
 
 class Filter extends Widget
@@ -55,7 +56,16 @@ class Filter extends Widget
                 return;
             }
 
-            $field->filter($this->data());
+            if ($field->relation()) {
+                $this->data()->whereHas(
+                    $field->relation(),
+                    function (EloquentTable $table) use ($field) {
+                        $field->filter($table);
+                    }
+                );
+            } else {
+                $field->filter($this->data());
+            }
         });
     }
 
@@ -69,11 +79,7 @@ class Filter extends Widget
         if ($syncFields) {
             $this->fields()->each(
                 function (Field $field) {
-                    $this->grid->add(
-                        class_basename($field),
-                        $field->name(),
-                        $field->description()
-                    );
+                    $this->grid->add(class_basename($field), $field->name(), $field->description());
                 }
             );
         }
