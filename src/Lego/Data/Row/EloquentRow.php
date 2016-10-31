@@ -37,13 +37,42 @@ class EloquentRow extends Row
     }
 
     /**
-     * 存储操作, 针对 Eloquent 等场景
+     * 存储操作
+     *
+     * 存储时尝试先存储 Relation ，再存储 Model ，任一失败则回滚
+     *
      * @param array $options
-     * @return mixed
+     * @return bool
      */
-    public function save($options = [])
+    public function save($options = []): bool
     {
-        return $this->original->save($options);
+        \DB::beginTransaction();
+
+        try {
+            $failed = $this->saveRelations() === false || $this->original->save() === false;
+            if ($failed) {
+                \DB::rollBack();
+                return false;
+            }
+            \DB::commit();
+            return true;
+        } catch (\Throwable $e) {
+            \DB::rollBack();
+            return false;
+        }
+    }
+
+    private function saveRelations()
+    {
+        /** @var Eloquent $related */
+        foreach ($this->original->getRelations() as $related) {
+            if ($related->isDirty()) {
+                if ($related->save() === false) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     /**
@@ -51,7 +80,7 @@ class EloquentRow extends Row
      * 参照: https://laravel.com/docs/5.2/validation
      * @return array
      */
-    public function rules() : array
+    public function rules(): array
     {
         return [];
     }

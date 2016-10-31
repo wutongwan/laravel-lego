@@ -15,9 +15,9 @@ abstract class Row extends Data
     /**
      * 存储操作, 针对 Eloquent 等场景
      * @param array $options
-     * @return mixed
+     * @return bool
      */
-    abstract public function save($options = []);
+    abstract public function save($options = []): bool;
 
     /** 方便渲染模板、使用原数据的函数 */
 
