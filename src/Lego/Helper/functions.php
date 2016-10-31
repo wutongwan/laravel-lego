@@ -99,3 +99,8 @@ if (!function_exists('class_namespace')) {
         return $namespace;
     }
 }
+
+function is_empty_string($string)
+{
+    return strlen(trim($string)) === 0;
+}
