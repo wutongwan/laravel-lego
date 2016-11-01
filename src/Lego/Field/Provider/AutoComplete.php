@@ -120,7 +120,9 @@ class AutoComplete extends Field
 
     public function process()
     {
-        if (($current = $this->value()->current()) && ($related = $this->related())) {
+        $current = $this->value()->current();
+        $related = $this->related();
+        if ($current && $related) {
             $model = $related->where($related->getKeyName(), $current)->first([$this->relationColumn()]);
             if ($model) {
                 $this->value()->setShow($model->{$this->relationColumn()});
