@@ -6,5 +6,6 @@
         </div>
     @endforeach
 
-    <button type="submit" class="btn btn-primary">查询</button>
+    <input type="submit" class="btn btn-primary" value="查询">
+    <a href="?" class="btn btn-default">清空</a>
 </form>
