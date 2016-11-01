@@ -87,6 +87,12 @@ class Form extends Widget implements HasMode
                 return $field->value()->original();
             }
         );
+
+        $field->value()->setShow(
+            function () use ($field) {
+                return $field->source()->get($field->name());
+            }
+        );
     }
 
 
@@ -127,7 +133,10 @@ class Form extends Widget implements HasMode
         } else {
             // 使用默认的数据处理逻辑
             $this->syncFieldsValue();
-            $this->data()->save();
+            if ($this->data()->save() === false) {
+                $this->errors()->add('save-error', '保存失败');
+                return;
+            }
         }
 
         $this->messages()->add('success', '操作成功');
@@ -160,7 +169,7 @@ class Form extends Widget implements HasMode
      * 渲染当前对象
      * @return string
      */
-    public function render() : string
+    public function render(): string
     {
         return view('lego::default.form.horizontal', ['form' => $this])->render();
     }

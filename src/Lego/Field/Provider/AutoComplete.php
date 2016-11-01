@@ -32,14 +32,14 @@ class AutoComplete extends Field
             return [];
         }
 
-        if (!$related = $this->getRelated()) {
+        if (!$related = $this->related()) {
             return [];
         }
 
         return $related
-            ->where($this->column(), 'like', '%' . trim($keyword) . '%')
+            ->where($this->relationColumn(), 'like', '%' . trim($keyword) . '%')
             ->limit($this->getLimit())
-            ->pluck($this->column(), $related->getKeyName())
+            ->pluck($this->relationColumn(), $related->getKeyName())
             ->map(function ($column, $id) {
                 return ['text' => $column, 'id' => $id];
             })
@@ -125,10 +125,10 @@ class AutoComplete extends Field
             LegoAsset::js("default/select2/i18n/" . \App::getLocale() . ".js");
         }
 
-        if (($current = $this->value()->current()) && ($related = $this->getRelated())) {
-            $model = $related->where($related->getKeyName(), $current)->first([$this->column()]);
+        if (($current = $this->value()->current()) && ($related = $this->related())) {
+            $model = $related->where($related->getKeyName(), $current)->first([$this->relationColumn()]);
             if ($model) {
-                $this->value()->setShow($model->{$this->column()});
+                $this->value()->setShow($model->{$this->relationColumn()});
             }
         }
     }

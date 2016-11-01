@@ -1,6 +1,7 @@
 <?php namespace Lego\Field\Plugin;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Lego\Field\Field;
 
@@ -17,12 +18,15 @@ trait EloquentPlugin
     private $relation;
 
     /**
-     * Relation 数组，eg: ['suite', 'xiaoqu', 'area']
-     * @var array
+     * Relation 使用的字段，例如：xiaoqu_id （ suite ）
+     *
+     * @var string
      */
-    private $relationArray;
+    private $relationColumn;
 
     /**
+     * 最终关联到的 Model ，非数据实例，仅可用于 query、relation 等用途
+     *
      * @var Model
      */
     private $related;
@@ -32,9 +36,17 @@ trait EloquentPlugin
         return $this->relation;
     }
 
-    protected function relationAsArray()
+    public function relationColumn()
     {
-        return $this->relationArray;
+        return $this->relationColumn;
+    }
+
+    /**
+     * @return Model
+     */
+    public function related()
+    {
+        return $this->related;
     }
 
     protected function initializeEloquentPlugin()
@@ -44,21 +56,28 @@ trait EloquentPlugin
             return;
         }
 
-        $this->column = last($names);
-        $this->relationArray = array_slice($names, 0, -1);
-        $this->relation = join('.', $this->relationArray);
+        $this->relation = join('.', array_slice($names, 0, -1));
+        $this->relationColumn = last($names);
 
+        // 计算 related model
         $this->related = $this->calculateRelated();
+
+        // 计算 relation column
+        $first = $this->getModel()->{$names[0]}();
+        if ($first instanceof BelongsTo) {
+            $this->column = $first->getForeignKey();
+        }
     }
 
     private function calculateRelated(Model $model = null, $relationName = null)
     {
-        if (is_null($model) && is_null($relationName)) {
-            $model = $this->source()->original()->getModel();
-            foreach ($this->relationAsArray() as $name) {
-                $model = $this->calculateRelated($model, $name);
+        $model = $model ?: $this->getModel();
+        if (is_null($relationName)) {
+            $copy = $model;
+            foreach (explode('.', $this->relation) as $name) {
+                $copy = $this->calculateRelated($copy, $name);
             }
-            return $model;
+            return $copy;
         }
 
         lego_assert(
@@ -73,12 +92,9 @@ trait EloquentPlugin
         return $relation->getRelated();
     }
 
-    /**
-     * @return Model
-     */
-    protected function getRelated()
+    private function getModel(): Model
     {
-        return $this->related;
+        return $this->source()->original()->getModel();
     }
 
     /**
