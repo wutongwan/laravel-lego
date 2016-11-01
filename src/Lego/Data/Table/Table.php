@@ -86,6 +86,13 @@ abstract class Table extends Data implements \ArrayAccess, Arrayable, \Countable
     abstract public function whereHas($relation, $callback);
 
     /**
+     * 限制条数
+     * @param $limit
+     * @return static
+     */
+    abstract public function limit($limit);
+
+    /**
      * order by
      * @param $attribute
      * @param bool $desc 默认升序(false), 如需降序, 传入 true

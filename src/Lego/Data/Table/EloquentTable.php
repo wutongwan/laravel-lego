@@ -144,6 +144,13 @@ class EloquentTable extends Table
         return $this;
     }
 
+    public function limit($limit)
+    {
+        $this->original->limit($limit);
+
+        return $this;
+    }
+
     /**
      * order by
      * @param $attribute
