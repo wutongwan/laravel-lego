@@ -37,7 +37,7 @@ trait ModeOperator
         return $this->isMode(self::MODE_DISABLED);
     }
 
-    protected function mode($mode, $condition = true)
+    public function mode($mode, $condition = true)
     {
         lego_assert(
             in_array($mode, [self::MODE_EDITABLE, self::MODE_READONLY, self::MODE_DISABLED]),

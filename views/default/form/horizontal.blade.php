@@ -27,11 +27,13 @@
         </div>
     @endforeach
 
-    {{ csrf_field() }}
+    @if($form->isEditable())
+        {{ csrf_field() }}
 
-    <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10">
-            <button type="submit" class="btn btn-primary">提交</button>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary">提交</button>
+            </div>
         </div>
-    </div>
+    @endif
 </form>
