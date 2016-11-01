@@ -96,6 +96,7 @@ class AutoComplete extends Field
     /**
      * 自动补全的结果集
      * @param callable $callable
+     * @return $this
      */
     public function match($callable)
     {
@@ -108,6 +109,8 @@ class AutoComplete extends Field
         );
 
         $this->remote = ResponseData::url($responsePath);
+
+        return $this;
     }
 
     private function responsePath()
