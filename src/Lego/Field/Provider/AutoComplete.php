@@ -120,18 +120,21 @@ class AutoComplete extends Field
 
     public function process()
     {
-        LegoAsset::css('default/select2/select2.min.css');
-        LegoAsset::css('default/select2/select2-bootstrap.min.css');
-        LegoAsset::js('default/select2/select2.full.min.js');
-
-        if (!\App::isLocale('en')) {
-            LegoAsset::js("default/select2/i18n/" . \App::getLocale() . ".js");
-        }
-
         if (($current = $this->value()->current()) && ($related = $this->related())) {
             $model = $related->where($related->getKeyName(), $current)->first([$this->relationColumn()]);
             if ($model) {
                 $this->value()->setShow($model->{$this->relationColumn()});
+            }
+        }
+
+        // 以下文件仅在 editable 时加载
+        if ($this->isEditable()) {
+            LegoAsset::css('default/select2/select2.min.css');
+            LegoAsset::css('default/select2/select2-bootstrap.min.css');
+            LegoAsset::js('default/select2/select2.full.min.js');
+
+            if (!\App::isLocale('en')) {
+                LegoAsset::js("default/select2/i18n/" . \App::getLocale() . ".js");
             }
         }
     }
@@ -141,6 +144,11 @@ class AutoComplete extends Field
      * @return string
      */
     public function render(): string
+    {
+        return $this->renderByMode();
+    }
+
+    protected function renderEditable(): string
     {
         return view('lego::default.field.auto-complete', ['field' => $this]);
     }

@@ -1,5 +1,7 @@
 <?php namespace Lego\Helper;
 
+use Lego\LegoException;
+
 /**
  * 推荐宿主类实现接口 HasMode
  *
@@ -79,18 +81,19 @@ trait ModeOperator
     {
         return call_user_func_array([$this, 'render' . ucfirst($this->mode)], []);
     }
+
     protected function renderEditable() : string
     {
-        return '';
+        throw new LegoException('show be rewrite.');
     }
 
     protected function renderReadonly() : string
     {
-        return '';
+        return view('lego::default.field.readonly', ['field' => $this]);
     }
 
     protected function renderDisabled() : string
     {
-        return '';
+        return view('lego::default.field.disabled', ['field' => $this]);
     }
 }

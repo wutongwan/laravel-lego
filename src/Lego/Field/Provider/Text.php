@@ -28,21 +28,6 @@ class Text extends Field
         );
     }
 
-    protected function renderReadonly() : string
-    {
-        return $this->value()->original() ?? '';
-    }
-
-    protected function renderDisabled() : string
-    {
-        return HtmlUtility::form()->input(
-            'text',
-            $this->elementName(),
-            $this->value()->original(),
-            ['disabled' => 'disabled']
-        );
-    }
-
     public function filter(Table $query) : Table
     {
         return $query->whereContains($this->column(), $this->value()->current());
