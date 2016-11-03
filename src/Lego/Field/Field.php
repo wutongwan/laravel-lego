@@ -63,6 +63,8 @@ abstract class Field implements HasMode
         $this->description = $description;
         $this->source = $source;
 
+        $this->locale(\App::getLocale()); // 默认使用 Laravel 的配置
+
         $this->triggerInitialize();
     }
 
@@ -91,12 +93,30 @@ abstract class Field implements HasMode
         return $this->source;
     }
 
+    private $locale;
+
+    public function locale($locale)
+    {
+        $this->locale = $locale;
+        return $this;
+    }
+
+    public function getLocale()
+    {
+        return $this->locale;
+    }
+
+    public function isLocale($locale)
+    {
+        return $this->locale === $locale;
+    }
+
     /**
      * Filter 检索数据时, 构造此字段的查询
      * @param Table $query
      * @return Table
      */
-    abstract public function filter(Table $query) : Table;
+    abstract public function filter(Table $query): Table;
 
     /**
      * 数据处理逻辑
