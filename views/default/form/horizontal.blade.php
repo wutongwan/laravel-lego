@@ -3,7 +3,7 @@
     @foreach($form->fields() as $field)
         <div class="form-group {{ $field->errors()->any() ? 'has-error' : '' }}">
             <label for="{{ $field->elementId() }}" class="col-sm-2 control-label">
-                @if($field->isRequired() || $field->isEditable())
+                @if($field->isRequired() && $field->isEditable())
                     <span class="text-danger">*</span>
                 @endif
                 {{ $field->description() }}
