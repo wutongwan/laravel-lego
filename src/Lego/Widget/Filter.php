@@ -2,12 +2,13 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Request;
+use Lego\Data\Data;
 use Lego\Data\Table\EloquentTable;
 use Lego\Field\Field;
 
 class Filter extends Widget
 {
-    public function __construct($data)
+    protected function prepareData($data): Data
     {
         if (is_subclass_of($data, Model::class)) {
             $data = new $data;
@@ -17,7 +18,7 @@ class Filter extends Widget
             $data = $data->newQuery();
         }
 
-        parent::__construct($data);
+        return lego_table($data);
     }
 
     /**

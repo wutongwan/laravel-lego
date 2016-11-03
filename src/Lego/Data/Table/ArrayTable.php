@@ -1,30 +1,28 @@
 <?php namespace Lego\Data\Table;
 
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Query\Builder as QueryBuilder;
-use Illuminate\Database\Eloquent\Model as Eloquent;
-use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Carbon\Carbon;
+use Illuminate\Support\Collection;
+use Lego\Data\Row\Row;
 
-/**
- * Laravel ORM Data
- */
-class EloquentTable extends Table
+class ArrayTable extends Table
 {
-    /**
-     * 方便补全
-     * @var Eloquent|EloquentBuilder|QueryBuilder|Collection $query
-     */
-    protected $original;
+    protected function initialize()
+    {
+        $this->rows = collect($this->original())
+            ->map(function ($data) {
+                return lego_row($data);
+            });
+    }
 
     /**
      * 当前属性是否等于某值
      * @param $attribute
-     * @param $value
+     * @param null $value
      * @return static
      */
     public function whereEquals($attribute, $value)
     {
-        $this->original->where($attribute, '=', $value);
+        $this->rows = $this->rows->where($attribute, $value);
 
         return $this;
     }
@@ -32,15 +30,18 @@ class EloquentTable extends Table
     /**
      * 当前属性大于某值
      * @param $attribute
-     * @param $value
+     * @param null $value
      * @param bool $equals 是否包含等于的情况, 默认不包含
      * @return static
      */
     public function whereGt($attribute, $value, bool $equals = false)
     {
-        $this->original->where($attribute, $equals ? '>=' : '>', $value);
-
-        return $this;
+        return $this->addFilterToRows(
+            function (Row $row) use ($attribute, $value, $equals) {
+                $current = $row->get($attribute);
+                return $current > $value || ($equals && $current == $value);
+            }
+        );
     }
 
     /**
@@ -52,26 +53,25 @@ class EloquentTable extends Table
      */
     public function whereLt($attribute, $value, bool $equals = false)
     {
-        $this->original->where($attribute, $equals ? '<=' : '<', $value);
-
-        return $this;
+        return $this->addFilterToRows(
+            function (Row $row) use ($attribute, $value, $equals) {
+                $current = $row->get($attribute);
+                return $current < $value || ($equals && $current == $value);
+            }
+        );
     }
 
     /**
      * 当前属性包含特定字符串
      * @param $attribute
-     * @param string $value
+     * @param string|null $value
      * @return static
      */
     public function whereContains($attribute, string $value)
     {
-        if (is_empty_string($value)) {
-            return $this;
-        }
-
-        $this->original->where($attribute, 'like', '%' . trim($value, '%') . '%');
-
-        return $this;
+        return $this->addFilterToRows(function (Row $row) use ($attribute, $value) {
+            return str_contains($row->get($attribute), $value);
+        });
     }
 
     /**
@@ -82,13 +82,9 @@ class EloquentTable extends Table
      */
     public function whereStartsWith($attribute, string $value)
     {
-        if (is_empty_string($value)) {
-            return $this;
-        }
-
-        $this->original->where($attribute, 'like', trim($value, '%') . '%');
-
-        return $this;
+        return $this->addFilterToRows(function (Row $row) use ($attribute, $value) {
+            return starts_with($row->get($attribute), $value);
+        });
     }
 
     /**
@@ -99,13 +95,9 @@ class EloquentTable extends Table
      */
     public function whereEndsWith($attribute, string $value)
     {
-        if (is_empty_string($value)) {
-            return $this;
-        }
-
-        $this->original->where($attribute, 'like', '%' . trim($value, '%'));
-
-        return $this;
+        return $this->addFilterToRows(function (Row $row) use ($attribute, $value) {
+            return ends_with($row->get($attribute), $value);
+        });
     }
 
     /**
@@ -117,36 +109,42 @@ class EloquentTable extends Table
      */
     public function whereBetween($attribute, $min, $max)
     {
-        if ($min > $max) {
-            return $this->whereEquals(0, 1);
-        }
+        return $this->addFilterToRows(function (Row $row) use ($attribute, $min, $max) {
+            $current = $row->get($attribute);
+            if ($current instanceof \DateTime) {
+                return (new Carbon($current))->between(new Carbon($min), new Carbon($max));
+            }
 
-        $this->original->whereBetween($attribute, [$min, $max]);
-
-        return $this;
+            return $current >= $min && $current <= $max;
+        });
     }
 
     /**
      * 关联查询
      * @param $relation
-     * @param \Closure $callback 由于此处 Closure 接受的参数是 Table 类，所以下面调用时封装了一次
+     * @param $callback
      * @return static
      */
     public function whereHas($relation, $callback)
     {
-        $this->original->whereHas(
-            $relation,
-            function ($query) use ($callback) {
-                call_user_func($callback, lego_table($query));
-            }
-        );
+        return $this;
+    }
+
+    private function addFilterToRows(\Closure $filter)
+    {
+        $this->rows = $this->rows->filter($filter);
 
         return $this;
     }
 
+    /**
+     * 限制条数
+     * @param $limit
+     * @return static
+     */
     public function limit($limit)
     {
-        $this->original->limit($limit);
+        $this->rows->slice(0, $limit);
 
         return $this;
     }
@@ -159,7 +157,7 @@ class EloquentTable extends Table
      */
     public function orderBy($attribute, bool $desc = false)
     {
-        $this->original->orderBy($attribute, $desc ? 'desc' : 'asc');
+        $this->rows->sortBy($attribute, SORT_REGULAR, $desc);
 
         return $this;
     }
@@ -173,7 +171,7 @@ class EloquentTable extends Table
      */
     public function paginate(int $perPage, string $pageName = 'page', int $page = null)
     {
-        $this->original->paginate($perPage, ['*'], $pageName, $page);
+        $this->rows->forPage($page, $perPage);
 
         return $this;
     }
@@ -182,10 +180,10 @@ class EloquentTable extends Table
      * 处理上方所有条件后, 执行查询语句, 返回结果集
      *
      * @param array $columns 默认获取全部字段
-     * @return mixed
+     * @return Collection
      */
-    protected function selectQuery(array $columns = []): \Illuminate\Support\Collection
+    protected function selectQuery(array $columns = []): Collection
     {
-        return $this->original->get($columns);
+        return $this->rows;
     }
 }

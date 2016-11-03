@@ -9,7 +9,7 @@ use Traversable;
 abstract class Table extends Data implements \ArrayAccess, Arrayable, \Countable, \IteratorAggregate, Jsonable, \JsonSerializable
 {
     /** @var Collection $rows */
-    private $rows;
+    protected $rows;
 
     /**
      * 根据数据类型做相关的初始化, 方便进行 Query 等操作
@@ -127,7 +127,7 @@ abstract class Table extends Data implements \ArrayAccess, Arrayable, \Countable
     {
         $this->rows = $this->selectQuery($columns)
             ->map(function ($row) {
-                return lego_data($row);
+                return lego_row($row);
             });
 
         return $this->rows;

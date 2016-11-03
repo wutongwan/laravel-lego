@@ -1,49 +1,82 @@
 <?php
 
-use Illuminate\Database\Eloquent\Model as Eloquent;
-use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
-use Illuminate\Database\Eloquent\Collection as EloquentCollection;
-use Illuminate\Database\Query\Builder as QueryBuilder;
-
 use Lego\LegoException;
 use Lego\Register\Register;
-use Lego\Data\Data;
 use Lego\Data\Row\Row;
-use Lego\Data\Row\EloquentRow;
 use Lego\Data\Table\Table;
-use Lego\Data\Table\EloquentTable;
-
 
 /**
- * 根据数据类型加载 Data
+ * 将传入的数据转换为 Row
+ *
  * @param $data
- * @return Data|Row|Table
+ * @return Row
  * @throws LegoException
  */
-function lego_data($data)
+function lego_row($data)
 {
-    if ($data instanceof Data) {
-        return $data;
-    }
-
-    $class = is_object($data) ? get_class($data) : null;
-
     switch (true) {
+        case $data instanceof Row:
+            return $data;
 
-        // Laravel Eloquent Data
-        case in_array($class, [QueryBuilder::class, EloquentBuilder::class, EloquentCollection::class]):
-            $source = EloquentTable::class;
+        case is_array($data):
+            $source = \Lego\Data\Row\ArrayRow::class;
             break;
 
-        case $data instanceof Eloquent:
-            $source = EloquentRow::class;
+        case $data instanceof \Illuminate\Database\Eloquent\Model:
+            $source = \Lego\Data\Row\EloquentRow::class;
+            break;
+
+        case is_object($data):
+            $source = \Lego\Data\Row\ObjectRow::class;
             break;
 
         default:
             throw new LegoException('Illegal $data type');
     }
 
-    /** @var Data $source */
+    /** @var Row $source */
+    $source = new $source;
+    return $source->load($data);
+}
+
+/**
+ * 将数据转换为 Table
+ * @param $data
+ * @return Table
+ * @throws LegoException
+ */
+function lego_table($data)
+{
+    $class = is_object($data) ? get_class($data) : null;
+
+    switch (true) {
+        case $data instanceof Table:
+            return $data;
+
+        // Laravel Eloquent Data
+        case in_array($class, [
+            Illuminate\Database\Eloquent\Model::class,
+            Illuminate\Database\Query\Builder::class,
+            Illuminate\Database\Eloquent\Builder::class,
+            Illuminate\Database\Eloquent\Collection::class,
+        ]):
+            $source = \Lego\Data\Table\EloquentTable::class;
+            break;
+
+        case is_array($data):
+        case $data instanceof \Illuminate\Support\Collection:
+            $source = \Lego\Data\Table\ArrayTable::class;
+            break;
+
+        case is_object($data):
+            $source = \Lego\Data\Table\ObjectTable::class;
+            break;
+
+        default:
+            throw new LegoException('Illegal $data type');
+    }
+
+    /** @var Table $source */
     $source = new $source;
     return $source->load($data);
 }

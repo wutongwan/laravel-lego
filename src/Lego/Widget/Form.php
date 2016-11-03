@@ -1,6 +1,7 @@
 <?php namespace Lego\Widget;
 
 use Illuminate\Support\Facades\Request;
+use Lego\Data\Data;
 use Lego\Field\Field;
 use Lego\Helper\HasMode;
 use Lego\Helper\ModeOperator;
@@ -24,6 +25,11 @@ class Form extends Widget implements HasMode
      * 成功后的回调 or 跳转链接
      */
     private $success;
+
+    protected function prepareData($data): Data
+    {
+        return lego_row($data);
+    }
 
     /**
      * 初始化操作, 在类构造函数中调用

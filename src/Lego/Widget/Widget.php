@@ -37,16 +37,18 @@ abstract class Widget
 
     public function __construct($data)
     {
-        $this->data = lego_data($data);
+        $this->data = $this->prepareData($data);
 
         // 初始化
         $this->triggerInitialize();
     }
 
+    abstract protected function prepareData($data): Data;
+
     /**
      * @return Data|Table|Row
      */
-    protected function data() : Data
+    protected function data(): Data
     {
         return $this->data;
     }
