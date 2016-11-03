@@ -17,7 +17,7 @@
             ajax: {
                 url: "{!! $field->remote() !!}",
                 dataType: 'json',
-                delay: 250,
+                delay: 700,
                 cache: true,
                 data: function (params) {
                     return {
