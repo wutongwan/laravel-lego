@@ -15,9 +15,10 @@ $__field_placeholder = $field->getPlaceholder($field->description());
 <script>
     $(document).ready(function () {
         $("#{{ $field->elementId() }} input").each(function () {
-            $(this).datepicker({
+            $(this).datetimepicker({
                 format: "{{ $field->getJavaScriptFormat() }}",
                 language: "{{ $field->getLocale() }}",
+                minView: "{{ $field instanceof \Lego\Field\Provider\Date ? 1 : 0}}",
                 todayBtn: "linked",
                 todayHighlight: true,
                 autoclose: true,

@@ -63,7 +63,11 @@ class Date extends Field
 
     public function getJavaScriptFormat()
     {
-        return str_replace(['d', 'm', 'Y'], ['dd', 'mm', 'yyyy'], $this->format);
+        return str_replace(
+            ['d', 'm', 'Y', 'H', 'i', 's', 'a', 'A', 'g', 'G'],
+            ['dd', 'mm', 'yyyy', 'hh', 'ii', 'ss', 'p', 'P', 'H', 'h'],
+            $this->format
+        );
     }
 
     /**
@@ -81,11 +85,11 @@ class Date extends Field
     public function process()
     {
         if ($this->isEditable()) {
-            LegoAsset::css('default/datepicker/bootstrap-datepicker3.standalone.min.css');
-            LegoAsset::js('default/datepicker/bootstrap-datepicker.min.js');
+            LegoAsset::css('default/datetimepicker/bootstrap-datetimepicker.min.css');
+            LegoAsset::js('default/datetimepicker/bootstrap-datetimepicker.min.js');
 
             if (!$this->isLocale('en')) {
-                LegoAsset::js('default/datepicker/i18n/bootstrap-datepicker.zh-CN.min.js');
+                LegoAsset::js('default/datetimepicker/i18n/bootstrap-datetimepicker.zh-CN.js');
             }
         }
     }
