@@ -1,6 +1,7 @@
 <?php namespace Lego\Register;
 
 use Lego\Register\Data\Data as RegisterData;
+use Lego\Register\Data\Data;
 
 /**
  * Lego 内部的注册器
@@ -14,28 +15,28 @@ class Register
     /**
      * 注册函数, 推荐使用全局函数 `lego_register()`
      *
-     * @param string $class 匹配到`Lego/Register/Data`目录中的注册数据类, 支持两种格式:
+     * @param string $name 匹配到`Lego/Register/Data`目录中的注册数据类, 支持两种格式:
      *      1、\Lego\Register\Data\FieldData::class, 类的全名
      *      2、`field.data`, 类名, 以点号分隔, eg: field.data => FieldData
-     * @param string|null $path 源数据类型, eg: \Room::class
      * @param mixed $data 注册数据, 数组
+     * @param string|null $dataName 源数据类型, eg: \Room::class
      * @return RegisterData
      */
-    public static function register($class, $path = null, $data = null)
+    public static function register($name, $data = null, $dataName = null)
     {
-        $class = self::translateClass($class);
-        $path = self::translatePath($path);
+        $key = $dataClass = self::translateClass($name);
 
-        if ($provider = self::get($class, $path)) {
-            $provider->merge($data);
-        } else {
-            $provider = new $class($path, $data);
-            array_set(self::$registered, self::key($class, $path), $provider);
+        if (!is_null($dataName)) {
+            $dataName = self::translateDataName($dataName);
+            $key = self::key($dataClass, $dataName);
         }
 
-        $provider->afterRegistered();
+        /** @var Data $instance */
+        $instance = new $dataClass($data, $dataName);
+        array_set(self::$registered, $key, $instance);
+        $instance->afterRegistered();
 
-        return $provider;
+        return $instance;
     }
 
     /**
@@ -50,18 +51,18 @@ class Register
     /**
      * 获取特定注册项
      *
-     * @param $class
-     * @param string|null $path
+     * @param $name
+     * @param string|null $dataName
      * @param mixed $default
      * @return RegisterData
      */
-    public static function get($class, $path = null, $default = [])
+    public static function get($name, $dataName = null, $default = null)
     {
-        return array_get(
-            self::registered(),
-            self::key(self::translateClass($class), self::translatePath($path)),
-            $default
-        );
+        $key = self::translateClass($name);
+        if (!is_null($dataName)) {
+            $key = self::key($key, self::translateDataName($dataName));
+        }
+        return array_get(self::registered(), $key, $default);
     }
 
     /**
@@ -82,7 +83,7 @@ class Register
         static $cache = [];
 
         // 避免多次进行父类判定
-        if (isset($cache[$key])) {
+        if (array_key_exists($key, $cache)) {
             return $cache[$key];
         }
 
@@ -100,7 +101,7 @@ class Register
         return $class;
     }
 
-    private static function translatePath($path)
+    private static function translateDataName($path)
     {
         return is_object($path) ? get_class($path) : $path;
     }

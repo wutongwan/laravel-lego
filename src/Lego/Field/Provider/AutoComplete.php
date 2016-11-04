@@ -100,22 +100,13 @@ class AutoComplete extends Field
      */
     public function match($callable)
     {
-        $responsePath = $this->responsePath();
+        $hash = md5(get_class($this->source()->original()) . $this->name());
 
-        Register::register(
-            AutoCompleteData::class,
-            $this->source()->original(),
-            [$responsePath => $callable]
-        );
-
-        $this->remote = ResponseData::url($responsePath);
+        /** @var AutoCompleteData $data */
+        $data = lego_register(AutoCompleteData::class, $callable, $hash);
+        $this->remote = $data->response()->url();
 
         return $this;
-    }
-
-    private function responsePath()
-    {
-        return md5(get_class($this->source()->original()) . $this->name());
     }
 
     public function process()
