@@ -9,25 +9,23 @@ use Lego\Register\Data\AutoCompleteData;
 
 class AutoComplete extends Field
 {
-    const KEYWORD_KEY = '__lego_auto_complete';
 
     protected function initialize()
     {
         // 默认自动补全列表
-        $this->match(function ($arguments) {
-            return self::result($this->defaultMatch($arguments));
+        $this->match(function ($keyword) {
+            return self::result($this->defaultMatch($keyword));
         });
     }
 
     /**
      * 默认的自动补全逻辑
      *
-     * @param $arguments
+     * @param $keyword
      * @return array
      */
-    private function defaultMatch($arguments)
+    private function defaultMatch($keyword)
     {
-        $keyword = array_get($arguments, self::KEYWORD_KEY);
         if (is_empty_string($keyword)) {
             return [];
         }

@@ -94,7 +94,7 @@ abstract class Widget
         /**
          * 全局重写 Response.
          */
-        $registeredResponse = ResponseData::response();
+        $registeredResponse = ResponseData::getResponse();
         if (!is_null($registeredResponse)) {
             return $registeredResponse;
         }

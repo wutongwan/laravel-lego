@@ -11,7 +11,7 @@
             placeholder: "{{ $field->getPlaceholder() }}",
             theme: "bootstrap",
             width: "100%",
-            language: "{{ \App::getLocale() }}",
+            language: "{{ $field->getLocale() }}",
             allowClear: eval("{{ $field->isRequired() ? 'false' : 'true' }}"),
             minimumInputLength: eval("{{ $field->getMin() }}"),
             ajax: {
@@ -21,7 +21,7 @@
                 cache: true,
                 data: function (params) {
                     return {
-                        "{{ \Lego\Field\Provider\AutoComplete::KEYWORD_KEY }}": params.term,
+                        "{{ \Lego\Register\Data\AutoCompleteData::KEYWORD_KEY }}": params.term,
                         "page": params.page
                     };
                 },
