@@ -35,13 +35,11 @@ class Date extends Field
     {
         $value = $this->value()->current();
         if ($this->range && is_array($value)) {
-            $min = $value['min'];
-            $max = $value['max'];
-            lego_assert($min instanceof Carbon && $max instanceof Carbon, 'illegal value');
+            $min = new Carbon($value['min']);
+            $max = new Carbon($value['max']);
             return $query->whereBetween($this->column(), $min, $max);
         } else {
-            lego_assert($value instanceof Carbon, 'illegal value');
-            return $query->whereEquals($this->column(), $value);
+            return $query->whereEquals($this->column(), new Carbon($value));
         }
     }
 
@@ -103,6 +101,9 @@ class Date extends Field
 
     protected function renderEditable(): string
     {
+        if ($this->range) {
+            return view('lego::default.field.date-range', ['field' => $this]);
+        }
         return view('lego::default.field.date', ['field' => $this]);
     }
 }

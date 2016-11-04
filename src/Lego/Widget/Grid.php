@@ -12,7 +12,7 @@ class Grid extends Widget
             $data->process();
         }
 
-        return lego_table($data);
+        return lego_table($data->data());
     }
 
     /**

@@ -1,4 +1,4 @@
-<input type="text" name="{{ $field->elementName() }}" id="{{ $field->elementId() }}" value="{{ $field->value()->current() }}" class="form-control">
+<input type="text" name="{{ $field->elementName() }}" id="{{ $field->elementId() }}" value="{{ $field->value()->current() }}" class="form-control" placeholder="{{ $field->getPlaceholder($field->description()) }}">
 
 <script>
     $(document).ready(function () {
@@ -7,7 +7,8 @@
             language: "{{ $field->getLocale() }}",
             todayBtn: "linked",
             todayHighlight: true,
-            autoclose: true
+            autoclose: true,
+            disableTouchKeyboard: true
         });
     });
 </script>
