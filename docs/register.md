@@ -12,9 +12,9 @@ class FieldData extends Data
 {
     /**
      * 校验注册的数据是否合法, 不合法时抛出异常
-     * @param array $data
+     * @param $data
      */
-    protected function validate(array $data = [])
+    protected function validate($data)
     {
     }
 
@@ -35,10 +35,10 @@ class FieldData extends Data
 
 ```php
 
-lego_register('field.data', Room::class, [
+lego_register('field.data', [
 	'address' => ['description' => '地址'],
 	// ..
-]);
+], Room::class);
 ```
 
 
@@ -46,7 +46,7 @@ lego_register('field.data', Room::class, [
 
 ```php
 
-$data = lego_register('field.data', Room::class);
+$data = Register::get('field.data', Room::class);
 
 // $data instanceof \Lego\Register\Data\FieldData
 ```
