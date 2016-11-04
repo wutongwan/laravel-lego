@@ -2,6 +2,8 @@
 
 class Date extends Datetime
 {
+    protected $inputType = 'date';
+
     protected $minView = 'month';
 
     protected function initialize()

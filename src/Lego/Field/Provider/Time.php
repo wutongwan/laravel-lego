@@ -2,9 +2,11 @@
 
 class Time extends Datetime
 {
+    protected $inputType = 'time';
+
     protected $maxView = 'day';
 
-    protected $startView = 'hour';
+    protected $startView = 'day';
 
     protected function initialize()
     {

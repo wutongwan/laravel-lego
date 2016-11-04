@@ -7,6 +7,8 @@ use Lego\LegoAsset;
 
 class Datetime extends Field
 {
+    protected $inputType = 'datetime-local';
+
     /**
      * 初始化对象
      */
@@ -14,6 +16,10 @@ class Datetime extends Field
     {
         $this->rule('date');
         $this->format('Y-m-d H:i:s');
+
+        if (!$this->isMobile()) {
+            $this->inputType = 'text';
+        }
     }
 
     /**
@@ -94,19 +100,19 @@ class Datetime extends Field
 
     protected $startView = 'month';
 
-    public function getMinView()
+    public function getPickerOptions()
     {
-        return $this->minView;
-    }
-
-    public function getMaxView()
-    {
-        return $this->maxView;
-    }
-
-    public function getStartView()
-    {
-        return $this->startView;
+        return [
+            'format' => $this->getJavaScriptFormat(),
+            'language' => $this->getLocale(),
+            'startView' => $this->startView,
+            'minView' => $this->minView,
+            'maxView' => $this->maxView,
+            'todayBtn' => "linked",
+            'todayHighlight' => true,
+            'autoclose' => true,
+            'disableTouchKeyboard' => true,
+        ];
     }
 
     /**
@@ -126,7 +132,7 @@ class Datetime extends Field
             return $value;
         });
 
-        if ($this->isEditable()) {
+        if ($this->isEditable() && !$this->isMobile()) {
             LegoAsset::css('default/datetimepicker/bootstrap-datetimepicker.min.css');
             LegoAsset::js('default/datetimepicker/bootstrap-datetimepicker.min.js');
 
@@ -134,6 +140,11 @@ class Datetime extends Field
                 LegoAsset::js('default/datetimepicker/i18n/bootstrap-datetimepicker.zh-CN.js');
             }
         }
+    }
+
+    private function isMobile()
+    {
+        return (new \Mobile_Detect())->isMobile();
     }
 
     /**
