@@ -18,10 +18,12 @@ $__field_placeholder = $field->getPlaceholder($field->description());
             $(this).datetimepicker({
                 format: "{{ $field->getJavaScriptFormat() }}",
                 language: "{{ $field->getLocale() }}",
-                minView: "{{ $field instanceof \Lego\Field\Provider\Date ? 1 : 0}}",
                 todayBtn: "linked",
                 todayHighlight: true,
                 autoclose: true,
+                startView: "{{ $field->getStartView() }}",
+                minView: "{{ $field->getMinView() }}",
+                maxView: "{{ $field->getMaxView() }}",
                 disableTouchKeyboard: true
             });
         });
