@@ -31,9 +31,11 @@ $form->addText('name', 'Your Name')
 $form = Lego::form(new Book);
 $form->addAutoComplete('author.name', 'Author')
 	// 自定义补全结果
-	->match(function ($arguments) {
-		$keyword = 
-	
+	->match(function ($keyword) {
+		return Author::whereMatch($keyword)
+			->limit(10)
+			->pluck('name', 'id')
+			->all();
 	})
 ;
 
