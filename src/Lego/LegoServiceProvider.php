@@ -2,12 +2,22 @@
 
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
+use Lego\Command\IDEHelper;
 
 /**
  * Lego Service Provider for Laravel
  */
 class LegoServiceProvider extends ServiceProvider
 {
+    public function boot()
+    {
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                IDEHelper::class,
+            ]);
+        }
+    }
+
     /**
      * Register the service provider.
      *

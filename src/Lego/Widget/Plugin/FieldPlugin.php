@@ -7,9 +7,6 @@ use Lego\Field\Provider\Text;
 
 /**
  * Field 相关逻辑
- * ** Magic Add **
- * @method Text addText(string $fieldName, $fieldDescription)
- * @method \Lego\Field\Provider\AutoComplete addAutoComplete(string $fieldName, $fieldDescription)
  */
 trait FieldPlugin
 {
