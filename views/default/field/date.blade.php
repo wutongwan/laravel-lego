@@ -1,6 +1,10 @@
+<?
+/** @var \Lego\Field\Field $field */
+$__field_value = $field->value()->current();
+?>
 <input type="text" name="{{ $field->elementName() }}" id="{{ $field->elementId() }}"
        class="form-control"
-       value="{{ $field->value()->current() }}"
+       value="{{ $__field_value ? $__field_value->format($field->getFormat()) : null }}"
        placeholder="{{ $field->getPlaceholder($field->description()) }}">
 
 <script>
@@ -11,7 +15,9 @@
             todayBtn: "linked",
             todayHighlight: true,
             autoclose: true,
-            minView: "{{ $field instanceof \Lego\Field\Provider\Datetime ? 0 : 'month'}}",
+            startView: "{{ $field->getStartView() }}",
+            minView: "{{ $field->getMinView() }}",
+            maxView: "{{ $field->getMaxView() }}",
             disableTouchKeyboard: true
         })
         ;
