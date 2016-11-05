@@ -41,7 +41,7 @@ abstract class Field implements HasMode
      * 对应的数据表字段名
      * @var string
      */
-    private $column;
+    protected $column;
 
     /**
      * 当前字段所属 Row

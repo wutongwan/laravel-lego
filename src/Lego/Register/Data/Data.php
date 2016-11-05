@@ -22,6 +22,11 @@ abstract class Data
         $this->name = $category;
     }
 
+    public function name()
+    {
+        return $this->name;
+    }
+
     public function data($default = null)
     {
         return is_null($this->data) ? $default : $this->data;
@@ -29,7 +34,7 @@ abstract class Data
 
     /**
      * 校验注册的数据是否合法, 不合法时抛出异常
-     * @param array $data
+     * @param $data
      */
     abstract protected function validate($data);
 
