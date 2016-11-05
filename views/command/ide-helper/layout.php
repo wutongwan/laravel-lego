@@ -6,8 +6,8 @@ namespace Lego\Widget\Plugin{
     /**
     * Field 相关逻辑
     * ** Magic Add **
-<? foreach ($fields as $field) {?>
-    * @method \Lego\Field\Provider\<?= $field ?> add<?= $field ?>(string $fieldName, $fieldDescription)
+<? foreach ($fields as $name => $class) {?>
+    * @method \<?= $class ?> add<?= $name ?>(string $fieldName, $fieldDescription)
 <? } ?>
     */
     trait FieldPlugin {
