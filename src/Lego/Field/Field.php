@@ -134,4 +134,32 @@ abstract class Field implements HasMode
      * 数据处理逻辑
      */
     abstract public function process();
+
+    public function getOriginalValue()
+    {
+        return $this->value()->original();
+    }
+
+    public function getCurrentValue()
+    {
+        return $this->value()->current();
+    }
+
+    /**
+     * 将新的数据存储到 Source
+     */
+    public function syncCurrentValueToSource()
+    {
+        $this->source()->set($this->column(), $this->getCurrentValue());
+    }
+
+    protected function renderReadonly() : string
+    {
+        return view('lego::default.field.readonly', ['field' => $this]);
+    }
+
+    protected function renderDisabled() : string
+    {
+        return view('lego::default.field.disabled', ['field' => $this]);
+    }
 }

@@ -1,6 +1,6 @@
 <?
 /** @var \Lego\Field\Field $field */
-$__field_value = $field->value()->current();
+$__field_value = $field->getCurrentValue();
 $__field_placeholder = $field->getPlaceholder($field->description());
 ?>
 <div class="input-group" id="{{ $field->elementId() }}">

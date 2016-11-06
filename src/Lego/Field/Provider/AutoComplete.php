@@ -109,7 +109,7 @@ class AutoComplete extends Field
 
     public function process()
     {
-        $current = $this->value()->current();
+        $current = $this->getCurrentValue();
         $related = $this->related();
         if ($current && $related) {
             $model = $related->where($related->getKeyName(), $current)->first([$this->relationColumn()]);
@@ -153,7 +153,7 @@ class AutoComplete extends Field
     {
         return $query->whereEquals(
             $query->original()->getModel()->getKeyName(),
-            $this->value()->current()
+            $this->getCurrentValue()
         );
     }
 

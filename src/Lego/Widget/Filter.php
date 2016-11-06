@@ -53,7 +53,7 @@ class Filter extends Widget
     public function process()
     {
         $this->fields()->each(function (Field $field) {
-            if (is_null($field->value()->current())) {
+            if (is_null($field->getCurrentValue())) {
                 return;
             }
 

@@ -1,6 +1,6 @@
 <select name="{{ $field->elementName() }}" id="{{ $field->elementId() }}" class="form-control"
         style="width: 100%; min-width: 100%;">
-    @if($value = $field->value()->current())
+    @if($value = $field->getCurrentValue())
         <option value="{{ $value }}">{{ $field->value()->show() }}</option>
     @endif
 </select>

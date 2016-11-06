@@ -24,13 +24,6 @@ class Value
      */
     private $default;
 
-    /**
-     * original、current 值返回之前的装饰器，一般用于转换为特定的数据结构
-     *
-     * @var \Closure
-     */
-    private $decorator;
-
     public function __construct($value = null)
     {
         $this->set($value);
@@ -44,12 +37,12 @@ class Value
 
     public function original()
     {
-        return $this->value($this->original);
+        return value($this->original);
     }
 
     public function current()
     {
-        return $this->value($this->current);
+        return value($this->current);
     }
 
     public function show()
@@ -101,22 +94,6 @@ class Value
         $this->default = $default;
 
         return $this;
-    }
-
-    public function decorator(\Closure $decorator)
-    {
-        $this->decorator = $decorator;
-    }
-
-    private function value($value)
-    {
-        $value = value($value);
-
-        if ($this->decorator) {
-            $value = call_user_func($this->decorator, $value);
-        }
-
-        return $value;
     }
 
     public function __toString()

@@ -75,7 +75,7 @@ class Datetime extends Field
      */
     public function filter(Table $query): Table
     {
-        $value = $this->value()->current();
+        $value = $this->getCurrentValue();
         if ($this->range && is_array($value)) {
             $min = $value['min'];
             $max = $value['max'];
@@ -115,23 +115,46 @@ class Datetime extends Field
         ];
     }
 
+    public function getOriginalValue()
+    {
+        $original = $this->value()->original();
+        return is_null($original) ? null : new Carbon($original);
+    }
+
+    public function getCurrentValue()
+    {
+        $current = $this->value()->current();
+        if (is_array($current)) {
+            foreach ($current as &$item) {
+                $item = $this->convertToCarbon($item);
+            }
+        } else {
+            $current = $this->convertToCarbon($current);
+        }
+        return $current;
+    }
+
+    private function convertToCarbon($value)
+    {
+        if (is_null($value)) {
+            return null;
+        }
+
+        if ($value instanceof Carbon) {
+            return $value;
+        }
+
+        return Carbon::createFromTimestamp(strtotime($value));
+    }
+
     /**
      * 数据处理逻辑
      */
     public function process()
     {
-        // 将值转换为 Carbon
-        $this->value()->decorator(function ($value) {
-            if (is_array($value)) {
-                foreach ($value as &$item) {
-                    $item = new Carbon(date($this->format, strtotime($item)));
-                }
-            } else {
-                return new Carbon(date($this->format, strtotime($value)));
-            }
-            return $value;
-        });
-
+        /**
+         * 仅在 editable && 非移动端启用日期控件，移动端使用原生的输入控件
+         */
         if ($this->isEditable() && !$this->isMobile()) {
             LegoAsset::css('default/datetimepicker/bootstrap-datetimepicker.min.css');
             LegoAsset::js('default/datetimepicker/bootstrap-datetimepicker.min.js');

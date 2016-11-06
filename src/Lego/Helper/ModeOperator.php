@@ -17,6 +17,11 @@ trait ModeOperator
      */
     private $mode = self::MODE_EDITABLE;
 
+    public function getMode()
+    {
+        return $this->mode;
+    }
+
     public function isMode($mode)
     {
         return $this->mode === $mode;
@@ -89,11 +94,11 @@ trait ModeOperator
 
     protected function renderReadonly() : string
     {
-        return view('lego::default.field.readonly', ['field' => $this]);
+        throw new LegoException('show be rewrite.');
     }
 
     protected function renderDisabled() : string
     {
-        return view('lego::default.field.disabled', ['field' => $this]);
+        throw new LegoException('show be rewrite.');
     }
 }

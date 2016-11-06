@@ -78,10 +78,7 @@ trait FieldPlugin
     protected function syncFieldsValue()
     {
         $this->fields()->each(function (Field $field) {
-            $field->source()->set(
-                $field->column(),
-                $field->value()->current()
-            );
+            $field->syncCurrentValueToSource();
         });
     }
 }

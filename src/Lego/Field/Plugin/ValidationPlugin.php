@@ -60,7 +60,7 @@ trait ValidationPlugin
          */
 
         $validator = Validator::make(
-            [$this->column => $this->value()->current()],
+            [$this->column => $this->getCurrentValue()],
             [$this->column => $this->rules()],
             [],
             [$this->column => $this->description]

@@ -23,14 +23,14 @@ class Text extends Field
         return HtmlUtility::form()->input(
             'text',
             $this->elementName(),
-            $this->value()->current() ?? $this->value()->original(),
+            $this->getCurrentValue() ?? $this->getOriginalValue(),
             $this->getAttributes()
         );
     }
 
     public function filter(Table $query) : Table
     {
-        return $query->whereContains($this->column(), $this->value()->current());
+        return $query->whereContains($this->column(), $this->getCurrentValue());
     }
 
     /**

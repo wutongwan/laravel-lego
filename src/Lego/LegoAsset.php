@@ -28,25 +28,25 @@ class LegoAsset
     private static $styles = [];
     private static $scripts = [];
 
-    public static function css($path)
+    public static function css($path, $isLegoAsset = true)
     {
-        $path = self::path($path);
+        $path = self::path($path, $isLegoAsset);
         if (!in_array($path, self::$styles)) {
             self::$styles [] = $path;
         }
     }
 
-    public static function js($path)
+    public static function js($path, $isLegoAsset = true)
     {
-        $path = self::path($path);
+        $path = self::path($path, $isLegoAsset);
         if (!in_array($path, self::$scripts)) {
             self::$scripts [] = $path;
         }
     }
 
-    private static function path($path)
+    private static function path($path, $isLegoAsset = true)
     {
-        return self::ASSET_PATH . '/' . trim($path, '/');
+        return $isLegoAsset ? self::ASSET_PATH . '/' . trim($path, '/') : $path;
     }
 
     public static function scripts()
