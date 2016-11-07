@@ -74,6 +74,7 @@ trait ValidationPlugin
         $value = $this->getCurrentValue();
 
         /**
+         * 检查 Laravel Validation
          * ide-helper comment
          * @var Field $this
          * @var \Illuminate\Validation\Validator $validator
@@ -92,6 +93,7 @@ trait ValidationPlugin
             return false;
         }
 
+        // 调用自定义的 Validators
         foreach ($this->validators as $closure) {
             $error = call_user_func($closure, $value);
             if (is_string($error)) {
