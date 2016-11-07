@@ -42,9 +42,9 @@ class ResponseData extends Data
 
     public function url(array $query = [])
     {
-        return Request::fullUrlWithQuery(
-            array_merge($query, [self::REQUEST_PARAM => $this->name])
-        );
+        return Request::fullUrlWithQuery(array_merge($query, [
+            self::REQUEST_PARAM => $this->name,
+        ]));
     }
 
     public function response()

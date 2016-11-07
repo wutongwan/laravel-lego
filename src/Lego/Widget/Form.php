@@ -2,10 +2,10 @@
 
 use Illuminate\Support\Facades\Request;
 use Lego\Data\Data;
+use Lego\Data\Row\Row;
 use Lego\Field\Field;
 use Lego\Helper\HasMode;
 use Lego\Helper\ModeOperator;
-use Lego\Data\Row\Row;
 
 /**
  * Class Form
@@ -55,7 +55,7 @@ class Form extends Widget implements HasMode
     {
         $this->fields()->each(
             function (Field $field) {
-                if (!$field->validate()) {
+                if (!$field->validationPassed()) {
                     $this->errors()->merge($field->errors());
                 }
             }
