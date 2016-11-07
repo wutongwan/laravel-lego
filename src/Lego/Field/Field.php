@@ -35,7 +35,7 @@ abstract class Field implements HasMode
      * 字段描述
      * @var string
      */
-    private $description;
+    protected $description;
 
     /**
      * 对应的数据表字段名
