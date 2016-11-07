@@ -63,7 +63,7 @@ abstract class Field implements HasMode
      * @param string $description 描述、标签
      * @param Data $source 对应 Row
      */
-    public function __construct(string $name, string $description, Data $source = null)
+    public function __construct(string $name, string $description = null, Data $source = null)
     {
         $this->name = $name;
         $this->column = $name;

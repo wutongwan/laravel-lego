@@ -36,7 +36,7 @@ trait FieldPlugin
         return $this->fields()->get($fieldName);
     }
 
-    protected function add($fieldType, $fieldName, $fieldDescription): Field
+    protected function add($fieldType, $fieldName, $fieldDescription = null): Field
     {
         $class = FieldRegister::get($fieldType);
         /** @var Field $field */
