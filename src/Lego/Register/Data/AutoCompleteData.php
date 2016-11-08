@@ -1,38 +1,36 @@
 <?php namespace Lego\Register\Data;
 
-use Lego\Register\Register;
-
 class AutoCompleteData extends Data
 {
-    public static function global($name, \Closure $callable)
-    {
-        return Register::register(self::class, self::class, [$name => $callable]);
-    }
+    const KEYWORD_KEY = '__lego_auto_complete';
 
     /**
      * 校验注册的数据是否合法, 不合法时抛出异常
-     * @param array $data
+     * @param $data
      */
-    protected function validate(array $data = [])
+    protected function validate($data)
     {
+        lego_assert($data instanceof \Closure, '$data should be Closure.');
     }
+
+    private $response;
 
     public function afterRegistered()
     {
-        $globals = Register::get(self::class, self::class);
+        $this->response = lego_register(
+            ResponseData::class,
+            [
+                $this->data(),
+                function () {
+                    return [\Request::get(self::KEYWORD_KEY), \Request::all()];
+                }
+            ],
+            $this->name
+        );
+    }
 
-        foreach ($this->data() as $name => &$callable) {
-            if ($name === self::class) {
-                continue;
-            }
-
-            if (is_string($callable) && array_key_exists($callable, $globals)) {
-                $callable = $globals[$callable];
-                lego_assert(is_callable($callable), '$callable is not callable.');
-            }
-
-            // Register to ResponseData
-            ResponseData::add($name, $callable);
-        }
+    public function response(): ResponseData
+    {
+        return $this->response;
     }
 }

@@ -2,12 +2,22 @@
 
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
+use Lego\Command\IDEHelper;
 
 /**
  * Lego Service Provider for Laravel
  */
 class LegoServiceProvider extends ServiceProvider
 {
+    public function boot()
+    {
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                IDEHelper::class,
+            ]);
+        }
+    }
+
     /**
      * Register the service provider.
      *
@@ -22,11 +32,11 @@ class LegoServiceProvider extends ServiceProvider
 
         // assets
         $this->publishes([
-            $this->path('public/assets') => public_path('packages/wutongwan/lego/assets')
-        ], 'assets');
+            $this->path('public/') => public_path(LegoAsset::ASSET_PATH)
+        ]);
 
         // views
-        $this->loadViewsFrom($this->path('views'), 'lego');
+        $this->loadViewsFrom($this->path('resources/views'), 'lego');
 
         // ** 第三方库 **
         $this->registerHtmlServices();

@@ -1,0 +1,1 @@
+<p class="form-control-static" id="{{ $field->elementId() }}">{{ $field->value()->display() }}</p>

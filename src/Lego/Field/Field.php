@@ -35,13 +35,13 @@ abstract class Field implements HasMode
      * 字段描述
      * @var string
      */
-    private $description;
+    protected $description;
 
     /**
      * 对应的数据表字段名
      * @var string
      */
-    private $column;
+    protected $column;
 
     /**
      * 当前字段所属 Row
@@ -51,17 +51,26 @@ abstract class Field implements HasMode
     private $source;
 
     /**
+     * <input type="__THIS_VALUE__" ...
+     *
+     * @var string
+     */
+    protected $inputType = 'text';
+
+    /**
      * Field constructor.
      * @param string $name 该字段的唯一标记, 同一个控件中不能存在相同name的field
      * @param string $description 描述、标签
      * @param Data $source 对应 Row
      */
-    public function __construct(string $name, string $description, Data $source = null)
+    public function __construct(string $name, string $description = null, Data $source = null)
     {
         $this->name = $name;
         $this->column = $name;
         $this->description = $description;
         $this->source = $source;
+
+        $this->locale(\App::getLocale()); // 默认使用 Laravel 的配置
 
         $this->triggerInitialize();
     }
@@ -91,15 +100,66 @@ abstract class Field implements HasMode
         return $this->source;
     }
 
+    private $locale;
+
+    public function locale($locale)
+    {
+        $this->locale = $locale;
+        return $this;
+    }
+
+    public function getLocale()
+    {
+        return $this->locale;
+    }
+
+    public function isLocale($locale)
+    {
+        return $this->locale === $locale;
+    }
+
+    public function getInputType()
+    {
+        return $this->inputType;
+    }
+
     /**
      * Filter 检索数据时, 构造此字段的查询
      * @param Table $query
      * @return Table
      */
-    abstract public function filter(Table $query) : Table;
+    abstract public function filter(Table $query): Table;
 
     /**
      * 数据处理逻辑
      */
     abstract public function process();
+
+    public function getOriginalValue()
+    {
+        return $this->value()->original();
+    }
+
+    public function getCurrentValue()
+    {
+        return $this->value()->current();
+    }
+
+    /**
+     * 将新的数据存储到 Source
+     */
+    public function syncCurrentValueToSource()
+    {
+        $this->source()->set($this->column(), $this->getCurrentValue());
+    }
+
+    protected function renderReadonly() : string
+    {
+        return view('lego::default.field.readonly', ['field' => $this]);
+    }
+
+    protected function renderDisabled() : string
+    {
+        return view('lego::default.field.disabled', ['field' => $this]);
+    }
 }

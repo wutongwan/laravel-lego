@@ -8,6 +8,8 @@
 
 ## Example
 
+- UserController.php
+
 ```php
 $form = Lego::form(new User());
 
@@ -17,7 +19,26 @@ $form->addText('email', '邮箱')->required()->rule('email')->unique();
 return $form->view('layout', ['form' => $form]);
 ```
 
-![image](http://ww1.sinaimg.cn/large/801b780agw1f8pjbovte0j20n80h4jrz.jpg)
+- layout.blade.php
+
+```html
+<!doctype html>
+<html lang="en">
+<head>
+    {!! \Lego\LegoAsset::styles() !!}
+    <link href="//cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+	{!! $form !!}
+
+    <script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+    {!! \Lego\LegoAsset::scripts() !!}
+</body>
+</html>
+```
+
+![image](http://ww1.sinaimg.cn/bmiddle/801b780agw1f8pjbovte0j20n80h4jrz.jpg)
 
 
 ## 系统需求：
@@ -43,6 +64,16 @@ composer require wutongwan/lego
 ```bash
 php artisan vendor:publish
 ```
+
+4、仅开发环境
+
+- IDE Helper
+
+	为方便调用 widget 中的 addField 系列函数，推荐执行下面命令，该命令会在项目根目录创建 `_ide_helper_lego.php` 文件，方便 IDE 进行自动补全.
+	
+	```bash
+	php artisan lego:ide-helper
+	```
 
 ## 文档
 

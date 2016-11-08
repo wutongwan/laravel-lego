@@ -15,14 +15,21 @@ trait HtmlPlugin
      */
     private $attributes = [];
 
+    private $elementName;
+
+    protected function initializeHtmlPlugin()
+    {
+        $this->elementName = str_replace(['.', ':'], '-', $this->name()); // TODO 替换冒号
+    }
+
     public function elementId()
     {
-        return $this->name();
+        return 'lego-' . $this->elementName;
     }
 
     public function elementName()
     {
-        return $this->name();
+        return $this->elementName;
     }
 
     /**

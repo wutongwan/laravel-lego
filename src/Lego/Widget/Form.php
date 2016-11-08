@@ -1,12 +1,11 @@
 <?php namespace Lego\Widget;
 
 use Illuminate\Support\Facades\Request;
+use Lego\Data\Data;
+use Lego\Data\Row\Row;
 use Lego\Field\Field;
 use Lego\Helper\HasMode;
-use Lego\Helper\MagicCallOperator;
 use Lego\Helper\ModeOperator;
-use Lego\LegoException;
-use Lego\Data\Row\Row;
 
 /**
  * Class Form
@@ -26,6 +25,11 @@ class Form extends Widget implements HasMode
      * 成功后的回调 or 跳转链接
      */
     private $success;
+
+    protected function prepareData($data): Data
+    {
+        return lego_row($data);
+    }
 
     /**
      * 初始化操作, 在类构造函数中调用
@@ -51,7 +55,7 @@ class Form extends Widget implements HasMode
     {
         $this->fields()->each(
             function (Field $field) {
-                if (!$field->validate()) {
+                if (!$field->validationPassed()) {
                     $this->errors()->merge($field->errors());
                 }
             }
@@ -87,6 +91,12 @@ class Form extends Widget implements HasMode
                 }
 
                 return $field->value()->original();
+            }
+        );
+
+        $field->value()->setShow(
+            function () use ($field) {
+                return $field->source()->get($field->name());
             }
         );
     }
@@ -129,7 +139,10 @@ class Form extends Widget implements HasMode
         } else {
             // 使用默认的数据处理逻辑
             $this->syncFieldsValue();
-            $this->data()->save();
+            if ($this->data()->save() === false) {
+                $this->errors()->add('save-error', '保存失败');
+                return;
+            }
         }
 
         $this->messages()->add('success', '操作成功');
@@ -162,7 +175,7 @@ class Form extends Widget implements HasMode
      * 渲染当前对象
      * @return string
      */
-    public function render() : string
+    public function render(): string
     {
         return view('lego::default.form.horizontal', ['form' => $this])->render();
     }

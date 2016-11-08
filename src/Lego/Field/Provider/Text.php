@@ -23,29 +23,14 @@ class Text extends Field
         return HtmlUtility::form()->input(
             'text',
             $this->elementName(),
-            $this->value()->current() ?? $this->value()->original(),
+            $this->getCurrentValue() ?? $this->getOriginalValue(),
             $this->getAttributes()
-        );
-    }
-
-    protected function renderReadonly() : string
-    {
-        return $this->value()->original() ?? '';
-    }
-
-    protected function renderDisabled() : string
-    {
-        return HtmlUtility::form()->input(
-            'text',
-            $this->elementName(),
-            $this->value()->original(),
-            ['disabled' => 'disabled']
         );
     }
 
     public function filter(Table $query) : Table
     {
-        return $query->whereContains($this->column(), $this->value()->current());
+        return $query->whereContains($this->column(), $this->getCurrentValue());
     }
 
     /**

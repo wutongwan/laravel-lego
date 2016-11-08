@@ -1,5 +1,7 @@
 <?php namespace Lego\Helper;
 
+use Lego\LegoException;
+
 /**
  * 推荐宿主类实现接口 HasMode
  *
@@ -14,6 +16,11 @@ trait ModeOperator
      * 模式, eg:editable、readonly、disabled
      */
     private $mode = self::MODE_EDITABLE;
+
+    public function getMode()
+    {
+        return $this->mode;
+    }
 
     public function isMode($mode)
     {
@@ -35,7 +42,7 @@ trait ModeOperator
         return $this->isMode(self::MODE_DISABLED);
     }
 
-    protected function mode($mode, $condition = true)
+    public function mode($mode, $condition = true)
     {
         lego_assert(
             in_array($mode, [self::MODE_EDITABLE, self::MODE_READONLY, self::MODE_DISABLED]),
@@ -79,18 +86,19 @@ trait ModeOperator
     {
         return call_user_func_array([$this, 'render' . ucfirst($this->mode)], []);
     }
+
     protected function renderEditable() : string
     {
-        return '';
+        throw new LegoException('show be rewrite.');
     }
 
     protected function renderReadonly() : string
     {
-        return '';
+        throw new LegoException('show be rewrite.');
     }
 
     protected function renderDisabled() : string
     {
-        return '';
+        throw new LegoException('show be rewrite.');
     }
 }

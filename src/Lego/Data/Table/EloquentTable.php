@@ -65,6 +65,10 @@ class EloquentTable extends Table
      */
     public function whereContains($attribute, string $value)
     {
+        if (is_empty_string($value)) {
+            return $this;
+        }
+
         $this->original->where($attribute, 'like', '%' . trim($value, '%') . '%');
 
         return $this;
@@ -78,6 +82,10 @@ class EloquentTable extends Table
      */
     public function whereStartsWith($attribute, string $value)
     {
+        if (is_empty_string($value)) {
+            return $this;
+        }
+
         $this->original->where($attribute, 'like', trim($value, '%') . '%');
 
         return $this;
@@ -91,6 +99,10 @@ class EloquentTable extends Table
      */
     public function whereEndsWith($attribute, string $value)
     {
+        if (is_empty_string($value)) {
+            return $this;
+        }
+
         $this->original->where($attribute, 'like', '%' . trim($value, '%'));
 
         return $this;
@@ -117,12 +129,24 @@ class EloquentTable extends Table
     /**
      * 关联查询
      * @param $relation
-     * @param $callback
+     * @param \Closure $callback 由于此处 Closure 接受的参数是 Table 类，所以下面调用时封装了一次
      * @return static
      */
     public function whereHas($relation, $callback)
     {
-        $this->original->whereHas($relation, $callback);
+        $this->original->whereHas(
+            $relation,
+            function ($query) use ($callback) {
+                call_user_func($callback, lego_table($query));
+            }
+        );
+
+        return $this;
+    }
+
+    public function limit($limit)
+    {
+        $this->original->limit($limit);
 
         return $this;
     }

@@ -7,15 +7,12 @@ class RegisterTest extends PHPUnit_Framework_TestCase
 {
     public function testEmpty()
     {
-        $this->assertEquals([], lego_register('field.data', 'empty'));
+        $this->assertEquals([], lego_register('field.data', [], 'empty')->data());
     }
 
     public function testRegister()
     {
-        $data = lego_register('field.data', 'test', ['a' => 'b']);
-        $this->assertData($data);
-
-        $data = lego_register('field.data', 'test');
+        $data = lego_register('field.data', ['a' => 'b'], 'test');
         $this->assertData($data);
     }
 
@@ -23,7 +20,5 @@ class RegisterTest extends PHPUnit_Framework_TestCase
     {
         $this->assertTrue($data instanceof FieldData);
         $this->assertEquals($data->data()['a'], 'b');
-        $this->assertEquals($data->data('a'), 'b');
-        $this->assertEquals($data->data('hello', 'default'), 'default');
     }
 }

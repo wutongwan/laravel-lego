@@ -1,17 +1,18 @@
 <?php namespace Lego\Widget;
 
+use Lego\Data\Data;
 use Lego\Field\Field;
 
 class Grid extends Widget
 {
-    public function __construct($data)
+    protected function prepareData($data): Data
     {
         if ($data instanceof Filter) {
             $data->processFields();
             $data->process();
         }
 
-        parent::__construct($data->data());
+        return lego_table($data->data());
     }
 
     /**

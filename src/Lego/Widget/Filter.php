@@ -2,11 +2,13 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Request;
+use Lego\Data\Data;
+use Lego\Data\Table\EloquentTable;
 use Lego\Field\Field;
 
 class Filter extends Widget
 {
-    public function __construct($data)
+    protected function prepareData($data): Data
     {
         if (is_subclass_of($data, Model::class)) {
             $data = new $data;
@@ -16,7 +18,7 @@ class Filter extends Widget
             $data = $data->newQuery();
         }
 
-        parent::__construct($data);
+        return lego_table($data);
     }
 
     /**
@@ -51,11 +53,20 @@ class Filter extends Widget
     public function process()
     {
         $this->fields()->each(function (Field $field) {
-            if (is_null($field->value()->current())) {
+            if (is_null($field->getCurrentValue())) {
                 return;
             }
 
-            $field->filter($this->data());
+            if ($field->relation()) {
+                $this->data()->whereHas(
+                    $field->relation(),
+                    function (EloquentTable $table) use ($field) {
+                        $field->filter($table);
+                    }
+                );
+            } else {
+                $field->filter($this->data());
+            }
         });
     }
 
@@ -69,11 +80,7 @@ class Filter extends Widget
         if ($syncFields) {
             $this->fields()->each(
                 function (Field $field) {
-                    $this->grid->add(
-                        class_basename($field),
-                        $field->name(),
-                        $field->description()
-                    );
+                    $this->grid->add(class_basename($field), $field->name(), $field->description());
                 }
             );
         }

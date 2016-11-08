@@ -1,6 +1,5 @@
 <?php namespace Lego\Widget;
 
-use Lego\Field\Field;
 use Lego\Helper\InitializeOperator;
 use Lego\Helper\MagicCallOperator;
 use Lego\Helper\MessageOperator;
@@ -38,16 +37,18 @@ abstract class Widget
 
     public function __construct($data)
     {
-        $this->data = lego_data($data);
+        $this->data = $this->prepareData($data);
 
         // 初始化
         $this->triggerInitialize();
     }
 
+    abstract protected function prepareData($data): Data;
+
     /**
      * @return Data|Table|Row
      */
-    protected function data() : Data
+    protected function data(): Data
     {
         return $this->data;
     }
@@ -93,7 +94,7 @@ abstract class Widget
         /**
          * 全局重写 Response.
          */
-        $registeredResponse = ResponseData::response();
+        $registeredResponse = ResponseData::getResponse();
         if (!is_null($registeredResponse)) {
             return $registeredResponse;
         }

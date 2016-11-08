@@ -4,16 +4,17 @@ use Lego\LegoException;
 
 trait MagicCallOperator
 {
-    private $magicCalls = [];
+    private $magicCalls;
 
     public function __call($name, $arguments)
     {
         foreach ($this->magicCalls() as $pattern => $closure) {
-            if (!str_is($pattern, $name)) {
-                continue;
+            if (str_is($pattern, $name)) {
+                return call_user_func_array(
+                    $closure,
+                    array_merge([$name], $arguments)
+                );
             }
-
-            return call_user_func_array($closure, array_merge([$name], $arguments));
         }
 
         throw new LegoException("Method `{$name}` not found.");
@@ -21,18 +22,19 @@ trait MagicCallOperator
 
     private function magicCalls()
     {
-        if ($this->magicCalls === false) {
-            return [];
+        if (is_array($this->magicCalls)) {
+            return $this->magicCalls;
         }
 
-        if (!$this->magicCalls) {
-            foreach (class_uses_recursive(static::class) as $trait) {
-                $method = 'register' . class_basename($trait) . 'MagicCall';
-                if (method_exists($this, $method)) {
-                    $functions = call_user_func_array([$this, $method], []);
+        $this->magicCalls = [];
 
-                    $this->magicCalls = array_merge($this->magicCalls, $functions);
-                }
+        foreach (class_uses_recursive(static::class) as $trait) {
+            $method = 'register' . class_basename($trait) . 'MagicCall';
+            if (method_exists($this, $method)) {
+                $this->magicCalls = array_merge(
+                    $this->magicCalls,
+                    $this->{$method}()
+                );
             }
         }
 

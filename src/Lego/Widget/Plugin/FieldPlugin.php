@@ -1,13 +1,12 @@
 <?php namespace Lego\Widget\Plugin;
 
 use Illuminate\Support\Collection;
+
 use Lego\Field\Field;
-use Lego\Field\Provider\Text;
+use Lego\Register\Data\Field as FieldRegister;
 
 /**
  * Field 相关逻辑
- * ** Magic Add **
- * @method Text addText(string $fieldName, $fieldDescription)
  */
 trait FieldPlugin
 {
@@ -37,15 +36,11 @@ trait FieldPlugin
         return $this->fields()->get($fieldName);
     }
 
-    protected function add($fieldType, $fieldName, $fieldDescription) : Field
+    protected function add($fieldType, $fieldName, $fieldDescription = null): Field
     {
-        // 为避免人肉拼接namespace, 所以写了下面一坨
-        $field = class_namespace(Text::class, $fieldType);
-
-        lego_assert(class_exists($field), 'Undefined Field ' . $field);
-
+        $class = FieldRegister::get($fieldType);
         /** @var Field $field */
-        $field = new $field($fieldName, $fieldDescription, $this->data());
+        $field = new $class($fieldName, $fieldDescription, $this->data());
 
         $this->fields [$fieldName] = $field;
 
@@ -83,10 +78,7 @@ trait FieldPlugin
     protected function syncFieldsValue()
     {
         $this->fields()->each(function (Field $field) {
-            $field->source()->set(
-                $field->column(),
-                $field->value()->current()
-            );
+            $field->syncCurrentValueToSource();
         });
     }
 }

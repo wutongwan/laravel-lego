@@ -5,46 +5,69 @@ use Lego\Register\Register;
 
 class ResponseData extends Data
 {
-    const GET_PARAM = '__lego';
+    const REQUEST_PARAM = '__lego';
 
-    public static function url($path, array $query = [])
+    private $response;
+
+    private $arguments;
+
+    /**
+     * 校验注册的数据是否合法, 不合法时抛出异常
+     * @param $data
+     *
+     * $data 可以为数组 or Closure
+     * - 数组：
+     *  $data[0] 为生成 Response 的 Closure
+     *  $data[1] 为供给上面 Closure 使用的参数，可以为 array 或 返回 array 的 Closure
+     * - Closure：
+     *  生成 Response 的 Clojure
+     */
+    protected function validate($data)
     {
-        return Request::fullUrlWithQuery(
-            array_merge($query, [self::GET_PARAM => $path])
-        );
+        if (is_array($data)) {
+            lego_assert($data[0] instanceof \Closure, '$data[0] should be Closure.');
+            lego_assert(
+                !isset($data[1]) || is_array($data[1]) || $data[1] instanceof \Closure,
+                '$data[1] should be arguments of $data[0] closure.'
+            );
+
+            $this->response = $data[0];
+            $this->arguments = $data[1] ?? [];
+        } else {
+            lego_assert($data instanceof \Closure, '$data should be Closure');
+            $this->response = $data;
+            $this->arguments = [];
+        }
     }
 
-    public static function add($path, \Closure $closure)
+    public function url(array $query = [])
     {
-        return Register::register(self::class, self::class, [$path => $closure]);
+        return Request::fullUrlWithQuery(array_merge($query, [
+            self::REQUEST_PARAM => $this->name,
+        ]));
     }
 
-    public static function response()
+    public function response()
     {
-        $path = Request::get(self::GET_PARAM);
+        $arguments = value($this->arguments);
+        lego_assert(is_array($arguments), '$data[1] should be array or return array.');
+
+        return call_user_func_array($this->response, $arguments);
+    }
+
+    public static function getResponse()
+    {
+        $path = Request::get(self::REQUEST_PARAM);
         if (!$path) {
             return null;
         }
 
-        $provider = Register::get(self::class, self::class);
-        if (!$provider) {
+        /** @var self $data */
+        $data = Register::get(self::class, $path);
+        if (!$data) {
             return null;
         }
 
-        $response = $provider->data($path);
-        if (is_null($response)) {
-            return null;
-        }
-
-        return call_user_func($response, Request::all());
-    }
-
-    /**
-     * 校验注册的数据是否合法, 不合法时抛出异常
-     * @param array $data
-     */
-    protected function validate(array $data = [])
-    {
-        lego_assert($this->path() === self::class, 'ResponseData Path must be self.');
+        return $data->response();
     }
 }
