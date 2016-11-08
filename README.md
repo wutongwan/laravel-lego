@@ -65,6 +65,16 @@ composer require wutongwan/lego
 php artisan vendor:publish
 ```
 
+4、仅开发环境
+
+- IDE Helper
+
+	为方便调用 widget 中的 addField 系列函数，推荐执行下面命令，该命令会在项目根目录创建 `_ide_helper_lego.php` 文件，方便 IDE 进行自动补全.
+	
+	```bash
+	php artisan lego:ide-helper
+	```
+
 ## 文档
 
 见 [./docs](./docs/README.md)
