@@ -36,7 +36,7 @@ class LegoServiceProvider extends ServiceProvider
         ]);
 
         // views
-        $this->loadViewsFrom($this->path('views'), 'lego');
+        $this->loadViewsFrom($this->path('resources/views'), 'lego');
 
         // ** 第三方库 **
         $this->registerHtmlServices();
