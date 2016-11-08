@@ -87,10 +87,6 @@ abstract class Widget
      */
     final public function response($response)
     {
-        $this->processFields();
-
-        $this->process();
-
         /**
          * 全局重写 Response.
          */
@@ -98,6 +94,9 @@ abstract class Widget
         if (!is_null($registeredResponse)) {
             return $registeredResponse;
         }
+
+        $this->processFields();
+        $this->process();
 
         /**
          * 通过 rewriteResponse() 重写的 Response.
