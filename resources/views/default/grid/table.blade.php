@@ -1,3 +1,7 @@
+@foreach($grid->exports() as $name => $url)
+    {{ link_to($url, $name) }}
+@endforeach
+
 <div class="table-responsive">
     <table class="table">
         <tr>

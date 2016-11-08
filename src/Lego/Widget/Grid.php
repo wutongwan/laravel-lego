@@ -2,6 +2,9 @@
 
 use Lego\Data\Data;
 use Lego\Field\Field;
+use Lego\Register\Data\ResponseData;
+use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Writers\LaravelExcelWriter;
 
 class Grid extends Widget
 {
@@ -64,5 +67,58 @@ class Grid extends Widget
     public function orderBy($attribute, bool $desc = false)
     {
         $this->data()->orderBy($attribute, $desc);
+    }
+
+    /**
+     * 导出功能
+     * @var array
+     */
+    private $exports = [];
+
+    public function exports()
+    {
+        return $this->exports;
+    }
+
+    public function export($name, \Closure $onExport = null)
+    {
+        /** @var ResponseData $resp */
+        $resp = lego_register(
+            ResponseData::class,
+            function () use ($name, $onExport) {
+                if ($onExport) {
+                    call_user_func($onExport, $this);
+                }
+                return $this->exportAsExcel($name);
+            },
+            md5('grid export' . $name)
+        );
+        $this->exports[$name] = $resp->url();
+
+        return $this;
+    }
+
+    private function exportAsExcel($filename)
+    {
+        $data = [];
+        foreach ($this->rows() as $row) {
+            $_row = [];
+            /** @var Field $field */
+            foreach ($this->fields() as $field) {
+                $_row[$field->description()] = $row->get($field->name());
+            }
+            $data [] = $_row;
+        }
+
+        return Excel::create(
+            $filename,
+            function (LaravelExcelWriter $excel) use ($data) {
+                $excel->sheet('SheetName',
+                    function (\PHPExcel_Worksheet $sheet) use ($data) {
+                        $sheet->fromArray($data);
+                    }
+                );
+            }
+        )->export('xls');
     }
 }
