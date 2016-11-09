@@ -79,7 +79,17 @@ class Datetime extends Field
         if ($this->range && is_array($value)) {
             $min = $value['min'];
             $max = $value['max'];
-            return $query->whereBetween($this->column(), $min, $max);
+
+            switch (true) {
+                case $min && $max:
+                    return $query->whereBetween($this->column(), $min, $max);
+                case $min:
+                    return $query->whereGte($this->column(), $min);
+                case $max:
+                    return $query->whereLte($this->column(), $max);
+                default:
+                    return $query;
+            }
         } else {
             return $query->whereEquals($this->column(), $value);
         }
@@ -136,7 +146,7 @@ class Datetime extends Field
 
     private function convertToCarbon($value)
     {
-        if (is_null($value)) {
+        if (!$value) {
             return null;
         }
 
@@ -152,6 +162,18 @@ class Datetime extends Field
      */
     public function process()
     {
+        $this->value()->setShow(function () {
+            $value = $this->getCurrentValue();
+            if (is_array($value)) {
+                foreach ($value as &$item) {
+                    $item = $item ? $item->format($this->getFormat()) : null;
+                }
+            } else {
+                $value = $value ? $value->format($this->getFormat()) : null;
+            }
+            return $value;
+        });
+
         /**
          * 仅在 editable && 非移动端启用日期控件，移动端使用原生的输入控件
          */
