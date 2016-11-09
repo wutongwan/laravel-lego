@@ -4,6 +4,7 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Request;
 use Lego\Data\Data;
 use Traversable;
 
@@ -41,6 +42,11 @@ abstract class Table extends Data implements \ArrayAccess, Arrayable, \Countable
      */
     abstract public function whereGt($attribute, $value, bool $equals = false);
 
+    public function whereGte($attribute, $value)
+    {
+        return $this->whereGt($attribute, $value, true);
+    }
+
     /**
      * 当前属性小于某值
      * @param $attribute
@@ -49,6 +55,11 @@ abstract class Table extends Data implements \ArrayAccess, Arrayable, \Countable
      * @return static
      */
     abstract public function whereLt($attribute, $value, bool $equals = false);
+
+    public function whereLte($attribute, $value)
+    {
+        return $this->whereLt($attribute, $value, true);
+    }
 
     /**
      * 当前属性包含特定字符串
@@ -114,12 +125,22 @@ abstract class Table extends Data implements \ArrayAccess, Arrayable, \Countable
      */
     abstract protected function createPaginator(int $perPage, int $page = null): AbstractPaginator;
 
+    /**
+     * Convert rows to \Data\Row\Row && return Paginator
+     *
+     * @param $perPage
+     * @param null $page
+     * @return AbstractPaginator
+     */
     public function paginate($perPage, $page = null)
     {
         $this->paginator = $this->createPaginator($perPage, $page);
-        $this->paginator->getCollection()->map(function ($row) {
-            return lego_row($row);
-        });
+        $this->paginator->setCollection(
+            $this->paginator->getCollection()->map(function ($row) {
+                return lego_row($row);
+            })
+        );
+        $this->paginator->appends(Request::input());
 
         return $this->paginator;
     }

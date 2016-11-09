@@ -1,7 +1,8 @@
 <?php namespace Lego\Data\Table;
 
 use Carbon\Carbon;
-use Illuminate\Support\Collection;
+use Illuminate\Pagination\AbstractPaginator;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Lego\Data\Row\Row;
 
 class ArrayTable extends Table
@@ -165,25 +166,11 @@ class ArrayTable extends Table
     /**
      * 翻页
      * @param int $perPage
-     * @param string $pageName
      * @param int|null $page
-     * @return static
+     * @return AbstractPaginator
      */
-    public function paginate(int $perPage, string $pageName = 'page', int $page = null)
+    protected function createPaginator(int $perPage, int $page = null) : AbstractPaginator
     {
-        $this->rows->forPage($page, $perPage);
-
-        return $this;
-    }
-
-    /**
-     * 处理上方所有条件后, 执行查询语句, 返回结果集
-     *
-     * @param array $columns 默认获取全部字段
-     * @return Collection
-     */
-    protected function selectQuery(array $columns = []): Collection
-    {
-        return $this->rows;
+        return new LengthAwarePaginator($this->rows, count($this->rows), $perPage);
     }
 }
