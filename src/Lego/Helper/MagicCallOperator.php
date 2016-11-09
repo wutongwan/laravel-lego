@@ -38,6 +38,10 @@ trait MagicCallOperator
             }
         }
 
+        uksort($this->magicCalls, function ($key) {
+            return count($key);
+        });
+
         return $this->magicCalls;
     }
 }

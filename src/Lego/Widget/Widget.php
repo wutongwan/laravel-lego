@@ -23,6 +23,7 @@ abstract class Widget
     use Plugin\FieldPlugin;
     use Plugin\GroupPlugin;
     use Plugin\RequestPlugin;
+    use Plugin\ButtonsPlugin;
 
     /**
      * 数据源
@@ -112,4 +113,14 @@ abstract class Widget
      * Widget 的所有数据处理都放在此函数中, 渲染 view 前调用
      */
     abstract public function process();
+
+    /**
+     * 默认四个方位可以插入按钮，特殊需求请重写此函数
+     *
+     * @return array
+     */
+    public function buttonLocations(): array
+    {
+        return ['right-top', 'right-bottom', 'left-top', 'left-bottom'];
+    }
 }

@@ -1,15 +1,47 @@
 <?= '<?' ?>
 
+/**
+ * Lego IDE Helper file.
+ */
+
+<?
+/**
+ * @var $fields array
+ * @var $widgets array
+ */
+?>
+
 namespace Lego\Widget\Plugin{
-    exit("This file should not be included, only analyzed by your IDE");
 
     /**
-    * Field 相关逻辑
-    * ** Magic Add **
+     * Field 相关逻辑
+     * ** Magic Add **
 <? foreach ($fields as $name => $class) {?>
-    * @method \<?= $class ?> add<?= $name ?>(string $fieldName, $fieldDescription = null)
+     * @method \<?= $class ?> add<?= $name ?>(string $fieldName, $fieldDescription = null)
 <? } ?>
-    */
-    trait FieldPlugin {
+     *
+     * @see \Lego\Widget\Plugin\FieldPlugin
+     */
+    trait FieldPlugin
+    {
     }
+}
+
+namespace Lego\Widget {
+
+<? foreach ($widgets as $widget => $detail) {?>
+    /**
+<? foreach ($detail['methods'] as $method) {?>
+     * @method <?= $method['return'] ?> <?= $method['name'] ?>(<?= $method['arguments'] ?>)
+<? } ?>
+     *
+     * @see \<?= $widget . "\n" ?>
+     */
+    class <?= class_basename($widget) ?>
+
+    {
+    }
+
+<? } ?>
+
 }
