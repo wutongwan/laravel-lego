@@ -1,8 +1,8 @@
 <?php namespace Lego\Field\Provider;
 
+use Collective\Html\FormFacade;
 use Lego\Field\Field;
 use Lego\Data\Table\Table;
-use Lego\Helper\HtmlUtility;
 
 class JSON extends Field
 {
@@ -45,7 +45,7 @@ class JSON extends Field
      */
     public function render(): string
     {
-        return HtmlUtility::form()->input('text', $this->elementName(),
+        return FormFacade::input('text', $this->elementName(),
             $this->getCurrentValue(),
             [
                 'id' => $this->elementId(),

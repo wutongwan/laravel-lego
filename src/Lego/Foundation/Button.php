@@ -1,20 +1,24 @@
-<?php namespace Lego\Helper;
+<?php namespace Lego\Foundation;
 
+use Collective\Html\HtmlFacade;
 
+/**
+ * Html button or link.
+ */
 class Button
 {
     /**
-     * 链接
+     * button link
      */
     private $url;
 
     /**
-     * 文本
+     * button text
      */
     private $text;
 
     /**
-     * 按钮的唯一标记
+     * button id
      */
     private $id;
 
@@ -134,7 +138,7 @@ class Button
         /** @var \Illuminate\Support\HtmlString $html */
         $html = $this->url
             ? link_to($this->url, $this->text, $attributes)
-            : HtmlUtility::html()->tag('button', $this->text, $attributes);
+            : HtmlFacade::tag('button', $this->text, $attributes);
 
         return $html->toHtml();
     }

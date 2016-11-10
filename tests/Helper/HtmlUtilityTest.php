@@ -32,7 +32,7 @@ class HtmlUtilityTest extends PHPUnit_Framework_TestCase
     private function call($method, $params = [])
     {
         return forward_static_call_array(
-            [\Lego\Helper\HtmlUtility::class, $method],
+            [\Lego\Utility\HtmlUtility::class, $method],
             $params
         );
     }

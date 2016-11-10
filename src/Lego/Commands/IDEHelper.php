@@ -1,7 +1,7 @@
-<?php namespace Lego\Command;
+<?php namespace Lego\Commands;
 
 use Illuminate\Console\Command;
-use Lego\Helper\Button;
+use Lego\Foundation\Button;
 use Lego\Register\Data\Field;
 use Lego\Widget\Filter;
 use Lego\Widget\Form;
@@ -26,7 +26,7 @@ class IDEHelper extends Command
     {
         $fields = Field::availableFields();
         $widgets = $this->widgetHelpers();
-        $content = view('lego::command.ide-helper.layout', compact('fields', 'widgets'));
+        $content = view('lego::commands.ide-helper.layout', compact('fields', 'widgets'));
 
         $this->writeToHelperFile($content);
     }

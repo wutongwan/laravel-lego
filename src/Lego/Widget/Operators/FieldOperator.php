@@ -1,4 +1,4 @@
-<?php namespace Lego\Widget\Plugin;
+<?php namespace Lego\Widget\Operatos;
 
 use Illuminate\Support\Collection;
 
@@ -8,7 +8,7 @@ use Lego\Register\Data\Field as FieldRegister;
 /**
  * Field 相关逻辑
  */
-trait FieldPlugin
+trait FieldOperator
 {
     /**
      * Field Collection

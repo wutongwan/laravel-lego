@@ -2,7 +2,7 @@
 
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
-use Lego\Command\IDEHelper;
+use Lego\Commands\IDEHelper;
 
 /**
  * Lego Service Provider for Laravel
@@ -48,17 +48,6 @@ class LegoServiceProvider extends ServiceProvider
     private function registerHtmlServices()
     {
         $this->app->register(\Collective\Html\HtmlServiceProvider::class);
-
-        $loader = AliasLoader::getInstance();
-        $aliases = $loader->getAliases();
-
-        if (!in_array('Html', $aliases)) {
-            $loader->alias('Html', \Collective\Html\HtmlFacade::class);
-        }
-
-        if (!in_array('Form', $aliases)) {
-            $loader->alias('Form', \Collective\Html\FormFacade::class);
-        }
     }
 
     private function path($path = '')

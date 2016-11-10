@@ -1,10 +1,10 @@
 <?php namespace Lego\Field;
 
-use Lego\Helper\HasMode;
-use Lego\Helper\ModeOperator;
-use Lego\Helper\MessageOperator;
-use Lego\Helper\InitializeOperator;
-use Lego\Helper\RenderStringOperator;
+use Lego\Foundation\Operators\HasMode;
+use Lego\Foundation\Operators\ModeOperator;
+use Lego\Foundation\Operators\MessageOperator;
+use Lego\Foundation\Operators\InitializeOperator;
+use Lego\Foundation\Operators\RenderStringOperator;
 use Lego\Data\Row\Row;
 use Lego\Data\Data;
 use Lego\Data\Table\Table;
@@ -20,10 +20,10 @@ abstract class Field implements HasMode
     use ModeOperator; // 必须放在 `RenderStringOperator`后面
 
     // Plugins
-    use Plugin\HtmlPlugin;
-    use Plugin\EloquentPlugin;
-    use Plugin\ValidationPlugin;
-    use Plugin\ValuePlugin;
+    use Operators\HtmlOperator;
+    use Operators\EloquentOperator;
+    use Operators\ValidationOperator;
+    use Operators\ValueOperator;
 
     /**
      * 字段的唯一标记

@@ -1,9 +1,9 @@
-<?php namespace Lego\Field\Plugin;
+<?php namespace Lego\Field\Operators;
 
 use Illuminate\Support\Facades\Validator;
 use Lego\Field\Field;
 
-trait ValidationPlugin
+trait ValidationOperator
 {
     /**
      * 改 Field 所有 Validation

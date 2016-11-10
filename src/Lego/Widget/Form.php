@@ -4,8 +4,8 @@ use Illuminate\Support\Facades\Request;
 use Lego\Data\Data;
 use Lego\Data\Row\Row;
 use Lego\Field\Field;
-use Lego\Helper\HasMode;
-use Lego\Helper\ModeOperator;
+use Lego\Foundation\Operators\HasMode;
+use Lego\Foundation\Operators\ModeOperator;
 
 /**
  * Class Form

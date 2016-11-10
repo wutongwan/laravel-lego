@@ -1,8 +1,8 @@
-<?php namespace Lego\Widget\Plugin;
+<?php namespace Lego\Widget\Operatos;
 
-use Lego\Helper\Button;
+use Lego\Foundation\Button;
 
-trait ButtonsPlugin
+trait ButtonsOperator
 {
     private $buttons = [];
 

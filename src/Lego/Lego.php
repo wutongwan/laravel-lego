@@ -4,11 +4,13 @@ use Lego\Widget\Filter;
 use Lego\Widget\Form;
 use Lego\Widget\Grid;
 
-/**
- * Lego 主要接口类
- */
 class Lego
 {
+    /**
+     * Lego version.
+     */
+    const VERSION = '0.1.1';
+
     public static function filter($source)
     {
         return new Filter($source);

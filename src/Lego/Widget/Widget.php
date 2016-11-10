@@ -1,9 +1,9 @@
 <?php namespace Lego\Widget;
 
-use Lego\Helper\InitializeOperator;
-use Lego\Helper\MagicCallOperator;
-use Lego\Helper\MessageOperator;
-use Lego\Helper\RenderStringOperator;
+use Lego\Foundation\Operators\InitializeOperator;
+use Lego\Foundation\Operators\MagicCallOperator;
+use Lego\Foundation\Operators\MessageOperator;
+use Lego\Foundation\Operators\RenderStringOperator;
 use Lego\Register\Data\ResponseData;
 use Lego\Data\Data;
 use Lego\Data\Row\Row;
@@ -20,10 +20,10 @@ abstract class Widget
     use MagicCallOperator;
 
     // Plugins
-    use Plugin\FieldPlugin;
-    use Plugin\GroupPlugin;
-    use Plugin\RequestPlugin;
-    use Plugin\ButtonsPlugin;
+    use Operatos\FieldOperator;
+    use Operatos\GroupOperator;
+    use Operatos\RequestOperator;
+    use Operatos\ButtonsOperator;
 
     /**
      * 数据源

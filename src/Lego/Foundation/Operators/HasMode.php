@@ -1,4 +1,4 @@
-<?php namespace Lego\Helper;
+<?php namespace Lego\Foundation\Operators;
 
 /**
  * ModeOperator 的接口类

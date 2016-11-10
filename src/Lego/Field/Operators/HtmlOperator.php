@@ -1,13 +1,13 @@
-<?php namespace Lego\Field\Plugin;
+<?php namespace Lego\Field\Operators;
 
 use Lego\Field\Field;
-use Lego\Helper\HtmlUtility;
+use Lego\Utility\HtmlUtility;
 
 /**
- * Class HtmlPlugin
+ * Class HtmlOperator
  * @package Lego\Field\Plugin
  */
-trait HtmlPlugin
+trait HtmlOperator
 {
     /**
      * Html element attributes.
