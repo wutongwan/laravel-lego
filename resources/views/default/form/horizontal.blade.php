@@ -1,3 +1,5 @@
+@include('lego::default.snippets.top-buttons', ['widget' => $form])
+
 @include('lego::default.messages', ['object' => $form])
 <form method="post" class="form-horizontal">
     @foreach($form->fields() as $field)
@@ -37,3 +39,5 @@
         </div>
     @endif
 </form>
+
+@include('lego::default.snippets.bottom-buttons', ['widget' => $form])
