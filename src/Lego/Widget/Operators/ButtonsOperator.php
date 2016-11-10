@@ -16,6 +16,13 @@ trait ButtonsOperator
     {
         foreach ($this->buttonLocations() as $location) {
             $this->buttons[$location] = [];
+
+            self::macro(
+                'add' . ucfirst(camel_case($location)) . 'Button',
+                function () use ($location) {
+                    call_user_func_array([$this, 'addButton'], array_merge([$location], func_get_args()));
+                }
+            );
         }
     }
 
@@ -36,16 +43,5 @@ trait ButtonsOperator
     public function removeButton($location, $text)
     {
         unset($this->buttons[$location][$text]);
-    }
-
-    protected function registerButtonsOperatorMagicCall()
-    {
-        return [
-            'add*Button' => function () {
-                $arguments = func_get_args(); // eg: [addLeftTopButton, 'text', 'http://...', 'id']
-                $arguments[0] = str_slug(snake_case(substr($arguments[0], 3, -6))); // addLeftTopButton => left-top
-                return call_user_func_array([$this, 'addButton'], $arguments);
-            }
-        ];
     }
 }

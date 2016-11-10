@@ -1,7 +1,7 @@
 <?php namespace Lego\Widget;
 
+use Illuminate\Support\Traits\Macroable;
 use Lego\Foundation\Operators\InitializeOperator;
-use Lego\Foundation\Operators\MagicCallOperator;
 use Lego\Foundation\Operators\MessageOperator;
 use Lego\Foundation\Operators\RenderStringOperator;
 use Lego\Register\Data\ResponseData;
@@ -17,7 +17,7 @@ abstract class Widget
     use MessageOperator;
     use InitializeOperator;
     use RenderStringOperator;
-    use MagicCallOperator;
+    use Macroable;
 
     // Plugins
     use Operators\FieldOperator;

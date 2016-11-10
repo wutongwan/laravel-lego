@@ -19,6 +19,18 @@ trait FieldOperator
     protected function initializeFieldOperator()
     {
         $this->fields = collect([]);
+
+        // addField Magic call
+        foreach (FieldRegister::availableFields() as $name => $class) {
+            self::macro(
+                'add' . $name,
+                function () use ($class) {
+                    return call_user_func_array(
+                        [$this, 'addField'], array_merge([$class], func_get_args())
+                    );
+                }
+            );
+        }
     }
 
     public function fields()
@@ -36,10 +48,8 @@ trait FieldOperator
         return $this->fields()->get($fieldName);
     }
 
-    protected function add($fieldType, $fieldName, $fieldDescription = null): Field
+    protected function addField($class, $fieldName, $fieldDescription = null): Field
     {
-        $class = FieldRegister::get($fieldType);
-        /** @var Field $field */
         $field = new $class($fieldName, $fieldDescription, $this->data());
 
         $this->fields [$fieldName] = $field;

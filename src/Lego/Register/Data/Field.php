@@ -17,6 +17,11 @@ class Field extends Data
         );
     }
 
+    public function afterRegistered()
+    {
+        $this->name = ucfirst(camel_case($this->name));
+    }
+
     public static function availableFields()
     {
         $fields = [];
