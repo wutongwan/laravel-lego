@@ -11,7 +11,7 @@
  */
 ?>
 
-namespace Lego\Widget\Plugin{
+namespace Lego\Widget\Operators{
 
     /**
      * Field 相关逻辑
@@ -20,9 +20,9 @@ namespace Lego\Widget\Plugin{
      * @method \<?= $class ?> add<?= $name ?>(string $fieldName, $fieldDescription = null)
 <? } ?>
      *
-     * @see \Lego\Widget\Plugin\FieldPlugin
+     * @see \Lego\Widget\Operators\FieldPlugin
      */
-    trait FieldPlugin
+    trait FieldOperator
     {
     }
 }

@@ -9,7 +9,7 @@ trait ValueOperator
      */
     private $value;
 
-    protected function initializeValuePlugin()
+    protected function initializeValueOperator()
     {
         $this->value = new Value();
     }

@@ -1,4 +1,4 @@
-<?php namespace Lego\Widget\Operatos;
+<?php namespace Lego\Widget\Operators;
 
 use Illuminate\Support\Collection;
 
@@ -16,7 +16,7 @@ trait FieldOperator
      */
     private $fields;
 
-    protected function initializeFieldPlugin()
+    protected function initializeFieldOperator()
     {
         $this->fields = collect([]);
     }
@@ -54,7 +54,7 @@ trait FieldOperator
      */
     abstract protected function fieldAdded(Field $field);
 
-    protected function registerFieldPluginMagicCall()
+    protected function registerFieldOperatorMagicCall()
     {
         return [
             /**

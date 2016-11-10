@@ -20,10 +20,10 @@ abstract class Widget
     use MagicCallOperator;
 
     // Plugins
-    use Operatos\FieldOperator;
-    use Operatos\GroupOperator;
-    use Operatos\RequestOperator;
-    use Operatos\ButtonsOperator;
+    use Operators\FieldOperator;
+    use Operators\GroupOperator;
+    use Operators\RequestOperator;
+    use Operators\ButtonsOperator;
 
     /**
      * 数据源

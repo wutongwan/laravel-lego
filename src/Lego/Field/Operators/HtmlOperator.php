@@ -17,7 +17,7 @@ trait HtmlOperator
 
     private $elementName;
 
-    protected function initializeHtmlPlugin()
+    protected function initializeHtmlOperator()
     {
         $this->elementName = str_replace(['.', ':'], '-', $this->name()); // TODO 替换冒号
     }

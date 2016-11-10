@@ -49,7 +49,7 @@ trait EloquentOperator
         return $this->related;
     }
 
-    protected function initializeEloquentPlugin()
+    protected function initializeEloquentOperator()
     {
         $names = explode('.', $this->name());
         if (count($names) === 1) {

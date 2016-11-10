@@ -1,4 +1,4 @@
-<?php namespace Lego\Widget\Operatos;
+<?php namespace Lego\Widget\Operators;
 
 use Lego\Foundation\Button;
 
@@ -12,7 +12,7 @@ trait ButtonsOperator
      */
     abstract public function buttonLocations(): array;
 
-    protected function initializeButtonsPlugin()
+    protected function initializeButtonsOperator()
     {
         foreach ($this->buttonLocations() as $location) {
             $this->buttons[$location] = [];
@@ -38,7 +38,7 @@ trait ButtonsOperator
         unset($this->buttons[$location][$text]);
     }
 
-    protected function registerButtonsPluginMagicCall()
+    protected function registerButtonsOperatorMagicCall()
     {
         return [
             'add*Button' => function () {
