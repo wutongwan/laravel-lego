@@ -1,6 +1,7 @@
 <?php namespace Lego\Foundation;
 
 use Collective\Html\HtmlFacade;
+use Lego\Register\Data\ResponseData;
 
 /**
  * Html button or link.
@@ -98,6 +99,13 @@ class Button
         return $this->attribute('target', '_blank', false);
     }
 
+    public function action(\Closure $action)
+    {
+        /** @var ResponseData $resp */
+        $resp = lego_register(ResponseData::class, $action, md5('button ' . $this->text));
+        return $this->url($resp->url());
+    }
+
     /** BootStrap Helpers */
 
     public function bootstrapStyle($style)
@@ -112,6 +120,7 @@ class Button
 
     /**
      * @param null|string $size if null, clear btn-*size* styles
+     * @return Button
      */
     public function bootstrapSize($size = null)
     {
