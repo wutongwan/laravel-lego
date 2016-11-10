@@ -1,8 +1,8 @@
-<?php namespace Lego\Widget\Plugin;
+<?php namespace Lego\Widget\Operators;
 
 use Illuminate\Support\Facades\Request;
 
-trait RequestPlugin
+trait RequestOperator
 {
     protected function isPost()
     {

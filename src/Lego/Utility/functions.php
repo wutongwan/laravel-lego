@@ -1,6 +1,7 @@
 <?php
 
 use Lego\LegoException;
+use Lego\Register\Data\ResponseData;
 use Lego\Register\Register;
 use Lego\Data\Row\Row;
 use Lego\Data\Table\Table;
@@ -132,4 +133,20 @@ if (!function_exists('class_namespace')) {
 function is_empty_string($string)
 {
     return strlen(trim($string)) === 0;
+}
+
+/**
+ * @return \Symfony\Component\HttpFoundation\Response|\Illuminate\Contracts\Routing\ResponseFactory
+ */
+function lego_response()
+{
+    /**
+     * Check registered global response
+     */
+    $registeredResponse = ResponseData::getResponse();
+    if (!is_null($registeredResponse)) {
+        return $registeredResponse;
+    }
+
+    return call_user_func_array('response', func_get_args());
 }

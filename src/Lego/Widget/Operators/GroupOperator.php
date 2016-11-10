@@ -1,14 +1,14 @@
-<?php namespace Lego\Widget\Plugin;
+<?php namespace Lego\Widget\Operators;
 
 use Lego\Field\Group;
 
 /**
  * Widget 中 Field 的分组功能
  *
- * Class GroupPlugin
+ * Class GroupOperator
  * @package Lego\Widget\Plugin
  */
-trait GroupPlugin
+trait GroupOperator
 {
     /**
      * Group List

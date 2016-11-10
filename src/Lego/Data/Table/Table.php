@@ -2,7 +2,9 @@
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
+use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Request;
 use Lego\Data\Data;
 use Traversable;
 
@@ -10,6 +12,11 @@ abstract class Table extends Data implements \ArrayAccess, Arrayable, \Countable
 {
     /** @var Collection $rows */
     protected $rows;
+
+    /**
+     * @var AbstractPaginator
+     */
+    protected $paginator;
 
     /**
      * 根据数据类型做相关的初始化, 方便进行 Query 等操作
@@ -35,6 +42,11 @@ abstract class Table extends Data implements \ArrayAccess, Arrayable, \Countable
      */
     abstract public function whereGt($attribute, $value, bool $equals = false);
 
+    public function whereGte($attribute, $value)
+    {
+        return $this->whereGt($attribute, $value, true);
+    }
+
     /**
      * 当前属性小于某值
      * @param $attribute
@@ -43,6 +55,11 @@ abstract class Table extends Data implements \ArrayAccess, Arrayable, \Countable
      * @return static
      */
     abstract public function whereLt($attribute, $value, bool $equals = false);
+
+    public function whereLte($attribute, $value)
+    {
+        return $this->whereLt($attribute, $value, true);
+    }
 
     /**
      * 当前属性包含特定字符串
@@ -101,45 +118,36 @@ abstract class Table extends Data implements \ArrayAccess, Arrayable, \Countable
     abstract public function orderBy($attribute, bool $desc = false);
 
     /**
-     * 翻页
+     * Create Paginator
      * @param int $perPage
-     * @param string $pageName
      * @param int|null $page
-     * @return static
+     * @return AbstractPaginator
      */
-    abstract public function paginate(int $perPage, string $pageName = 'page', int $page = null);
+    abstract protected function createPaginator(int $perPage, int $page = null): AbstractPaginator;
 
     /**
-     * 处理上方所有条件后, 执行查询语句, 返回结果集
+     * Convert rows to \Data\Row\Row && return Paginator
      *
-     * @param array $columns 默认获取全部字段
-     * @return Collection
+     * @param $perPage
+     * @param null $page
+     * @return AbstractPaginator
      */
-    abstract protected function selectQuery(array $columns = []): Collection;
-
-    /**
-     * 对外提供发起检索的函数
-     *
-     * @param array $columns
-     * @return Collection
-     */
-    final public function fetch(array $columns = ['*'])
+    public function paginate($perPage, $page = null)
     {
-        $this->rows = $this->selectQuery($columns)
-            ->map(function ($row) {
+        $this->paginator = $this->createPaginator($perPage, $page);
+        $this->paginator->setCollection(
+            $this->paginator->getCollection()->map(function ($row) {
                 return lego_row($row);
-            });
+            })
+        );
+        $this->paginator->appends(Request::input());
 
-        return $this->rows;
+        return $this->paginator;
     }
 
-    public function rows(): Collection
+    public function paginator()
     {
-        if (is_null($this->rows)) {
-            $this->fetch();
-        }
-
-        return $this->rows;
+        return $this->paginator;
     }
 
     /** Array Access Interface Methods. */
@@ -151,7 +159,7 @@ abstract class Table extends Data implements \ArrayAccess, Arrayable, \Countable
      */
     public function toArray()
     {
-        return $this->rows()->toArray();
+        return $this->paginator()->toArray();
     }
 
     /**
@@ -163,7 +171,7 @@ abstract class Table extends Data implements \ArrayAccess, Arrayable, \Countable
      */
     public function getIterator()
     {
-        return $this->rows()->getIterator();
+        return $this->paginator()->getIterator();
     }
 
     /**
@@ -180,7 +188,7 @@ abstract class Table extends Data implements \ArrayAccess, Arrayable, \Countable
      */
     public function offsetExists($offset)
     {
-        return $this->rows()->offsetExists($offset);
+        return $this->paginator()->offsetExists($offset);
     }
 
     /**
@@ -194,7 +202,7 @@ abstract class Table extends Data implements \ArrayAccess, Arrayable, \Countable
      */
     public function offsetGet($offset)
     {
-        return $this->rows()->offsetGet($offset);
+        return $this->paginator()->offsetGet($offset);
     }
 
     /**
@@ -211,7 +219,7 @@ abstract class Table extends Data implements \ArrayAccess, Arrayable, \Countable
      */
     public function offsetSet($offset, $value)
     {
-        $this->rows()->offsetSet($offset, $value);
+        $this->paginator()->offsetSet($offset, $value);
     }
 
     /**
@@ -225,7 +233,7 @@ abstract class Table extends Data implements \ArrayAccess, Arrayable, \Countable
      */
     public function offsetUnset($offset)
     {
-        $this->rows()->offsetUnset($offset);
+        $this->paginator()->offsetUnset($offset);
     }
 
     /**
@@ -236,7 +244,7 @@ abstract class Table extends Data implements \ArrayAccess, Arrayable, \Countable
      */
     public function toJson($options = 0)
     {
-        return $this->rows()->toJson(
+        return $this->paginator()->toJson(
             $options === 0 ? JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE : $options
         );
     }
@@ -252,7 +260,7 @@ abstract class Table extends Data implements \ArrayAccess, Arrayable, \Countable
      */
     public function count()
     {
-        return $this->rows()->count();
+        return $this->paginator()->count();
     }
 
     /**
@@ -264,6 +272,6 @@ abstract class Table extends Data implements \ArrayAccess, Arrayable, \Countable
      */
     function jsonSerialize()
     {
-        return $this->rows()->jsonSerialize();
+        return $this->paginator()->jsonSerialize();
     }
 }

@@ -1,4 +1,4 @@
-<?php namespace Lego\Helper;
+<?php namespace Lego\Utility;
 
 class HtmlUtility
 {
@@ -18,23 +18,5 @@ class HtmlUtility
         }
 
         return $attributes;
-    }
-
-    /**
-     * Alias
-     * @return \Collective\Html\HtmlBuilder
-     */
-    public static function html()
-    {
-        return app('html');
-    }
-
-    /**
-     * Alias
-     * @return \Collective\Html\FormBuilder
-     */
-    public static function form()
-    {
-        return app('form');
     }
 }

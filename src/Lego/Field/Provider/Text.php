@@ -1,7 +1,7 @@
 <?php namespace Lego\Field\Provider;
 
+use Collective\Html\FormFacade;
 use Lego\Field\Field;
-use Lego\Helper\HtmlUtility;
 use Lego\Data\Table\Table;
 
 class Text extends Field
@@ -20,7 +20,7 @@ class Text extends Field
 
     protected function renderEditable() : string
     {
-        return HtmlUtility::form()->input(
+        return FormFacade::input(
             'text',
             $this->elementName(),
             $this->getCurrentValue() ?? $this->getOriginalValue(),

@@ -1,4 +1,4 @@
-<?php namespace Lego\Helper;
+<?php namespace Lego\Foundation\Operators;
 
 trait InitializeOperator
 {

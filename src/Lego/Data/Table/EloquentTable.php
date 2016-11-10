@@ -4,6 +4,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Pagination\AbstractPaginator;
 
 /**
  * Laravel ORM Data
@@ -117,7 +118,7 @@ class EloquentTable extends Table
      */
     public function whereBetween($attribute, $min, $max)
     {
-        if ($min > $max) {
+        if ($min && $max && $min > $max) {
             return $this->whereEquals(0, 1);
         }
 
@@ -167,25 +168,11 @@ class EloquentTable extends Table
     /**
      * 翻页
      * @param int $perPage
-     * @param string $pageName
      * @param int|null $page
-     * @return static
+     * @return AbstractPaginator
      */
-    public function paginate(int $perPage, string $pageName = 'page', int $page = null)
+    protected function createPaginator(int $perPage, int $page = null) : AbstractPaginator
     {
-        $this->original->paginate($perPage, ['*'], $pageName, $page);
-
-        return $this;
-    }
-
-    /**
-     * 处理上方所有条件后, 执行查询语句, 返回结果集
-     *
-     * @param array $columns 默认获取全部字段
-     * @return mixed
-     */
-    protected function selectQuery(array $columns = []): \Illuminate\Support\Collection
-    {
-        return $this->original->get($columns);
+        return $this->original->paginate($perPage, ['*'], 'page', $page);
     }
 }

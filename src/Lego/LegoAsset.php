@@ -1,6 +1,6 @@
 <?php namespace Lego;
 
-use Lego\Helper\HtmlUtility;
+use Collective\Html\HtmlFacade;
 
 /**
  * Lego 中静态文件的依赖维护类
@@ -53,7 +53,7 @@ class LegoAsset
     {
         return join("\n", array_map(
             function ($script) {
-                return HtmlUtility::html()->script($script);
+                return HtmlFacade::script($script);
             },
             self::$scripts
         ));
@@ -63,7 +63,7 @@ class LegoAsset
     {
         return join("\n", array_map(
             function ($style) {
-                return HtmlUtility::html()->style($style);
+                return HtmlFacade::style($style);
             },
             self::$styles
         ));

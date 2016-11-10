@@ -1,12 +1,4 @@
 vendor
-composer.phar
 composer.lock
-.php_cs.cache
-
-_ide_helper.php
-
-#mac
-.DS_Store
-Thumbs.db
 .idea/
-demo
+.phpstorm.meta.php

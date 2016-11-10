@@ -1,15 +1,15 @@
-<?php namespace Lego\Field\Plugin;
+<?php namespace Lego\Field\Operators;
 
-use Lego\Helper\Value;
+use Lego\Foundation\Value;
 
-trait ValuePlugin
+trait ValueOperator
 {
     /**
      * @var Value
      */
     private $value;
 
-    protected function initializeValuePlugin()
+    protected function initializeValueOperator()
     {
         $this->value = new Value();
     }

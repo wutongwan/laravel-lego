@@ -1,4 +1,4 @@
-<?php namespace Lego\Field\Plugin;
+<?php namespace Lego\Field\Operators;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Lego\Field\Field;
 
 /**
- * Class EloquentPlugin
+ * Class EloquentOperator
  * @package Lego\Field\Plugin
  */
-trait EloquentPlugin
+trait EloquentOperator
 {
     /**
      * Relation 字符串，eg：suite.xiaoqu.area
@@ -49,7 +49,7 @@ trait EloquentPlugin
         return $this->related;
     }
 
-    protected function initializeEloquentPlugin()
+    protected function initializeEloquentOperator()
     {
         $names = explode('.', $this->name());
         if (count($names) === 1) {

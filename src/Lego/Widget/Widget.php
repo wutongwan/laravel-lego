@@ -1,9 +1,9 @@
 <?php namespace Lego\Widget;
 
-use Lego\Helper\InitializeOperator;
-use Lego\Helper\MagicCallOperator;
-use Lego\Helper\MessageOperator;
-use Lego\Helper\RenderStringOperator;
+use Illuminate\Support\Traits\Macroable;
+use Lego\Foundation\Operators\InitializeOperator;
+use Lego\Foundation\Operators\MessageOperator;
+use Lego\Foundation\Operators\RenderStringOperator;
 use Lego\Register\Data\ResponseData;
 use Lego\Data\Data;
 use Lego\Data\Row\Row;
@@ -17,12 +17,13 @@ abstract class Widget
     use MessageOperator;
     use InitializeOperator;
     use RenderStringOperator;
-    use MagicCallOperator;
+    use Macroable;
 
     // Plugins
-    use Plugin\FieldPlugin;
-    use Plugin\GroupPlugin;
-    use Plugin\RequestPlugin;
+    use Operators\FieldOperator;
+    use Operators\GroupOperator;
+    use Operators\RequestOperator;
+    use Operators\ButtonsOperator;
 
     /**
      * 数据源
@@ -87,10 +88,6 @@ abstract class Widget
      */
     final public function response($response)
     {
-        $this->processFields();
-
-        $this->process();
-
         /**
          * 全局重写 Response.
          */
@@ -98,6 +95,9 @@ abstract class Widget
         if (!is_null($registeredResponse)) {
             return $registeredResponse;
         }
+
+        $this->processFields();
+        $this->process();
 
         /**
          * 通过 rewriteResponse() 重写的 Response.
@@ -113,4 +113,14 @@ abstract class Widget
      * Widget 的所有数据处理都放在此函数中, 渲染 view 前调用
      */
     abstract public function process();
+
+    /**
+     * 默认四个方位可以插入按钮，特殊需求请重写此函数
+     *
+     * @return array
+     */
+    public function buttonLocations(): array
+    {
+        return ['right-top', 'right-bottom', 'left-top', 'left-bottom'];
+    }
 }

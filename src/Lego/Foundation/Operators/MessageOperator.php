@@ -1,4 +1,4 @@
-<?php namespace Lego\Helper;
+<?php namespace Lego\Foundation\Operators;
 
 use Illuminate\Support\MessageBag;
 
