@@ -1,6 +1,5 @@
-# Lego 文档
+# Lego Documents
 
-## 目录
-
-- [Field](./field.md) 支持的输入控件
-- [Register](./register.md) Lego的注册器
+- [Form](./form.md)
+- [Fields](./field.md)
+- [Lego Register](./register.md)
