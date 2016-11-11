@@ -1,6 +1,7 @@
 * text=auto
 
 /docs export-ignore
+/tests export-ignore
 .travis.yml export-ignore
 phpunit.xml export-ignore
 .gitattributes export-ignore
