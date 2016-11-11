@@ -28,8 +28,15 @@ class JSON extends Field
 
     public function getCurrentValue()
     {
-        $value = $this->value()->current();
-        return is_array($value) ? array_get($value, $this->jsonKey) : $value;
+        $original = $this->value()->original();
+        $current = $this->value()->current();
+        if ($current === $original) {
+            return $this->getOriginalValue();
+        }
+
+        return is_string($current)
+            ? json_decode($current, JSON_OBJECT_AS_ARRAY)
+            : $current;
     }
 
     /**
@@ -37,6 +44,10 @@ class JSON extends Field
      */
     public function process()
     {
+        $this->value()->setShow(function () {
+            $value = $this->getCurrentValue();
+            return is_scalar($value) ? $value : json_encode($this->getCurrentValue(), JSON_UNESCAPED_UNICODE);
+        });
     }
 
     /**
@@ -46,7 +57,7 @@ class JSON extends Field
     public function render(): string
     {
         return FormFacade::input('text', $this->elementName(),
-            $this->getCurrentValue(),
+            $this->value()->show(),
             [
                 'id' => $this->elementId(),
                 'class' => 'form-control'

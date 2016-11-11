@@ -1,5 +1,6 @@
 <?php namespace Lego\Field;
 
+use Illuminate\Support\Facades\App;
 use Lego\Foundation\Operators\HasMode;
 use Lego\Foundation\Operators\ModeOperator;
 use Lego\Foundation\Operators\MessageOperator;
@@ -70,7 +71,7 @@ abstract class Field implements HasMode
         $this->description = $description;
         $this->source = $source;
 
-        $this->locale(\App::getLocale()); // 默认使用 Laravel 的配置
+        $this->locale(App::getLocale()); // 默认使用 Laravel 的配置
 
         $this->triggerInitialize();
     }
@@ -160,6 +161,6 @@ abstract class Field implements HasMode
 
     protected function renderDisabled() : string
     {
-        return view('lego::default.field.disabled', ['field' => $this]);
+        return $this->renderReadonly();
     }
 }
