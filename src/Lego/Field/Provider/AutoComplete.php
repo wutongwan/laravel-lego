@@ -1,5 +1,6 @@
 <?php namespace Lego\Field\Provider;
 
+use Illuminate\Support\Facades\Request;
 use Lego\Field\Field;
 use Lego\Data\Table\Table;
 use Lego\LegoAsset;
@@ -14,7 +15,7 @@ class AutoComplete extends Field
     {
         // 默认自动补全列表
         $this->match(function ($keyword) {
-            return self::result($this->defaultMatch($keyword));
+            return $this->defaultMatch($keyword);
         });
     }
 
@@ -38,10 +39,6 @@ class AutoComplete extends Field
             ->where($this->relationColumn(), 'like', '%' . trim($keyword) . '%')
             ->limit($this->getLimit())
             ->pluck($this->relationColumn(), $related->getKeyName())
-            ->map(function ($column, $id) {
-                return ['text' => $column, 'id' => $id];
-            })
-            ->values()
             ->all();
     }
 
@@ -98,7 +95,8 @@ class AutoComplete extends Field
      */
     public function match($callable)
     {
-        $hash = md5(get_class($this->source()->original()) . $this->name());
+        $original = $this->source()->original();
+        $hash = md5(is_object($original) ? get_class($original) : gettype($original) . $this->name());
 
         /** @var AutoCompleteData $data */
         $data = lego_register(AutoCompleteData::class, $callable, $hash);
@@ -116,6 +114,12 @@ class AutoComplete extends Field
             if ($model) {
                 $this->value()->setShow($model->{$this->relationColumn()});
             }
+        }
+
+        if (!$this->value()->show()) {
+            $this->value()->setShow(function () {
+                return Request::input($this->elementName() . '-text');
+            });
         }
 
         // 以下文件仅在 editable 时加载
@@ -151,33 +155,13 @@ class AutoComplete extends Field
      */
     public function filter(Table $query): Table
     {
+        if (!$this->relation()) {
+            return $query;
+        }
+
         return $query->whereEquals(
             $query->original()->getModel()->getKeyName(),
             $this->getCurrentValue()
         );
-    }
-
-    /**
-     * 自动补全结果的构建函数
-     *
-     * @param array $items [ ['id' => 1, 'text' => 'Some Text', ...], ... ]
-     * @return array
-     */
-    public static function result(array $items)
-    {
-        $count = count($items);
-        if ($count > 0) {
-            // 简单的接口校验
-            $first = $items[0];
-            lego_assert(
-                array_key_exists('id', $first) && array_key_exists('text', $first),
-                'AutoComplete items illegal.'
-            );
-        }
-
-        return [
-            'items' => $items,
-            'total_count' => $count,
-        ];
     }
 }

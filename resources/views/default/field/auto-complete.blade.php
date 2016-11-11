@@ -1,13 +1,19 @@
+<? /** @var \Lego\Field\Provider\AutoComplete $field */ ?>
+<? $__field_show_value = $field->value()->show() ?>
+
 <select name="{{ $field->elementName() }}" id="{{ $field->elementId() }}" class="form-control"
         style="width: 100%; min-width: 100%;">
     @if($value = $field->getCurrentValue())
-        <option value="{{ $value }}">{{ $field->value()->show() }}</option>
+        <option value="{{ $value }}">{{ $__field_show_value }}</option>
     @endif
 </select>
+<input type="hidden" id="{{ $field->elementId() }}-text" name="{{ $field->elementName() }}-text" value="{{ $__field_show_value }}">
 
 <script>
     $(document).ready(function () {
-        $("#{{ $field->elementId() }}").select2({
+        var $select = $("#{{ $field->elementId() }}");
+
+        $select.select2({
             placeholder: "{{ $field->getPlaceholder() }}",
             theme: "bootstrap",
             width: "100%",
@@ -39,6 +45,17 @@
             escapeMarkup: function (markup) {
                 return markup;
             } // let our custom formatter work
+        });
+
+        // fill text input
+        var $selectedText = $('#{{ $field->elementId() }}-text');
+
+        $select.on('select2:select', function (event) {
+            $selectedText.val(event.params.data.text);
+        });
+
+        $select.on('select2:unselect', function () {
+            $selectedText.val(null);
         });
     });
 </script>
