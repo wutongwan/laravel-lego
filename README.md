@@ -41,11 +41,11 @@ return $form->view('layout', ['form' => $form]);
 ![image](http://ww1.sinaimg.cn/bmiddle/801b780agw1f8pjbovte0j20n80h4jrz.jpg)
 
 
-## 系统需求：
+## Required
   - php >= 7.0 (短时间很多人肯定还没用上 PHP7, but who cares ? 一切向前看！)
   - Laravel >= 5.2
 
-## 安装
+## Installment
 
 1、使用 Composer 添加依赖
 
