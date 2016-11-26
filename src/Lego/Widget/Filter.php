@@ -80,7 +80,7 @@ class Filter extends Widget
         if ($syncFields) {
             $this->fields()->each(
                 function (Field $field) {
-                    $this->grid->addField(get_class($field), $field->name(), $field->description());
+                    $this->grid->addField($field);
                 }
             );
         }

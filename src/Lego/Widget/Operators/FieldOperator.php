@@ -22,14 +22,11 @@ trait FieldOperator
 
         // addField Magic call
         foreach (FieldRegister::availableFields() as $name => $class) {
-            self::macro(
-                'add' . $name,
-                function () use ($class) {
-                    return call_user_func_array(
-                        [$this, 'addField'], array_merge([$class], func_get_args())
-                    );
-                }
-            );
+            self::macro('add' . $name, function () use ($class) {
+                $arguments = array_merge(func_get_args(), [$this->data()]);
+                $field = (new \ReflectionClass($class))->newInstanceArgs($arguments);
+                return call_user_func_array([$this, 'addField'], [$field]);
+            });
         }
     }
 
@@ -48,11 +45,9 @@ trait FieldOperator
         return $this->fields()->get($fieldName);
     }
 
-    protected function addField($class, $fieldName, $fieldDescription = null): Field
+    protected function addField(Field $field): Field
     {
-        $field = new $class($fieldName, $fieldDescription, $this->data());
-
-        $this->fields [$fieldName] = $field;
+        $this->fields[$field->name()] = $field;
 
         $this->fieldAdded($field);
 
@@ -85,10 +80,36 @@ trait FieldOperator
         });
     }
 
+    /**
+     * sync field's value to source.
+     */
     protected function syncFieldsValue()
     {
         $this->fields()->each(function (Field $field) {
             $field->syncCurrentValueToSource();
         });
+    }
+
+    /**
+     * Mark Fields as Required.
+     *
+     * @param array[]|Field[] $fields
+     * @return $this
+     */
+    public function required($fields = [])
+    {
+        $fields = $fields ?: $this->fields();
+
+        foreach ($fields as $field) {
+            if (is_string($field)) {
+                $this->field($field)->required();
+                continue;
+            }
+
+            /** @var Field $field */
+            $field->required();
+        }
+
+        return $this;
     }
 }
