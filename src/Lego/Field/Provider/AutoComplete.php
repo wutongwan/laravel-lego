@@ -4,8 +4,6 @@ use Illuminate\Support\Facades\Request;
 use Lego\Field\Field;
 use Lego\Data\Table\Table;
 use Lego\LegoAsset;
-use Lego\Register\Register;
-use Lego\Register\Data\ResponseData;
 use Lego\Register\Data\AutoCompleteData;
 
 class AutoComplete extends Field
@@ -145,7 +143,7 @@ class AutoComplete extends Field
 
     protected function renderEditable(): string
     {
-        return view('lego::default.field.auto-complete', ['field' => $this]);
+        return $this->view('lego::default.field.auto-complete');
     }
 
     /**

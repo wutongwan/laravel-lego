@@ -33,6 +33,8 @@ class Filter extends Widget
      */
     protected function fieldAdded(Field $field)
     {
+        $field->placeholder($field->description());
+
         $field->value()->set(function () use ($field) {
             return Request::get($field->elementName());
         });

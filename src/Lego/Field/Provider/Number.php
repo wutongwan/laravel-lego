@@ -58,7 +58,8 @@ class Number extends Field
 
     protected function renderEditable(): string
     {
-        return FormFacade::number($this->elementName(), $this->getCurrentValue(), [
+        $type = is_integer($this->step) ? 'number' : 'text'; // iOS number field not supported float input.
+        return FormFacade::input($type, $this->elementName(), $this->getCurrentValue(), [
             'id' => $this->elementId(),
             'class' => 'form-control',
             'min' => $this->min,

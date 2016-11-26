@@ -29,7 +29,7 @@ class Select extends Field
 
     protected function renderEditable(): string
     {
-        return view('lego::default.field.select', ['field' => $this]);
+        return $this->view('lego::default.field.select');
     }
 
     protected $options = [];

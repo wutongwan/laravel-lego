@@ -166,4 +166,9 @@ abstract class Field implements HasMode
     {
         return $this->renderReadonly();
     }
+
+    protected function view($view, $data = [])
+    {
+        return view($view, $data)->with('field', $this);
+    }
 }

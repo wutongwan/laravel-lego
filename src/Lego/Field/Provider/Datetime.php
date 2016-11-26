@@ -6,6 +6,12 @@ use Lego\LegoAsset;
 
 class Datetime extends Field
 {
+    /**
+     * 日期格式，eg：Y-m-d
+     * @var string
+     */
+    protected $format = 'Y-m-d H:i:s';
+
     protected $inputType = 'datetime-local';
 
     /**
@@ -14,18 +20,11 @@ class Datetime extends Field
     protected function initialize()
     {
         $this->rule('date');
-        $this->format('Y-m-d H:i:s');
 
         if (!$this->isMobile()) {
             $this->inputType = 'text';
         }
     }
-
-    /**
-     * 日期格式，eg：Y-m-d
-     * @var string
-     */
-    protected $format;
 
     public function format($format)
     {
@@ -149,6 +148,6 @@ class Datetime extends Field
 
     protected function renderEditable(): string
     {
-        return view('lego::default.field.date', ['field' => $this]);
+        return $this->view('lego::default.field.date');
     }
 }
