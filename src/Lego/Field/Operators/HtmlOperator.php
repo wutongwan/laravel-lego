@@ -19,7 +19,7 @@ trait HtmlOperator
 
     protected function initializeHtmlOperator()
     {
-        $this->elementName = str_replace(['.', ':'], '-', $this->name()); // TODO 替换冒号
+        $this->elementName = str_replace(['.', ':'], '-', $this->name());
     }
 
     public function elementId()
@@ -59,10 +59,6 @@ trait HtmlOperator
      */
     public function getAttributes()
     {
-        if (!array_key_exists('placeholder', $this->attributes)) {
-            $this->attr('placeholder', $this->description());
-        }
-
         return HtmlUtility::mergeAttributes(
             $this->getConfiguredAttributes(),
             $this->getMetaAttributes(),
@@ -77,18 +73,18 @@ trait HtmlOperator
      *      - 数组, 将merge到现有attributes中
      *      - 字符串, 和对应的 value 放入 attributes
      *
-     * @param array|string $attributesOrAttributes
+     * @param array|string $attributeOrAttributes
      * @param string|null $value
      * @return $this
      */
-    public function attr($attributesOrAttributes, $value = null)
+    public function attr($attributeOrAttributes, $value = null)
     {
-        if (is_array($attributesOrAttributes)) {
-            $this->attributes = array_merge($this->attributes, $attributesOrAttributes);
+        if (is_array($attributeOrAttributes)) {
+            $this->attributes = array_merge($this->attributes, $attributeOrAttributes);
             return $this;
         }
 
-        $this->attributes [$attributesOrAttributes] = $value;
+        $this->attributes [$attributeOrAttributes] = $value;
         return $this;
     }
 

@@ -1,6 +1,7 @@
 <?php namespace Lego\Widget;
 
 use Illuminate\Support\Traits\Macroable;
+use Lego\Field\Field;
 use Lego\Foundation\Operators\InitializeOperator;
 use Lego\Foundation\Operators\MessageOperator;
 use Lego\Foundation\Operators\RenderStringOperator;
@@ -89,7 +90,7 @@ abstract class Widget
     final public function response($response)
     {
         /**
-         * 全局重写 Response.
+         * Global Response.
          */
         $registeredResponse = ResponseData::getResponse();
         if (!is_null($registeredResponse)) {
@@ -100,11 +101,19 @@ abstract class Widget
         $this->process();
 
         /**
-         * 通过 rewriteResponse() 重写的 Response.
+         * if rewriteResponse() called
          */
         if (!is_null($this->response)) {
             return value($this->response);
         }
+
+        /**
+         * Render to string here.
+         */
+        $this->renderOnce();
+        $this->fields()->each(function (Field $field) {
+            $field->renderOnce();
+        });
 
         return $response;
     }
