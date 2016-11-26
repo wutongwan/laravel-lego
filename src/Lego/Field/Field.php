@@ -129,7 +129,10 @@ abstract class Field implements HasMode
      * @param Table $query
      * @return Table
      */
-    abstract public function filter(Table $query): Table;
+    public function filter(Table $query): Table
+    {
+        return $query->whereEquals($this->column(), $this->getCurrentValue());
+    }
 
     /**
      * 数据处理逻辑

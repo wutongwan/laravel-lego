@@ -1,6 +1,6 @@
 <?php namespace Lego\Field\Provider;
 
-class Time extends Datetime
+class TimeRange extends DatetimeRange
 {
     protected $format = 'H:i:s';
 

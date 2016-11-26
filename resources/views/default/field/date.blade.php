@@ -9,8 +9,7 @@ $__field_placeholder = $field->getPlaceholder($field->description());
 @if(!(new Mobile_Detect())->isMobile())
     <script>
         $(document).ready(function () {
-            $("#{{ $field->elementId() }}")
-                .datetimepicker({!! json_encode($field->getPickerOptions()) !!});
+            $("#{{ $field->elementId() }}").datetimepicker({!! json_encode($field->getPickerOptions()) !!});
         });
     </script>
 @endif

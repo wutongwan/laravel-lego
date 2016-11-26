@@ -1,7 +1,6 @@
 <?php namespace Lego\Field\Provider;
 
 use Carbon\Carbon;
-use Lego\Data\Table\Table;
 use Lego\Field\Field;
 use Lego\LegoAsset;
 
@@ -26,7 +25,7 @@ class Datetime extends Field
      * 日期格式，eg：Y-m-d
      * @var string
      */
-    private $format;
+    protected $format;
 
     public function format($format)
     {
@@ -47,52 +46,6 @@ class Datetime extends Field
             ['dd', 'mm', 'yyyy', 'hh', 'ii', 'ss', 'p', 'P', 'H', 'h'],
             $this->format
         );
-    }
-
-    /**
-     * Filter 中日期的筛选框是否是范围输入
-     *
-     * @var bool
-     */
-    private $range = false;
-
-    public function range()
-    {
-        $this->range = true;
-
-        return $this;
-    }
-
-    public function isRange()
-    {
-        return $this->range;
-    }
-
-    /**
-     * Filter 检索数据时, 构造此字段的查询
-     * @param Table $query
-     * @return Table
-     */
-    public function filter(Table $query): Table
-    {
-        $value = $this->getCurrentValue();
-        if ($this->range && is_array($value)) {
-            $min = $value['min'];
-            $max = $value['max'];
-
-            switch (true) {
-                case $min && $max:
-                    return $query->whereBetween($this->column(), $min, $max);
-                case $min:
-                    return $query->whereGte($this->column(), $min);
-                case $max:
-                    return $query->whereLte($this->column(), $max);
-                default:
-                    return $query;
-            }
-        } else {
-            return $query->whereEquals($this->column(), $value);
-        }
     }
 
     /**
@@ -131,20 +84,15 @@ class Datetime extends Field
         return is_null($original) ? null : new Carbon($original);
     }
 
+    /**
+     * @return Carbon|null
+     */
     public function getCurrentValue()
     {
-        $current = $this->value()->current();
-        if (is_array($current)) {
-            foreach ($current as &$item) {
-                $item = $this->convertToCarbon($item);
-            }
-        } else {
-            $current = $this->convertToCarbon($current);
-        }
-        return $current;
+        return $this->convertToCarbon(parent::getCurrentValue());
     }
 
-    private function convertToCarbon($value)
+    protected function convertToCarbon($value)
     {
         if (!$value) {
             return null;
@@ -163,15 +111,7 @@ class Datetime extends Field
     public function process()
     {
         $this->value()->setShow(function () {
-            $value = $this->getCurrentValue();
-            if (is_array($value)) {
-                foreach ($value as &$item) {
-                    $item = $item ? $item->format($this->getFormat()) : null;
-                }
-            } else {
-                $value = $value ? $value->format($this->getFormat()) : null;
-            }
-            return $value;
+            return $this->getShowValue();
         });
 
         /**
@@ -185,6 +125,12 @@ class Datetime extends Field
                 LegoAsset::js('default/datetimepicker/i18n/bootstrap-datetimepicker.zh-CN.js');
             }
         }
+    }
+
+    protected function getShowValue()
+    {
+        $value = $this->getCurrentValue();
+        return $value ? $value->format($this->format) : null;
     }
 
     private function isMobile()
@@ -203,9 +149,6 @@ class Datetime extends Field
 
     protected function renderEditable(): string
     {
-        if ($this->range) {
-            return view('lego::default.field.date-range', ['field' => $this]);
-        }
         return view('lego::default.field.date', ['field' => $this]);
     }
 }

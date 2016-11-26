@@ -1,6 +1,6 @@
 <?php namespace Lego\Field\Provider;
 
-class Date extends Datetime
+class DateRange extends DatetimeRange
 {
     protected $format = 'Y-m-d';
 
