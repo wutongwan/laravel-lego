@@ -9,10 +9,7 @@ class ArrayTable extends Table
 {
     protected function initialize()
     {
-        $this->rows = collect($this->original())
-            ->map(function ($data) {
-                return lego_row($data);
-            });
+        $this->rows = collect($this->original())->map('lego_row');
     }
 
     /**
@@ -23,9 +20,9 @@ class ArrayTable extends Table
      */
     public function whereEquals($attribute, $value)
     {
-        $this->rows = $this->rows->where($attribute, $value);
-
-        return $this;
+        return $this->addFilterToRows(function (Row $row) use ($attribute, $value) {
+           return $row->get($attribute) == $value;
+        });
     }
 
     /**
@@ -121,6 +118,19 @@ class ArrayTable extends Table
     }
 
     /**
+     * 嵌套查询
+     *
+     * @param \Closure $closure
+     * @return static
+     */
+    public function where(\Closure $closure)
+    {
+        call_user_func($closure, $this);
+
+        return $this;
+    }
+
+    /**
      * 关联查询
      * @param $relation
      * @param $callback
@@ -128,7 +138,12 @@ class ArrayTable extends Table
      */
     public function whereHas($relation, $callback)
     {
-        return $this;
+        return $this->addFilterToRows(function (Row $row) use ($relation, $callback) {
+            if (!$related = $row->get($relation)) {
+                return false;
+            }
+            return lego_table([$related])->where($callback)->count() > 0;
+        });
     }
 
     private function addFilterToRows(\Closure $filter)
@@ -169,7 +184,7 @@ class ArrayTable extends Table
      * @param int|null $page
      * @return AbstractPaginator
      */
-    protected function createPaginator(int $perPage, int $page = null) : AbstractPaginator
+    protected function createPaginator(int $perPage, int $page = null): AbstractPaginator
     {
         return new LengthAwarePaginator($this->rows, count($this->rows), $perPage);
     }

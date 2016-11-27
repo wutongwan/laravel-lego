@@ -1,6 +1,7 @@
 <?php namespace Lego\Field;
 
 use Illuminate\Support\Facades\App;
+use Lego\Data\Table\EloquentTable;
 use Lego\Foundation\Operators\HasMode;
 use Lego\Foundation\Operators\ModeOperator;
 use Lego\Foundation\Operators\MessageOperator;
@@ -25,6 +26,7 @@ abstract class Field implements HasMode
     use Operators\EloquentOperator;
     use Operators\ValidationOperator;
     use Operators\ValueOperator;
+    use Operators\ScopeOperator;
 
     /**
      * 字段的唯一标记
@@ -132,6 +134,28 @@ abstract class Field implements HasMode
     public function filter(Table $query): Table
     {
         return $query->whereEquals($this->column(), $this->getCurrentValue());
+    }
+
+    /**
+     * Call Field's Filter
+     *
+     * @param Table $query
+     * @return Table
+     *
+     * - Relation
+     * - Scope
+     * - Filter
+     */
+    public function applyFilter(Table $query)
+    {
+        if ($this->relation()) {
+            $query->whereHas($this->relation(), function (EloquentTable $query) {
+                $this->callFilterWithScope($query);
+            });
+        } else {
+            $this->callFilterWithScope($query);
+        }
+        return $query;
     }
 
     /**

@@ -95,6 +95,14 @@ abstract class Table extends Data implements \ArrayAccess, Arrayable, \Countable
     abstract public function whereBetween($attribute, $min, $max);
 
     /**
+     * 嵌套查询
+     *
+     * @param \Closure $closure
+     * @return static
+     */
+    abstract public function where(\Closure $closure);
+
+    /**
      * 关联查询
      * @param $relation
      * @param $callback
@@ -140,13 +148,16 @@ abstract class Table extends Data implements \ArrayAccess, Arrayable, \Countable
                 return lego_row($row);
             })
         );
-        $this->paginator->appends(Request::input());
 
         return $this->paginator;
     }
 
     public function paginator()
     {
+        if (!$this->paginator) {
+            $this->paginate(100);
+        }
+
         return $this->paginator;
     }
 

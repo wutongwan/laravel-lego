@@ -8,7 +8,6 @@ use Lego\Register\Data\AutoCompleteData;
 
 class AutoComplete extends Field
 {
-
     protected function initialize()
     {
         // 默认自动补全列表
@@ -34,9 +33,9 @@ class AutoComplete extends Field
         }
 
         return $related
-            ->where($this->relationColumn(), 'like', '%' . trim($keyword) . '%')
+            ->where($this->column(), 'like', '%' . trim($keyword) . '%')
             ->limit($this->getLimit())
-            ->pluck($this->relationColumn(), $related->getKeyName())
+            ->pluck($this->column(), $related->getKeyName())
             ->all();
     }
 
@@ -94,7 +93,7 @@ class AutoComplete extends Field
     public function match($callable)
     {
         $original = $this->source()->original();
-        $hash = md5(is_object($original) ? get_class($original) : gettype($original) . $this->name());
+        $hash = md5((is_object($original) ? get_class($original) : gettype($original)) . $this->name());
 
         /** @var AutoCompleteData $data */
         $data = lego_register(AutoCompleteData::class, $callable, $hash);
@@ -108,9 +107,9 @@ class AutoComplete extends Field
         $current = $this->getCurrentValue();
         $related = $this->related();
         if ($current && $related) {
-            $model = $related->where($related->getKeyName(), $current)->first([$this->relationColumn()]);
+            $model = $related->where($related->getKeyName(), $current)->first([$this->column()]);
             if ($model) {
-                $this->value()->setShow($model->{$this->relationColumn()});
+                $this->value()->setShow($model->{$this->column()});
             }
         }
 
@@ -157,9 +156,13 @@ class AutoComplete extends Field
             return $query;
         }
 
-        return $query->whereEquals(
-            $query->original()->getModel()->getKeyName(),
-            $this->getCurrentValue()
-        );
+        return $query->whereEquals($query->original()->getModel()->getKeyName(), $this->getCurrentValue());
+    }
+
+    public function syncCurrentValueToSource()
+    {
+        lego_assert(!$this->isNestedRelation(), __CLASS__ . ' not support nested relation in form widget.');
+
+        parent::syncCurrentValueToSource();
     }
 }

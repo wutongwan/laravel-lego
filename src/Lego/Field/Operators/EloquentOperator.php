@@ -22,7 +22,7 @@ trait EloquentOperator
      *
      * @var string
      */
-    private $relationColumn;
+    private $foreignKey;
 
     /**
      * 最终关联到的 Model ，非数据实例，仅可用于 query、relation 等用途
@@ -36,9 +36,9 @@ trait EloquentOperator
         return $this->relation;
     }
 
-    public function relationColumn()
+    public function foreignKey()
     {
-        return $this->relationColumn;
+        return $this->foreignKey;
     }
 
     /**
@@ -51,31 +51,37 @@ trait EloquentOperator
 
     protected function initializeEloquentOperator()
     {
+        // $this->name eg: author.country.name
         $names = explode('.', $this->name());
         if (count($names) === 1) {
             return;
         }
 
-        $this->relation = join('.', array_slice($names, 0, -1));
-        $this->relationColumn = last($names);
+        $this->relation = join('.', array_slice($names, 0, -1)); // eg: author.country
+        $this->column = last($names); // eg: name
 
         // 计算 related model
-        $this->related = $this->calculateRelated();
+        $this->related = $this->getRelated();
 
         // 计算 relation column
         $first = $this->getModel()->{$names[0]}();
         if ($first instanceof BelongsTo) {
-            $this->column = $first->getForeignKey();
+            $this->foreignKey = $first->getForeignKey();
         }
     }
 
-    private function calculateRelated(Model $model = null, $relationName = null)
+    protected function isNestedRelation()
+    {
+        return strpos($this->relation, '.') !== false;
+    }
+
+    private function getRelated(Model $model = null, $relationName = null)
     {
         $model = $model ?: $this->getModel();
         if (is_null($relationName)) {
             $copy = $model;
             foreach (explode('.', $this->relation) as $name) {
-                $copy = $this->calculateRelated($copy, $name);
+                $copy = $this->getRelated($copy, $name);
             }
             return $copy;
         }

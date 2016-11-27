@@ -55,20 +55,12 @@ class Filter extends Widget
     public function process()
     {
         $this->fields()->each(function (Field $field) {
-            if (is_null($field->getCurrentValue())) {
+            $value = $field->getCurrentValue();
+            if ((is_string($value) && is_empty_string($value)) || !$value) {
                 return;
             }
 
-            if ($field->relation()) {
-                $this->data()->whereHas(
-                    $field->relation(),
-                    function (EloquentTable $table) use ($field) {
-                        $field->filter($table);
-                    }
-                );
-            } else {
-                $field->filter($this->data());
-            }
+            $field->applyFilter($this->data());
         });
     }
 
