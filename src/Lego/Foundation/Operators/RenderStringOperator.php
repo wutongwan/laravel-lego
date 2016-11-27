@@ -14,11 +14,22 @@ trait RenderStringOperator
      * 渲染当前对象
      * @return string
      */
-    abstract public function render() : string;
+    abstract public function render(): string;
+
+    private $rendered;
+
+    public function renderOnce()
+    {
+        if (!$this->rendered) {
+            $this->rendered = $this->render();
+        }
+
+        return $this->rendered;
+    }
 
     final public function __toString()
     {
-        return $this->render();
+        return $this->renderOnce();
     }
 
     /**
@@ -28,6 +39,6 @@ trait RenderStringOperator
      */
     final public function toHtmlString()
     {
-        return new HtmlString($this->render());
+        return new HtmlString($this->renderOnce());
     }
 }

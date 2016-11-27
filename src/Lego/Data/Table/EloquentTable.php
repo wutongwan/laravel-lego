@@ -128,6 +128,21 @@ class EloquentTable extends Table
     }
 
     /**
+     * 嵌套查询
+     *
+     * @param \Closure $closure
+     * @return static
+     */
+    public function where(\Closure $closure)
+    {
+        $this->original->where(function ($query) use ($closure) {
+            call_user_func($closure, lego_table($query));
+        });
+
+        return $this;
+    }
+
+    /**
      * 关联查询
      * @param $relation
      * @param \Closure $callback 由于此处 Closure 接受的参数是 Table 类，所以下面调用时封装了一次

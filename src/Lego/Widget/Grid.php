@@ -1,6 +1,7 @@
 <?php namespace Lego\Widget;
 
 use Illuminate\Pagination\AbstractPaginator;
+use Illuminate\Support\Facades\Request;
 use Lego\Data\Data;
 use Lego\Data\Row\Row;
 use Lego\Field\Field;
@@ -119,6 +120,7 @@ class Grid extends Widget
     {
         if (!$this->paginator) {
             $this->paginator = $this->data()->paginate($this->paginatorPerPage);
+            $this->paginator->appends(Request::input());
         }
 
         return $this->paginator;
