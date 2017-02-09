@@ -13,12 +13,12 @@ use Lego\Widget\Widget;
  *
  * inspired by https://github.com/barryvdh/laravel-ide-helper
  *
- * Class IDEHelper
+ * Class GenerateIDEHelper
  * @package Lego\Command
  */
-class IDEHelper extends Command
+class GenerateIDEHelper extends Command
 {
-    protected $signature = 'lego:ide-helper';
+    protected $signature = 'lego:generate-ide-helper';
 
     protected $description = 'Generate IDE Helper file for Lego.';
 
@@ -28,7 +28,9 @@ class IDEHelper extends Command
         $widgets = $this->widgetHelpers();
         $content = view('lego::commands.ide-helper.layout', compact('fields', 'widgets'));
 
-        $this->writeToHelperFile($content);
+        $path = base_path('_ide_helper_lego.php');
+        file_put_contents($path, $content);
+        $this->line("Lego IDE Helper file `{$path}` done.");
     }
 
     private function widgetHelpers()
@@ -51,12 +53,5 @@ class IDEHelper extends Command
         }
 
         return $widgets;
-    }
-
-    private function writeToHelperFile($content)
-    {
-        $path = base_path('_ide_helper_lego.php');
-        file_put_contents($path, $content);
-        $this->line("Lego IDE Helper file `{$path}` done.");
     }
 }

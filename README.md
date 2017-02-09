@@ -61,8 +61,12 @@ composer require wutongwan/lego
 
 3、发布项目相关文件
 
+本项目使用 [bower](https://bower.io/) 管理静态文件，执行下面命令前，请确认已安装 bower
+
 ```bash
-php artisan vendor:publish
+php artisan lego:update-components
+# 如果当前用户为 root
+php artisan lego:update-components --bower-allow-root
 ```
 
 4、仅开发环境
@@ -72,7 +76,7 @@ php artisan vendor:publish
 	为方便调用 widget 中的 addField 系列函数，推荐执行下面命令，该命令会在项目根目录创建 `_ide_helper_lego.php` 文件，方便 IDE 进行自动补全.
 	
 	```bash
-	php artisan lego:ide-helper
+	php artisan lego:generate-ide-helper
 	```
 
 ## 文档
