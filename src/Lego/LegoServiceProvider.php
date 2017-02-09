@@ -1,7 +1,8 @@
 <?php namespace Lego;
 
 use Illuminate\Support\ServiceProvider;
-use Lego\Commands\IDEHelper;
+use Lego\Commands\GenerateIDEHelper;
+use Lego\Commands\UpdateComponents;
 
 /**
  * Lego Service Provider for Laravel
@@ -12,7 +13,8 @@ class LegoServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->commands([
-                IDEHelper::class,
+                GenerateIDEHelper::class,
+                UpdateComponents::class,
             ]);
         }
     }
