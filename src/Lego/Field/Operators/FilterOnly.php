@@ -2,9 +2,9 @@
 
 use Lego\LegoException;
 
-trait ForFilterOnly
+trait FilterOnly
 {
-    public function syncCurrentValueToSource()
+    public function syncValueToSource()
     {
         throw new LegoException(static::class . ' for filter only.');
     }

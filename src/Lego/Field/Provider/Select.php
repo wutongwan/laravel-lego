@@ -22,12 +22,12 @@ class Select extends Field
      * 渲染当前对象
      * @return string
      */
-    public function render(): string
+    public function render()
     {
         return $this->renderByMode();
     }
 
-    protected function renderEditable(): string
+    protected function renderEditable()
     {
         return $this->view('lego::default.field.select');
     }

@@ -77,27 +77,19 @@ class Form extends Widget implements HasMode
     protected function fieldAdded(Field $field)
     {
         // Field 原始值来源
-        $field->value()->setOriginal(
-            function () use ($field) {
-                return $field->source()->get($field->column());
-            }
+        $field->setOriginalValue(
+            $field->source()->get($field->column())
         );
 
         // Field 当前值来源
-        $field->value()->setCurrent(
-            function () use ($field) {
-                if ($this->isPost() && $field->isEditable()) {
-                    return Request::input($field->elementName());
-                }
-
-                return $field->value()->original();
-            }
+        $field->setValue(
+            $this->isPost() && $field->isEditable()
+                ? Request::input($field->elementName())
+                : $field->getOriginalValue()
         );
 
-        $field->value()->setShow(
-            function () use ($field) {
-                return $field->source()->get($field->name());
-            }
+        $field->setDisplayValue(
+            $field->source()->get($field->name())
         );
     }
 
@@ -175,7 +167,7 @@ class Form extends Widget implements HasMode
      * 渲染当前对象
      * @return string
      */
-    public function render(): string
+    public function render()
     {
         return view('lego::default.form.horizontal', ['form' => $this])->render();
     }

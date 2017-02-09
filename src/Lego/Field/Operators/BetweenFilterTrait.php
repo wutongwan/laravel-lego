@@ -9,7 +9,7 @@ trait BetweenFilterTrait
      * @param Table $query
      * @return Table
      */
-    public function filter(Table $query): Table
+    public function filter(Table $query)
     {
         $values = $this->getCurrentValue();
         $min = array_get($values, 'min');

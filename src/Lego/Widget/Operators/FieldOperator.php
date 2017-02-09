@@ -86,7 +86,7 @@ trait FieldOperator
     protected function syncFieldsValue()
     {
         $this->fields()->each(function (Field $field) {
-            $field->syncCurrentValueToSource();
+            $field->syncValueToSource();
         });
     }
 

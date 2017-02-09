@@ -3,7 +3,6 @@
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Request;
 use Lego\Data\Data;
-use Lego\Data\Table\EloquentTable;
 use Lego\Field\Field;
 
 class Filter extends Widget
@@ -35,18 +34,18 @@ class Filter extends Widget
     {
         $field->placeholder($field->description());
 
-        $field->value()->set(function () use ($field) {
-            return Request::get($field->elementName());
-        });
+        $field->setValue(
+            Request::get($field->elementName())
+        );
     }
 
     /**
      * 渲染当前对象
      * @return string
      */
-    public function render(): string
+    public function render()
     {
-        return view('lego::default.filter.inline', ['filter' => $this])->render();
+        return view('lego::default.filter.inline', ['filter' => $this]);
     }
 
     /**

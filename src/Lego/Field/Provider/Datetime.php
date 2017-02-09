@@ -79,7 +79,7 @@ class Datetime extends Field
 
     public function getOriginalValue()
     {
-        $original = $this->value()->original();
+        $original = parent::getOriginalValue();
         return is_null($original) ? null : new Carbon($original);
     }
 
@@ -109,9 +109,7 @@ class Datetime extends Field
      */
     public function process()
     {
-        $this->value()->setShow(function () {
-            return $this->getShowValue();
-        });
+        $this->setDisplayValue($this->getShowValue());
 
         /**
          * 仅在 editable && 非移动端启用日期控件，移动端使用原生的输入控件
@@ -141,12 +139,12 @@ class Datetime extends Field
      * 渲染当前对象
      * @return string
      */
-    public function render(): string
+    public function render()
     {
         return $this->renderByMode();
     }
 
-    protected function renderEditable(): string
+    protected function renderEditable()
     {
         return $this->view('lego::default.field.date');
     }

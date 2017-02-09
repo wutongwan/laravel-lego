@@ -14,7 +14,7 @@ trait RenderStringOperator
      * 渲染当前对象
      * @return string
      */
-    abstract public function render(): string;
+    abstract public function render();
 
     private $rendered;
 
@@ -29,7 +29,7 @@ trait RenderStringOperator
 
     final public function __toString()
     {
-        return $this->renderOnce();
+        return (string)$this->renderOnce();
     }
 
     /**

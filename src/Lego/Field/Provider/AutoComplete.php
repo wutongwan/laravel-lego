@@ -109,14 +109,12 @@ class AutoComplete extends Field
         if ($current && $related) {
             $model = $related->where($related->getKeyName(), $current)->first([$this->column()]);
             if ($model) {
-                $this->value()->setShow($model->{$this->column()});
+                $this->setDisplayValue($model->{$this->column()});
             }
         }
 
-        if (!$this->value()->show()) {
-            $this->value()->setShow(function () {
-                return Request::input($this->elementName() . '-text');
-            });
+        if (!$this->getDisplayValue()) {
+            $this->setDisplayValue(Request::input($this->elementName() . '-text'));
         }
 
         // 以下文件仅在 editable 时加载
@@ -135,12 +133,12 @@ class AutoComplete extends Field
      * 渲染当前对象
      * @return string
      */
-    public function render(): string
+    public function render()
     {
         return $this->renderByMode();
     }
 
-    protected function renderEditable(): string
+    protected function renderEditable()
     {
         return $this->view('lego::default.field.auto-complete');
     }
@@ -150,7 +148,7 @@ class AutoComplete extends Field
      * @param Table $query
      * @return Table
      */
-    public function filter(Table $query): Table
+    public function filter(Table $query)
     {
         if (!$this->relation()) {
             return $query;
@@ -159,10 +157,10 @@ class AutoComplete extends Field
         return $query->whereEquals($query->original()->getModel()->getKeyName(), $this->getCurrentValue());
     }
 
-    public function syncCurrentValueToSource()
+    public function syncValueToSource()
     {
         lego_assert(!$this->isNestedRelation(), __CLASS__ . ' not support nested relation in form widget.');
 
-        parent::syncCurrentValueToSource();
+        parent::syncValueToSource();
     }
 }

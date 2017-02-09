@@ -51,12 +51,12 @@ class Number extends Field
      * 渲染当前对象
      * @return string
      */
-    public function render(): string
+    public function render()
     {
         return $this->renderByMode();
     }
 
-    protected function renderEditable(): string
+    protected function renderEditable()
     {
         $type = is_integer($this->step) ? 'number' : 'text'; // iOS number field not supported float input.
         return FormFacade::input($type, $this->elementName(), $this->getCurrentValue(), [

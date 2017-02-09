@@ -142,7 +142,7 @@ class Grid extends Widget
      * 渲染当前对象
      * @return string
      */
-    public function render(): string
+    public function render()
     {
         return view('lego::default.grid.table', ['grid' => $this])->render();
     }

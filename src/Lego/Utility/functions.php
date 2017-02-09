@@ -150,3 +150,20 @@ function lego_response()
 
     return call_user_func_array('response', func_get_args());
 }
+
+/**
+ * 按顺序取默认值
+ *
+ * lego_default($value, $default1, $default2, $default3, ...)
+ *
+ * @return mixed|null
+ */
+function lego_default()
+{
+    foreach (func_get_args() as $value) {
+        if (!is_null($val = value($value))) {
+            return $val;
+        }
+    }
+    return null;
+}

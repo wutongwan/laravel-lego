@@ -2,19 +2,19 @@
 
 use Carbon\Carbon;
 use Lego\Field\Operators\BetweenFilterTrait;
-use Lego\Field\Operators\ForFilterOnly;
+use Lego\Field\Operators\FilterOnly;
 
 class DatetimeRange extends Datetime
 {
     use BetweenFilterTrait;
-    use ForFilterOnly;
+    use FilterOnly;
 
     /**
      * @return Carbon[]
      */
     public function getCurrentValue()
     {
-        $current = $this->value()->current() ?: [];
+        $current = $this->getValue([]);
         $current['min'] = $this->convertToCarbon(array_get($current, 'min'));
         $current['max'] = $this->convertToCarbon(array_get($current, 'max'));
         return $current;
