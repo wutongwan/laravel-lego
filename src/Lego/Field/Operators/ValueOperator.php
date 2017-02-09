@@ -6,14 +6,21 @@ trait ValueOperator
      * 原始值，一般读取自数据库等数据源
      */
     protected $originalValue;
+
     /**
      * 当前值，一般为当前请求中产生的值
      */
-    protected $value;
+    protected $currentValue;
+
     /**
      * 展示值，仅用于展示
      */
     protected $displayValue;
+
+    /**
+     * 默认值
+     */
+    protected $defaultValue;
 
     public function getOriginalValue($default = null)
     {
@@ -27,21 +34,21 @@ trait ValueOperator
         return $this;
     }
 
-    public function getValue($default = null)
+    public function getCurrentValue($default = null)
     {
-        return lego_default($this->value, $default);
+        return lego_default($this->currentValue, $default);
     }
 
-    public function setValue($value)
+    public function setCurrentValue($value)
     {
-        $this->value = $value;
+        $this->currentValue = $value;
 
         return $this;
     }
 
-    public function valueNew($default = null)
+    public function value($default = null)
     {
-        return lego_default($this->value, $default, $this->originalValue);
+        return lego_default($this->currentValue, $this->originalValue, $default);
     }
 
     public function getDisplayValue($default = null)
@@ -54,5 +61,17 @@ trait ValueOperator
         $this->displayValue = $displayValue;
 
         return $this;
+    }
+
+    public function default($value)
+    {
+        $this->defaultValue = $value;
+
+        return $this;
+    }
+
+    public function getDefaultValue($default = null)
+    {
+        return lego_default($this->defaultValue, $default);
     }
 }

@@ -9,27 +9,25 @@ class DatetimeRange extends Datetime
     use BetweenFilterTrait;
     use FilterOnly;
 
-    /**
-     * @return Carbon[]
-     */
-    public function getCurrentValue()
+    public function setCurrentValue($value)
     {
-        $current = $this->getValue([]);
-        $current['min'] = $this->convertToCarbon(array_get($current, 'min'));
-        $current['max'] = $this->convertToCarbon(array_get($current, 'max'));
-        return $current;
+        $value['min'] = $this->convertToCarbon(array_get($value, 'min'));
+        $value['max'] = $this->convertToCarbon(array_get($value, 'max'));
+
+        $this->currentValue = $value;
     }
 
-    protected function getShowValue()
+    public function getDisplayValue()
     {
         $values = $this->getCurrentValue();
+        /** @var Carbon $item */
         foreach ($values as &$item) {
             $item = $item ? $item->format($this->getFormat()) : null;
         }
         return $values;
     }
 
-    protected function renderEditable(): string
+    protected function renderEditable()
     {
         return $this->view('lego::default.field.date-range');
     }

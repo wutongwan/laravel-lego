@@ -27,9 +27,9 @@ class JSON extends Field
         $this->originalValue = array_get($array, $this->jsonKey);
     }
 
-    public function setValue($value)
+    public function setCurrentValue($value)
     {
-        $this->value = $this->decode($value);
+        $this->currentValue = $this->decode($value);
 
         return $this;
     }

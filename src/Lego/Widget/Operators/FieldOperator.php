@@ -49,8 +49,6 @@ trait FieldOperator
     {
         $this->fields[$field->name()] = $field;
 
-        $this->fieldAdded($field);
-
         return $field;
     }
 
@@ -76,6 +74,8 @@ trait FieldOperator
     protected function processFields()
     {
         $this->fields()->each(function (Field $field) {
+            $this->fieldAdded($field);
+
             $field->process();
         });
     }

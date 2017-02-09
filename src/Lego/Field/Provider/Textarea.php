@@ -43,7 +43,7 @@ class Textarea extends Field
     {
         return FormFacade::textarea(
             $this->elementName(),
-            $this->getCurrentValue(),
+            $this->getDisplayValue(),
             ['id' => $this->elementId(), 'class' => 'form-control']
         );
     }

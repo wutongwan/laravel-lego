@@ -18,12 +18,12 @@ class Text extends Field
         return $this->renderByMode();
     }
 
-    protected function renderEditable() : string
+    protected function renderEditable()
     {
         return FormFacade::input(
             'text',
             $this->elementName(),
-            $this->getCurrentValue() ?? $this->getOriginalValue(),
+            $this->getDisplayValue(),
             $this->getAttributes()
         );
     }

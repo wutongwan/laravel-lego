@@ -82,15 +82,13 @@ class Form extends Widget implements HasMode
         );
 
         // Field 当前值来源
-        $field->setValue(
+        $field->setCurrentValue(
             $this->isPost() && $field->isEditable()
                 ? Request::input($field->elementName())
-                : $field->getOriginalValue()
+                : $field->getDefaultValue($field->getOriginalValue())
         );
 
-        $field->setDisplayValue(
-            $field->source()->get($field->name())
-        );
+        $field->setDisplayValue($field->getCurrentValue());
     }
 
 

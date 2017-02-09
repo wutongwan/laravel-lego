@@ -163,11 +163,6 @@ abstract class Field implements HasMode
      */
     abstract public function process();
 
-    public function getCurrentValue()
-    {
-        return $this->getValue();
-    }
-
     /**
      * 将新的数据存储到 Source
      */
@@ -176,12 +171,12 @@ abstract class Field implements HasMode
         $this->source()->set($this->column(), $this->getCurrentValue());
     }
 
-    protected function renderReadonly() : string
+    protected function renderReadonly()
     {
         return view('lego::default.field.readonly', ['field' => $this]);
     }
 
-    protected function renderDisabled() : string
+    protected function renderDisabled()
     {
         return $this->renderReadonly();
     }

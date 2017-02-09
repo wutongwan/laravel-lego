@@ -34,7 +34,7 @@ class Filter extends Widget
     {
         $field->placeholder($field->description());
 
-        $field->setValue(
+        $field->setCurrentValue(
             Request::get($field->elementName())
         );
     }
