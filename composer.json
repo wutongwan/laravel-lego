@@ -26,6 +26,14 @@
             "Lego\\": "src/Lego/"
         }
     },
+    "scripts": {
+        "post-package-install": [
+            "bower update"
+        ],
+        "post-package-update": [
+            "bower update"
+        ]
+    },
     "prefer-stable": true,
     "minimum-stability": "dev"
 }
