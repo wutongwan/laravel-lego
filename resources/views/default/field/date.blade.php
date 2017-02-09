@@ -3,7 +3,7 @@
 $__field_placeholder = $field->getPlaceholder($field->description());
 ?>
 <input type="{{ $field->getInputType() }}" name="{{ $field->elementName() }}" id="{{ $field->elementId() }}"
-       class="form-control" value="{{ $field->value()->show() }}"
+       class="form-control" value="{{ $field->getDisplayValue() }}"
        placeholder="{{ $__field_placeholder }}">
 
 @if(!(new Mobile_Detect())->isMobile())

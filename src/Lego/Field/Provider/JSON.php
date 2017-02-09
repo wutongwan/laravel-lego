@@ -15,28 +15,33 @@ class JSON extends Field
     {
         $exploded = explode(':', $this->name(), 2);
 
-        lego_assert(count($exploded) === 2, 'JSON field name example: `array:key:sub-key:...`');
+        lego_assert(count($exploded) === 2, 'JSON field `name` example: `array:key:sub-key:...`');
 
         $this->column = $exploded[0];
         $this->jsonKey = str_replace(':', '.', $exploded[1]);
     }
 
-    public function getOriginalValue()
+    public function setOriginalValue($originalValue)
     {
-        return array_get($this->value()->original(), $this->jsonKey);
+        $array = $this->decode($originalValue);
+        $this->originalValue = array_get($array, $this->jsonKey);
     }
 
-    public function getCurrentValue()
+    public function setCurrentValue($value)
     {
-        $original = $this->value()->original();
-        $current = $this->value()->current();
-        if ($current === $original) {
-            return $this->getOriginalValue();
-        }
+        $this->currentValue = $this->decode($value);
 
-        return is_string($current)
-            ? json_decode($current, JSON_OBJECT_AS_ARRAY)
-            : $current;
+        return $this;
+    }
+
+    private function decode($json)
+    {
+        return is_string($json) ? json_decode($json, JSON_OBJECT_AS_ARRAY) : $json;
+    }
+
+    protected function encode($data)
+    {
+        return json_encode($data, JSON_UNESCAPED_SLASHES);
     }
 
     /**
@@ -44,20 +49,19 @@ class JSON extends Field
      */
     public function process()
     {
-        $this->value()->setShow(function () {
-            $value = $this->getCurrentValue();
-            return is_scalar($value) ? $value : json_encode($this->getCurrentValue(), JSON_UNESCAPED_UNICODE);
-        });
+        $this->setDisplayValue(
+            $this->encode($this->getCurrentValue())
+        );
     }
 
     /**
      * 渲染当前对象
      * @return string
      */
-    public function render(): string
+    public function render()
     {
         return FormFacade::input('text', $this->elementName(),
-            $this->value()->show(),
+            $this->getDisplayValue(),
             [
                 'id' => $this->elementId(),
                 'class' => 'form-control'
@@ -65,11 +69,12 @@ class JSON extends Field
         );
     }
 
-    public function syncCurrentValueToSource()
+    public function syncValueToSource()
     {
         $original = $this->source()->get($this->column());
+        $original = is_string($original) ? $this->decode($original) : $original;
         array_set($original, $this->jsonKey, $this->getCurrentValue());
-        $this->source()->set($this->column(), $original);
+        $this->source()->set($this->column(), $this->encode($original));
     }
 
     /**
@@ -77,7 +82,7 @@ class JSON extends Field
      * @param Table $query
      * @return Table
      */
-    public function filter(Table $query): Table
+    public function filter(Table $query)
     {
         return $query;
     }

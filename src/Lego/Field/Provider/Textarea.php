@@ -11,7 +11,7 @@ class Textarea extends Field
      * @param Table $query
      * @return Table
      */
-    public function filter(Table $query): Table
+    public function filter(Table $query)
     {
         return $query->whereContains($this->column(), $this->getCurrentValue());
     }
@@ -34,16 +34,16 @@ class Textarea extends Field
      * 渲染当前对象
      * @return string
      */
-    public function render(): string
+    public function render()
     {
         return $this->renderByMode();
     }
 
-    protected function renderEditable(): string
+    protected function renderEditable()
     {
         return FormFacade::textarea(
             $this->elementName(),
-            $this->getCurrentValue(),
+            $this->getDisplayValue(),
             ['id' => $this->elementId(), 'class' => 'form-control']
         );
     }

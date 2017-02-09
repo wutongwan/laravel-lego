@@ -131,7 +131,7 @@ abstract class Field implements HasMode
      * @param Table $query
      * @return Table
      */
-    public function filter(Table $query): Table
+    public function filter(Table $query)
     {
         return $query->whereEquals($this->column(), $this->getCurrentValue());
     }
@@ -163,30 +163,20 @@ abstract class Field implements HasMode
      */
     abstract public function process();
 
-    public function getOriginalValue()
-    {
-        return $this->value()->original();
-    }
-
-    public function getCurrentValue()
-    {
-        return $this->value()->current();
-    }
-
     /**
      * 将新的数据存储到 Source
      */
-    public function syncCurrentValueToSource()
+    public function syncValueToSource()
     {
         $this->source()->set($this->column(), $this->getCurrentValue());
     }
 
-    protected function renderReadonly() : string
+    protected function renderReadonly()
     {
         return view('lego::default.field.readonly', ['field' => $this]);
     }
 
-    protected function renderDisabled() : string
+    protected function renderDisabled()
     {
         return $this->renderReadonly();
     }

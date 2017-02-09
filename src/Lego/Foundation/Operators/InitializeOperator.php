@@ -7,11 +7,11 @@ trait InitializeOperator
      */
     protected function triggerInitialize()
     {
-        // 初始化自身
-        $this->initialize();
-
         // 调用 Trait 中的初始化函数
         $this->initializeTraits();
+
+        // 初始化自身
+        $this->initialize();
     }
 
     /**

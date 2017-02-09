@@ -87,17 +87,17 @@ trait ModeOperator
         return call_user_func_array([$this, 'render' . ucfirst($this->mode)], []);
     }
 
-    protected function renderEditable() : string
+    protected function renderEditable()
     {
         throw new LegoException('show be rewrite.');
     }
 
-    protected function renderReadonly() : string
+    protected function renderReadonly()
     {
         throw new LegoException('show be rewrite.');
     }
 
-    protected function renderDisabled() : string
+    protected function renderDisabled()
     {
         throw new LegoException('show be rewrite.');
     }

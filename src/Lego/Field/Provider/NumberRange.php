@@ -1,12 +1,12 @@
 <?php namespace Lego\Field\Provider;
 
 use Lego\Field\Operators\BetweenFilterTrait;
-use Lego\Field\Operators\ForFilterOnly;
+use Lego\Field\Operators\FilterOnly;
 
 class NumberRange extends Number
 {
     use BetweenFilterTrait;
-    use ForFilterOnly;
+    use FilterOnly;
 
     /**
      * 数据处理逻辑
@@ -26,7 +26,7 @@ class NumberRange extends Number
      * 渲染当前对象
      * @return string
      */
-    public function render(): string
+    public function render()
     {
         return $this->view('lego::default.field.number-range');
     }
