@@ -119,12 +119,12 @@ class AutoComplete extends Field
 
         // 以下文件仅在 editable 时加载
         if ($this->isEditable()) {
-            LegoAsset::css('default/select2/select2.min.css');
-            LegoAsset::css('default/select2/select2-bootstrap.min.css');
-            LegoAsset::js('default/select2/select2.full.min.js');
+            LegoAsset::css('components/select2/dist/css/select2.min.css');
+            LegoAsset::css('components/select2-bootstrap-theme/dist/select2-bootstrap.min.css');
+            LegoAsset::js('components/select2/dist/js/select2.full.min.js');
 
             if (!$this->isLocale('en')) {
-                LegoAsset::js("default/select2/i18n/" . $this->getLocale() . ".js");
+                LegoAsset::js("components/select2/dist/js/i18n/{$this->getLocale()}.js");
             }
         }
     }

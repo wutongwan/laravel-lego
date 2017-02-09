@@ -1,0 +1,8 @@
+{
+    "name": "wutongwan/laravel-lego",
+    "dependencies": {
+        "smalot-bootstrap-datetimepicker": "2.4.*",
+        "select2": "4.*",
+        "select2-bootstrap-theme": "0.1.*"
+    }
+}

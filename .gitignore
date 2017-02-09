@@ -2,3 +2,6 @@ vendor
 composer.lock
 .idea/
 .phpstorm.meta.php
+
+# bower
+public/components
