@@ -1,6 +1,5 @@
 <?php namespace Lego;
 
-use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
 use Lego\Commands\IDEHelper;
 
@@ -27,13 +26,14 @@ class LegoServiceProvider extends ServiceProvider
     {
         // config
         $config = $this->path('config/lego.php');
-        $this->publishes([$config => config_path('lego.php')]);
+        $this->publishes([$config => config_path('lego.php')], 'config');
         $this->mergeConfigFrom($config, 'lego');
 
         // assets
-        $this->publishes([
-            $this->path('public/') => public_path(LegoAsset::ASSET_PATH)
-        ]);
+        $this->publishes(
+            [$this->path('public/') => public_path(LegoAsset::ASSET_PATH)],
+            'public'
+        );
 
         // views
         $this->loadViewsFrom($this->path('resources/views'), 'lego');
