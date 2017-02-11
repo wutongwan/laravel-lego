@@ -14,6 +14,7 @@ use Lego\Foundation\Operators\ModeOperator;
 class Form extends Widget implements HasMode
 {
     use ModeOperator;
+    use Operators\EloquentOperator;
 
     /**
      * 此属性设置后将不再调用默认的数据处理逻辑
