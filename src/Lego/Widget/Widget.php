@@ -50,7 +50,7 @@ abstract class Widget
     /**
      * @return Data|Table|Row
      */
-    protected function data(): Data
+    public function data(): Data
     {
         return $this->data;
     }
