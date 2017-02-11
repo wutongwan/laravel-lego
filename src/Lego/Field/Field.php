@@ -171,16 +171,6 @@ abstract class Field implements HasMode
         $this->source()->set($this->column(), $this->getCurrentValue());
     }
 
-    protected function renderReadonly()
-    {
-        return view('lego::default.field.readonly', ['field' => $this]);
-    }
-
-    protected function renderDisabled()
-    {
-        return $this->renderReadonly();
-    }
-
     protected function view($view, $data = [])
     {
         return view($view, $data)->with('field', $this);

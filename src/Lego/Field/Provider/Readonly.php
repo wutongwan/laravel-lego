@@ -1,6 +1,5 @@
 <?php namespace Lego\Field\Provider;
 
-use Collective\Html\HtmlFacade;
 use Lego\Field\Field;
 use Lego\Field\Operators\DisabledInFilter;
 
@@ -32,7 +31,8 @@ class Readonly extends Field
      */
     public function render()
     {
-        return HtmlFacade::tag('p', $this->readonlyValue, ['class' => 'form-control-static']);
+        $this->setDisplayValue($this->readonlyValue);
+        return parent::renderReadonly();
     }
 
     public function syncValueToSource()

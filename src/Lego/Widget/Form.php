@@ -63,20 +63,15 @@ class Form extends Widget implements HasMode
         );
     }
 
-    protected function afterModeChanged($mode)
-    {
-        $this->fields()->each(
-            function (Field $field) use ($mode) {
-                $field->mode($mode);
-            }
-        );
-    }
-
     /**
      * @param Field $field
      */
     protected function fieldAdded(Field $field)
     {
+        if ($this->modeIsModified() && !$field->modeIsModified()) {
+            $field->mode($this->getMode());
+        }
+
         // Field 原始值来源
         $field->setOriginalValue(
             $field->source()->get($field->column())
@@ -108,7 +103,7 @@ class Form extends Widget implements HasMode
 
     public function process()
     {
-        if (!$this->isPost()) {
+        if (!$this->isPost() || !$this->isEditable()) {
             return;
         }
 
