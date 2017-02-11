@@ -1,5 +1,6 @@
 <?php namespace Lego\Foundation\Operators;
 
+use Collective\Html\HtmlFacade;
 use Lego\LegoException;
 
 /**
@@ -16,6 +17,12 @@ trait ModeOperator
      * 模式, eg:editable、readonly、disabled
      */
     private $mode = self::MODE_EDITABLE;
+
+    /**
+     * 是否通过函数修改过模式，用于判断组件间 mode 的继承与否
+     * @var bool
+     */
+    private $modeIsModified = false;
 
     public function getMode()
     {
@@ -42,6 +49,11 @@ trait ModeOperator
         return $this->isMode(self::MODE_DISABLED);
     }
 
+    public function modeIsModified()
+    {
+        return $this->modeIsModified;
+    }
+
     public function mode($mode, $condition = true)
     {
         lego_assert(
@@ -51,20 +63,10 @@ trait ModeOperator
 
         if (value($condition)) {
             $this->mode = $mode;
-
-            // trigger event
-            $this->afterModeChanged($mode);
+            $this->modeIsModified = true;
         }
 
         return $this;
-    }
-
-    /**
-     * 模式变动后的回调
-     */
-    protected function afterModeChanged($mode)
-    {
-        // do nothing.
     }
 
     public function readonly($condition = true)
@@ -82,7 +84,7 @@ trait ModeOperator
         return $this->mode(self::MODE_DISABLED, $condition);
     }
 
-    protected function renderByMode() : string
+    protected function renderByMode()
     {
         return call_user_func_array([$this, 'render' . ucfirst($this->mode)], []);
     }
@@ -94,11 +96,14 @@ trait ModeOperator
 
     protected function renderReadonly()
     {
-        throw new LegoException('show be rewrite.');
+        return HtmlFacade::tag('p', (string)$this->getDisplayValue(), [
+            'id' => $this->elementId(),
+            'class' => 'form-control-static',
+        ]);
     }
 
     protected function renderDisabled()
     {
-        throw new LegoException('show be rewrite.');
+        return $this->renderReadonly();
     }
 }

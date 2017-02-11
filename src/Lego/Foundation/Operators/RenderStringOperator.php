@@ -21,7 +21,7 @@ trait RenderStringOperator
     public function renderOnce()
     {
         if (!$this->rendered) {
-            $this->rendered = $this->render();
+            $this->rendered = (string)$this->render();
         }
 
         return $this->rendered;
@@ -29,7 +29,7 @@ trait RenderStringOperator
 
     final public function __toString()
     {
-        return (string)$this->renderOnce();
+        return $this->renderOnce();
     }
 
     /**
