@@ -106,6 +106,8 @@ trait HtmlOperator
     public function note($message)
     {
         /** @var Field $this */
-        return $this->messages()->add('note', $message);
+        $this->messages()->add('note', $message);
+
+        return $this;
     }
 }
