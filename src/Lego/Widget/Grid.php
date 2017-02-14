@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Request;
 use Lego\Data\Data;
 use Lego\Data\Row\Row;
 use Lego\Field\Field;
-use Lego\Register\Data\ResponseData;
+use Lego\Register\Data\HighPriorityResponse;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Writers\LaravelExcelWriter;
 
@@ -55,9 +55,9 @@ class Grid extends Widget
 
     public function export($name, \Closure $onExport = null)
     {
-        /** @var ResponseData $resp */
+        /** @var HighPriorityResponse $resp */
         $resp = lego_register(
-            ResponseData::class,
+            HighPriorityResponse::class,
             function () use ($name, $onExport) {
                 if ($onExport) {
                     call_user_func($onExport, $this);

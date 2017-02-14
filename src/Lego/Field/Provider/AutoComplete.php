@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Request;
 use Lego\Field\Field;
 use Lego\Data\Table\Table;
 use Lego\LegoAsset;
-use Lego\Register\Data\AutoCompleteData;
+use Lego\Register\Data\AutoCompleteMatchHandler;
 
 class AutoComplete extends Field
 {
@@ -92,7 +92,7 @@ class AutoComplete extends Field
     {
         $original = $this->source()->original();
         $tag = md5((is_object($original) ? get_class($original) : gettype($original)) . $this->name());
-        $this->remote = lego_register(AutoCompleteData::class, $callable, $tag)->remote();
+        $this->remote = lego_register(AutoCompleteMatchHandler::class, $callable, $tag)->remote();
         $this->matchIsModified = true;
 
         return $this;
