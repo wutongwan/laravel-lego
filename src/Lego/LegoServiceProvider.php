@@ -28,23 +28,32 @@ class LegoServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // config
-        $config = $this->path('config/lego.php');
-        $this->publishes([$config => config_path('lego.php')], 'config');
-        $this->mergeConfigFrom($config, 'lego');
-
-        // assets
-        $this->publishes(
-            [$this->path('public/') => public_path(LegoAsset::ASSET_PATH)],
-            'public'
-        );
-
-        $this->app->singleton(Fields::class, Fields::class);
+        $this->publishConfigs();
+        $this->publishAssets();
 
         // views
         $this->loadViewsFrom($this->path('resources/views'), 'lego');
 
+        // user-defined-fields
         $this->registerUserDefinedFields();
+
+        // alias
+        $this->app->singleton(Fields::class, Fields::class);
+    }
+
+    private function publishAssets()
+    {
+        $this->publishes(
+            [$this->path('public/') => public_path(LegoAsset::ASSET_PATH)],
+            'public'
+        );
+    }
+
+    private function publishConfigs()
+    {
+        $config = $this->path('config/lego.php');
+        $this->publishes([$config => config_path('lego.php')], 'config');
+        $this->mergeConfigFrom($config, 'lego');
     }
 
     private function path($path = '')
