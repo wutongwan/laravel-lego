@@ -6,7 +6,7 @@ abstract class Data
      * 注册数据的分类、标记等等
      * @var string|null
      */
-    protected $name = null;
+    protected $tag;
 
     /**
      * 注册的数据
@@ -14,17 +14,12 @@ abstract class Data
      */
     protected $data;
 
-    public function __construct($data, $category = null)
+    public function __construct($data, $tag)
     {
         $this->validate($data);
 
+        $this->tag = $tag;
         $this->data = $data;
-        $this->name = $category;
-    }
-
-    public function name()
-    {
-        return $this->name;
     }
 
     public function data($default = null)

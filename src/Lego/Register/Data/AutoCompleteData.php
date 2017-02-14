@@ -1,6 +1,7 @@
 <?php namespace Lego\Register\Data;
 
 use Illuminate\Support\Facades\Request;
+use Lego\Foundation\Exceptions\InvalidRegisterData;
 
 class AutoCompleteData extends Data
 {
@@ -12,9 +13,12 @@ class AutoCompleteData extends Data
      */
     protected function validate($data)
     {
-        lego_assert($data instanceof \Closure, '$data should be Closure.');
+        InvalidRegisterData::assert($data instanceof \Closure, '$data should be Closure.');
     }
 
+    /**
+     * @var ResponseData
+     */
     private $response;
 
     public function afterRegistered()
@@ -25,15 +29,14 @@ class AutoCompleteData extends Data
                 $items = call_user_func_array($this->data(), [Request::get(self::KEYWORD_KEY), Request::all()]);
                 return self::result($items);
             },
-            $this->name
+            $this->tag
         );
     }
 
-    public function response(): ResponseData
+    public function remote()
     {
-        return $this->response;
+        return $this->response->url();
     }
-
 
     /**
      * 自动补全结果的构建函数

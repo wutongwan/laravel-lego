@@ -10,10 +10,6 @@ class AutoComplete extends Field
 {
     protected function initialize()
     {
-        // 默认自动补全列表
-        $this->match(function ($keyword) {
-            return $this->defaultMatch($keyword);
-        });
     }
 
     /**
@@ -85,6 +81,8 @@ class AutoComplete extends Field
         return $this->remote;
     }
 
+    protected $matchIsModified;
+
     /**
      * 自动补全的结果集
      * @param callable $callable
@@ -93,17 +91,22 @@ class AutoComplete extends Field
     public function match($callable)
     {
         $original = $this->source()->original();
-        $hash = md5((is_object($original) ? get_class($original) : gettype($original)) . $this->name());
-
-        /** @var AutoCompleteData $data */
-        $data = lego_register(AutoCompleteData::class, $callable, $hash);
-        $this->remote = $data->response()->url();
+        $tag = md5((is_object($original) ? get_class($original) : gettype($original)) . $this->name());
+        $this->remote = lego_register(AutoCompleteData::class, $callable, $tag)->remote();
+        $this->matchIsModified = true;
 
         return $this;
     }
 
     public function process()
     {
+        // 默认自动补全列表
+        if (!$this->matchIsModified) {
+            $this->match(function ($keyword) {
+                return $this->defaultMatch($keyword);
+            });
+        }
+
         $current = $this->getCurrentValue();
         $related = $this->related();
         if ($current && $related) {
