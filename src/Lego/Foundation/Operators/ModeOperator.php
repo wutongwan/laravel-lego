@@ -1,7 +1,7 @@
 <?php namespace Lego\Foundation\Operators;
 
 use Collective\Html\HtmlFacade;
-use Lego\LegoException;
+use Lego\Foundation\Exceptions\LegoException;
 
 /**
  * 推荐宿主类实现接口 HasMode
