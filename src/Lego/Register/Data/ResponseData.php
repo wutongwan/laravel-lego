@@ -1,58 +1,28 @@
 <?php namespace Lego\Register\Data;
 
 use Illuminate\Support\Facades\Request;
+use Lego\Foundation\Exceptions\InvalidRegisterData;
 use Lego\Register\Register;
 
 class ResponseData extends Data
 {
     const REQUEST_PARAM = '__lego';
 
-    private $response;
-
-    private $arguments;
-
-    /**
-     * 校验注册的数据是否合法, 不合法时抛出异常
-     * @param $data
-     *
-     * $data 可以为数组 or Closure
-     * - 数组：
-     *  $data[0] 为生成 Response 的 Closure
-     *  $data[1] 为供给上面 Closure 使用的参数，可以为 array 或 返回 array 的 Closure
-     * - Closure：
-     *  生成 Response 的 Clojure
-     */
     protected function validate($data)
     {
-        if (is_array($data)) {
-            lego_assert($data[0] instanceof \Closure, '$data[0] should be Closure.');
-            lego_assert(
-                !isset($data[1]) || is_array($data[1]) || $data[1] instanceof \Closure,
-                '$data[1] should be arguments of $data[0] closure.'
-            );
-
-            $this->response = $data[0];
-            $this->arguments = $data[1] ?? [];
-        } else {
-            lego_assert($data instanceof \Closure, '$data should be Closure');
-            $this->response = $data;
-            $this->arguments = [];
-        }
+        InvalidRegisterData::assert($data instanceof \Closure, '$data should be Closure');
     }
 
     public function url(array $query = [])
     {
-        return Request::fullUrlWithQuery(array_merge($query, [
-            self::REQUEST_PARAM => $this->name,
-        ]));
+        $query[self::REQUEST_PARAM] = $this->tag;
+
+        return Request::fullUrlWithQuery($query);
     }
 
     public function response()
     {
-        $arguments = value($this->arguments);
-        lego_assert(is_array($arguments), '$data[1] should be array or return array.');
-
-        return call_user_func_array($this->response, $arguments);
+        return call_user_func($this->data);
     }
 
     public static function getResponse()
