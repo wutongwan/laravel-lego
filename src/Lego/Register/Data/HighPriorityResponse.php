@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Request;
 use Lego\Foundation\Exceptions\InvalidRegisterData;
 use Lego\Register\Register;
 
-class ResponseData extends Data
+class HighPriorityResponse extends Data
 {
     const REQUEST_PARAM = '__lego';
 

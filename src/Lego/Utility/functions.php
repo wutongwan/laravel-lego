@@ -1,7 +1,7 @@
 <?php
 
 use Lego\Foundation\Exceptions\LegoException;
-use Lego\Register\Data\ResponseData;
+use Lego\Register\Data\HighPriorityResponse;
 use Lego\Register\Register;
 use Lego\Data\Row\Row;
 use Lego\Data\Table\Table;
@@ -133,7 +133,7 @@ function lego_response()
     /**
      * Check registered global response
      */
-    $registeredResponse = ResponseData::getResponse();
+    $registeredResponse = HighPriorityResponse::getResponse();
     if (!is_null($registeredResponse)) {
         return $registeredResponse;
     }

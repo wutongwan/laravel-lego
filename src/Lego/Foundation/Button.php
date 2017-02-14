@@ -1,7 +1,7 @@
 <?php namespace Lego\Foundation;
 
 use Collective\Html\HtmlFacade;
-use Lego\Register\Data\ResponseData;
+use Lego\Register\Data\HighPriorityResponse;
 
 /**
  * Html button or link.
@@ -101,8 +101,8 @@ class Button
 
     public function action(\Closure $action)
     {
-        /** @var ResponseData $resp */
-        $resp = lego_register(ResponseData::class, $action, md5('button ' . $this->text));
+        /** @var HighPriorityResponse $resp */
+        $resp = lego_register(HighPriorityResponse::class, $action, md5('button ' . $this->text));
         return $this->url($resp->url());
     }
 

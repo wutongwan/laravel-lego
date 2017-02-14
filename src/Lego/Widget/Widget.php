@@ -5,7 +5,7 @@ use Lego\Field\Field;
 use Lego\Foundation\Operators\InitializeOperator;
 use Lego\Foundation\Operators\MessageOperator;
 use Lego\Foundation\Operators\RenderStringOperator;
-use Lego\Register\Data\ResponseData;
+use Lego\Register\Data\HighPriorityResponse;
 use Lego\Data\Data;
 use Lego\Data\Row\Row;
 use Lego\Data\Table\Table;
@@ -92,7 +92,7 @@ abstract class Widget
         /**
          * Global Response.
          */
-        $registeredResponse = ResponseData::getResponse();
+        $registeredResponse = HighPriorityResponse::getResponse();
         if (!is_null($registeredResponse)) {
             return $registeredResponse;
         }

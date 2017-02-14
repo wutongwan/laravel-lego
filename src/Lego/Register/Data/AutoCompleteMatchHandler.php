@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Request;
 use Lego\Foundation\Exceptions\InvalidRegisterData;
 
-class AutoCompleteData extends Data
+class AutoCompleteMatchHandler extends Data
 {
     const KEYWORD_KEY = '__lego_auto_complete';
 
@@ -17,14 +17,14 @@ class AutoCompleteData extends Data
     }
 
     /**
-     * @var ResponseData
+     * @var HighPriorityResponse
      */
     private $response;
 
     public function afterRegistered()
     {
         $this->response = lego_register(
-            ResponseData::class,
+            HighPriorityResponse::class,
             function () {
                 $items = call_user_func_array($this->data(), [Request::get(self::KEYWORD_KEY), Request::all()]);
                 return self::result($items);
