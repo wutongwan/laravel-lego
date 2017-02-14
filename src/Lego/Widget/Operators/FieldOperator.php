@@ -23,9 +23,9 @@ trait FieldOperator
         // addField Magic call
         foreach (app(Fields::class)->all() as $name => $class) {
             self::macro('add' . $name, function () use ($class) {
-                $arguments = array_merge(func_get_args(), [$this->data()]);
-                $field = (new \ReflectionClass($class))->newInstanceArgs($arguments);
-                return call_user_func_array([$this, 'addField'], [$field]);
+                $args = func_get_args();
+                $field = new $class($args[0], $args[1] ?? null, $this->data());
+                return $this->addField($field);
             });
         }
     }
