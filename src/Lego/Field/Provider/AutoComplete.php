@@ -10,6 +10,9 @@ class AutoComplete extends Field
 {
     protected function initialize()
     {
+        $this->match(function ($keyword) {
+            return $this->defaultMatch($keyword);
+        });
     }
 
     /**
@@ -100,13 +103,6 @@ class AutoComplete extends Field
 
     public function process()
     {
-        // 默认自动补全列表
-        if (!$this->matchIsModified) {
-            $this->match(function ($keyword) {
-                return $this->defaultMatch($keyword);
-            });
-        }
-
         $current = $this->getCurrentValue();
         $related = $this->related();
         if ($current && $related) {

@@ -20,11 +20,6 @@ class HighPriorityResponse extends Data
         return Request::fullUrlWithQuery($query);
     }
 
-    public function response()
-    {
-        return call_user_func($this->data);
-    }
-
     public static function getResponse()
     {
         $path = Request::get(self::REQUEST_PARAM);
@@ -32,12 +27,11 @@ class HighPriorityResponse extends Data
             return null;
         }
 
-        /** @var self $data */
         $data = Register::get(self::class, $path);
         if (!$data) {
             return null;
         }
 
-        return $data->response();
+        return call_user_func($data);
     }
 }
