@@ -16,4 +16,10 @@ return [
             'class' => 'form-control',
         ],
     ],
+
+    /**
+     * 自定义的 Field
+     */
+    'user-defined-fields' => [
+    ],
 ];

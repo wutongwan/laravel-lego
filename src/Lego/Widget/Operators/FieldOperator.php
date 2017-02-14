@@ -3,7 +3,7 @@
 use Illuminate\Support\Collection;
 
 use Lego\Field\Field;
-use Lego\Register\Data\Field as FieldRegister;
+use Lego\Foundation\Fields;
 
 /**
  * Field 相关逻辑
@@ -21,7 +21,7 @@ trait FieldOperator
         $this->fields = collect([]);
 
         // addField Magic call
-        foreach (FieldRegister::availableFields() as $name => $class) {
+        foreach (app(Fields::class)->all() as $name => $class) {
             self::macro('add' . $name, function () use ($class) {
                 $arguments = array_merge(func_get_args(), [$this->data()]);
                 $field = (new \ReflectionClass($class))->newInstanceArgs($arguments);
