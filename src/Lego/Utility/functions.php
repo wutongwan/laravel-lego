@@ -1,6 +1,6 @@
 <?php
 
-use Lego\LegoException;
+use Lego\Foundation\Exceptions\LegoException;
 use Lego\Register\Data\ResponseData;
 use Lego\Register\Register;
 use Lego\Data\Row\Row;
@@ -11,7 +11,7 @@ use Lego\Data\Table\Table;
  *
  * @param $data
  * @return Row
- * @throws LegoException
+ * @throws \Lego\Foundation\Exceptions\LegoException
  */
 function lego_row($data)
 {
@@ -90,9 +90,7 @@ function lego_table($data)
  */
 function lego_assert($condition, $description)
 {
-    if (!$condition) {
-        throw new LegoException($description);
-    }
+    LegoException::assert($condition, $description);
 }
 
 /**

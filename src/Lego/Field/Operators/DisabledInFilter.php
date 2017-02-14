@@ -1,7 +1,7 @@
 <?php namespace Lego\Field\Operators;
 
 use Lego\Data\Table\Table;
-use Lego\LegoException;
+use Lego\Foundation\Exceptions\LegoException;
 
 trait DisabledInFilter
 {

@@ -1,6 +1,6 @@
 <?php namespace Lego\Field\Operators;
 
-use Lego\LegoException;
+use Lego\Foundation\Exceptions\LegoException;
 
 trait FilterOnly
 {
