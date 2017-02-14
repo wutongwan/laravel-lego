@@ -40,8 +40,8 @@ class Register
         return array_get(self::$registered, "{$dataClass}.{$tag}", $default);
     }
 
-    public static function getWithoutTag($dataClass, $default = null)
+    public static function getAll($dataClass, $default = null)
     {
-        return self::get($dataClass, self::DEFAULT_TAG, $default);
+        return array_get(self::$registered, $dataClass, $default);
     }
 }

@@ -3,6 +3,8 @@
 use Illuminate\Support\ServiceProvider;
 use Lego\Commands\GenerateIDEHelper;
 use Lego\Commands\UpdateComponents;
+use Lego\Foundation\Fields;
+use Lego\Register\Data\UserDefinedField;
 
 /**
  * Lego Service Provider for Laravel
@@ -37,23 +39,23 @@ class LegoServiceProvider extends ServiceProvider
             'public'
         );
 
+        $this->app->singleton(Fields::class, Fields::class);
+
         // views
         $this->loadViewsFrom($this->path('resources/views'), 'lego');
 
-        // ** 第三方库 **
-        $this->registerHtmlServices();
-    }
-
-    /**
-     * 依赖第三方库 laravelcollective/html, 为方便使用, 在这里自动注册
-     */
-    private function registerHtmlServices()
-    {
-        $this->app->register(\Collective\Html\HtmlServiceProvider::class);
+        $this->registerUserDefinedFields();
     }
 
     private function path($path = '')
     {
         return __DIR__ . '/../../' . $path;
+    }
+
+    private function registerUserDefinedFields()
+    {
+        foreach (config('lego.user-defined-fields') as $field) {
+            lego_register(UserDefinedField::class, $field);
+        }
     }
 }

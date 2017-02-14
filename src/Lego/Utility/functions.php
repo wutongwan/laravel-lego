@@ -94,19 +94,11 @@ function lego_assert($condition, $description)
 }
 
 /**
- * Alias to Register Methods
- *
- * - $data 为 null => \Lego\Register\Register::get
- * - $data 不为 null => \Lego\Register\Register::register
- *
- * @param $name
- * @param mixed $data
- * @param string|null $dataName
- * @return \Lego\Register\Data\Data
+ * Alias to Register::register
  */
-function lego_register($name, $data = null, $dataName = null)
+function lego_register($name, $data, $tag = Register::DEFAULT_TAG)
 {
-    return Register::register($name, $data, $dataName);
+    return Register::register($name, $data, $tag);
 }
 
 if (!function_exists('class_namespace')) {
