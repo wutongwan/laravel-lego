@@ -25,7 +25,7 @@ return $form->view('layout', ['form' => $form]);
 <!doctype html>
 <html lang="en">
 <head>
-    {!! \Lego\LegoAsset::styles() !!}
+    @include('lego::styles')
     <link href="//cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -33,7 +33,7 @@ return $form->view('layout', ['form' => $form]);
 	{!! $form !!}
 
     <script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
-    {!! \Lego\LegoAsset::scripts() !!}
+    @include('lego::scripts')
 </body>
 </html>
 ```
