@@ -1,6 +1,7 @@
 <?php namespace Lego\Commands;
 
 use Illuminate\Console\Command;
+use Lego\LegoServiceProvider;
 
 class UpdateComponents extends Command
 {
@@ -18,6 +19,7 @@ class UpdateComponents extends Command
 
         $this->line('~ publish public files');
         $this->call('vendor:publish', [
+            '--provider' => LegoServiceProvider::class,
             '--tag' => 'public',
             '--force' => true,
         ]);
