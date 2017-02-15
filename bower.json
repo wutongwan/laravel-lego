@@ -3,6 +3,7 @@
     "dependencies": {
         "smalot-bootstrap-datetimepicker": "2.4.*",
         "select2": "4.*",
-        "select2-bootstrap-theme": "0.1.*"
+        "select2-bootstrap-theme": "0.1.*",
+        "vue": "~2.1"
     }
 }

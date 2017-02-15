@@ -1,7 +1,6 @@
 <?php namespace Lego\Widget;
 
 use Illuminate\Support\Traits\Macroable;
-use Lego\Field\Field;
 use Lego\Foundation\Operators\InitializeOperator;
 use Lego\Foundation\Operators\MessageOperator;
 use Lego\Foundation\Operators\RenderStringOperator;
@@ -106,14 +105,6 @@ abstract class Widget
         if (!is_null($this->response)) {
             return value($this->response);
         }
-
-        /**
-         * Render to string here.
-         */
-        $this->renderOnce();
-        $this->fields()->each(function (Field $field) {
-            $field->renderOnce();
-        });
 
         return $response;
     }

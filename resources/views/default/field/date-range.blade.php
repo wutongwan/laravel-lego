@@ -12,6 +12,7 @@ $__field_placeholder = $field->getPlaceholder($field->description());
 </div>
 
 @if(!(new Mobile_Detect())->isMobile())
+    @push('lego-scripts')
     <script>
         $(document).ready(function () {
             $("#{{ $field->elementId() }} input").each(function () {
@@ -19,4 +20,5 @@ $__field_placeholder = $field->getPlaceholder($field->description());
             });
         });
     </script>
+    @endpush
 @endif

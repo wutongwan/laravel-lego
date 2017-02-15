@@ -18,18 +18,9 @@ trait RenderStringOperator
 
     private $rendered;
 
-    public function renderOnce()
-    {
-        if (!$this->rendered) {
-            $this->rendered = (string)$this->render();
-        }
-
-        return $this->rendered;
-    }
-
     final public function __toString()
     {
-        return $this->renderOnce();
+        return (string)$this->render();
     }
 
     /**
@@ -39,6 +30,6 @@ trait RenderStringOperator
      */
     final public function toHtmlString()
     {
-        return new HtmlString($this->renderOnce());
+        return new HtmlString($this->__toString());
     }
 }
