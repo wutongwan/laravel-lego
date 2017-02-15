@@ -9,6 +9,7 @@
 </select>
 <input type="hidden" id="{{ $field->elementId() }}-text" name="{{ $field->elementName() }}-text" value="{{ $__field_show_value }}">
 
+@push('lego-scripts')
 <script>
     $(document).ready(function () {
         var $select = $("#{{ $field->elementId() }}");
@@ -59,3 +60,4 @@
         });
     });
 </script>
+@endpush

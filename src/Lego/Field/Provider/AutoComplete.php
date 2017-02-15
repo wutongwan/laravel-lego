@@ -93,9 +93,11 @@ class AutoComplete extends Field
      */
     public function match($callable)
     {
-        $original = $this->source()->original();
-        $tag = md5((is_object($original) ? get_class($original) : gettype($original)) . $this->name());
-        $this->remote = lego_register(AutoCompleteMatchHandler::class, $callable, $tag)->remote();
+        $this->remote = lego_register(
+            AutoCompleteMatchHandler::class,
+            $callable,
+            md5(__CLASS__ . $this->name())
+        )->remote();
         $this->matchIsModified = true;
 
         return $this;

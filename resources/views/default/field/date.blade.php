@@ -7,9 +7,11 @@ $__field_placeholder = $field->getPlaceholder($field->description());
        placeholder="{{ $__field_placeholder }}">
 
 @if(!(new Mobile_Detect())->isMobile())
+    @push('lego-scripts')
     <script>
         $(document).ready(function () {
             $("#{{ $field->elementId() }}").datetimepicker({!! json_encode($field->getPickerOptions()) !!});
         });
     </script>
+    @endpush
 @endif

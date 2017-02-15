@@ -1,7 +1,5 @@
 <?php namespace Lego;
 
-use Collective\Html\HtmlFacade;
-
 /**
  * Lego 中静态文件的依赖维护类
  *
@@ -51,21 +49,11 @@ class LegoAsset
 
     public static function scripts()
     {
-        return join("\n", array_map(
-            function ($script) {
-                return HtmlFacade::script($script);
-            },
-            self::$scripts
-        ));
+        return self::$scripts;
     }
 
     public static function styles()
     {
-        return join("\n", array_map(
-            function ($style) {
-                return HtmlFacade::style($style);
-            },
-            self::$styles
-        ));
+        return self::$styles;
     }
 }
