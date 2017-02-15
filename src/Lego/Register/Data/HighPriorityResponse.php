@@ -38,6 +38,6 @@ class HighPriorityResponse extends Data
             return null;
         }
 
-        return $data->response();
+        return call_user_func($data);
     }
 }
