@@ -2,11 +2,11 @@
 
 use Illuminate\Support\Facades\App;
 use Lego\Data\Table\EloquentTable;
-use Lego\Foundation\Operators\HasMode;
-use Lego\Foundation\Operators\ModeOperator;
-use Lego\Foundation\Operators\MessageOperator;
-use Lego\Foundation\Operators\InitializeOperator;
-use Lego\Foundation\Operators\RenderStringOperator;
+use Lego\Foundation\Concerns\HasMode;
+use Lego\Foundation\Concerns\ModeOperator;
+use Lego\Foundation\Concerns\MessageOperator;
+use Lego\Foundation\Concerns\InitializeOperator;
+use Lego\Foundation\Concerns\RenderStringOperator;
 use Lego\Data\Row\Row;
 use Lego\Data\Data;
 use Lego\Data\Table\Table;
@@ -22,11 +22,11 @@ abstract class Field implements HasMode
     use ModeOperator; // 必须放在 `RenderStringOperator`后面
 
     // Plugins
-    use Operators\HtmlOperator;
-    use Operators\EloquentOperator;
-    use Operators\ValidationOperator;
-    use Operators\ValueOperator;
-    use Operators\ScopeOperator;
+    use Concerns\HtmlOperator;
+    use Concerns\EloquentOperator;
+    use Concerns\ValidationOperator;
+    use Concerns\ValueOperator;
+    use Concerns\ScopeOperator;
 
     /**
      * 字段的唯一标记

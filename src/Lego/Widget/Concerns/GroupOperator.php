@@ -1,4 +1,4 @@
-<?php namespace Lego\Widget\Operators;
+<?php namespace Lego\Widget\Concerns;
 
 use Lego\Field\Group;
 

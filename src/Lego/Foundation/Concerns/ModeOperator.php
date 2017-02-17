@@ -1,4 +1,4 @@
-<?php namespace Lego\Foundation\Operators;
+<?php namespace Lego\Foundation\Concerns;
 
 use Collective\Html\HtmlFacade;
 use Lego\Foundation\Exceptions\LegoException;

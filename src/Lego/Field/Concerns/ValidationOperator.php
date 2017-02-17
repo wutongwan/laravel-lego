@@ -1,4 +1,4 @@
-<?php namespace Lego\Field\Operators;
+<?php namespace Lego\Field\Concerns;
 
 use Illuminate\Support\Facades\Validator;
 use Lego\Field\Field;

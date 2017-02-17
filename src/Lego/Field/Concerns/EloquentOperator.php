@@ -1,4 +1,4 @@
-<?php namespace Lego\Field\Operators;
+<?php namespace Lego\Field\Concerns;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

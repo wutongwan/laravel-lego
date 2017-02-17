@@ -1,8 +1,8 @@
 <?php namespace Lego\Field\Provider;
 
 use Carbon\Carbon;
-use Lego\Field\Operators\BetweenFilterTrait;
-use Lego\Field\Operators\FilterOnly;
+use Lego\Field\Concerns\BetweenFilterTrait;
+use Lego\Field\Concerns\FilterOnly;
 
 class DatetimeRange extends Datetime
 {
