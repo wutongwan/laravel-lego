@@ -1,5 +1,5 @@
 # Lego Documents
 
 - [Form](./form.md)
-- [Fields](./field.md)
+- [Fields](./fields.md)
 - [Lego Register](./register.md)
