@@ -1,9 +1,9 @@
 <?php namespace Lego\Widget;
 
 use Illuminate\Support\Traits\Macroable;
-use Lego\Foundation\Operators\InitializeOperator;
-use Lego\Foundation\Operators\MessageOperator;
-use Lego\Foundation\Operators\RenderStringOperator;
+use Lego\Foundation\Concerns\InitializeOperator;
+use Lego\Foundation\Concerns\MessageOperator;
+use Lego\Foundation\Concerns\RenderStringOperator;
 use Lego\Register\Data\HighPriorityResponse;
 use Lego\Data\Data;
 use Lego\Data\Row\Row;
@@ -20,10 +20,10 @@ abstract class Widget
     use Macroable;
 
     // Plugins
-    use Operators\FieldOperator;
-    use Operators\GroupOperator;
-    use Operators\RequestOperator;
-    use Operators\ButtonsOperator;
+    use Concerns\FieldOperator;
+    use Concerns\GroupOperator;
+    use Concerns\RequestOperator;
+    use Concerns\ButtonsOperator;
 
     /**
      * 数据源

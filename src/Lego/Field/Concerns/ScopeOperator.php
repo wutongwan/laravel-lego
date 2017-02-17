@@ -1,4 +1,4 @@
-<?php namespace Lego\Field\Operators;
+<?php namespace Lego\Field\Concerns;
 
 use Lego\Data\Table\Table;
 

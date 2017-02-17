@@ -1,4 +1,4 @@
-<?php namespace Lego\Field\Operators;
+<?php namespace Lego\Field\Concerns;
 
 use Lego\Field\Field;
 use Lego\Utility\HtmlUtility;

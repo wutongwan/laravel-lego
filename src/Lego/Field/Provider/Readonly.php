@@ -1,7 +1,7 @@
 <?php namespace Lego\Field\Provider;
 
 use Lego\Field\Field;
-use Lego\Field\Operators\DisabledInFilter;
+use Lego\Field\Concerns\DisabledInFilter;
 
 class Readonly extends Field
 {

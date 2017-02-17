@@ -4,8 +4,8 @@ use Illuminate\Support\Facades\Request;
 use Lego\Data\Data;
 use Lego\Data\Row\Row;
 use Lego\Field\Field;
-use Lego\Foundation\Operators\HasMode;
-use Lego\Foundation\Operators\ModeOperator;
+use Lego\Foundation\Concerns\HasMode;
+use Lego\Foundation\Concerns\ModeOperator;
 
 /**
  * Class Form
@@ -14,7 +14,7 @@ use Lego\Foundation\Operators\ModeOperator;
 class Form extends Widget implements HasMode
 {
     use ModeOperator;
-    use Operators\EloquentOperator;
+    use Concerns\EloquentOperator;
 
     /**
      * 此属性设置后将不再调用默认的数据处理逻辑
