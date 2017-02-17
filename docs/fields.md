@@ -2,7 +2,7 @@
 
 ## Text
 
-text 输入框
+文本输入框
 
 - 示例 HTML：
 
@@ -74,3 +74,23 @@ $form->addDate('birthday', 'Birthday');
 $form = Lego::form(new Schedule);
 $form->addTime('daily_at', 'Select Time');
 ```
+
+## Textarea
+
+长文本输入框
+
+```php
+$form = Lego::form([]);
+$form->addTestarea('description', 'Description');
+```
+
+## Readonly
+
+只读文本
+
+```php
+$form = Lego::form([]);
+$form->addTestarea('Description', 'this is description of ...');
+```
+
+Email field in <http://getbootstrap.com/css/#forms-controls-static>
