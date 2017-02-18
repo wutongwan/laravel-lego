@@ -1,17 +1,10 @@
 <?php namespace Lego\Field\Provider;
 
 use Collective\Html\FormFacade;
-use Lego\Field\Field;
+use Lego\Operator\Query\Query;
 
-class Number extends Field
+class Number extends Text
 {
-    /**
-     * 数据处理逻辑
-     */
-    public function process()
-    {
-    }
-
     /**
      * 初始化对象
      */
@@ -66,5 +59,12 @@ class Number extends Field
             'max' => $this->max,
             'step' => $this->step,
         ]);
+    }
+
+    public function filter(Query $query)
+    {
+        return $this->filterWithRelationOrDirectly($query, function (Query $query) {
+            return $query->whereEquals($this->column(), $this->getCurrentValue());
+        });
     }
 }

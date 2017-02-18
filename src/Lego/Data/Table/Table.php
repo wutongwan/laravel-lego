@@ -4,7 +4,6 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Request;
 use Lego\Data\Data;
 use Traversable;
 
@@ -143,12 +142,6 @@ abstract class Table extends Data implements \ArrayAccess, Arrayable, \Countable
     public function paginate($perPage, $page = null)
     {
         $this->paginator = $this->createPaginator($perPage, $page);
-        $this->paginator->setCollection(
-            $this->paginator->getCollection()->map(function ($row) {
-                return lego_row($row);
-            })
-        );
-
         return $this->paginator;
     }
 

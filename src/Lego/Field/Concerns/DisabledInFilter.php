@@ -1,17 +1,13 @@
 <?php namespace Lego\Field\Concerns;
 
-use Lego\Data\Table\Table;
-use Lego\Foundation\Exceptions\LegoException;
+use Lego\Operator\Query\Query;
 
 trait DisabledInFilter
 {
     /**
      * Filter 检索数据时, 构造此字段的查询
-     * @param Table $query
-     * @return Table
-     * @throws LegoException
      */
-    public function filter(Table $query)
+    public function filter(Query $query)
     {
         return $query;
     }

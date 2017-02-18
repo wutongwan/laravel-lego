@@ -58,7 +58,9 @@ trait HasFields
     /**
      * @param Field $field
      */
-    abstract protected function fieldAdded(Field $field);
+    protected function fieldAdded(Field $field)
+    {
+    }
 
     protected function registerFieldOperatorMagicCall()
     {
@@ -89,7 +91,7 @@ trait HasFields
     protected function syncFieldsValue()
     {
         $this->fields()->each(function (Field $field) {
-            $field->syncValueToSource();
+            $field->syncValueToStore();
         });
     }
 

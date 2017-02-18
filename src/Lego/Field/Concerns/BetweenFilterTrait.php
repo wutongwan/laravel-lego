@@ -1,15 +1,13 @@
 <?php namespace Lego\Field\Concerns;
 
-use Lego\Data\Table\Table;
+use Lego\Operator\Query\Query;
 
 trait BetweenFilterTrait
 {
     /**
      * Filter 检索数据时, 构造此字段的查询
-     * @param Table $query
-     * @return Table
      */
-    public function filter(Table $query)
+    public function filter(Query $query)
     {
         $values = $this->getCurrentValue();
         $min = array_get($values, 'min');

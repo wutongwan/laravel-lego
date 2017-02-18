@@ -135,10 +135,6 @@ class EloquentTable extends Table
      */
     public function where(\Closure $closure)
     {
-        $this->original->where(function ($query) use ($closure) {
-            call_user_func($closure, lego_table($query));
-        });
-
         return $this;
     }
 
@@ -150,13 +146,6 @@ class EloquentTable extends Table
      */
     public function whereHas($relation, $callback)
     {
-        $this->original->whereHas(
-            $relation,
-            function ($query) use ($callback) {
-                call_user_func($callback, lego_table($query));
-            }
-        );
-
         return $this;
     }
 

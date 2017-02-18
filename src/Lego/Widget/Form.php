@@ -1,8 +1,6 @@
 <?php namespace Lego\Widget;
 
 use Illuminate\Support\Facades\Request;
-use Lego\Data\Data;
-use Lego\Data\Row\Row;
 use Lego\Field\Field;
 use Lego\Foundation\Concerns\HasMode;
 use Lego\Foundation\Concerns\ModeOperator;
@@ -27,17 +25,11 @@ class Form extends Widget implements HasMode
      */
     private $success;
 
-    protected function prepareData($data): Data
-    {
-        return lego_row($data);
-    }
-
     /**
      * 初始化操作, 在类构造函数中调用
      */
     protected function initialize()
     {
-        lego_assert($this->data() instanceof Row, 'Unsupported data.');
     }
 
     /**
@@ -74,7 +66,7 @@ class Form extends Widget implements HasMode
 
         // Field 原始值来源
         $field->setOriginalValue(
-            $field->source()->get($field->column())
+            $field->store->get($field->column())
         );
 
         // Field 当前值来源

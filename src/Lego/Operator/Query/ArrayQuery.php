@@ -1,15 +1,42 @@
-<?php namespace Lego\Data\Table;
+<?php namespace Lego\Operator\Query;
 
 use Carbon\Carbon;
-use Illuminate\Pagination\AbstractPaginator;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Lego\Data\Row\Row;
+use Illuminate\Support\Collection;
+use Lego\Operator\Finder;
+use Lego\Operator\Store\Store;
 
-class ArrayTable extends Table
+class ArrayQuery extends Query
 {
+    public static function attempt($data)
+    {
+        if (
+            is_array($data)
+            || $data instanceof Collection
+            || $data instanceof Arrayable
+            || $data instanceof Jsonable
+            || $data instanceof \JsonSerializable
+            || $data instanceof \Traversable
+        ) {
+            return new self($data);
+        }
+
+        return false;
+    }
+
+    /**
+     * @var Collection
+     */
+    protected $collection;
+
     protected function initialize()
     {
-        $this->rows = collect([]);
+        $this->collection = new Collection($this->data);
+        $this->collection->map(function ($item) {
+            return Finder::store($item);
+        });
     }
 
     /**
@@ -20,8 +47,8 @@ class ArrayTable extends Table
      */
     public function whereEquals($attribute, $value)
     {
-        return $this->addFilterToRows(function (Row $row) use ($attribute, $value) {
-           return $row->get($attribute) == $value;
+        return $this->addFilter(function (Store $store) use ($attribute, $value) {
+            return $store->get($attribute) == $value;
         });
     }
 
@@ -34,9 +61,9 @@ class ArrayTable extends Table
      */
     public function whereGt($attribute, $value, bool $equals = false)
     {
-        return $this->addFilterToRows(
-            function (Row $row) use ($attribute, $value, $equals) {
-                $current = $row->get($attribute);
+        return $this->addFilter(
+            function (Store $store) use ($attribute, $value, $equals) {
+                $current = $store->get($attribute);
                 return $current > $value || ($equals && $current == $value);
             }
         );
@@ -51,9 +78,9 @@ class ArrayTable extends Table
      */
     public function whereLt($attribute, $value, bool $equals = false)
     {
-        return $this->addFilterToRows(
-            function (Row $row) use ($attribute, $value, $equals) {
-                $current = $row->get($attribute);
+        return $this->addFilter(
+            function (Store $store) use ($attribute, $value, $equals) {
+                $current = $store->get($attribute);
                 return $current < $value || ($equals && $current == $value);
             }
         );
@@ -67,8 +94,8 @@ class ArrayTable extends Table
      */
     public function whereContains($attribute, string $value)
     {
-        return $this->addFilterToRows(function (Row $row) use ($attribute, $value) {
-            return str_contains($row->get($attribute), $value);
+        return $this->addFilter(function (Store $store) use ($attribute, $value) {
+            return str_contains($store->get($attribute), $value);
         });
     }
 
@@ -80,8 +107,8 @@ class ArrayTable extends Table
      */
     public function whereStartsWith($attribute, string $value)
     {
-        return $this->addFilterToRows(function (Row $row) use ($attribute, $value) {
-            return starts_with($row->get($attribute), $value);
+        return $this->addFilter(function (Store $store) use ($attribute, $value) {
+            return starts_with($store->get($attribute), $value);
         });
     }
 
@@ -93,8 +120,8 @@ class ArrayTable extends Table
      */
     public function whereEndsWith($attribute, string $value)
     {
-        return $this->addFilterToRows(function (Row $row) use ($attribute, $value) {
-            return ends_with($row->get($attribute), $value);
+        return $this->addFilter(function (Store $store) use ($attribute, $value) {
+            return ends_with($store->get($attribute), $value);
         });
     }
 
@@ -107,8 +134,8 @@ class ArrayTable extends Table
      */
     public function whereBetween($attribute, $min, $max)
     {
-        return $this->addFilterToRows(function (Row $row) use ($attribute, $min, $max) {
-            $current = $row->get($attribute);
+        return $this->addFilter(function (Store $store) use ($attribute, $min, $max) {
+            $current = $store->get($attribute);
             if ($current instanceof \DateTime) {
                 return (new Carbon($current))->between(new Carbon($min), new Carbon($max));
             }
@@ -130,6 +157,18 @@ class ArrayTable extends Table
         return $this;
     }
 
+
+    /**
+     * Get the relation instance for the given relation name.
+     *
+     * @param $name
+     * @return static
+     */
+    public function getRelation($name)
+    {
+        return new self($this->collection->pluck($name));
+    }
+
     /**
      * 关联查询
      * @param $relation
@@ -138,12 +177,20 @@ class ArrayTable extends Table
      */
     public function whereHas($relation, $callback)
     {
-        return $this;
+        return $this->addFilter(function (Store $store) use ($relation, $callback) {
+            $related = $store->get($relation);
+            if (!$related) {
+                return false;
+            }
+
+            $query = new self([$related]);
+            return $query->where($callback)->count() === 1;
+        });
     }
 
-    private function addFilterToRows(\Closure $filter)
+    private function addFilter(\Closure $filter)
     {
-        $this->rows = $this->rows->filter($filter);
+        $this->collection = $this->collection->filter($filter);
 
         return $this;
     }
@@ -155,7 +202,7 @@ class ArrayTable extends Table
      */
     public function limit($limit)
     {
-        $this->rows->slice(0, $limit);
+        $this->collection->slice(0, $limit);
 
         return $this;
     }
@@ -168,19 +215,15 @@ class ArrayTable extends Table
      */
     public function orderBy($attribute, bool $desc = false)
     {
-        $this->rows->sortBy($attribute, SORT_REGULAR, $desc);
+        $this->collection->sortBy($attribute, SORT_REGULAR, $desc);
 
         return $this;
     }
 
-    /**
-     * 翻页
-     * @param int $perPage
-     * @param int|null $page
-     * @return AbstractPaginator
-     */
-    protected function createPaginator(int $perPage, int $page = null): AbstractPaginator
+    protected function createPaginator($perPage = null, $columns = ['*'], $pageName = 'page', $page = null)
     {
-        return new LengthAwarePaginator($this->rows, count($this->rows), $perPage);
+        return new LengthAwarePaginator($this->collection, $this->collection->count(), $perPage, $page, [
+            'pageName' => $pageName,
+        ]);
     }
 }

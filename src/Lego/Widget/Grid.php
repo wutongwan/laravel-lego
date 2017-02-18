@@ -2,44 +2,29 @@
 
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Support\Facades\Request;
-use Lego\Data\Data;
-use Lego\Data\Row\Row;
-use Lego\Field\Field;
-use Lego\Register\Data\HighPriorityResponse;
+use Lego\Register\HighPriorityResponse;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Writers\LaravelExcelWriter;
 
 class Grid extends Widget
 {
-    protected function prepareData($data): Data
+    protected $filter;
+
+    protected function transformer($data)
     {
         if ($data instanceof Filter) {
-            $data->processFields();
-            $data->process();
-            $data = $data->data();
+            $this->filter = $data;
+            $this->filter->processFields();
+            $this->filter->process();
+            return $this->filter->data();
         }
 
-        return lego_table($data);
+        return parent::transformer($data);
     }
-
-    /**
-     * 初始化对象
-     */
-    protected function initialize()
-    {
-    }
-
-    /**
-     * @param Field $field
-     */
-    protected function fieldAdded(Field $field)
-    {
-    }
-
 
     public function orderBy($attribute, bool $desc = false)
     {
-        $this->data()->orderBy($attribute, $desc);
+        $this->query->orderBy($attribute, $desc);
     }
 
     /**
@@ -55,7 +40,7 @@ class Grid extends Widget
 
     public function export($name, \Closure $onExport = null)
     {
-        /** @var HighPriorityResponse $resp */
+        /** @var \Lego\Register\HighPriorityResponse $resp */
         $resp = lego_register(
             HighPriorityResponse::class,
             function () use ($name, $onExport) {
@@ -74,11 +59,10 @@ class Grid extends Widget
     private function exportAsExcel($filename)
     {
         $data = [];
-        foreach ($this->paginator() as $row) {
+        foreach ($this->paginator() as $store) {
             $_row = [];
-            /** @var Field $field */
             foreach ($this->fields() as $field) {
-                $_row[$field->description()] = $row->get($field->name());
+                $_row[$field->description()] = $store->get($field->name());
             }
             $data [] = $_row;
         }
@@ -105,21 +89,24 @@ class Grid extends Widget
      * @var int
      */
     private $paginatorPerPage = 100;
+    private $paginatorPageName;
 
-    public function paginate(int $perPage)
+    public function paginate(int $perPage, $pageName = null)
     {
         $this->paginatorPerPage = $perPage;
+        $this->paginatorPageName = $pageName;
 
         return $this;
     }
 
-    /**
-     * @return AbstractPaginator|Row[]
-     */
     public function paginator()
     {
         if (!$this->paginator) {
-            $this->paginator = $this->data()->paginate($this->paginatorPerPage);
+            $this->paginator = $this->query->paginate(
+                $this->paginatorPerPage,
+                null,
+                $this->paginatorPageName
+            );
             $this->paginator->appends(Request::input());
         }
 
@@ -132,7 +119,7 @@ class Grid extends Widget
     public function process()
     {
         foreach ($this->exports as $name => $url) {
-            $this->addButton('right-top', $name, $url, 'lego-export-' . $name);
+            $this->addButton(self::BTN_RIGHT_TOP, $name, $url, 'lego-export-' . $name);
         }
 
         $this->paginator();

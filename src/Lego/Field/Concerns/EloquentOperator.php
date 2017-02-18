@@ -100,7 +100,7 @@ trait EloquentOperator
 
     private function getModel(): Model
     {
-        return $this->source()->original()->getModel();
+        return $this->data;
     }
 
     /**
@@ -114,7 +114,7 @@ trait EloquentOperator
     {
         /** @var Field $this */
         /** @var Model $model */
-        $model = $this->source()->original();
+        $model = $this->data;
 
         $id = $id ?: $model->getKey() ?: 'NULL';
         $idColumn = $idColumn ?: $model->getKeyName();

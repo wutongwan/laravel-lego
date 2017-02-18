@@ -24,5 +24,16 @@ abstract class Operator
     final public function __construct($data)
     {
         $this->data = $data;
+
+        $this->initialize();
+    }
+
+    protected function initialize()
+    {
+    }
+
+    public function getOriginalData()
+    {
+        return $this->data;
     }
 }

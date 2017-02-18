@@ -1,32 +1,30 @@
 <?php namespace Lego\Field;
 
 use Illuminate\Support\Facades\App;
-use Lego\Data\Table\EloquentTable;
 use Lego\Foundation\Concerns\HasMode;
 use Lego\Foundation\Concerns\ModeOperator;
 use Lego\Foundation\Concerns\MessageOperator;
 use Lego\Foundation\Concerns\InitializeOperator;
 use Lego\Foundation\Concerns\RenderStringOperator;
-use Lego\Data\Row\Row;
-use Lego\Data\Data;
-use Lego\Data\Table\Table;
+use Lego\Operator\Query\Query;
+use Lego\Widget\Concerns\Operable;
 
 /**
  * 输入输出控件的基类
  */
 abstract class Field implements HasMode
 {
-    use MessageOperator;
-    use InitializeOperator;
-    use RenderStringOperator;
-    use ModeOperator; // 必须放在 `RenderStringOperator`后面
+    use MessageOperator,
+        InitializeOperator,
+        RenderStringOperator,
+        ModeOperator, // 必须放在 `RenderStringOperator`后面
+        Operable;
 
-    // Plugins
-    use Concerns\HtmlOperator;
-    use Concerns\EloquentOperator;
-    use Concerns\ValidationOperator;
-    use Concerns\ValueOperator;
-    use Concerns\ScopeOperator;
+    use Concerns\HtmlOperator,
+        Concerns\EloquentOperator,
+        Concerns\ValidationOperator,
+        Concerns\ValueOperator,
+        Concerns\ScopeOperator;
 
     /**
      * 字段的唯一标记
@@ -46,12 +44,7 @@ abstract class Field implements HasMode
      */
     protected $column;
 
-    /**
-     * 当前字段所属 Row
-     *
-     * @var Data|Row|Table
-     */
-    private $source;
+    protected $relation;
 
     /**
      * <input type="__THIS_VALUE__" ...
@@ -64,18 +57,27 @@ abstract class Field implements HasMode
      * Field constructor.
      * @param string $name 该字段的唯一标记, 同一个控件中不能存在相同name的field
      * @param string $description 描述、标签
-     * @param Data $source 对应 Row
+     * @param mixed $data 数据域
      */
-    public function __construct(string $name, string $description = null, Data $source = null)
+    public function __construct(string $name, string $description = null, $data = null)
     {
         $this->name = $name;
-        $this->column = $name;
-        $this->description = $description;
-        $this->source = $source;
 
-        $this->locale(App::getLocale()); // 默认使用 Laravel 的配置
+        /**
+         * Example
+         *  - name : school.city.name
+         *  - column : name
+         *  - relation : school.city
+         *  - description <default> : School City Name
+         */
+        $parts = explode('.', $name);
+        $this->column = last($parts);
+        $this->relation = join('.', array_slice($parts, 0, -1));
+        $this->description = $description ?: ucwords(join(' ', $parts));
 
-        $this->triggerInitialize();
+        $this->locale(App::getLocale()); // set field's locale.
+        $this->initializeOperator($data); // create query operator and store operator.
+        $this->triggerInitialize(); // initialize traits and self.
     }
 
     /**
@@ -96,11 +98,6 @@ abstract class Field implements HasMode
     public function description()
     {
         return $this->description;
-    }
-
-    public function source()
-    {
-        return $this->source;
     }
 
     private $locale;
@@ -128,34 +125,23 @@ abstract class Field implements HasMode
 
     /**
      * Filter 检索数据时, 构造此字段的查询
-     * @param Table $query
-     * @return Table
+     * @param Query $query
+     * @return Query
      */
-    public function filter(Table $query)
+    public function filter(Query $query)
     {
-        return $query->whereEquals($this->column(), $this->getCurrentValue());
+        return $this->filterWithRelationOrDirectly($query, function (Query $query) {
+            return $query->whereEquals($this->column(), $this->getCurrentValue());
+        });
     }
 
-    /**
-     * Call Field's Filter
-     *
-     * @param Table $query
-     * @return Table
-     *
-     * - Relation
-     * - Scope
-     * - Filter
-     */
-    public function applyFilter(Table $query)
+    protected function filterWithRelationOrDirectly(Query $query, \Closure $closure)
     {
-        if ($this->relation()) {
-            $query->whereHas($this->relation(), function (EloquentTable $query) {
-                $this->callFilterWithScope($query);
-            });
-        } else {
-            $this->callFilterWithScope($query);
+        if ($this->relation) {
+            return $query->whereHas($this->relation, $closure);
         }
-        return $query;
+
+        return call_user_func($closure, $query);
     }
 
     /**
@@ -164,11 +150,11 @@ abstract class Field implements HasMode
     abstract public function process();
 
     /**
-     * 将新的数据存储到 Source
+     * 将新的数据存储到 Store
      */
-    public function syncValueToSource()
+    public function syncValueToStore()
     {
-        $this->source()->set($this->column(), $this->getCurrentValue());
+        $this->store->set($this->column(), $this->getCurrentValue());
     }
 
     protected function view($view, $data = [])

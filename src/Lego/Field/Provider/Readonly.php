@@ -1,20 +1,12 @@
 <?php namespace Lego\Field\Provider;
 
-use Lego\Field\Field;
 use Lego\Field\Concerns\DisabledInFilter;
 
-class Readonly extends Field
+class Readonly extends Text
 {
     use DisabledInFilter;
 
     protected $readonlyValue;
-
-    /**
-     * 数据处理逻辑
-     */
-    public function process()
-    {
-    }
 
     /**
      * 初始化对象
@@ -35,7 +27,7 @@ class Readonly extends Field
         return parent::renderReadonly();
     }
 
-    public function syncValueToSource()
+    public function syncValueToStore()
     {
     }
 }

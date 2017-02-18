@@ -1,25 +1,10 @@
 <?php namespace Lego\Widget;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Request;
-use Lego\Data\Data;
 use Lego\Field\Field;
 
 class Filter extends Widget
 {
-    protected function prepareData($data): Data
-    {
-        if (is_subclass_of($data, Model::class)) {
-            $data = new $data;
-        }
-
-        if ($data instanceof Model) {
-            $data = $data->newQuery();
-        }
-
-        return lego_table($data);
-    }
-
     /**
      * 初始化对象
      */
@@ -59,7 +44,7 @@ class Filter extends Widget
                 return;
             }
 
-            $field->applyFilter($this->data());
+            $field->filter($this->query);
         });
     }
 
