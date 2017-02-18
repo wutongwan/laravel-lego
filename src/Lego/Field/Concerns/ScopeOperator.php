@@ -1,6 +1,6 @@
 <?php namespace Lego\Field\Concerns;
 
-use Lego\Data\Table\Table;
+use Lego\Operator\Query\Query;
 
 /**
  * Class ScopeOperator
@@ -38,14 +38,14 @@ trait ScopeOperator
         return $this;
     }
 
-    public function callFilterWithScope(Table $query)
+    public function callFilterWithScope(Query $query)
     {
         if (!$this->scope) {
             return $this->filter($query);
         }
 
         if (is_string($this->scope)) {
-            $query->original()->{$this->scope}($this->getCurrentValue());
+            $query->{$this->scope}($this->getCurrentValue());
         } else {
             call_user_func_array($this->scope, [$query, $this->getCurrentValue()]);
         }

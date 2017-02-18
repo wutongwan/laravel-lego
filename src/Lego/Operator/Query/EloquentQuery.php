@@ -1,6 +1,8 @@
 <?php namespace Lego\Operator\Query;
 
+use Illuminate\Database\Eloquent\Builder as EloquentQueryBuilder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\AbstractPaginator;
 
 class EloquentQuery extends Query
@@ -18,10 +20,7 @@ class EloquentQuery extends Query
                 return new self($data->newQuery());
 
             // Laravel query builder
-            case in_array(get_class($data), [
-                \Illuminate\Database\Query\Builder::class,
-                \Illuminate\Database\Eloquent\Builder::class,
-            ]):
+            case in_array(get_class($data), [QueryBuilder::class, EloquentQueryBuilder::class]):
                 return new self($data);
 
             default:
@@ -30,7 +29,7 @@ class EloquentQuery extends Query
     }
 
     /**
-     * @var Model
+     * @var Model|QueryBuilder|EloquentQueryBuilder
      */
     protected $data;
 
@@ -153,10 +152,15 @@ class EloquentQuery extends Query
     public function where(\Closure $closure)
     {
         $this->data->where(function ($query) use ($closure) {
-            call_user_func($closure, lego_table($query));
+            call_user_func($closure, new self($query));
         });
 
         return $this;
+    }
+
+    public function getRelation($name)
+    {
+        return new self($this->data->newQuery()->getRelation($name));
     }
 
     /**
@@ -170,7 +174,7 @@ class EloquentQuery extends Query
         $this->data->whereHas(
             $relation,
             function ($query) use ($callback) {
-                call_user_func($callback, lego_table($query));
+                call_user_func($callback, new self($query));
             }
         );
 
@@ -203,12 +207,8 @@ class EloquentQuery extends Query
      * @param int|null $page
      * @return AbstractPaginator
      */
-    protected function createPaginator(
-        $perPage = null,
-        $columns = null,
-        $pageName = null,
-        $page = null
-    ): AbstractPaginator {
+    protected function createPaginator($perPage = null, $columns = null, $pageName = null, $page = null)
+    {
         return $this->data->paginate($perPage, ['*'], 'page', $page);
     }
 }

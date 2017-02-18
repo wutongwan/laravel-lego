@@ -2,8 +2,8 @@
 
 use Illuminate\Support\Facades\Request;
 use Lego\Field\Field;
-use Lego\Data\Table\Table;
 use Lego\LegoAsset;
+use Lego\Operator\Query\Query;
 use Lego\Register\AutoCompleteMatchHandler;
 
 class AutoComplete extends Field
@@ -146,22 +146,22 @@ class AutoComplete extends Field
 
     /**
      * Filter 检索数据时, 构造此字段的查询
-     * @param Table $query
-     * @return Table
+     * @param Query $query
+     * @return Query
      */
-    public function filter(Table $query)
+    public function filter(Query $query)
     {
         if (!$this->relation()) {
             return $query;
         }
 
-        return $query->whereEquals($query->original()->getModel()->getKeyName(), $this->getCurrentValue());
+        return $query->whereEquals($query->getOriginalData()->getModel()->getKeyName(), $this->getCurrentValue());
     }
 
-    public function syncValueToSource()
+    public function syncValueToStore()
     {
         lego_assert(!$this->isNestedRelation(), __CLASS__ . ' not support nested relation in form widget.');
 
-        parent::syncValueToSource();
+        parent::syncValueToStore();
     }
 }

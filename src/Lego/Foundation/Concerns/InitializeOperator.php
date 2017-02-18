@@ -17,7 +17,9 @@ trait InitializeOperator
     /**
      * 初始化对象
      */
-    abstract protected function initialize();
+    protected function initialize()
+    {
+    }
 
     /**
      * 初始化插件

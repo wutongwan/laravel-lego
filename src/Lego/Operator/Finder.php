@@ -6,10 +6,12 @@ class Finder
 {
     const QUERY_LIST = [
         Query\EloquentQuery::class,
+        Query\ArrayQuery::class,
     ];
 
     const STORE_LIST = [
         Store\EloquentStore::class,
+        Store\ArrayStore::class,
     ];
 
     /**

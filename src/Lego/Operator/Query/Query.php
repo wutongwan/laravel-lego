@@ -96,6 +96,14 @@ abstract class Query extends Operator implements \ArrayAccess, Arrayable, \Count
     abstract public function where(\Closure $closure);
 
     /**
+     * Get the relation instance for the given relation name.
+     *
+     * @param $name
+     * @return static
+     */
+    abstract public function getRelation($name);
+
+    /**
      * 关联查询
      * @param $relation
      * @param $callback
@@ -120,16 +128,13 @@ abstract class Query extends Operator implements \ArrayAccess, Arrayable, \Count
 
     /**
      * Create Paginator
-     * @param int $perPage
-     * @param int|null $page
+     * @param null $perPage
+     * @param array $columns
+     * @param string $pageName
+     * @param null $page
      * @return AbstractPaginator
      */
-    abstract protected function createPaginator(
-        $perPage = null,
-        $columns = ['*'],
-        $pageName = 'page',
-        $page = null
-    ): AbstractPaginator;
+    abstract protected function createPaginator($perPage = null, $columns = ['*'], $pageName = 'page', $page = null);
 
     /**
      * Paginator API

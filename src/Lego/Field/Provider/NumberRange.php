@@ -9,13 +9,6 @@ class NumberRange extends Number
     use FilterOnly;
 
     /**
-     * 数据处理逻辑
-     */
-    public function process()
-    {
-    }
-
-    /**
      * 初始化对象
      */
     protected function initialize()

@@ -1,11 +1,13 @@
 <?php namespace Lego\Field\Provider;
 
 use Collective\Html\FormFacade;
+use Lego\Field\Concerns\DisabledInFilter;
 use Lego\Field\Field;
-use Lego\Data\Table\Table;
 
 class JSON extends Field
 {
+    use DisabledInFilter;
+
     protected $jsonKey;
 
     /**
@@ -60,30 +62,17 @@ class JSON extends Field
      */
     public function render()
     {
-        return FormFacade::input('text', $this->elementName(),
-            $this->getDisplayValue(),
-            [
-                'id' => $this->elementId(),
-                'class' => 'form-control'
-            ]
-        );
+        return FormFacade::input('text', $this->elementName(), $this->getDisplayValue(), [
+            'id' => $this->elementId(),
+            'class' => 'form-control'
+        ]);
     }
 
-    public function syncValueToSource()
+    public function syncValueToStore()
     {
-        $original = $this->source()->get($this->column());
+        $original = $this->store->get($this->column());
         $original = is_string($original) ? $this->decode($original) : $original;
         array_set($original, $this->jsonKey, $this->getCurrentValue());
-        $this->source()->set($this->column(), $this->encode($original));
-    }
-
-    /**
-     * Filter 检索数据时, 构造此字段的查询
-     * @param Table $query
-     * @return Table
-     */
-    public function filter(Table $query)
-    {
-        return $query;
+        $this->store->set($this->column(), $this->encode($original));
     }
 }

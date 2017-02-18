@@ -4,7 +4,6 @@ use Illuminate\Support\Traits\Macroable;
 use Lego\Foundation\Concerns\InitializeOperator;
 use Lego\Foundation\Concerns\MessageOperator;
 use Lego\Foundation\Concerns\RenderStringOperator;
-use Lego\Operator\Finder;
 use Lego\Register\HighPriorityResponse;
 use Lego\Widget\Concerns\ButtonLocations;
 
@@ -21,35 +20,23 @@ abstract class Widget implements ButtonLocations
     use Concerns\HasFields,
         Concerns\HasGroups,
         Concerns\RequestOperator,
-        Concerns\HasButtons;
-
-    /**
-     * 源数据
-     */
-    protected $data;
-
-    /**
-     * @var \Lego\Operator\Query\Query
-     */
-    protected $query;
-
-    /**
-     * @var \Lego\Operator\Store\Store
-     */
-    protected $store;
+        Concerns\HasButtons,
+        Concerns\Operable;
 
     public function __construct($data)
     {
-        $this->data = $this->initializeData($data);
+        $this->initializeOperator(
+            $this->transformer($data)
+        );
 
-        $this->query = Finder::query($data);
-        $this->store = Finder::store($data);
-
-        // 初始化
+        // 初始化 traits & self
         $this->triggerInitialize();
     }
 
-    public function initializeData($data)
+    /**
+     * 初始化 Operator 之前，对 $data 进行修正的工具函数
+     */
+    protected function transformer($data)
     {
         return $data;
     }

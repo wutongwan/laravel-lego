@@ -1,32 +1,7 @@
 <?php namespace Lego\Field\Provider;
 
-use Lego\Field\Field;
-
-class Select extends Field
+class Select extends Text
 {
-    /**
-     * 数据处理逻辑
-     */
-    public function process()
-    {
-    }
-
-    /**
-     * 初始化对象
-     */
-    protected function initialize()
-    {
-    }
-
-    /**
-     * 渲染当前对象
-     * @return string
-     */
-    public function render()
-    {
-        return $this->renderByMode();
-    }
-
     protected function renderEditable()
     {
         return $this->view('lego::default.field.select');

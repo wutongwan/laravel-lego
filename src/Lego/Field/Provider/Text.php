@@ -2,18 +2,11 @@
 
 use Collective\Html\FormFacade;
 use Lego\Field\Field;
-use Lego\Data\Table\Table;
+use Lego\Operator\Query\Query;
 
 class Text extends Field
 {
-    /**
-     * 初始化对象
-     */
-    protected function initialize()
-    {
-    }
-
-    public function render() : string
+    public function render()
     {
         return $this->renderByMode();
     }
@@ -28,9 +21,11 @@ class Text extends Field
         );
     }
 
-    public function filter(Table $query) : Table
+    public function filter(Query $query)
     {
-        return $query->whereContains($this->column(), $this->getCurrentValue());
+        return $this->filterWithRelationOrDirectly($query, function (Query $query) {
+            return $query->whereContains($this->column(), $this->getCurrentValue());
+        });
     }
 
     /**

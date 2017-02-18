@@ -1,6 +1,7 @@
 <?php namespace Lego\Operator\Store;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class EloquentStore extends Store
 {
@@ -20,6 +21,8 @@ class EloquentStore extends Store
     /** @var Model $data */
     protected $data;
 
+    protected $relations = [];
+
     /**
      * 获取属性值
      *
@@ -29,7 +32,7 @@ class EloquentStore extends Store
      */
     public function get($attribute, $default = null)
     {
-        return object_get($this->original, $attribute, $default);
+        return object_get($this->data, $attribute, $default);
     }
 
     /**
@@ -39,7 +42,20 @@ class EloquentStore extends Store
      */
     public function set($attribute, $value)
     {
-        data_set($this->original, $attribute, $value);
+        $parts = explode('.', $attribute);
+
+        if (count($parts) === 1) {
+            $this->data->setAttribute($attribute, $value);
+            return;
+        }
+
+        $relation = join('.', array_slice($parts, 0, -1));
+        $related = data_get($this->data, $relation);
+        if ($related && $related instanceof Model) {
+            $related->setAttribute(last($parts), $value);
+            $this->relations[$relation] = $related;
+            return;
+        }
     }
 
     /**
@@ -52,6 +68,12 @@ class EloquentStore extends Store
      */
     public function save($options = [])
     {
-        return $this->data->saveOrFail();
+        return DB::transfaction(function () use ($options) {
+            foreach ($this->relations as $related) {
+                $related->save();
+            }
+
+            return $this->data->save($options);
+        });
     }
 }
