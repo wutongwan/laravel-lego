@@ -22,7 +22,7 @@ abstract class Widget
     use Concerns\HasFields,
         Concerns\HasGroups,
         Concerns\RequestOperator,
-        Concerns\ButtonsOperator;
+        Concerns\HasButtons;
 
     /**
      * 数据源

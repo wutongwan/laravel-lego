@@ -2,7 +2,7 @@
 
 use Lego\Foundation\Button;
 
-trait ButtonsOperator
+trait HasButtons
 {
     private $buttons = [];
 
