@@ -16,7 +16,7 @@ trait HasFields
      */
     private $fields;
 
-    protected function initializeFieldOperator()
+    protected function initializeHasFields()
     {
         $this->fields = collect([]);
 

@@ -12,7 +12,7 @@ trait HasButtons
      */
     abstract public function buttonLocations(): array;
 
-    protected function initializeButtonsOperator()
+    protected function initializeHasButtons()
     {
         foreach ($this->buttonLocations() as $location) {
             $this->buttons[$location] = [];

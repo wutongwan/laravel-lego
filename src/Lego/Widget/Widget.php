@@ -8,11 +8,12 @@ use Lego\Register\Data\HighPriorityResponse;
 use Lego\Data\Data;
 use Lego\Data\Row\Row;
 use Lego\Data\Table\Table;
+use Lego\Widget\Concerns\ButtonLocations;
 
 /**
  * Lego中所有大型控件的基类
  */
-abstract class Widget
+abstract class Widget implements ButtonLocations
 {
     use MessageOperator,
         InitializeOperator,
@@ -29,11 +30,6 @@ abstract class Widget
      * @var Data $data
      */
     private $data;
-
-    /**
-     * 响应内容
-     */
-    private $response;
 
     public function __construct($data)
     {
@@ -53,6 +49,22 @@ abstract class Widget
         return $this->data;
     }
 
+
+    /**
+     * 默认四个方位可以插入按钮，特殊需求请重写此函数
+     *
+     * @return array
+     */
+    public function buttonLocations(): array
+    {
+        return [
+            self::BTN_RIGHT_TOP,
+            self::BTN_RIGHT_BOTTOM,
+            self::BTN_LEFT_TOP,
+            self::BTN_LEFT_BOTTOM,
+        ];
+    }
+
     /**
      * 对 view() 的封装
      *
@@ -65,6 +77,11 @@ abstract class Widget
     {
         return $this->response(view($view, $data, $mergeData));
     }
+
+    /**
+     * 响应内容
+     */
+    private $response;
 
     /**
      * 重写此次请求的 Response
@@ -112,14 +129,4 @@ abstract class Widget
      * Widget 的所有数据处理都放在此函数中, 渲染 view 前调用
      */
     abstract public function process();
-
-    /**
-     * 默认四个方位可以插入按钮，特殊需求请重写此函数
-     *
-     * @return array
-     */
-    public function buttonLocations(): array
-    {
-        return ['right-top', 'right-bottom', 'left-top', 'left-bottom'];
-    }
 }
