@@ -30,6 +30,9 @@ trait HasFields
         }
     }
 
+    /**
+     * @return Collection|Field[]
+     */
     public function fields()
     {
         return $this->fields;

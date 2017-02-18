@@ -3,7 +3,9 @@
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Pagination\AbstractPaginator;
+use Lego\Operator\Finder;
 use Lego\Operator\Operator;
+use Lego\Operator\Store\Store;
 use Traversable;
 
 /**
@@ -136,7 +138,7 @@ abstract class Query extends Operator implements \ArrayAccess, Arrayable, \Count
      * @param array $columns
      * @param null $pageName
      * @param null $page
-     * @return AbstractPaginator
+     * @return AbstractPaginator|Store[]
      */
     public function paginate($perPage = null, $columns = null, $pageName = null, $page = null)
     {
@@ -145,6 +147,11 @@ abstract class Query extends Operator implements \ArrayAccess, Arrayable, \Count
         $columns = is_null($columns) ? ['*'] : $columns;
 
         $this->paginator = $this->createPaginator($perPage, $columns, $pageName, $page);
+        $this->paginator->setCollection(
+            $this->paginator->getCollection()->map(function ($row) {
+                return Finder::store($row);
+            })
+        );
 
         return $this->paginator;
     }

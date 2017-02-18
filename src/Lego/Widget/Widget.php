@@ -4,10 +4,8 @@ use Illuminate\Support\Traits\Macroable;
 use Lego\Foundation\Concerns\InitializeOperator;
 use Lego\Foundation\Concerns\MessageOperator;
 use Lego\Foundation\Concerns\RenderStringOperator;
-use Lego\Register\Data\HighPriorityResponse;
-use Lego\Data\Data;
-use Lego\Data\Row\Row;
-use Lego\Data\Table\Table;
+use Lego\Operator\Finder;
+use Lego\Register\HighPriorityResponse;
 use Lego\Widget\Concerns\ButtonLocations;
 
 /**
@@ -26,29 +24,40 @@ abstract class Widget implements ButtonLocations
         Concerns\HasButtons;
 
     /**
-     * 数据源
-     * @var Data $data
+     * 源数据
      */
-    private $data;
+    protected $data;
+
+    /**
+     * @var \Lego\Operator\Query\Query
+     */
+    protected $query;
+
+    /**
+     * @var \Lego\Operator\Store\Store
+     */
+    protected $store;
 
     public function __construct($data)
     {
-        $this->data = $this->prepareData($data);
+        $this->data = $this->initializeData($data);
+
+        $this->query = Finder::query($data);
+        $this->store = Finder::store($data);
 
         // 初始化
         $this->triggerInitialize();
     }
 
-    abstract protected function prepareData($data): Data;
+    public function initializeData($data)
+    {
+        return $data;
+    }
 
-    /**
-     * @return Data|Table|Row
-     */
-    public function data(): Data
+    public function data()
     {
         return $this->data;
     }
-
 
     /**
      * 默认四个方位可以插入按钮，特殊需求请重写此函数
