@@ -48,5 +48,5 @@ lego_register('field.data', [
 
 $data = Register::get('field.data', Room::class);
 
-// $data instanceof \Lego\Register\Data\FieldData
+// $data instanceof \Lego\Register\FieldData
 ```

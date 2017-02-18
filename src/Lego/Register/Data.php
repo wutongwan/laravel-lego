@@ -1,4 +1,4 @@
-<?php namespace Lego\Register\Data;
+<?php namespace Lego\Register;
 
 abstract class Data
 {

@@ -1,6 +1,6 @@
 <?php namespace Lego\Foundation;
 
-use Lego\Register\Data\UserDefinedField;
+use Lego\Register\UserDefinedField;
 use Symfony\Component\ClassLoader\ClassMapGenerator;
 
 /**

@@ -1,4 +1,4 @@
-<?php namespace Lego\Register\Data;
+<?php namespace Lego\Register;
 
 use Illuminate\Support\Facades\Request;
 use Lego\Foundation\Exceptions\InvalidRegisterData;

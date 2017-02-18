@@ -4,7 +4,7 @@ use Illuminate\Support\ServiceProvider;
 use Lego\Commands\GenerateIDEHelper;
 use Lego\Commands\UpdateComponents;
 use Lego\Foundation\Fields;
-use Lego\Register\Data\UserDefinedField;
+use Lego\Register\UserDefinedField;
 
 /**
  * Lego Service Provider for Laravel

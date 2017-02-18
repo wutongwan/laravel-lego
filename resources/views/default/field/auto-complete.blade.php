@@ -28,7 +28,7 @@
                 cache: true,
                 data: function (params) {
                     return {
-                        "{{ \Lego\Register\Data\AutoCompleteMatchHandler::KEYWORD_KEY }}": params.term,
+                        "{{ \Lego\Register\AutoCompleteMatchHandler::KEYWORD_KEY }}": params.term,
                         "page": params.page
                     };
                 },

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Request;
 use Lego\Field\Field;
 use Lego\Data\Table\Table;
 use Lego\LegoAsset;
-use Lego\Register\Data\AutoCompleteMatchHandler;
+use Lego\Register\AutoCompleteMatchHandler;
 
 class AutoComplete extends Field
 {
