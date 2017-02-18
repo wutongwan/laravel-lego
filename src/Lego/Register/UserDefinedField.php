@@ -1,7 +1,7 @@
-<?php namespace Lego\Register\Data;
+<?php namespace Lego\Register;
 
 use Lego\Foundation\Exceptions\InvalidRegisterData;
-use Lego\Register\Register;
+use Lego\LegoRegister;
 
 class UserDefinedField extends Data
 {
@@ -19,7 +19,7 @@ class UserDefinedField extends Data
 
     public function afterRegistered()
     {
-        if ($this->tag === Register::DEFAULT_TAG) {
+        if ($this->tag === LegoRegister::DEFAULT_TAG) {
             lego_register(self::class, $this->data, class_basename($this->data));
         }
     }
@@ -31,8 +31,8 @@ class UserDefinedField extends Data
      */
     public static function list()
     {
-        $fields = Register::getAll(self::class);
-        unset($fields[Register::DEFAULT_TAG]);
+        $fields = LegoRegister::getAll(self::class);
+        unset($fields[LegoRegister::DEFAULT_TAG]);
         return $fields;
     }
 }

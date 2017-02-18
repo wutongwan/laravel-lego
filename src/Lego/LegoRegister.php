@@ -1,14 +1,14 @@
-<?php namespace Lego\Register;
+<?php namespace Lego;
 
 use Illuminate\Support\Arr;
-use Lego\Register\Data\Data;
+use Lego\Register\Data;
 
 /**
  * Lego 内部的注册器
  *
  * 文档见: `docs/register.md`
  */
-class Register
+class LegoRegister
 {
     const DEFAULT_TAG = 'default';
 
@@ -20,7 +20,7 @@ class Register
      * @param string $name 匹配到 `Lego/Register/Data` 目录中的注册数据类
      * @param mixed $data 注册数据, 数组
      * @param string|null $tag
-     * @return Data
+     * @return \Lego\Register\Data
      */
     public static function register($dataClass, $data, $tag = self::DEFAULT_TAG)
     {

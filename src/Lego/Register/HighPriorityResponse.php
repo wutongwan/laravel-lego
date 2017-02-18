@@ -1,8 +1,8 @@
-<?php namespace Lego\Register\Data;
+<?php namespace Lego\Register;
 
 use Illuminate\Support\Facades\Request;
 use Lego\Foundation\Exceptions\InvalidRegisterData;
-use Lego\Register\Register;
+use Lego\LegoRegister;
 
 class HighPriorityResponse extends Data
 {
@@ -27,7 +27,7 @@ class HighPriorityResponse extends Data
             return null;
         }
 
-        $data = Register::get(self::class, $path);
+        $data = LegoRegister::get(self::class, $path);
         if (!$data) {
             return null;
         }

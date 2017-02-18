@@ -1,7 +1,7 @@
 <?php
 
-use Lego\Register\Data\Data;
-use Lego\Register\Data\FieldData;
+use Lego\Register\Data;
+use Lego\Register\FieldData;
 
 class RegisterTest extends PHPUnit_Framework_TestCase
 {

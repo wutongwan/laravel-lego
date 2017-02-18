@@ -1,8 +1,8 @@
 <?php
 
 use Lego\Foundation\Exceptions\LegoException;
-use Lego\Register\Data\HighPriorityResponse;
-use Lego\Register\Register;
+use Lego\Register\HighPriorityResponse;
+use Lego\LegoRegister;
 use Lego\Data\Row\Row;
 use Lego\Data\Table\Table;
 
@@ -94,11 +94,11 @@ function lego_assert($condition, $description)
 }
 
 /**
- * Alias to Register::register
+ * Alias to LegoRegister::register
  */
-function lego_register($name, $data, $tag = Register::DEFAULT_TAG)
+function lego_register($name, $data, $tag = LegoRegister::DEFAULT_TAG)
 {
-    return Register::register($name, $data, $tag);
+    return LegoRegister::register($name, $data, $tag);
 }
 
 if (!function_exists('class_namespace')) {
