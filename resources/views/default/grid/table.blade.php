@@ -1,6 +1,9 @@
-@include('lego::default.snippets.top-buttons', ['widget' => $grid])
+@php
+    /** @var \Lego\Widget\Grid $grid */
+    $paginator = $grid->paginator();
+@endphp
 
-<? $paginator = $grid->paginator() ?>
+@include('lego::default.snippets.top-buttons', ['widget' => $grid])
 
 <div class="table-responsive">
     <table class="table">
@@ -9,6 +12,7 @@
                 <th>{{ $field->description() }}</th>
             @endforeach
         </tr>
+        <?php /** @var \Lego\Operator\Store\Store $row */ ?>
         @foreach($paginator as $row)
             <tr>
                 @foreach($grid->fields() as $field)

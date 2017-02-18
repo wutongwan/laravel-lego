@@ -16,9 +16,9 @@ namespace Lego\Widget\Operators{
     /**
      * Field 相关逻辑
      * ** Magic Add **
-<? foreach ($fields as $name => $class) {?>
+<?php foreach ($fields as $name => $class) {?>
      * @method \<?= $class ?> add<?= $name ?>(string $fieldName, $fieldDescription = null)
-<? } ?>
+<?php } ?>
      *
      * @see \Lego\Widget\Operators\FieldPlugin
      */
@@ -29,11 +29,11 @@ namespace Lego\Widget\Operators{
 
 namespace Lego\Widget {
 
-<? foreach ($widgets as $widget => $detail) {?>
+<?php foreach ($widgets as $widget => $detail) {?>
     /**
-<? foreach ($detail['methods'] as $method) {?>
+<?php foreach ($detail['methods'] as $method) {?>
      * @method <?= $method['return'] ?> <?= $method['name'] ?>(<?= $method['arguments'] ?>)
-<? } ?>
+<?php} ?>
      *
      * @see \<?= $widget . "\n" ?>
      */
@@ -42,6 +42,6 @@ namespace Lego\Widget {
     {
     }
 
-<? } ?>
+<?php } ?>
 
 }
