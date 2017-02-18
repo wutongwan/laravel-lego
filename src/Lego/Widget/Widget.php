@@ -14,16 +14,15 @@ use Lego\Data\Table\Table;
  */
 abstract class Widget
 {
-    use MessageOperator;
-    use InitializeOperator;
-    use RenderStringOperator;
-    use Macroable;
+    use MessageOperator,
+        InitializeOperator,
+        RenderStringOperator,
+        Macroable;
 
-    // Plugins
-    use Concerns\FieldOperator;
-    use Concerns\GroupOperator;
-    use Concerns\RequestOperator;
-    use Concerns\ButtonsOperator;
+    use Concerns\HasFields,
+        Concerns\HasGroups,
+        Concerns\RequestOperator,
+        Concerns\ButtonsOperator;
 
     /**
      * 数据源

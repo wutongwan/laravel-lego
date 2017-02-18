@@ -8,7 +8,7 @@ use Lego\Foundation\Fields;
 /**
  * Field 相关逻辑
  */
-trait FieldOperator
+trait HasFields
 {
     /**
      * Field Collection
