@@ -22,4 +22,12 @@ return [
      */
     'user-defined-fields' => [
     ],
+
+    /**
+     * 默认 paginator 配置
+     */
+    'paginator' => [
+        'per-page' => 100,
+        'page-name' => 'page',
+    ],
 ];
