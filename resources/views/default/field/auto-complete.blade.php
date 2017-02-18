@@ -1,5 +1,5 @@
-<? /** @var \Lego\Field\Provider\AutoComplete $field */ ?>
-<? $__field_show_value = $field->getDisplayValue() ?>
+<?php /** @var \Lego\Field\Provider\AutoComplete $field */ ?>
+<?php $__field_show_value = $field->getDisplayValue() ?>
 
 <select name="{{ $field->elementName() }}" id="{{ $field->elementId() }}" class="form-control"
         style="width: 100%; min-width: 100%;">
