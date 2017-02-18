@@ -5,10 +5,10 @@ use Lego\Field\Group;
 /**
  * Widget 中 Field 的分组功能
  *
- * Class GroupOperator
+ * Class HasGroups
  * @package Lego\Widget\Plugin
  */
-trait GroupOperator
+trait HasGroups
 {
     /**
      * Group List
