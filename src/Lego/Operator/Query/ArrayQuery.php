@@ -8,6 +8,9 @@ use Illuminate\Support\Collection;
 use Lego\Operator\Finder;
 use Lego\Operator\Store\Store;
 
+/**
+ * ArrayAble
+ */
 class ArrayQuery extends Query
 {
     public static function attempt($data)
@@ -202,7 +205,7 @@ class ArrayQuery extends Query
      */
     public function limit($limit)
     {
-        $this->collection->slice(0, $limit);
+        $this->collection = $this->collection->slice(0, $limit);
 
         return $this;
     }
@@ -215,7 +218,7 @@ class ArrayQuery extends Query
      */
     public function orderBy($attribute, bool $desc = false)
     {
-        $this->collection->sortBy($attribute, SORT_REGULAR, $desc);
+        $this->collection = $this->collection->sortBy($attribute, SORT_REGULAR, $desc);
 
         return $this;
     }

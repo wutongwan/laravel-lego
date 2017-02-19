@@ -12,6 +12,7 @@ class Finder
     const STORE_LIST = [
         Store\EloquentStore::class,
         Store\ArrayStore::class,
+        Store\ObjectStore::class,
     ];
 
     /**

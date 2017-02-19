@@ -5,6 +5,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\AbstractPaginator;
 
+/**
+ * Laravel ORM : Eloquent
+ */
 class EloquentQuery extends Query
 {
     public static function attempt($data)

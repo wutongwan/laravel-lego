@@ -170,6 +170,11 @@ abstract class Query extends Operator implements \ArrayAccess, Arrayable, \Count
         return $this->paginator;
     }
 
+    public function get()
+    {
+        return $this->paginator();
+    }
+
     /** Array Access Interface Methods. */
 
     /**
