@@ -117,7 +117,7 @@ class Form extends Widget implements HasMode
         } else {
             // 使用默认的数据处理逻辑
             $this->syncFieldsValue();
-            if ($this->data()->save() === false) {
+            if ($this->store->save() === false) {
                 $this->errors()->add('save-error', '保存失败');
                 return;
             }
@@ -138,7 +138,7 @@ class Form extends Widget implements HasMode
 
         $this->rewriteResponse(function () {
             if (is_callable($this->success)) {
-                return call_user_func($this->success, $this->data()->original());
+                return call_user_func($this->success, $this->data);
             }
 
             if (is_string($this->success) && starts_with($this->success, ['http://', '/'])) {
