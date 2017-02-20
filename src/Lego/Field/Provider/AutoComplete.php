@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Request;
 use Lego\Field\Field;
 use Lego\LegoAsset;
-use Lego\Operator\Finder;
 use Lego\Operator\Query\Query;
 use Lego\Register\AutoCompleteMatchHandler;
 
@@ -122,9 +121,7 @@ class AutoComplete extends Field
 
     public function process()
     {
-        if ($related = $this->store->get($this->relation)) {
-            $this->setDisplayValue(Finder::store($related)->get($this->column()));
-        }
+        $this->setDisplayValue($this->store->get($this->getColumnPathOfRelation($this->column())));
 
         if (!$this->getDisplayValue()) {
             $this->setDisplayValue(Request::input($this->elementName() . '-text'));

@@ -24,7 +24,7 @@ trait HasFields
         foreach (app(Fields::class)->all() as $name => $class) {
             self::macro('add' . $name, function () use ($class) {
                 $args = func_get_args();
-                $field = new $class($args[0], $args[1] ?? null, $this->data());
+                $field = new $class($args[0], $args[1] ?? null, $this->store);
                 return $this->addField($field);
             });
         }
@@ -60,20 +60,6 @@ trait HasFields
      */
     protected function fieldAdded(Field $field)
     {
-    }
-
-    protected function registerFieldOperatorMagicCall()
-    {
-        return [
-            /**
-             * 捕获 addXXX 函数, eg: addText($fieldName, $fieldDescription, $data)
-             */
-            'add*' => function () {
-                $arguments = func_get_args(); // eg: [addText, 'name', '描述']
-                $arguments[0] = substr($arguments[0], 3); // addText => text
-                return call_user_func_array([$this, 'add'], $arguments);
-            }
-        ];
     }
 
     protected function processFields()

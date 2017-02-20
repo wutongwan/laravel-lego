@@ -3,6 +3,7 @@
 use Illuminate\Database\Eloquent\Builder as EloquentQueryBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\AbstractPaginator;
 
@@ -165,13 +166,33 @@ class EloquentQuery extends Query
 
     public function getRelation($name)
     {
-        return new self($this->data->newQuery()->getRelation($name));
+        return new self($this->getNestedRelation($name));
     }
 
     public function getForeignKeyOfRelation($name)
     {
-        $relation = $this->data->newQuery()->getRelation($name);
-        return $relation instanceof BelongsTo ? $relation->getForeignKey() : null;
+        $relation = $this->getNestedRelation($name);
+        return $relation instanceof BelongsTo
+            ? trim($name, $relation->getRelation()) . $relation->getForeignKey()
+            : null;
+    }
+
+    /**
+     * @param string $name school.city.country
+     * @return Relation|null
+     */
+    private function getNestedRelation($name)
+    {
+        $model = $this->data;
+        $relation = null;
+        foreach (explode('.', $name) as $relation) {
+            /** @var Relation $relation */
+            $relation = $model->newQuery()->getRelation($relation);
+            if ($relation) {
+                $model = $relation->getRelated();
+            }
+        }
+        return $relation;
     }
 
     /**
