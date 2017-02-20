@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Validator;
 use Lego\Field\Field;
+use Lego\Foundation\Exceptions\LegoException;
 
 trait ValidationOperator
 {
@@ -103,5 +104,46 @@ trait ValidationOperator
         }
 
         return true;
+    }
+
+    /**
+     * Laravel Validation unique
+     *
+     * Auto except current model
+     *
+     * https://laravel.com/docs/master/validation#rule-unique
+     */
+    public function unique($id = null, $idColumn = null, $extra = null)
+    {
+        if (!$this->store instanceof \Lego\Operator\Store\EloquentStore) {
+            throw new LegoException(
+                'Validation: `unique` rule only worked for Eloquent, ' .
+                'you can use `validator($closure)` implement unique validation.'
+            );
+        }
+
+        /**
+         * @var \Illuminate\Database\Eloquent\Model $model
+         * @var Field $this
+         */
+        $model = $this->data;
+
+        $id = $id ?: $this->store->getKey() ?: 'NULL';
+        $idColumn = $idColumn ?: $this->store->getKeyName();
+
+        $parts = [
+            "unique:{$model->getConnectionName()}.{$model->getTable()}",
+            $this->column(),
+            $id,
+            $idColumn
+        ];
+
+        if ($extra) {
+            $parts [] = trim($extra, ',');
+        }
+
+        $this->rule(join(',', $parts));
+
+        return $this;
     }
 }

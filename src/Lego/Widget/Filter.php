@@ -44,7 +44,7 @@ class Filter extends Widget
                 return;
             }
 
-            $field->filter($this->query);
+            $field->applyFilter($this->query);
         });
     }
 

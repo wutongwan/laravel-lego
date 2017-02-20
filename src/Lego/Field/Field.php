@@ -141,6 +141,12 @@ abstract class Field implements HasMode
         return $this->inputType;
     }
 
+    final public function applyFilter(Query $query)
+    {
+        $this->callScope($query);
+        $this->filter($query);
+    }
+
     /**
      * Filter 检索数据时, 构造此字段的查询
      * @param Query $query
