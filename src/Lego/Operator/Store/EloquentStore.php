@@ -23,6 +23,11 @@ class EloquentStore extends Store
 
     protected $relations = [];
 
+    public function getKeyName()
+    {
+        return $this->data->getKeyName();
+    }
+
     /**
      * 获取属性值
      *
@@ -68,12 +73,15 @@ class EloquentStore extends Store
      */
     public function save($options = [])
     {
-        return DB::transfaction(function () use ($options) {
+        $result = DB::transaction(function () use ($options) {
             foreach ($this->relations as $related) {
                 $related->save();
             }
 
             return $this->data->save($options);
         });
+
+        $this->data = $this->data->fresh();
+        return $result;
     }
 }

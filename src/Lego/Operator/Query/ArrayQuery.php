@@ -229,4 +229,9 @@ class ArrayQuery extends Query
             'pageName' => $pageName,
         ]);
     }
+
+    protected function select(array $columns)
+    {
+        return new Collection($this->collection->all());
+    }
 }

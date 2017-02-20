@@ -51,7 +51,7 @@ trait ValidationOperator
      * @param \Closure $validator
      * @return $this
      */
-    public function validate(\Closure $validator)
+    public function validator(\Closure $validator)
     {
         $this->validators[] = $validator;
 
@@ -65,7 +65,7 @@ trait ValidationOperator
      *
      * @return bool 是否通过验证
      */
-    public function validationPassed()
+    public function validate()
     {
         if ($this->isReadonly()) {
             return true;

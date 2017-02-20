@@ -11,8 +11,9 @@ use Lego\Foundation\Concerns\ModeOperator;
  */
 class Form extends Widget implements HasMode
 {
-    use ModeOperator;
-    use Concerns\EloquentOperator;
+    use ModeOperator,
+        Concerns\EloquentOperator,
+        Concerns\HasEvents;
 
     /**
      * 此属性设置后将不再调用默认的数据处理逻辑
@@ -24,13 +25,6 @@ class Form extends Widget implements HasMode
      * 成功后的回调 or 跳转链接
      */
     private $success;
-
-    /**
-     * 初始化操作, 在类构造函数中调用
-     */
-    protected function initialize()
-    {
-    }
 
     /**
      * 保存成功后的 Response
@@ -48,7 +42,7 @@ class Form extends Widget implements HasMode
     {
         $this->fields()->each(
             function (Field $field) {
-                if (!$field->validationPassed()) {
+                if (!$field->validate()) {
                     $this->errors()->merge($field->errors());
                 }
             }
@@ -66,7 +60,7 @@ class Form extends Widget implements HasMode
 
         // Field 原始值来源
         $field->setOriginalValue(
-            $field->store->get($field->column())
+            $field->store->get($field->getColumnPathOfRelation($field->column()))
         );
 
         // Field 当前值来源
@@ -117,10 +111,12 @@ class Form extends Widget implements HasMode
         } else {
             // 使用默认的数据处理逻辑
             $this->syncFieldsValue();
+            $this->fireEvent('saving');
             if ($this->store->save() === false) {
                 $this->errors()->add('save-error', '保存失败');
                 return;
             }
+            $this->fireEvent('saved');
         }
 
         $this->messages()->add('success', '操作成功');
@@ -155,6 +151,6 @@ class Form extends Widget implements HasMode
      */
     public function render()
     {
-        return view('lego::default.form.horizontal', ['form' => $this])->render();
+        return view(config('lego.widgets.form.default-view'), ['form' => $this])->render();
     }
 }

@@ -30,4 +30,19 @@ return [
         'per-page' => 100,
         'page-name' => 'page',
     ],
+
+    /**
+     * 控件的配置项
+     */
+    'widgets' => [
+        /**
+         * 表单的配置项
+         */
+        'form' => [
+            /**
+             * 表单的默认 view
+             */
+            'default-view' => 'lego::default.form.horizontal',
+        ],
+    ]
 ];

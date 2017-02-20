@@ -51,7 +51,7 @@ class Finder
         }
 
         foreach (self::STORE_LIST as $item) {
-            if ($store = $item::attempt($item)) {
+            if ($store = $item::attempt($data)) {
                 return $store;
             }
         }

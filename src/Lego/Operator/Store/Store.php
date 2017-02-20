@@ -7,6 +7,16 @@ use Lego\Operator\Operator;
  */
 abstract class Store extends Operator
 {
+    public function getKeyName()
+    {
+        return null;
+    }
+
+    public function getKey()
+    {
+        return $this->get($this->getKeyName());
+    }
+
     abstract public function get($attribute, $default = null);
 
     abstract public function set($attribute, $value);
@@ -28,6 +38,11 @@ abstract class Store extends Operator
     function __set($name, $value)
     {
         $this->set($name, $value);
+    }
+
+    function __isset($name)
+    {
+        return $this->get($name);
     }
 
     public function __call($name, $arguments)
