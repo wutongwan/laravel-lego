@@ -90,9 +90,14 @@ abstract class Field implements HasMode
         $this->column = last($parts);
         $this->description = $description ?: ucwords(join(' ', $parts));
 
-        $this->data = $data;
-        $this->store = Finder::store($data);
-        $this->query = Finder::query($data);
+        if ($data instanceof Store) {
+            $this->data = $data->getOriginalData();
+            $this->store = $data;
+        } else {
+            $this->data = $data;
+            $this->store = Finder::store($data);
+        }
+        $this->query = Finder::query($this->data);
 
         $this->locale(App::getLocale()); // set field's locale.
         $this->triggerInitialize(); // initialize traits and self.

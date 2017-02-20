@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Lego\Foundation\Exceptions\LegoSaveFail;
 
 class EloquentStore extends Store
 {
@@ -37,7 +38,7 @@ class EloquentStore extends Store
      */
     public function get($attribute, $default = null)
     {
-        return object_get($this->data, $attribute, $default);
+        return data_get($this->data, $attribute, $default);
     }
 
     /**
@@ -59,7 +60,6 @@ class EloquentStore extends Store
         if ($related && $related instanceof Model) {
             $related->setAttribute(last($parts), $value);
             $this->relations[$relation] = $related;
-            return;
         }
     }
 
@@ -73,15 +73,19 @@ class EloquentStore extends Store
      */
     public function save($options = [])
     {
-        $result = DB::transaction(function () use ($options) {
+        DB::transaction(function () use ($options) {
             foreach ($this->relations as $related) {
-                $related->save();
+                if (!$related->save()) {
+                    throw new LegoSaveFail(class_basename($related));
+                }
             }
 
-            return $this->data->save($options);
+            if (!$this->data->save($options)) {
+                throw new LegoSaveFail(class_basename($this->data));
+            }
         });
 
         $this->data = $this->data->fresh();
-        return $result;
+        return true;
     }
 }
