@@ -12,7 +12,6 @@ use Lego\Foundation\Concerns\ModeOperator;
 class Form extends Widget implements HasMode
 {
     use ModeOperator,
-        Concerns\EloquentOperator,
         Concerns\HasEvents;
 
     /**

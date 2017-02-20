@@ -38,10 +38,10 @@ trait ScopeOperator
         return $this;
     }
 
-    public function callFilterWithScope(Query $query)
+    public function callScope(Query $query)
     {
         if (!$this->scope) {
-            return $this->filter($query);
+            return $query;
         }
 
         if (is_string($this->scope)) {
