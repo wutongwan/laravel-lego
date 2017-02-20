@@ -3,6 +3,7 @@
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Pagination\AbstractPaginator;
+use Illuminate\Support\Collection;
 use Lego\Operator\Finder;
 use Lego\Operator\Operator;
 use Lego\Operator\Store\Store;
@@ -103,6 +104,11 @@ abstract class Query extends Operator implements \ArrayAccess, Arrayable, \Count
      */
     abstract public function getRelation($name);
 
+    public function getForeignKeyOfRelation($name)
+    {
+        return null;
+    }
+    
     /**
      * 关联查询
      * @param $relation
@@ -170,9 +176,23 @@ abstract class Query extends Operator implements \ArrayAccess, Arrayable, \Count
         return $this->paginator;
     }
 
-    public function get()
+    /**
+     * Select from source
+     *
+     * @param array $columns
+     * @return Collection
+     */
+    abstract protected function select(array $columns);
+
+    /**
+     * @param array $columns
+     * @return Collection
+     */
+    public function get($columns = ['*'])
     {
-        return $this->paginator();
+        return $this->select($columns)->map(function ($row) {
+            return Finder::store($row);
+        });
     }
 
     /** Array Access Interface Methods. */

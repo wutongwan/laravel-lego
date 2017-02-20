@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Request;
 use Lego\Field\Field;
 use Lego\LegoAsset;
+use Lego\Operator\Finder;
 use Lego\Operator\Query\Query;
 use Lego\Register\AutoCompleteMatchHandler;
 
@@ -17,9 +18,6 @@ class AutoComplete extends Field
 
     /**
      * 默认的自动补全逻辑
-     *
-     * @param $keyword
-     * @return array
      */
     private function defaultMatch($keyword)
     {
@@ -27,14 +25,16 @@ class AutoComplete extends Field
             return [];
         }
 
-        if (!$related = $this->related()) {
+        if (!$this->relation) {
             return [];
         }
 
-        return $related
-            ->where($this->column(), 'like', '%' . trim($keyword) . '%')
+        return $this->query
+            ->getRelation($this->relation)
+            ->whereContains($this->column(), $keyword)
             ->limit($this->getLimit())
-            ->pluck($this->column(), $related->getKeyName())
+            ->get()
+            ->pluck($this->column(), $this->getValueColumn())
             ->all();
     }
 
@@ -103,15 +103,27 @@ class AutoComplete extends Field
         return $this;
     }
 
+    private $valueColumn;
+
+    /**
+     * 自动补全结果集的 key 即 存储到数据库的值
+     */
+    public function valueColumn($column)
+    {
+        $this->valueColumn = $column;
+
+        return $this;
+    }
+
+    protected function getValueColumn()
+    {
+        return lego_default($this->valueColumn, $this->store->getKeyName());
+    }
+
     public function process()
     {
-        $current = $this->getCurrentValue();
-        $related = $this->related();
-        if ($current && $related) {
-            $model = $related->where($related->getKeyName(), $current)->first([$this->column()]);
-            if ($model) {
-                $this->setDisplayValue($model->{$this->column()});
-            }
+        if ($related = $this->store->get($this->relation)) {
+            $this->setDisplayValue(Finder::store($related)->get($this->column()));
         }
 
         if (!$this->getDisplayValue()) {
@@ -151,17 +163,21 @@ class AutoComplete extends Field
      */
     public function filter(Query $query)
     {
-        if (!$this->relation()) {
-            return $query;
+        if (!$this->relation) {
+            return $query->whereEquals($this->column, $this->getCurrentValue());
         }
 
-        return $query->whereEquals($query->getOriginalData()->getModel()->getKeyName(), $this->getCurrentValue());
+        return $query->whereHas($this->relation, function (Query $query) {
+            $column = $this->getValueColumn() ?: $this->column;
+            return $query->whereEquals($column, $this->getCurrentValue());
+        });
     }
 
     public function syncValueToStore()
     {
-        lego_assert(!$this->isNestedRelation(), __CLASS__ . ' not support nested relation in form widget.');
-
-        parent::syncValueToStore();
+        $foreignKey = $this->query->getForeignKeyOfRelation($this->relation);
+        if ($foreignKey) {
+            $this->store->set($foreignKey, $this->getCurrentValue());
+        }
     }
 }

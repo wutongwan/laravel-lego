@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Eloquent\Builder as EloquentQueryBuilder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\AbstractPaginator;
 
@@ -23,7 +24,8 @@ class EloquentQuery extends Query
                 return new self($data->newQuery());
 
             // Laravel query builder
-            case in_array(get_class($data), [QueryBuilder::class, EloquentQueryBuilder::class]):
+            case is_object($data)
+                && in_array(get_class($data), [QueryBuilder::class, EloquentQueryBuilder::class]):
                 return new self($data);
 
             default:
@@ -166,6 +168,12 @@ class EloquentQuery extends Query
         return new self($this->data->newQuery()->getRelation($name));
     }
 
+    public function getForeignKeyOfRelation($name)
+    {
+        $relation = $this->data->newQuery()->getRelation($name);
+        return $relation instanceof BelongsTo ? $relation->getForeignKey() : null;
+    }
+
     /**
      * 关联查询
      * @param $relation
@@ -213,5 +221,10 @@ class EloquentQuery extends Query
     protected function createPaginator($perPage = null, $columns = null, $pageName = null, $page = null)
     {
         return $this->data->paginate($perPage, ['*'], 'page', $page);
+    }
+
+    protected function select(array $columns)
+    {
+        return $this->data->get($columns);
     }
 }

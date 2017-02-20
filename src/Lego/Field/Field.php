@@ -6,7 +6,9 @@ use Lego\Foundation\Concerns\ModeOperator;
 use Lego\Foundation\Concerns\MessageOperator;
 use Lego\Foundation\Concerns\InitializeOperator;
 use Lego\Foundation\Concerns\RenderStringOperator;
+use Lego\Operator\Finder;
 use Lego\Operator\Query\Query;
+use Lego\Operator\Store\Store;
 use Lego\Widget\Concerns\Operable;
 
 /**
@@ -21,10 +23,10 @@ abstract class Field implements HasMode
         Operable;
 
     use Concerns\HtmlOperator,
-        Concerns\EloquentOperator,
         Concerns\ValidationOperator,
         Concerns\ValueOperator,
-        Concerns\ScopeOperator;
+        Concerns\ScopeOperator,
+        Concerns\HasRelation;
 
     /**
      * 字段的唯一标记
@@ -44,7 +46,21 @@ abstract class Field implements HasMode
      */
     protected $column;
 
-    protected $relation;
+    /**
+     * 原始数据
+     * @var mixed|null
+     */
+    protected $data;
+
+    /**
+     * @var Query
+     */
+    protected $query;
+
+    /**
+     * @var Store
+     */
+    public $store;
 
     /**
      * <input type="__THIS_VALUE__" ...
@@ -72,11 +88,13 @@ abstract class Field implements HasMode
          */
         $parts = explode('.', $name);
         $this->column = last($parts);
-        $this->relation = join('.', array_slice($parts, 0, -1));
         $this->description = $description ?: ucwords(join(' ', $parts));
 
+        $this->data = $data;
+        $this->store = Finder::store($data);
+        $this->query = Finder::query($data);
+
         $this->locale(App::getLocale()); // set field's locale.
-        $this->initializeOperator($data); // create query operator and store operator.
         $this->triggerInitialize(); // initialize traits and self.
     }
 
@@ -133,15 +151,6 @@ abstract class Field implements HasMode
         return $this->filterWithRelationOrDirectly($query, function (Query $query) {
             return $query->whereEquals($this->column(), $this->getCurrentValue());
         });
-    }
-
-    protected function filterWithRelationOrDirectly(Query $query, \Closure $closure)
-    {
-        if ($this->relation) {
-            return $query->whereHas($this->relation, $closure);
-        }
-
-        return call_user_func($closure, $query);
     }
 
     /**
