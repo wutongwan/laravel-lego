@@ -4,25 +4,27 @@
  * Lego IDE Helper file.
  */
 
-<?
+<?php
 /**
  * @var $fields array
  * @var $widgets array
  */
 ?>
 
-namespace Lego\Widget\Operators{
+namespace Lego\Widget\Concerns {
 
     /**
      * Field 相关逻辑
      * ** Magic Add **
-<?php foreach ($fields as $name => $class) {?>
+<?php foreach ($fields as $name => $class) { ?>
      * @method \<?= $class ?> add<?= $name ?>(string $fieldName, $fieldDescription = null)
 <?php } ?>
      *
-     * @see \Lego\Widget\Operators\FieldPlugin
+     * @see \<?= \Lego\Widget\Concerns\HasFields::class ?>
+
      */
-    trait FieldOperator
+    trait <?= class_basename(\Lego\Widget\Concerns\HasFields::class) ?>
+
     {
     }
 }
@@ -33,7 +35,7 @@ namespace Lego\Widget {
     /**
 <?php foreach ($detail['methods'] as $method) {?>
      * @method <?= $method['return'] ?> <?= $method['name'] ?>(<?= $method['arguments'] ?>)
-<?php} ?>
+<?php } ?>
      *
      * @see \<?= $widget . "\n" ?>
      */
