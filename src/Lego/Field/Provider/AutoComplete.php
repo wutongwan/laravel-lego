@@ -130,7 +130,7 @@ class AutoComplete extends Field
             LegoAsset::css('components/select2-bootstrap-theme/dist/select2-bootstrap.min.css');
             LegoAsset::js('components/select2/dist/js/select2.full.min.js');
 
-            if (!$this->isLocale('en')) {
+            if ($this->localeIsNotEn()) {
                 LegoAsset::js("components/select2/dist/js/i18n/{$this->getLocale()}.js");
             }
         }
