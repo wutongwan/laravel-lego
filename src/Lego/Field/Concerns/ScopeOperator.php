@@ -40,10 +40,6 @@ trait ScopeOperator
 
     public function callScope(Query $query)
     {
-        if (!$this->scope) {
-            return $query;
-        }
-
         if (is_string($this->scope)) {
             $query->{$this->scope}($this->getNewValue());
         } else {
