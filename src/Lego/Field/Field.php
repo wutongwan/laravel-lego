@@ -63,13 +63,6 @@ abstract class Field implements HasMode
     public $store;
 
     /**
-     * <input type="__THIS_VALUE__" ...
-     *
-     * @var string
-     */
-    protected $inputType = 'text';
-
-    /**
      * Field constructor.
      * @param string $name 该字段的唯一标记, 同一个控件中不能存在相同name的field
      * @param string $description 描述、标签
@@ -120,11 +113,6 @@ abstract class Field implements HasMode
     public function description()
     {
         return $this->description;
-    }
-
-    public function getInputType()
-    {
-        return $this->inputType;
     }
 
     final public function applyFilter(Query $query)

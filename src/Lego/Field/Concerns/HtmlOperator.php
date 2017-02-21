@@ -10,6 +10,13 @@ use Lego\Utility\HtmlUtility;
 trait HtmlOperator
 {
     /**
+     * <input type="__THIS_VALUE__" ...
+     *
+     * @var string
+     */
+    protected $inputType = 'text';
+
+    /**
      * Html element attributes.
      * @var array
      */
@@ -30,6 +37,11 @@ trait HtmlOperator
     public function elementName()
     {
         return $this->elementName;
+    }
+
+    public function getInputType()
+    {
+        return $this->inputType;
     }
 
     /**
