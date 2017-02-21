@@ -55,18 +55,9 @@ trait HasFields
         return $field;
     }
 
-    /**
-     * @param Field $field
-     */
-    protected function fieldAdded(Field $field)
-    {
-    }
-
     protected function processFields()
     {
         $this->fields()->each(function (Field $field) {
-            $this->fieldAdded($field);
-
             $field->process();
         });
     }

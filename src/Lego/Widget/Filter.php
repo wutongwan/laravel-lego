@@ -13,18 +13,6 @@ class Filter extends Widget
     }
 
     /**
-     * @param Field $field
-     */
-    protected function fieldAdded(Field $field)
-    {
-        $field->placeholder($field->description());
-
-        $field->setCurrentValue(
-            Request::get($field->elementName())
-        );
-    }
-
-    /**
      * 渲染当前对象
      * @return string
      */
@@ -39,6 +27,9 @@ class Filter extends Widget
     public function process()
     {
         $this->fields()->each(function (Field $field) {
+            $field->placeholder($field->description());
+            $field->setCurrentValue(Request::get($field->elementName()));
+
             $value = $field->getCurrentValue();
             if ((is_string($value) && is_empty_string($value)) || !$value) {
                 return;
