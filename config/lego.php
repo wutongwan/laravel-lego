@@ -36,13 +36,19 @@ return [
      */
     'widgets' => [
         /**
-         * 表单的配置项
+         * form's configuration
          */
         'form' => [
             /**
              * 表单的默认 view
              */
             'default-view' => 'lego::default.form.horizontal',
+        ],
+        /**
+         * filter's configuration
+         */
+        'filter' => [
+            'default-view' => 'lego::default.filter.inline',
         ],
     ]
 ];

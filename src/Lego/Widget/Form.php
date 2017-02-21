@@ -12,6 +12,8 @@ use Lego\Foundation\Concerns\ModeOperator;
 class Form extends Widget implements HasMode
 {
     use ModeOperator,
+        Concerns\HasFields,
+        Concerns\HasGroups,
         Concerns\HasEvents;
 
     /**
@@ -21,7 +23,7 @@ class Form extends Widget implements HasMode
     private $submit;
 
     /**
-     * 成功后的回调 or 跳转链接
+     * 成功后的回调、跳转链接、任意 Response 内容
      */
     private $success;
 
@@ -39,13 +41,11 @@ class Form extends Widget implements HasMode
 
     private function validate()
     {
-        $this->fields()->each(
-            function (Field $field) {
-                if (!$field->validate()) {
-                    $this->errors()->merge($field->errors());
-                }
+        $this->editableFields()->each(function (Field $field) {
+            if (!$field->validate()) {
+                $this->errors()->merge($field->errors());
             }
-        );
+        });
 
         return $this;
     }
@@ -65,54 +65,74 @@ class Form extends Widget implements HasMode
 
     public function process()
     {
+        $this->processFields();
+        $this->syncFieldsValueFromStore();
         // 根据自身 mode 调整 field 的 mode
         $this->fields()->each(function (Field $field) {
             if ($this->modeIsModified() && !$field->modeIsModified()) {
                 $field->mode($this->getMode());
             }
-
-            // Field 原始值来源
-            $field->setOriginalValue(
-                $field->store->get($field->getColumnPathOfRelation($field->column()))
-            );
-
-            // Field 当前值来源
-            $field->setNewValue(
-                $this->isPost() && $field->isEditable()
-                    ? Request::input($field->elementName())
-                    : lego_default($field->getDefaultValue(), $field->getOriginalValue())
-            );
         });
 
         /**
-         * 处理 POST 请求
+         * 下面处理 POST 请求
          */
-        if (!$this->isPost() || !$this->isEditable()) {
-            return;
-        }
+        if ($this->isPost() && $this->isEditable()) {
+            // Sync fields from request
+            $this->editableFields()->each(function (Field $field) {
+                $field->setNewValue(Request::input($field->elementName()));
+            });
 
-        // Run validation
-        if ($this->validate()->errors()->any()) {
-            return;
-        }
+            // Run validation
+            if ($this->validate()->errors()->any()) {
+                return;
+            }
 
-        // 调用自定义的数据处理逻辑
-        if ($this->submit && $response = call_user_func($this->submit, $this)) {
-            $this->success($response);
-            return;
-        }
+            // Call custom submit action <if submit defined>
+            if ($this->submit && $response = call_user_func($this->submit, $this)) {
+                $this->success($response);
+                return;
+            }
 
-        // 使用默认的数据处理逻辑
-        $this->syncFieldsValue();
+            // Save to store <default>
+            if ($this->saveFieldsValueToStore()) {
+                $this->returnSuccessResponse();
+                $this->messages()->add('success', '操作成功');
+            } else {
+                $this->errors()->add('error', '保存失败');
+            }
+        }
+    }
+
+    /**
+     * sync field's value to source.
+     */
+    private function saveFieldsValueToStore()
+    {
+        $this->editableFields()->each(function (Field $field) {
+            $field->syncValueToStore();
+        });
+
         $this->fireEvent('saving');
-        if ($this->store->save() === false) {
-            $this->errors()->add('save-error', '保存失败');
-            return;
+        if ($this->store->save()) {
+            $this->syncFieldsValueFromStore();
+            $this->fireEvent('saved');
+            return true;
         }
-        $this->fireEvent('saved');
 
-        $this->returnSuccessResponse();
-        $this->messages()->add('success', '操作成功');
+        return false;
+    }
+
+    /**
+     * Sync field's original from store
+     */
+    private function syncFieldsValueFromStore()
+    {
+        $this->fields()->each(function (Field $field) {
+            $field->setOriginalValue(
+                $field->store->get($field->getColumnPathOfRelation($field->column()))
+            );
+        });
     }
 
     /**
@@ -127,13 +147,11 @@ class Form extends Widget implements HasMode
         $this->rewriteResponse(function () {
             if (is_callable($this->success)) {
                 return call_user_func($this->success, $this->data);
-            }
-
-            if (is_string($this->success) && starts_with($this->success, ['http://', '/'])) {
+            } elseif (is_string($this->success) && starts_with($this->success, ['http://', '/'])) {
                 return redirect($this->success);
+            } else {
+                return $this->success;
             }
-
-            return $this->success;
         });
     }
 

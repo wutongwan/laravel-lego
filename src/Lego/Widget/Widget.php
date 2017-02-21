@@ -17,9 +17,7 @@ abstract class Widget implements ButtonLocations
         RenderStringOperator,
         Macroable;
 
-    use Concerns\HasFields,
-        Concerns\HasGroups,
-        Concerns\RequestOperator,
+    use Concerns\RequestOperator,
         Concerns\HasButtons,
         Concerns\Operable;
 
@@ -108,7 +106,6 @@ abstract class Widget implements ButtonLocations
             return $registeredResponse;
         }
 
-        $this->processFields();
         $this->process();
 
         /**

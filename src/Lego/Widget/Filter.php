@@ -5,12 +5,7 @@ use Lego\Field\Field;
 
 class Filter extends Widget
 {
-    /**
-     * 初始化对象
-     */
-    protected function initialize()
-    {
-    }
+    use Concerns\HasFields, Concerns\HasGroups;
 
     /**
      * 渲染当前对象
@@ -18,7 +13,7 @@ class Filter extends Widget
      */
     public function render()
     {
-        return view('lego::default.filter.inline', ['filter' => $this]);
+        return view(config('lego.widgets.filter.default-view'), ['filter' => $this]);
     }
 
     /**
@@ -26,7 +21,9 @@ class Filter extends Widget
      */
     public function process()
     {
-        $this->fields()->each(function (Field $field) {
+        $this->processFields();
+
+        $this->editableFields()->each(function (Field $field) {
             $field->placeholder($field->description());
             $field->setNewValue(Request::get($field->elementName()));
 
