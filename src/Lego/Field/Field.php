@@ -117,8 +117,11 @@ abstract class Field implements HasMode
 
     final public function applyFilter(Query $query)
     {
-        $this->callScope($query);
-        $this->filter($query);
+        if ($this->scope) {
+            $this->callScope($query);
+        } else {
+            $this->filter($query);
+        }
     }
 
     /**
@@ -143,7 +146,7 @@ abstract class Field implements HasMode
      */
     public function syncValueToStore()
     {
-        $this->store->set($this->column(), $this->getNewValue());
+        $this->store->set($this->getColumnPathOfRelation($this->column), $this->getNewValue());
     }
 
     protected function view($view, $data = [])
