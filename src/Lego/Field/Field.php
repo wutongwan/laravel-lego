@@ -1,6 +1,5 @@
 <?php namespace Lego\Field;
 
-use Illuminate\Support\Facades\App;
 use Lego\Foundation\Concerns\HasMode;
 use Lego\Foundation\Concerns\ModeOperator;
 use Lego\Foundation\Concerns\MessageOperator;
@@ -26,7 +25,8 @@ abstract class Field implements HasMode
         Concerns\ValidationOperator,
         Concerns\ValueOperator,
         Concerns\ScopeOperator,
-        Concerns\HasRelation;
+        Concerns\HasRelation,
+        Concerns\HasLocale;
 
     /**
      * 字段的唯一标记
@@ -99,7 +99,6 @@ abstract class Field implements HasMode
         }
         $this->query = Finder::query($this->data);
 
-        $this->locale(App::getLocale()); // set field's locale.
         $this->triggerInitialize(); // initialize traits and self.
     }
 
@@ -121,24 +120,6 @@ abstract class Field implements HasMode
     public function description()
     {
         return $this->description;
-    }
-
-    private $locale;
-
-    public function locale($locale)
-    {
-        $this->locale = $locale;
-        return $this;
-    }
-
-    public function getLocale()
-    {
-        return $this->locale;
-    }
-
-    public function isLocale($locale)
-    {
-        return $this->locale === $locale;
     }
 
     public function getInputType()

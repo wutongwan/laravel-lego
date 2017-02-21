@@ -114,7 +114,7 @@ class Datetime extends Field
             LegoAsset::css('components/smalot-bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css');
             LegoAsset::js('components/smalot-bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js');
 
-            if (!$this->isLocale('en')) {
+            if ($this->localeIsNotEn()) {
                 LegoAsset::js("components/smalot-bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.{$this->getLocale()}.js");
             }
         }
