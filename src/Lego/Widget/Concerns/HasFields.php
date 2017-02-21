@@ -31,11 +31,25 @@ trait HasFields
     }
 
     /**
+     * all fields
+     *
      * @return Collection|Field[]
      */
     public function fields()
     {
         return $this->fields;
+    }
+
+    /**
+     * only editable fields
+     *
+     * @return Collection|Field[]
+     */
+    public function editableFields()
+    {
+        return $this->fields->filter(function (Field $field) {
+            return $field->isEditable();
+        });
     }
 
     /**
@@ -59,16 +73,6 @@ trait HasFields
     {
         $this->fields()->each(function (Field $field) {
             $field->process();
-        });
-    }
-
-    /**
-     * sync field's value to source.
-     */
-    protected function syncFieldsValue()
-    {
-        $this->fields()->each(function (Field $field) {
-            $field->syncValueToStore();
         });
     }
 
