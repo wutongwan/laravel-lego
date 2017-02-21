@@ -3,7 +3,7 @@
 
 <select name="{{ $field->elementName() }}" id="{{ $field->elementId() }}" class="form-control"
         style="width: 100%; min-width: 100%;">
-    @if($value = $field->getCurrentValue())
+    @if($value = $field->getNewValue())
         <option value="{{ $value }}">{{ $__field_show_value }}</option>
     @endif
 </select>

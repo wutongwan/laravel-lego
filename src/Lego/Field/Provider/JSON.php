@@ -29,9 +29,9 @@ class JSON extends Field
         $this->originalValue = array_get($array, $this->jsonKey);
     }
 
-    public function setCurrentValue($value)
+    public function setNewValue($value)
     {
-        $this->currentValue = $this->decode($value);
+        $this->newValue = $this->decode($value);
 
         return $this;
     }
@@ -52,7 +52,7 @@ class JSON extends Field
     public function process()
     {
         $this->setDisplayValue(
-            $this->encode($this->getCurrentValue())
+            $this->encode($this->getNewValue())
         );
     }
 
@@ -72,7 +72,7 @@ class JSON extends Field
     {
         $original = $this->store->get($this->column());
         $original = is_string($original) ? $this->decode($original) : $original;
-        array_set($original, $this->jsonKey, $this->getCurrentValue());
+        array_set($original, $this->jsonKey, $this->getNewValue());
         $this->store->set($this->column(), $this->encode($original));
     }
 }

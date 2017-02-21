@@ -160,7 +160,7 @@ abstract class Field implements HasMode
     public function filter(Query $query)
     {
         return $this->filterWithRelationOrDirectly($query, function (Query $query) {
-            return $query->whereEquals($this->column(), $this->getCurrentValue());
+            return $query->whereEquals($this->column(), $this->getNewValue());
         });
     }
 
@@ -174,7 +174,7 @@ abstract class Field implements HasMode
      */
     public function syncValueToStore()
     {
-        $this->store->set($this->column(), $this->getCurrentValue());
+        $this->store->set($this->column(), $this->getNewValue());
     }
 
     protected function view($view, $data = [])

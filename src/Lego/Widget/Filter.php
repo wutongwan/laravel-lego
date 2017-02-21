@@ -28,9 +28,9 @@ class Filter extends Widget
     {
         $this->fields()->each(function (Field $field) {
             $field->placeholder($field->description());
-            $field->setCurrentValue(Request::get($field->elementName()));
+            $field->setNewValue(Request::get($field->elementName()));
 
-            $value = $field->getCurrentValue();
+            $value = $field->getNewValue();
             if ((is_string($value) && is_empty_string($value)) || !$value) {
                 return;
             }

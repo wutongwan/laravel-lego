@@ -8,9 +8,9 @@ trait ValueOperator
     protected $originalValue;
 
     /**
-     * 当前值，一般为当前请求中产生的值
+     * 新值，一般为当前请求中产生的值
      */
-    protected $currentValue;
+    protected $newValue;
 
     /**
      * 展示值，仅用于展示
@@ -22,9 +22,9 @@ trait ValueOperator
      */
     protected $defaultValue;
 
-    public function getOriginalValue($default = null)
+    public function getOriginalValue()
     {
-        return lego_default($this->originalValue, $default);
+        return $this->originalValue;
     }
 
     public function setOriginalValue($originalValue)
@@ -34,26 +34,21 @@ trait ValueOperator
         return $this;
     }
 
-    public function getCurrentValue($default = null)
+    public function getNewValue()
     {
-        return lego_default($this->currentValue, $default);
+        return $this->newValue;
     }
 
-    public function setCurrentValue($value)
+    public function setNewValue($value)
     {
-        $this->currentValue = $value;
+        $this->newValue = $value;
 
         return $this;
     }
 
-    public function value($default = null)
+    public function getDisplayValue()
     {
-        return lego_default($this->currentValue, $this->originalValue, $default);
-    }
-
-    public function getDisplayValue($default = null)
-    {
-        return lego_default($this->displayValue, $default);
+        return $this->displayValue;
     }
 
     public function setDisplayValue($displayValue)
@@ -70,8 +65,8 @@ trait ValueOperator
         return $this;
     }
 
-    public function getDefaultValue($default = null)
+    public function getDefaultValue()
     {
-        return lego_default($this->defaultValue, $default);
+        return $this->defaultValue;
     }
 }

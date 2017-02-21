@@ -9,17 +9,17 @@ class DatetimeRange extends Datetime
     use BetweenFilterTrait;
     use FilterOnly;
 
-    public function setCurrentValue($value)
+    public function setNewValue($value)
     {
         $value['min'] = $this->convertToCarbon(array_get($value, 'min'));
         $value['max'] = $this->convertToCarbon(array_get($value, 'max'));
 
-        $this->currentValue = $value;
+        $this->newValue = $value;
     }
 
     public function getDisplayValue()
     {
-        $values = $this->getCurrentValue();
+        $values = $this->getNewValue();
         /** @var Carbon $item */
         foreach ($values as &$item) {
             $item = $item ? $item->format($this->getFormat()) : null;

@@ -64,7 +64,7 @@ class Number extends Text
     public function filter(Query $query)
     {
         return $this->filterWithRelationOrDirectly($query, function (Query $query) {
-            return $query->whereEquals($this->column(), $this->getCurrentValue());
+            return $query->whereEquals($this->column(), $this->getNewValue());
         });
     }
 }
