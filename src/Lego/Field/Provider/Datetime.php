@@ -82,9 +82,9 @@ class Datetime extends Field
         $this->originalValue = $this->convertToCarbon($originalValue);
     }
 
-    public function setCurrentValue($value)
+    public function setNewValue($value)
     {
-        $this->currentValue = $this->convertToCarbon($value);
+        $this->newValue = $this->convertToCarbon($value);
     }
 
     protected function convertToCarbon($value)
@@ -122,7 +122,8 @@ class Datetime extends Field
 
     protected function getShowValue()
     {
-        $value = $this->getCurrentValue();
+        /** @var Carbon $value */
+        $value = $this->getNewValue();
         return $value ? $value->format($this->format) : null;
     }
 

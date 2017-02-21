@@ -24,7 +24,7 @@ class Text extends Field
     public function filter(Query $query)
     {
         return $this->filterWithRelationOrDirectly($query, function (Query $query) {
-            return $query->whereContains($this->column(), $this->getCurrentValue());
+            return $query->whereContains($this->column(), $this->getNewValue());
         });
     }
 

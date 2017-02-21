@@ -77,7 +77,7 @@ class Form extends Widget implements HasMode
             );
 
             // Field 当前值来源
-            $field->setCurrentValue(
+            $field->setNewValue(
                 $this->isPost() && $field->isEditable()
                     ? Request::input($field->elementName())
                     : lego_default($field->getDefaultValue(), $field->getOriginalValue())

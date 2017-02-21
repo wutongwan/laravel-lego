@@ -9,7 +9,7 @@ trait BetweenFilterTrait
      */
     public function filter(Query $query)
     {
-        $values = $this->getCurrentValue();
+        $values = $this->getNewValue();
         $min = array_get($values, 'min');
         $max = array_get($values, 'max');
 

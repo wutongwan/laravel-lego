@@ -158,19 +158,19 @@ class AutoComplete extends Field
     public function filter(Query $query)
     {
         if (!$this->relation) {
-            return $query->whereEquals($this->column, $this->getCurrentValue());
+            return $query->whereEquals($this->column, $this->getNewValue());
         }
 
         return $query->whereHas($this->relation, function (Query $query) {
             $column = $this->getValueColumn() ?: $this->column;
-            return $query->whereEquals($column, $this->getCurrentValue());
+            return $query->whereEquals($column, $this->getNewValue());
         });
     }
 
     public function syncValueToStore()
     {
         if ($this->foreignKey) {
-            $this->store->set($this->foreignKey, $this->getCurrentValue());
+            $this->store->set($this->foreignKey, $this->getNewValue());
         }
     }
 }

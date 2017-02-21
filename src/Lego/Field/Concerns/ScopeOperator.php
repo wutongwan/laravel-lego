@@ -45,9 +45,9 @@ trait ScopeOperator
         }
 
         if (is_string($this->scope)) {
-            $query->{$this->scope}($this->getCurrentValue());
+            $query->{$this->scope}($this->getNewValue());
         } else {
-            call_user_func_array($this->scope, [$query, $this->getCurrentValue()]);
+            call_user_func_array($this->scope, [$query, $this->getNewValue()]);
         }
 
         return $query;

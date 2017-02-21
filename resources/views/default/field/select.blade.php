@@ -4,7 +4,7 @@
         <option value="">* {{ $placeholder }} *</option>
     @endif
     <?php /** @var \Lego\Field\Provider\Select $field */ ?>
-    <?php $__field_value = $field->getCurrentValue(); ?>
+    <?php $__field_value = $field->getNewValue(); ?>
     @foreach($field->getOptions() as $value => $option)
         <option value="{{ $value }}" {{ $value == $__field_value ? 'selected' : '' }}>{{ $option }}</option>
     @endforeach

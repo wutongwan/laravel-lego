@@ -72,7 +72,7 @@ trait ValidationOperator
             return true;
         }
 
-        $value = $this->getCurrentValue();
+        $value = $this->getNewValue();
 
         /**
          * 检查 Laravel Validation
