@@ -1,6 +1,5 @@
 <?php namespace Lego\Field\Provider;
 
-use Illuminate\Support\Facades\Request;
 use Lego\Field\Field;
 use Lego\LegoAsset;
 use Lego\Operator\Query\Query;
@@ -8,8 +7,12 @@ use Lego\Register\AutoCompleteMatchHandler;
 
 class AutoComplete extends Field
 {
+    protected $foreignKey;
+
     protected function initialize()
     {
+        $this->foreignKey = $this->query->getForeignKeyOfRelation($this->relation);
+
         $this->match(function ($keyword) {
             return $this->defaultMatch($keyword);
         });
@@ -121,12 +124,6 @@ class AutoComplete extends Field
 
     public function process()
     {
-        $this->setDisplayValue($this->store->get($this->getColumnPathOfRelation($this->column())));
-
-        if (!$this->getDisplayValue()) {
-            $this->setDisplayValue(Request::input($this->elementName() . '-text'));
-        }
-
         // 以下文件仅在 editable 时加载
         if ($this->isEditable()) {
             LegoAsset::css('components/select2/dist/css/select2.min.css');
@@ -172,9 +169,8 @@ class AutoComplete extends Field
 
     public function syncValueToStore()
     {
-        $foreignKey = $this->query->getForeignKeyOfRelation($this->relation);
-        if ($foreignKey) {
-            $this->store->set($foreignKey, $this->getCurrentValue());
+        if ($this->foreignKey) {
+            $this->store->set($this->foreignKey, $this->getCurrentValue());
         }
     }
 }

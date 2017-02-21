@@ -46,32 +46,9 @@ class Form extends Widget implements HasMode
                 }
             }
         );
+
+        return $this;
     }
-
-    /**
-     * @param Field $field
-     */
-    protected function fieldAdded(Field $field)
-    {
-        if ($this->modeIsModified() && !$field->modeIsModified()) {
-            $field->mode($this->getMode());
-        }
-
-        // Field 原始值来源
-        $field->setOriginalValue(
-            $field->store->get($field->getColumnPathOfRelation($field->column()))
-        );
-
-        // Field 当前值来源
-        $field->setCurrentValue(
-            $this->isPost() && $field->isEditable()
-                ? Request::input($field->elementName())
-                : $field->getDefaultValue($field->getOriginalValue())
-        );
-
-        $field->setDisplayValue($field->getCurrentValue());
-    }
-
 
     /**
      * 通过此函数传入数据处理逻辑，使用此函数后，将不再调用默认的数据处理逻辑（保存到 Model）
@@ -88,38 +65,54 @@ class Form extends Widget implements HasMode
 
     public function process()
     {
-        if (!$this->isPost() || !$this->isEditable()) {
-            return;
-        }
+        // 根据自身 mode 调整 field 的 mode
+        $this->fields()->each(function (Field $field) {
+            if ($this->modeIsModified() && !$field->modeIsModified()) {
+                $field->mode($this->getMode());
+            }
+
+            // Field 原始值来源
+            $field->setOriginalValue(
+                $field->store->get($field->getColumnPathOfRelation($field->column()))
+            );
+
+            // Field 当前值来源
+            $field->setCurrentValue(
+                $this->isPost() && $field->isEditable()
+                    ? Request::input($field->elementName())
+                    : lego_default($field->getDefaultValue(), $field->getOriginalValue())
+            );
+        });
 
         /**
          * 处理 POST 请求
          */
-
-        $this->validate();
-        if ($this->errors()->any()) {
+        if (!$this->isPost() || !$this->isEditable()) {
             return;
         }
 
-        if ($this->submit) {
-            // 调用自定义的数据处理逻辑
-            if ($response = call_user_func($this->submit, $this)) {
-                $this->success($response);
-                return;
-            }
-        } else {
-            // 使用默认的数据处理逻辑
-            $this->syncFieldsValue();
-            $this->fireEvent('saving');
-            if ($this->store->save() === false) {
-                $this->errors()->add('save-error', '保存失败');
-                return;
-            }
-            $this->fireEvent('saved');
+        // Run validation
+        if ($this->validate()->errors()->any()) {
+            return;
         }
 
-        $this->messages()->add('success', '操作成功');
+        // 调用自定义的数据处理逻辑
+        if ($this->submit && $response = call_user_func($this->submit, $this)) {
+            $this->success($response);
+            return;
+        }
+
+        // 使用默认的数据处理逻辑
+        $this->syncFieldsValue();
+        $this->fireEvent('saving');
+        if ($this->store->save() === false) {
+            $this->errors()->add('save-error', '保存失败');
+            return;
+        }
+        $this->fireEvent('saved');
+
         $this->returnSuccessResponse();
+        $this->messages()->add('success', '操作成功');
     }
 
     /**
