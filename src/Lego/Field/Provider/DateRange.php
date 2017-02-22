@@ -2,5 +2,5 @@
 
 class DateRange extends DatetimeRange
 {
-    const FIELD_TYPE = Date::class;
+    const RANGE_TYPE = Date::class;
 }
