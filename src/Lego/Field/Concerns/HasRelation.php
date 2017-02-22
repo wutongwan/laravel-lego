@@ -29,7 +29,7 @@ trait HasRelation
 
     public function getColumnPathOfRelation($column)
     {
-        return join('.', [$this->relation, $column]);
+        return $this->relation ? "{$this->relation}.{$column}" : $column;
     }
 
     /**
