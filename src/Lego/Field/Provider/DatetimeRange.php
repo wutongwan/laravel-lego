@@ -1,34 +1,18 @@
 <?php namespace Lego\Field\Provider;
 
-use Carbon\Carbon;
-use Lego\Field\Concerns\BetweenFilterTrait;
+use Lego\Field\Concerns\RangeFilterOperator;
 use Lego\Field\Concerns\FilterOnly;
+use Lego\Field\Field;
 
-class DatetimeRange extends Datetime
+class DatetimeRange extends Field
 {
-    use BetweenFilterTrait;
+    use RangeFilterOperator;
     use FilterOnly;
 
-    public function setNewValue($value)
-    {
-        $value['min'] = $this->convertToCarbon(array_get($value, 'min'));
-        $value['max'] = $this->convertToCarbon(array_get($value, 'max'));
-
-        $this->newValue = $value;
-    }
-
-    public function getDisplayValue()
-    {
-        $values = $this->getNewValue();
-        /** @var Carbon $item */
-        foreach ($values as &$item) {
-            $item = $item ? $item->format($this->getFormat()) : null;
-        }
-        return $values;
-    }
+    const FIELD_TYPE = Datetime::class;
 
     protected function renderEditable()
     {
-        return $this->view('lego::default.field.date-range');
+        return $this->view('lego::default.field.range');
     }
 }

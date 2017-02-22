@@ -1,26 +1,18 @@
 <?php namespace Lego\Field\Provider;
 
-use Lego\Field\Concerns\BetweenFilterTrait;
+use Lego\Field\Concerns\RangeFilterOperator;
 use Lego\Field\Concerns\FilterOnly;
+use Lego\Field\Field;
 
-class NumberRange extends Number
+class NumberRange extends Field
 {
-    use BetweenFilterTrait;
+    use RangeFilterOperator;
     use FilterOnly;
 
-    /**
-     * 初始化对象
-     */
-    protected function initialize()
-    {
-    }
+    const FIELD_TYPE = Number::class;
 
-    /**
-     * 渲染当前对象
-     * @return string
-     */
-    public function render()
+    public function renderEditable()
     {
-        return $this->view('lego::default.field.number-range');
+        return $this->view('lego::default.field.range');
     }
 }

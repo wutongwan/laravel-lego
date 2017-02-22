@@ -39,7 +39,7 @@ trait HasRelation
      * @param \Closure $closure
      * @return Query
      */
-    protected function filterWithRelationOrDirectly(Query $query, \Closure $closure)
+    protected function filterWithRelation(Query $query, \Closure $closure)
     {
         if ($this->relation) {
             return $query->whereHas($this->relation, $closure);

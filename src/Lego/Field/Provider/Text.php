@@ -14,16 +14,16 @@ class Text extends Field
     protected function renderEditable()
     {
         return FormFacade::input(
-            'text',
+            $this->getInputType(),
             $this->elementName(),
-            $this->getDisplayValue(),
+            $this->takeDefaultInputValue(),
             $this->getAttributes()
         );
     }
 
     public function filter(Query $query)
     {
-        return $this->filterWithRelationOrDirectly($query, function (Query $query) {
+        return $this->filterWithRelation($query, function (Query $query) {
             return $query->whereContains($this->column(), $this->getNewValue());
         });
     }
