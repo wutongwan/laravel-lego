@@ -21,6 +21,7 @@ class Cell
      * @var Store
      */
     private $store;
+    private $default;
 
     function __construct($name, $description)
     {
@@ -41,6 +42,12 @@ class Cell
     public function description()
     {
         return $this->description;
+    }
+
+    public function default($value)
+    {
+        $this->default = $value;
+        return $this;
     }
 
     /**
@@ -110,6 +117,10 @@ class Cell
     public function value()
     {
         $value = $this->getOriginalValue();
+        if (is_null($value)) {
+            return $this->default;
+        }
+
         foreach ($this->pipes as $pipe) {
             $value = call_user_func_array($pipe, [$value, $this->data, $this]);
         }
