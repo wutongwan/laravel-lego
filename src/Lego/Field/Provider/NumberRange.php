@@ -1,18 +1,11 @@
 <?php namespace Lego\Field\Provider;
 
-use Lego\Field\Concerns\RangeFilterOperator;
 use Lego\Field\Concerns\FilterOnly;
-use Lego\Field\Field;
+use Lego\Field\RangeField;
 
-class NumberRange extends Field
+class NumberRange extends RangeField
 {
-    use RangeFilterOperator;
     use FilterOnly;
 
-    const FIELD_TYPE = Number::class;
-
-    public function renderEditable()
-    {
-        return $this->view('lego::default.field.range');
-    }
+    const RANGE_TYPE = Number::class;
 }

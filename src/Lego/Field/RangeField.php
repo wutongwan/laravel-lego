@@ -1,11 +1,12 @@
-<?php namespace Lego\Field\Concerns;
+<?php namespace Lego\Field;
 
 use Illuminate\Support\Facades\Request;
-use Lego\Field\Field;
 use Lego\Operator\Query\Query;
 
-trait RangeFilterOperator
+abstract class RangeField extends Field
 {
+    const RANGE_TYPE = 'should be rewrite';
+
     /**
      * 上限
      * @var Field
@@ -18,9 +19,11 @@ trait RangeFilterOperator
      */
     protected $lower;
 
-    protected function initializeRangeFilterOperator()
+    protected function initialize()
     {
-        $class = static::FIELD_TYPE;
+        parent::initialize();
+
+        $class = static::RANGE_TYPE;
         $this->upper = new $class($this->name() . '-upper', $this->description(), []);
         $this->lower = new $class($this->name() . '-lower', $this->description(), []);
     }
@@ -58,9 +61,9 @@ trait RangeFilterOperator
     public function process()
     {
         $this->upper->setNewValue(Request::get($this->upper->elementName()));
-        $this->lower->setNewValue(Request::get($this->lower->elementName()));
-
         $this->upper->process();
+
+        $this->lower->setNewValue(Request::get($this->lower->elementName()));
         $this->lower->process();
     }
 
@@ -97,5 +100,10 @@ trait RangeFilterOperator
     public function render()
     {
         return $this->renderByMode();
+    }
+
+    public function renderEditable()
+    {
+        return $this->view('lego::default.field.range');
     }
 }
