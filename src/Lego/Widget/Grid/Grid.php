@@ -1,20 +1,26 @@
-<?php namespace Lego\Widget;
+<?php namespace Lego\Widget\Grid;
 
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Support\Facades\Request;
 use Lego\Register\HighPriorityResponse;
+use Lego\Widget\Filter;
+use Lego\Widget\Widget;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Writers\LaravelExcelWriter;
 
 class Grid extends Widget
 {
+    use Concerns\HasCells;
+
+    /**
+     * @var Filter
+     */
     protected $filter;
 
     protected function transformer($data)
     {
         if ($data instanceof Filter) {
             $this->filter = $data;
-            $this->filter->processFields();
             $this->filter->process();
             return $this->filter->data();
         }
@@ -61,8 +67,8 @@ class Grid extends Widget
         $data = [];
         foreach ($this->paginator() as $store) {
             $_row = [];
-            foreach ($this->fields() as $field) {
-                $_row[$field->description()] = $store->get($field->name());
+            foreach ($this->cells() as $cell) {
+                $_row[$cell->name()] = $cell->copy()->fill($store)->getOriginalValue();
             }
             $data [] = $_row;
         }

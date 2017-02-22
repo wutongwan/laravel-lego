@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Request;
 use Lego\Field\Field;
+use Lego\Widget\Grid\Grid;
 
 class Filter extends Widget
 {
@@ -46,7 +47,7 @@ class Filter extends Widget
         if ($syncFields) {
             $this->fields()->each(
                 function (Field $field) {
-                    $this->grid->addField($field);
+                    $this->grid->add($field->name(), $field->description());
                 }
             );
         }

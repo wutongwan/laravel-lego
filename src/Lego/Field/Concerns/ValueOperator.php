@@ -69,4 +69,21 @@ trait ValueOperator
     {
         return $this->defaultValue;
     }
+
+    /**
+     * 上方是标准 getter & setter
+     * 下方是特定场景的 getter
+     */
+
+    /**
+     * 输入框中显示给用户的值
+     */
+    public function takeDefaultInputValue()
+    {
+        return lego_default(
+            $this->getNewValue(),
+            $this->getDefaultValue(),
+            $this->getOriginalValue()
+        );
+    }
 }

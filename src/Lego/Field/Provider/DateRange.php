@@ -2,9 +2,5 @@
 
 class DateRange extends DatetimeRange
 {
-    protected $format = 'Y-m-d';
-
-    protected $inputType = 'date';
-
-    protected $minView = 'month';
+    const FIELD_TYPE = Date::class;
 }

@@ -131,7 +131,7 @@ abstract class Field implements HasMode
      */
     public function filter(Query $query)
     {
-        return $this->filterWithRelationOrDirectly($query, function (Query $query) {
+        return $this->filterWithRelation($query, function (Query $query) {
             return $query->whereEquals($this->column(), $this->getNewValue());
         });
     }

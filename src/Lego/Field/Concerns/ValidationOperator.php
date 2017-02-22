@@ -25,6 +25,15 @@ trait ValidationOperator
         return $this;
     }
 
+    public function removeRule($rule)
+    {
+        if(($key = array_search($rule, $this->rules)) !== false) {
+            unset($this->rules[$key]);
+        }
+
+        return $this;
+    }
+
     /**
      * 设置此字段为必填
      *

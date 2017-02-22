@@ -2,7 +2,7 @@
 
 use Lego\Widget\Filter;
 use Lego\Widget\Form;
-use Lego\Widget\Grid;
+use Lego\Widget\Grid\Grid;
 
 class Lego
 {

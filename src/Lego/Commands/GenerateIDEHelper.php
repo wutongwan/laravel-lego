@@ -5,7 +5,7 @@ use Lego\Foundation\Button;
 use Lego\Foundation\Fields;
 use Lego\Widget\Filter;
 use Lego\Widget\Form;
-use Lego\Widget\Grid;
+use Lego\Widget\Grid\Grid;
 use Lego\Widget\Widget;
 
 /**
