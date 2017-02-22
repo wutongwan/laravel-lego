@@ -1,10 +1,22 @@
 <?php namespace Lego\Field\Provider;
 
+use Collective\Html\FormFacade;
+
 class Select extends Text
 {
     protected function renderEditable()
     {
-        return $this->view('lego::default.field.select');
+        return FormFacade::select(
+            $this->elementName(),
+            $this->getOptions(),
+            $this->takeDefaultInputValue(),
+            $this->getAttributes()
+        );
+    }
+
+    public function placeholder($placeholder = null)
+    {
+        return parent::placeholder('* ' . trim($placeholder) . ' *');
     }
 
     protected $options = [];
