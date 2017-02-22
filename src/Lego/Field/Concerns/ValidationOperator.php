@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Validator;
 use Lego\Field\Field;
 use Lego\Foundation\Exceptions\LegoException;
+use Lego\LegoRegister;
+use Lego\Register\FieldSelfDefinedValidation;
 
 trait ValidationOperator
 {
@@ -11,6 +13,7 @@ trait ValidationOperator
      * eg: ['required', 'email']
      */
     private $rules = [];
+    private $discardedRules = [];
 
     public function rules(): array
     {
@@ -19,17 +22,30 @@ trait ValidationOperator
 
     public function rule($rule, $condition = true)
     {
-        if (value($condition) && !in_array($rule, $this->rules)) {
+        if (!value($condition)) {
+            return $this;
+        }
+
+        if (!str_contains($rule, 'regex') && str_contains($rule, '|')) {
+            foreach (explode('|', $rule) as $item) {
+                $this->rule($item);
+            }
+            return $this;
+        }
+
+        if (!in_array($rule, $this->rules) && !in_array($rule, $this->discardedRules)) {
             $this->rules [] = $rule;
         }
+
         return $this;
     }
 
     public function removeRule($rule)
     {
-        if(($key = array_search($rule, $this->rules)) !== false) {
+        if (($key = array_search($rule, $this->rules)) !== false) {
             unset($this->rules[$key]);
         }
+        $this->discardedRules[] = $rule;
 
         return $this;
     }
@@ -79,6 +95,11 @@ trait ValidationOperator
     {
         if ($this->isReadonly()) {
             return true;
+        }
+
+        $registered = LegoRegister::getDefault(FieldSelfDefinedValidation::class);
+        if ($registered) {
+            call_user_func_array($registered, [$this, $this->data]);
         }
 
         $value = $this->getNewValue();

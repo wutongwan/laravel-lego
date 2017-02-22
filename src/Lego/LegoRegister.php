@@ -40,6 +40,11 @@ class LegoRegister
         return array_get(self::$registered, "{$dataClass}.{$tag}", $default);
     }
 
+    public static function getDefault($dataClass)
+    {
+        return self::get($dataClass, self::DEFAULT_TAG);
+    }
+
     public static function getAll($dataClass, $default = null)
     {
         return array_get(self::$registered, $dataClass, $default);
