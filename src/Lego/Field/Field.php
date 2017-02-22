@@ -26,7 +26,8 @@ abstract class Field implements HasMode
         Concerns\ValueOperator,
         Concerns\ScopeOperator,
         Concerns\HasRelation,
-        Concerns\HasLocale;
+        Concerns\HasLocale,
+        Concerns\FilterWhereEquals;
 
     /**
      * 字段的唯一标记
@@ -124,17 +125,6 @@ abstract class Field implements HasMode
         }
     }
 
-    /**
-     * Filter 检索数据时, 构造此字段的查询
-     * @param Query $query
-     * @return Query
-     */
-    public function filter(Query $query)
-    {
-        return $this->filterWithRelation($query, function (Query $query) {
-            return $query->whereEquals($this->column(), $this->getNewValue());
-        });
-    }
 
     /**
      * 数据处理逻辑
