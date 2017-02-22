@@ -1,7 +1,7 @@
 @include('lego::default.snippets.top-buttons', ['widget' => $form])
 
 @include('lego::default.messages', ['object' => $form])
-<form method="post" class="form-horizontal">
+<form method="post" class="form-horizontal" action="{{ $form->getAction() }}">
     @foreach($form->fields() as $field)
         <div class="form-group {{ $field->errors()->any() ? 'has-error' : '' }}">
             <label for="{{ $field->elementId() }}" class="col-sm-2 control-label">

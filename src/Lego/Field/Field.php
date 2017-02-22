@@ -69,7 +69,7 @@ abstract class Field implements HasMode
      * @param string $description 描述、标签
      * @param mixed $data 数据域
      */
-    public function __construct(string $name, string $description = null, $data = null)
+    public function __construct(string $name, string $description = null, $data = [])
     {
         $this->name = $name;
 

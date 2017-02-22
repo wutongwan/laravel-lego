@@ -109,6 +109,11 @@ class Cell
         return $this;
     }
 
+    public function store()
+    {
+        return $this->store;
+    }
+
     public function getOriginalValue()
     {
         return $this->store->get($this->name);
