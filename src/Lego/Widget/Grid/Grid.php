@@ -2,6 +2,7 @@
 
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Support\Facades\Request;
+use Lego\LegoAsset;
 use Lego\Register\HighPriorityResponse;
 use Lego\Widget\Filter;
 use Lego\Widget\Widget;
@@ -10,7 +11,7 @@ use Maatwebsite\Excel\Writers\LaravelExcelWriter;
 
 class Grid extends Widget
 {
-    use Concerns\HasCells;
+    use Concerns\HasCells, Concerns\HasBatch;
 
     /**
      * @var Filter
@@ -126,6 +127,11 @@ class Grid extends Widget
     {
         foreach ($this->exports as $name => $url) {
             $this->addButton(self::BTN_RIGHT_TOP, $name, $url, 'lego-export-' . $name);
+        }
+
+        if ($this->batches()) {
+            LegoAsset::js('components/icheck/icheck.min.js');
+            LegoAsset::css('components/icheck/skins/square/blue.css');
         }
 
         $this->paginator();

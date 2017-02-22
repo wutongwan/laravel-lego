@@ -55,6 +55,13 @@ class ArrayQuery extends Query
         });
     }
 
+    public function whereIn($attribute, array $values)
+    {
+        return $this->addFilter(function (Store $store) use ($attribute, $values) {
+            return in_array($store->get($attribute), $values);
+        });
+    }
+
     /**
      * 当前属性大于某值
      * @param $attribute

@@ -16,6 +16,8 @@ class Form extends Widget implements HasMode
         Concerns\HasGroups,
         Concerns\HasEvents;
 
+    private $action;
+
     /**
      * 此属性设置后将不再调用默认的数据处理逻辑
      * @var \Closure
@@ -26,6 +28,17 @@ class Form extends Widget implements HasMode
      * 成功后的回调、跳转链接、任意 Response 内容
      */
     private $success;
+
+    public function action($url)
+    {
+        $this->action = $url;
+        return $this;
+    }
+
+    public function getAction()
+    {
+        return $this->action;
+    }
 
     /**
      * 保存成功后的 Response

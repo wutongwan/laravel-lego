@@ -34,4 +34,9 @@ class HighPriorityResponse extends Data
 
         return call_user_func($data);
     }
+
+    public static function exitUrl()
+    {
+        return Request::fullUrlWithQuery([self::REQUEST_PARAM => null]);
+    }
 }

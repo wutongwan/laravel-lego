@@ -62,7 +62,7 @@ trait HasFields
         return $this->fields()->get($fieldName);
     }
 
-    protected function addField(Field $field): Field
+    public function addField(Field $field): Field
     {
         $this->fields[$field->name()] = $field;
 

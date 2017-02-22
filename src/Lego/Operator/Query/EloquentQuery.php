@@ -52,6 +52,12 @@ class EloquentQuery extends Query
         return $this;
     }
 
+    public function whereIn($attribute, array $values)
+    {
+        $this->data->whereIn($attribute, $values);
+        return $this;
+    }
+
     /**
      * 当前属性大于某值
      * @param $attribute

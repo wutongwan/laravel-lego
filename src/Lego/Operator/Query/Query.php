@@ -29,6 +29,14 @@ abstract class Query extends Operator implements \ArrayAccess, Arrayable, \Count
     abstract public function whereEquals($attribute, $value);
 
     /**
+     * 当前属性值是否在 values 之内
+     * @param $attribute
+     * @param array $values
+     * @return static
+     */
+    abstract public function whereIn($attribute, array $values);
+
+    /**
      * 当前属性大于某值
      * @param $attribute
      * @param null $value
