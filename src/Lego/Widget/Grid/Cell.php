@@ -3,8 +3,10 @@
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 use Lego\Foundation\Exceptions\LegoException;
+use Lego\LegoRegister;
 use Lego\Operator\Finder;
 use Lego\Operator\Store\Store;
+use Lego\Register\GridCellPipe;
 
 class Cell
 {
@@ -68,7 +70,13 @@ class Cell
     private function getCallablePipe($pipe)
     {
         $method = 'pipe' . ucfirst(Str::camel($pipe));
-        return method_exists($this, $method) ? [$this, $method] : false;
+        if (method_exists($this, $method)) {
+            return [$this, $method];
+        } elseif ($callable = LegoRegister::get(GridCellPipe::class, $pipe)) {
+            return $callable;
+        } else {
+            return false;
+        }
     }
 
     public function cell($callable)
@@ -102,14 +110,14 @@ class Cell
     public function value()
     {
         $value = $this->getOriginalValue();
-        foreach ($this->pipes as $cell) {
-            $value = call_user_func_array($cell, [$value, $this->data]);
+        foreach ($this->pipes as $pipe) {
+            $value = call_user_func_array($pipe, [$value, $this->data, $this]);
         }
-        return new HtmlString($value);
+        return new HtmlString((string)$value);
     }
 
     public function __toString()
     {
-        return (string)$this->value();
+        return $this->value()->toHtml();
     }
 }
