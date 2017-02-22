@@ -77,27 +77,17 @@ class Datetime extends Field
         ];
     }
 
-    public function setOriginalValue($originalValue)
+    protected function autoFormat($datetime)
     {
-        $this->originalValue = $this->convertToCarbon($originalValue);
-    }
-
-    public function setNewValue($value)
-    {
-        $this->newValue = $this->convertToCarbon($value);
-    }
-
-    protected function convertToCarbon($value)
-    {
-        if (!$value) {
+        if (!$datetime) {
             return null;
         }
 
-        if ($value instanceof Carbon) {
-            return $value;
+        if ($datetime instanceof Carbon) {
+            return $datetime->format($this->format);
         }
 
-        return Carbon::createFromTimestamp(strtotime($value));
+        return date($this->format, strtotime($datetime));
     }
 
     /**
@@ -105,8 +95,6 @@ class Datetime extends Field
      */
     public function process()
     {
-        $this->setDisplayValue($this->getShowValue());
-
         /**
          * 仅在 editable && 非移动端启用日期控件，移动端使用原生的输入控件
          */
@@ -120,11 +108,14 @@ class Datetime extends Field
         }
     }
 
-    protected function getShowValue()
+    public function takeDefaultInputValue()
     {
-        /** @var Carbon $value */
-        $value = $this->getNewValue();
-        return $value ? $value->format($this->format) : null;
+        return $this->autoFormat(parent::takeDefaultInputValue());
+    }
+
+    public function takeDefaultShowValue()
+    {
+        return $this->autoFormat(parent::takeDefaultShowValue());
     }
 
     private function isMobile()

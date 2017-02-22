@@ -86,4 +86,13 @@ trait ValueOperator
             $this->getOriginalValue()
         );
     }
+
+    public function takeDefaultShowValue()
+    {
+        return lego_default(
+            $this->getDisplayValue(),
+            $this->getDisplayValue(),
+            $this->getOriginalValue()
+        );
+    }
 }
