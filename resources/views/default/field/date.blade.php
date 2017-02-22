@@ -1,10 +1,7 @@
-<?
-/** @var \Lego\Field\Field $field */
-$__field_placeholder = $field->getPlaceholder($field->description());
-?>
+<?php /** @var \Lego\Field\Field $field */ ?>
 <input type="{{ $field->getInputType() }}" name="{{ $field->elementName() }}" id="{{ $field->elementId() }}"
-       class="form-control" value="{{ $field->getDisplayValue() }}"
-       placeholder="{{ $__field_placeholder }}">
+       class="form-control" value="{{ $field->takeDefaultInputValue() }}"
+       placeholder="{{ $field->getPlaceholder($field->description()) }}">
 
 @if(!(new Mobile_Detect())->isMobile())
     @push('lego-scripts')

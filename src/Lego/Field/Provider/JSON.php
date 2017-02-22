@@ -42,6 +42,6 @@ class JSON extends Text
             $this->store->get($this->getColumnPathOfRelation($this->column()))
         );
         array_set($original, $this->jsonKey, $this->getNewValue());
-        $this->store->set($this->column(), $original);
+        $this->store->set($this->column(), $this->encode($original));
     }
 }
