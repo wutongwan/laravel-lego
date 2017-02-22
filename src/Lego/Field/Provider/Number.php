@@ -1,9 +1,11 @@
 <?php namespace Lego\Field\Provider;
 
-use Lego\Operator\Query\Query;
+use Lego\Field\Concerns\FilterWhereEquals;
 
 class Number extends Text
 {
+    use FilterWhereEquals;
+
     /**
      * 初始化对象
      */
@@ -52,12 +54,5 @@ class Number extends Text
         $this->inputType = is_integer($this->getAttribute('step')) ? 'number' : 'text';
 
         return parent::renderEditable();
-    }
-
-    public function filter(Query $query)
-    {
-        return $this->filterWithRelation($query, function (Query $query) {
-            return $query->whereEquals($this->column(), $this->getNewValue());
-        });
     }
 }

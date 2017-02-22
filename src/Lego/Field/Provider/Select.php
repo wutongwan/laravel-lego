@@ -1,9 +1,12 @@
 <?php namespace Lego\Field\Provider;
 
 use Collective\Html\FormFacade;
+use Lego\Field\Concerns\FilterWhereEquals;
 
 class Select extends Text
 {
+    use FilterWhereEquals;
+
     protected function renderEditable()
     {
         return FormFacade::select(
