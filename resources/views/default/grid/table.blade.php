@@ -10,7 +10,7 @@ $hasBatch = boolval($grid->batches());
     <div class="panel panel-default">
         <div class="panel-body" style="padding: 5px;">
             <div class="btn-group btn-group-sm">
-                <a href="{{ \Lego\Register\HighPriorityResponse::exitUrl() }}" class="btn btn-default">
+                <a href="{{ \Lego\Register\HighPriorityResponse::exit() }}" class="btn btn-default">
                     <span class="glyphicon glyphicon-log-out"></span> 退出
                 </a>
                 <button class="btn btn-default lego-select-all">
@@ -19,11 +19,12 @@ $hasBatch = boolval($grid->batches());
                 <button class="btn btn-default lego-select-toggle">
                     <span class="glyphicon glyphicon-unchecked"></span> 反选
                 </button>
+                <button class="btn btn-default" id="lego-selected-num">已选 0 项</button>
             </div>
 
             <div class="btn-group btn-group-sm">
                 @foreach($grid->batches() as $batch)
-                    <button class="btn btn-default lego-batch-button" data-action="{{ $batch->url() }}">
+                    <button class="btn btn-default lego-batch-button" data-batch-action="{{ $batch->url() }}">
                         <span class="glyphicon glyphicon-send"></span> {{ $batch->name() }}
                     </button>
                 @endforeach
@@ -32,8 +33,10 @@ $hasBatch = boolval($grid->batches());
     </div>
 
     <div class="hide">
-        {{-- <input type="text" name="ids[]" value=""> --}}
-        <form id="lego-grid-batch-form" action="" method="post"></form>
+        <form id="lego-grid-batch-form" action="" method="post">
+            <input type="text" name="ids" id="lego-grid-batch-input-ids" value="">
+            {{ csrf_field() }}
+        </form>
     </div>
 
     @push('lego-scripts')
@@ -47,25 +50,53 @@ $hasBatch = boolval($grid->batches());
                 increaseArea: '20%'
             });
 
+            var $input = $('#lego-grid-batch-input-ids');
+
+            var getIds = function () {
+                return $input.val().split(',').filter(function (el) {
+                    return el.length !== 0
+                })
+            };
+
+            var freshNum = function () {
+                $('#lego-selected-num').text(
+                    '已选 ' + getIds().length + ' 项'
+                );
+            };
+
             // events
             $checkboxes.on('ifToggled', function () {
                 var $this = $(this);
                 var id = $this.data('batch-id');
-                var $form = $('#lego-grid-batch-form');
+                var ids = getIds();
                 if ($this.prop('checked')) {
-                    if ($form.find('[value="' + id + '"]').length === 0) {
-                        $form.prepend($('<input/>', {type: "text", name: "ids[]", value: id}));
-                    }
+                    ids.push(id);
                 } else {
-                    $form.find('[value="' + id + '"]').remove();
+                    var index = ids.indexOf(id);
+                    if (index) {
+                        ids.splice(index, 1);
+                    }
                 }
+                $input.val(ids.join(','));
+                freshNum();
             });
             $('.lego-select-all').on('click', function () {
                 $checkboxes.iCheck('check');
+                freshNum();
             });
-
             $('.lego-select-toggle').on('click', function () {
                 $checkboxes.iCheck('toggle');
+                freshNum();
+            });
+
+            $('.lego-batch-button').on('click', function () {
+                if (getIds().length === 0) {
+                    alert('尚未选中任何记录！');
+                    return;
+                }
+                var $form = $('#lego-grid-batch-form');
+                $form.attr('action', $(this).data('batch-action'));
+                $form.submit();
             });
         });
     </script>
@@ -90,7 +121,6 @@ $hasBatch = boolval($grid->batches());
                         <input type="checkbox" class="lego-batch-checkbox" data-batch-id="{{ $__batch_id }}">
                     </td>
                 @endif
-
                 @foreach($grid->cells() as $cell)
                     <td>{{ $cell->copy()->fill($row)->value() }}</td>
                 @endforeach

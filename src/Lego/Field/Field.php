@@ -22,6 +22,7 @@ abstract class Field implements HasMode
         Operable;
 
     use Concerns\HtmlOperator,
+        Concerns\FieldContainer,
         Concerns\ValidationOperator,
         Concerns\ValueOperator,
         Concerns\ScopeOperator,

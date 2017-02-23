@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Request;
 use Lego\Field\Field;
 use Lego\Foundation\Concerns\HasMode;
 use Lego\Foundation\Concerns\ModeOperator;
+use Lego\Register\HighPriorityResponse;
 
 /**
  * Class Form
@@ -31,7 +32,12 @@ class Form extends Widget implements HasMode
 
     public function action($url)
     {
-        $this->action = $url;
+        if ($url instanceof \Closure) {
+            $this->action = HighPriorityResponse::register(__METHOD__, $url);
+        } else {
+            $this->action = $url;
+        }
+
         return $this;
     }
 
@@ -73,6 +79,12 @@ class Form extends Widget implements HasMode
     {
         $this->submit = $closure;
 
+        $this->action(
+            HighPriorityResponse::register(__METHOD__, function () {
+                return null;
+            })
+        );
+
         return $this;
     }
 
@@ -90,7 +102,7 @@ class Form extends Widget implements HasMode
         /**
          * 下面处理 POST 请求
          */
-        if ($this->isPost() && $this->isEditable()) {
+        if ($this->isPost() && $this->isEditable() && $this->shouldAction()) {
             // Sync fields from request
             $this->editableFields()->each(function (Field $field) {
                 $field->setNewValue(Request::input($field->elementName()));
@@ -104,6 +116,7 @@ class Form extends Widget implements HasMode
             // Call custom submit action <if submit defined>
             if ($this->submit && $response = call_user_func($this->submit, $this)) {
                 $this->success($response);
+                $this->returnSuccessResponse();
                 return;
             }
 
@@ -134,6 +147,11 @@ class Form extends Widget implements HasMode
         }
 
         return false;
+    }
+
+    private function shouldAction()
+    {
+        return !$this->action || Request::fullUrl() === $this->action;
     }
 
     /**

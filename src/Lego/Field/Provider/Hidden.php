@@ -1,13 +1,13 @@
 <?php namespace Lego\Field\Provider;
 
-use Collective\Html\HtmlFacade;
-
 class Hidden extends Text
 {
     protected $inputType = 'hidden';
 
-    protected function renderReadonly()
+    protected function initialize()
     {
-        return HtmlFacade::tag('div', (string)parent::renderReadonly(), ['class' => 'hide']);
+        parent::initialize();
+
+        $this->container('class', 'hide');
     }
 }
