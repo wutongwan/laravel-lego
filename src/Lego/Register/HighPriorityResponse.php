@@ -42,7 +42,7 @@ class HighPriorityResponse extends Data
             return null;
         }
 
-        self::$current = self::$current ? self::$current . ".{$step}" : $step;
+        self::$current = self::$current ? (self::$current . '.' . $step) : $step;
         return call_user_func($data);
     }
 
