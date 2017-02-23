@@ -10,9 +10,6 @@ $hasBatch = boolval($grid->batches());
     <div class="panel panel-default">
         <div class="panel-body" style="padding: 5px;">
             <div class="btn-group btn-group-sm">
-                <a href="{{ \Lego\Register\HighPriorityResponse::exit() }}" class="btn btn-default">
-                    <span class="glyphicon glyphicon-log-out"></span> 退出
-                </a>
                 <button class="btn btn-default lego-select-all">
                     <span class="glyphicon glyphicon-check"></span> 全选
                 </button>

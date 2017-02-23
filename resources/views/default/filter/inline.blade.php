@@ -1,3 +1,4 @@
+@include('lego::default.snippets.top-buttons', ['widget' => $filter])
 <form method="get" class="form-inline" style="line-height: 40px;">
     @foreach($filter->fields() as $field)
         <div class="form-group">
@@ -11,3 +12,4 @@
         <a href="?" class="btn btn-default">清空</a>
     </div>
 </form>
+@include('lego::default.snippets.bottom-buttons', ['widget' => $filter])
