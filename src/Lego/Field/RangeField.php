@@ -69,7 +69,7 @@ abstract class RangeField extends Field
 
     public function getNewValue()
     {
-        return !is_null(lego_default($this->lower->getNewValue(), $this->upper->getNewValue()));
+        return !is_empty_string($this->lower->getNewValue()) && !is_empty_string($this->upper->getNewValue());
     }
 
     /**
