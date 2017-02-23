@@ -11,14 +11,41 @@
 ```
 
 
-- example usage：
+## Text
 
 ```php
 $form = Lego::form(new User);
 $form->addText('name', 'Your Name')
+
+	// Validation
 	->required()
 	->unique()
-	->extra('select a nick name');
+	->rule('numberic') // Laravel Validation rules
+	// - 自定义的验证逻辑
+	->validator(function ($value) {
+		if (is_illegal($value)) {
+			return 'this name is illegal';
+		}
+	})
+
+	// 展示模式
+	->readonly()
+	->editable() // $ifYouAreAwesome
+	->extra('select a nick name')
+
+	// 字段值
+	->default('Tom')
+	
+	// html 属性
+	->attr('class', 'text-danger')
+	->attr(['class' => 'text-danger', 'data-mask' => '999'])
+	// - 修改 Field 上一层的属性，Boostrap 中的 .from-group div
+	->container('class', 'text-danger')
+	->container(['class' => 'hide'])
+	
+	// i18n
+	->locale('zh-CN') // default App::getLocale()
+;
 ```
 
 ## AutoComplete
