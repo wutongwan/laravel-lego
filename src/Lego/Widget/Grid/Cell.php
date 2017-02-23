@@ -121,11 +121,7 @@ class Cell
 
     public function value()
     {
-        $value = $this->getOriginalValue();
-        if (is_null($value)) {
-            return $this->default;
-        }
-
+        $value = lego_default($this->getOriginalValue(), $this->default);
         foreach ($this->pipes as $pipe) {
             $value = call_user_func_array($pipe, [$value, $this->data, $this]);
         }
