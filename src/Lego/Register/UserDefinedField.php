@@ -35,4 +35,19 @@ class UserDefinedField extends Data
         unset($fields[LegoRegister::DEFAULT_TAG]);
         return $fields;
     }
+
+    private static $registered = false;
+
+    public static function registerFromConfiguration()
+    {
+        if (self::$registered) {
+            return;
+        }
+
+        foreach (config('lego.user-defined-fields') as $field) {
+            lego_register(UserDefinedField::class, $field);
+        }
+
+        self::$registered = true;
+    }
 }

@@ -34,9 +34,6 @@ class LegoServiceProvider extends ServiceProvider
         // views
         $this->loadViewsFrom($this->path('resources/views'), 'lego');
 
-        // user-defined-fields
-        $this->registerUserDefinedFields();
-
         // alias
         $this->app->singleton(Fields::class, Fields::class);
     }
@@ -59,12 +56,5 @@ class LegoServiceProvider extends ServiceProvider
     private function path($path = '')
     {
         return __DIR__ . '/../../' . $path;
-    }
-
-    private function registerUserDefinedFields()
-    {
-        foreach (config('lego.user-defined-fields') as $field) {
-            lego_register(UserDefinedField::class, $field);
-        }
     }
 }
