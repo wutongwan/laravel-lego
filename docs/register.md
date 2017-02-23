@@ -1,11 +1,11 @@
 # Lego注册器
 
-_Code: `Lego/Register/Register.php`_
+_Code: `Lego/LegoRegister.php`_
 
 
 ## 添加注册项
 
-在 `Lego/Register/Data` 中创建对应数据类，示例如下：
+在 `Lego/Register` 中创建对应数据类，示例如下：
 
 ```php
 class FieldData extends Data
@@ -35,7 +35,7 @@ class FieldData extends Data
 
 ```php
 
-lego_register('field.data', [
+lego_register(FieldData::class, [
 	'address' => ['description' => '地址'],
 	// ..
 ], Room::class);
@@ -46,7 +46,5 @@ lego_register('field.data', [
 
 ```php
 
-$data = Register::get('field.data', Room::class);
-
-// $data instanceof \Lego\Register\FieldData
+$data = Register::get(FieldData::class, Room::class);
 ```
