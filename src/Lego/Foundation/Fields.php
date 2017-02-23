@@ -13,6 +13,7 @@ class Fields
     function __construct()
     {
         $this->addBuildInFields();
+        UserDefinedField::registerFromConfiguration();
 
         foreach (UserDefinedField::list() as $name => $field) {
             $this->fields[$name] = $field;

@@ -4,6 +4,7 @@ use Illuminate\Support\Collection;
 
 use Lego\Field\Field;
 use Lego\Foundation\Fields;
+use Lego\Register\UserDefinedField;
 
 /**
  * Field 相关逻辑
