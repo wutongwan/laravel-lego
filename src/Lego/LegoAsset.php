@@ -26,6 +26,12 @@ class LegoAsset
     private static $styles = [];
     private static $scripts = [];
 
+    public static function clear()
+    {
+        self::$styles = [];
+        self::$scripts = [];
+    }
+
     public static function css($path, $isLegoAsset = true)
     {
         $path = self::path($path, $isLegoAsset);

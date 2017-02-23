@@ -6,3 +6,5 @@ composer.lock
 # bower
 public/components
 docs/api
+
+_ide_helper_lego.php

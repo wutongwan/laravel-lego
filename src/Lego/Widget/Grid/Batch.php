@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Request;
 use Lego\Field\Provider\Hidden;
 use Lego\Lego;
+use Lego\LegoAsset;
 use Lego\Operator\Query\Query;
 use Lego\Operator\Store\Store;
 use Lego\Register\HighPriorityResponse;
@@ -20,11 +21,16 @@ class Batch
      * @var Query
      */
     private $query;
+    /**
+     * @var string
+     */
+    private $primaryKey;
 
-    public function __construct($name, Query $query, \Closure $action = null)
+    public function __construct($name, Query $query, \Closure $action = null, $primaryKey = 'id')
     {
         $this->name = $name;
         $this->query = $query;
+        $this->primaryKey = $primaryKey;
 
         if ($action) {
             $this->action($action);
@@ -36,9 +42,21 @@ class Batch
         return $this->name;
     }
 
+    public function getPrimaryKey()
+    {
+        return $this->primaryKey;
+    }
+
     public function url()
     {
         return $this->url;
+    }
+
+    public function primaryKey($key)
+    {
+        $this->primaryKey = $key;
+
+        return $this;
     }
 
     public function form(\Closure $builder)
@@ -52,41 +70,61 @@ class Batch
     {
         $this->action = $action;
 
-        if ($this->formBuilder) {
-            $this->url = $this->register('form', function () {
-                $form = Lego::form();
-                call_user_func($this->formBuilder, $form);
-                $form->addField(
-                    (new Hidden('ids'))->setOriginalValue(join(',', $this->getIdsFromRequest()))
-                );
-                $form->onSubmit(function () {
-                    return redirect(HighPriorityResponse::exitUrl());
-                });
-                return $form->view('grid.action.form', compact('form'))->with('action', $this);
-            });
-        } else {
-            $this->url = $this->register('action', function () {
-                if ($ids = $this->getIdsFromRequest()) {
-                    $this->query->whereIn('id', $ids)->get()
-                        ->each(function (Store $store) {
-                            call_user_func($this->action, $store->getOriginalData());
-                        });
-                    return redirect(HighPriorityResponse::exitUrl());
-                }
-            });
-        }
+        $this->url = HighPriorityResponse::register(
+            __METHOD__ . $this->name(),
+            function () {
+                LegoAsset::clear();
+                LegoAsset::css('components/bootstrap/dist/css/bootstrap.min.css');
+                LegoAsset::js('components/jquery/dist/jquery.min.js');
 
+                return $this->formBuilder ? $this->formResponse() : $this->actionResponse();
+            }
+        );
 
         return $this;
     }
 
-    private function getIdsFromRequest()
+    private function actionResponse()
     {
-        return array_unique(Request::input('ids', []));
+        if (!$ids = $this->getIdsFromRequest()) {
+            return view('lego::grid.action.message', ['message' => '尚未选中任何记录！', 'level' => 'warning']);
+        }
+
+        $this->eachStore(function (Store $store) {
+            call_user_func($this->action, $store->getOriginalData());
+        });
+        return redirect(HighPriorityResponse::exit());
     }
 
-    private function register($type, \Closure $closure)
+    private function formResponse()
     {
-        return lego_register(HighPriorityResponse::class, $closure, md5(__METHOD__ . $this->name() . $type))->url();
+        $form = Lego::form();
+        call_user_func($this->formBuilder, $form);
+        $form->addField(new Hidden('ids'))->default(Request::input('ids'));
+        $form->onSubmit(function ($form) {
+            // 下面这行判断挪到外面会影响 AutoComplete 等对后端发起请求的 Field 的使用
+            if (!$ids = $this->getIdsFromRequest()) {
+                return view('lego::grid.action.message', ['message' => '尚未选中任何记录！', 'level' => 'warning']);
+            }
+
+            $this->eachStore(function (Store $store) use ($form) {
+                call_user_func_array($this->action, [$store->getOriginalData(), $form]);
+            });
+            return redirect(HighPriorityResponse::exit());
+        });
+        return $form->view('lego::grid.action.form', ['form' => $form, 'action' => $this]);
+    }
+
+    private function eachStore(\Closure $closure)
+    {
+        $this->query->whereIn($this->primaryKey, $this->getIdsFromRequest())->get()->each($closure);
+    }
+
+    private function getIdsFromRequest()
+    {
+        if (!$ids = Request::input('ids')) {
+            return [];
+        }
+        return array_unique(is_array($ids) ? $ids : explode(',', $ids));
     }
 }

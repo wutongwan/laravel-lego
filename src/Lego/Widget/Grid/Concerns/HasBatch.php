@@ -6,9 +6,9 @@ trait HasBatch
 {
     protected $batches = [];
 
-    public function addBatch($name, \Closure $action = null)
+    public function addBatch($name, \Closure $action = null, $primaryKey = 'id')
     {
-        $action = new Batch($name, $this->query, $action);
+        $action = new Batch($name, $this->query, $action, $primaryKey);
         $this->batches[$name] = $action;
         return $action;
     }
