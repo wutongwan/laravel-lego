@@ -146,10 +146,6 @@ class EloquentQuery extends Query
      */
     public function whereBetween($attribute, $min, $max)
     {
-        if ($min && $max && $min > $max) {
-            return $this->whereEquals(0, 1);
-        }
-
         $this->data->whereBetween($attribute, [$min, $max]);
 
         return $this;
