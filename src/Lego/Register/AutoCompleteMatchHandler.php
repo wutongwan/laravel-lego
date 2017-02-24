@@ -49,7 +49,7 @@ class AutoCompleteMatchHandler extends Data
         $count = count($items);
         if ($count > 0) {
             // 简单的接口校验
-            if (is_string($first = array_first($items))) {
+            if (is_scalar($first = array_first($items))) {
                 foreach ($items as $id => &$text) {
                     $text = ['id' => $id, 'text' => $text];
                 }
