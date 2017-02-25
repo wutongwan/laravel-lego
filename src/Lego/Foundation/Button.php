@@ -28,8 +28,13 @@ class Button
     public function __construct($text, $url = null, $id = null)
     {
         $this->text = $text;
-        $this->url = $url;
         $this->id = $id ?: md5('_lego_button ' . $text);
+
+        if ($url instanceof \Closure) {
+            $this->action($url);
+        } else {
+            $this->url($url);
+        }
     }
 
     public function text($text)
@@ -128,9 +133,7 @@ class Button
             $this->removeClass('btn-' . $style);
         }
 
-        return is_null($size)
-            ? $this
-            : $this->class('btn-' . $size);
+        return is_null($size) ? $this : $this->class('btn-' . $size);
     }
 
     function __toString()
