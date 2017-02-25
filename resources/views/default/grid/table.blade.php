@@ -1,7 +1,7 @@
 <?php
 /** @var \Lego\Widget\Grid\Grid $grid */
 $paginator = $grid->paginator();
-$hasBatch = boolval($grid->batches());
+$hasBatch = boolval($grid->batches()) && $grid->batchModeEnabled();
 ?>
 
 @include('lego::default.snippets.top-buttons', ['widget' => $grid])
@@ -126,7 +126,7 @@ $hasBatch = boolval($grid->batches());
     </table>
 </div>
 
-<div style="text-align: center;">
+<div class="text-center">
     {!! $paginator->links() !!}
 </div>
 
