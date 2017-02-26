@@ -1,7 +1,9 @@
 <?php namespace Lego\Widget\Grid;
 
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
-use Lego\Field\Provider\Hidden;
+use Illuminate\Support\Facades\Session;
 use Lego\Lego;
 use Lego\LegoAsset;
 use Lego\Operator\Query\Query;
@@ -13,6 +15,8 @@ use Lego\Register\HighPriorityResponse;
  */
 class Batch
 {
+    const IDS_KEY = '__lego_batch_ids';
+
     private $name;
     private $url;
     private $formBuilder;
@@ -75,8 +79,12 @@ class Batch
             function () {
                 LegoAsset::clear();
                 LegoAsset::css('components/bootstrap/dist/css/bootstrap.min.css');
-                LegoAsset::js('components/jquery/dist/jquery.min.js');
 
+                if (!$this->getIds()) {
+                    return $this->fillIdsResponse();
+                }
+
+                LegoAsset::js('components/jquery/dist/jquery.min.js');
                 return $this->formBuilder ? $this->formResponse() : $this->actionResponse();
             }
         );
@@ -84,47 +92,59 @@ class Batch
         return $this;
     }
 
-    private function actionResponse()
+    private function fillIdsResponse()
     {
-        if (!$ids = $this->getIdsFromRequest()) {
+        if (!$ids = Request::input('ids')) {
             return view('lego::grid.action.message', ['message' => '尚未选中任何记录！', 'level' => 'warning']);
         }
 
+        $ids = array_unique(is_array($ids) ? $ids : explode(',', $ids));
+        $hash = md5(Session::getId() . microtime());
+        Cache::put(self::IDS_KEY . $hash, $ids, 10);
+        return Redirect::to(Request::fullUrlWithQuery([self::IDS_KEY => $hash]));
+    }
+
+    private function getIds()
+    {
+        if (!$key = Request::get(self::IDS_KEY)) {
+            return [];
+        }
+        $ids = Cache::get(self::IDS_KEY . $key);
+        return is_array($ids) ? $ids : [];
+    }
+
+    private function actionResponse()
+    {
         $this->eachStore(function (Store $store) {
             call_user_func($this->action, $store->getOriginalData());
         });
-        return redirect(HighPriorityResponse::exit());
+        return redirect($this->exit());
     }
 
     private function formResponse()
     {
         $form = Lego::form();
         call_user_func($this->formBuilder, $form);
-        $form->addField(new Hidden('ids'))->default(Request::input('ids'));
         $form->onSubmit(function ($form) {
-            // 下面这行判断挪到外面会影响 AutoComplete 等对后端发起请求的 Field 的使用
-            if (!$ids = $this->getIdsFromRequest()) {
-                return view('lego::grid.action.message', ['message' => '尚未选中任何记录！', 'level' => 'warning']);
-            }
-
             $this->eachStore(function (Store $store) use ($form) {
                 call_user_func_array($this->action, [$store->getOriginalData(), $form]);
             });
-            return redirect(HighPriorityResponse::exit());
+            return redirect($this->exit());
         });
         return $form->view('lego::grid.action.form', ['form' => $form, 'action' => $this]);
     }
 
     private function eachStore(\Closure $closure)
     {
-        $this->query->whereIn($this->primaryKey, $this->getIdsFromRequest())->get()->each($closure);
+        $this->query->whereIn($this->primaryKey, $this->getIds())->get()->each($closure);
     }
 
-    private function getIdsFromRequest()
+    private function exit()
     {
-        if (!$ids = Request::input('ids')) {
-            return [];
-        }
-        return array_unique(is_array($ids) ? $ids : explode(',', $ids));
+        $query = Request::query();
+        $query[HighPriorityResponse::REQUEST_PARAM] = null;
+        $query[self::IDS_KEY] = null;
+
+        return Request::fullUrlWithQuery($query);
     }
 }
