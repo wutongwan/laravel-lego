@@ -78,13 +78,6 @@ class Form extends Widget implements HasMode
     public function onSubmit(\Closure $closure)
     {
         $this->submit = $closure;
-
-        $this->action(
-            HighPriorityResponse::register(__METHOD__, function () {
-                return null;
-            })
-        );
-
         return $this;
     }
 
