@@ -91,7 +91,7 @@ trait ValueOperator
     {
         return lego_default(
             $this->getDisplayValue(),
-            $this->getDisplayValue(),
+            $this->getDefaultValue(),
             $this->getOriginalValue()
         );
     }
