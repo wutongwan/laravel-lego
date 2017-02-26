@@ -7,8 +7,17 @@ trait InitializeOperator
      */
     protected function triggerInitialize()
     {
-        // 调用 Trait 中的初始化函数
-        $this->initializeTraits();
+        /**
+         * Initialize Traits
+         *
+         * call each trait's `initializeTraitName()` method.
+         */
+        foreach (class_uses_recursive(static::class) as $trait) {
+            $method = 'initialize' . class_basename($trait);
+            if (method_exists($this, $method)) {
+                call_user_func_array([$this, $method], []);
+            }
+        }
 
         // 初始化自身
         $this->initialize();
@@ -19,20 +28,5 @@ trait InitializeOperator
      */
     protected function initialize()
     {
-    }
-
-    /**
-     * 初始化插件
-     *
-     * 如果插件实现了 initializePluginName() 函数, 会在此处调用
-     */
-    protected function initializeTraits()
-    {
-        foreach (class_uses_recursive(static::class) as $trait) {
-            $method = 'initialize' . class_basename($trait);
-            if (method_exists($this, $method)) {
-                call_user_func_array([$this, $method], []);
-            }
-        }
     }
 }

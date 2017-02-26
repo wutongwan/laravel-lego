@@ -1,5 +1,6 @@
 <?php namespace Lego\Field\Concerns;
 
+use Illuminate\Support\Facades\Config;
 use Lego\Field\Field;
 use Lego\Utility\HtmlUtility;
 
@@ -50,7 +51,7 @@ trait HtmlOperator
      */
     public function getConfiguredAttributes()
     {
-        return config('lego.field.attributes', []);
+        return Config::get('lego.field.attributes', []);
     }
 
     /**

@@ -17,7 +17,8 @@
         "symfony/class-loader": "~3.2"
     },
     "require-dev": {
-        "phpunit/phpunit": "5.*"
+        "phpunit/phpunit": "~5.2",
+        "laravel/laravel": "~5.2"
     },
     "autoload": {
         "files": [
@@ -25,6 +26,11 @@
         ],
         "psr-4": {
             "Lego\\": "src/Lego/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Lego\\Tests\\": "tests/"
         }
     },
     "prefer-stable": true,

@@ -23,25 +23,6 @@ function lego_register($name, $data, $tag = LegoRegister::DEFAULT_TAG)
     return LegoRegister::register($name, $data, $tag);
 }
 
-if (!function_exists('class_namespace')) {
-    /**
-     * \Lego\Field\Text => \Lego\Field
-     *
-     * @param $class
-     * @return string
-     */
-    function class_namespace($class, $appendClassName = null)
-    {
-        $namespace = (new \ReflectionClass($class))->getNamespaceName();
-
-        if (!is_null($appendClassName)) {
-            return $namespace . '\\' . $appendClassName;
-        }
-
-        return $namespace;
-    }
-}
-
 function is_empty_string($string)
 {
     return strlen(trim($string)) === 0;
