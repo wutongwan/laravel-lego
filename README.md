@@ -6,6 +6,10 @@
 
 * * *
 
+*注意：lego 尚处于开发阶段，1.0版本发布之前主要接口仍有调整的可能性，请注意查看 release note ！*
+
+* * *
+
 ## Example
 
 - UserController.php
