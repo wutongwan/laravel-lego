@@ -1,7 +1,8 @@
 <?php namespace Lego\Field\Provider;
 
+use Illuminate\Support\Facades\Request;
 use Lego\Field\Field;
-use Lego\LegoAsset;
+use Lego\Foundation\Facades\LegoAssets;
 use Lego\Operator\Query\Query;
 use Lego\Register\AutoCompleteMatchHandler;
 
@@ -23,10 +24,6 @@ class AutoComplete extends Field
      */
     private function defaultMatch($keyword)
     {
-        if (is_empty_string($keyword)) {
-            return [];
-        }
-
         if (!$this->relation) {
             return [];
         }
@@ -117,6 +114,19 @@ class AutoComplete extends Field
         return $this;
     }
 
+    public function setOriginalValue($originalValue)
+    {
+        return parent::setOriginalValue($this->store->get($this->foreignKey));
+    }
+
+    public function getDisplayValue()
+    {
+        return lego_default(
+            Request::input($this->elementName() . '-text'),
+            $this->store->get($this->getColumnPathOfRelation($this->column()))
+        );
+    }
+
     protected function getValueColumn()
     {
         return lego_default($this->valueColumn, $this->store->getKeyName());
@@ -126,12 +136,12 @@ class AutoComplete extends Field
     {
         // 以下文件仅在 editable 时加载
         if ($this->isEditable()) {
-            LegoAsset::css('components/select2/dist/css/select2.min.css');
-            LegoAsset::css('components/select2-bootstrap-theme/dist/select2-bootstrap.min.css');
-            LegoAsset::js('components/select2/dist/js/select2.full.min.js');
+            LegoAssets::css('components/select2/dist/css/select2.min.css');
+            LegoAssets::css('components/select2-bootstrap-theme/dist/select2-bootstrap.min.css');
+            LegoAssets::js('components/select2/dist/js/select2.full.min.js');
 
             if ($this->localeIsNotEn()) {
-                LegoAsset::js("components/select2/dist/js/i18n/{$this->getLocale()}.js");
+                LegoAssets::js("components/select2/dist/js/i18n/{$this->getLocale()}.js");
             }
         }
     }

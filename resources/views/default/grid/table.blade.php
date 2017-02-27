@@ -4,6 +4,13 @@ $paginator = $grid->paginator();
 $hasBatch = boolval($grid->batches()) && $grid->batchModeEnabled();
 ?>
 
+@if($grid->filter())
+    {!! $grid->filter() !!}
+    <br>
+    <h5>共找到 {{ $grid->paginator()->total() }} 条符合条件的记录</h5>
+    <hr>
+@endif
+
 @include('lego::default.snippets.top-buttons', ['widget' => $grid])
 
 @if($hasBatch)

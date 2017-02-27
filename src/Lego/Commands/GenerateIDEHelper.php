@@ -2,7 +2,7 @@
 
 use Illuminate\Console\Command;
 use Lego\Foundation\Button;
-use Lego\Foundation\Fields;
+use Lego\Foundation\Facades\LegoFields;
 use Lego\Widget\Filter;
 use Lego\Widget\Form;
 use Lego\Widget\Grid\Grid;
@@ -24,7 +24,7 @@ class GenerateIDEHelper extends Command
 
     public function handle()
     {
-        $fields = app(Fields::class)->all();
+        $fields = LegoFields::all();
         $widgets = $this->widgetHelpers();
         $content = view('lego::commands.ide-helper.layout', compact('fields', 'widgets'));
 
@@ -50,6 +50,9 @@ class GenerateIDEHelper extends Command
                 ];
             }
             array_set($widgets, "{$widget}.methods", $methods);
+
+            $rft = new \ReflectionClass($instance);
+            array_set($widgets, "{$widget}.namespace", $rft->getNamespaceName());
         }
 
         return $widgets;

@@ -1,4 +1,4 @@
-@foreach(\Lego\LegoAsset::styles() as $style)
+@foreach(\Lego\Foundation\Facades\LegoAssets::styles() as $style)
     {!! \Collective\Html\HtmlFacade::style($style) !!}
 @endforeach
 

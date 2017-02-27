@@ -5,9 +5,7 @@ use Lego\Foundation\Concerns\ModeOperator;
 use Lego\Foundation\Concerns\MessageOperator;
 use Lego\Foundation\Concerns\InitializeOperator;
 use Lego\Foundation\Concerns\RenderStringOperator;
-use Lego\Operator\Finder;
 use Lego\Operator\Query\Query;
-use Lego\Operator\Store\Store;
 use Lego\Widget\Concerns\Operable;
 
 /**
@@ -49,22 +47,6 @@ abstract class Field implements HasMode
     protected $column;
 
     /**
-     * 原始数据
-     * @var mixed|null
-     */
-    protected $data;
-
-    /**
-     * @var Query
-     */
-    protected $query;
-
-    /**
-     * @var Store
-     */
-    public $store;
-
-    /**
      * Field constructor.
      * @param string $name 该字段的唯一标记, 同一个控件中不能存在相同name的field
      * @param string $description 描述、标签
@@ -85,14 +67,7 @@ abstract class Field implements HasMode
         $this->column = last($parts);
         $this->description = $description ?: ucwords(join(' ', $parts));
 
-        if ($data instanceof Store) {
-            $this->data = $data->getOriginalData();
-            $this->store = $data;
-        } else {
-            $this->data = $data;
-            $this->store = Finder::store($data);
-        }
-        $this->query = Finder::query($this->data);
+        $this->initializeDataOperator($data);
 
         $this->triggerInitialize(); // initialize traits and self.
     }

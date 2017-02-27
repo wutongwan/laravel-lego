@@ -1,4 +1,4 @@
-@foreach(\Lego\LegoAsset::scripts() as $script)
+@foreach(\Lego\Foundation\Facades\LegoAssets::scripts() as $script)
     {!! \Collective\Html\HtmlFacade::script($script) !!}
 @endforeach
 

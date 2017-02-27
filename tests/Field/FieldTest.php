@@ -1,6 +1,6 @@
 <?php namespace Field;
 
-use Lego\Foundation\Fields;
+use Lego\Foundation\Facades\LegoFields;
 use Lego\Register\UserDefinedField;
 use Lego\Tests\Field\ExampleField;
 use Lego\Tests\TestCase;
@@ -17,7 +17,7 @@ class FieldTest extends TestCase
 
     public function testExampleDefined()
     {
-        $fields = app(Fields::class)->all();
+        $fields = LegoFields::all();
         $this->assertArrayHasKey(class_basename(ExampleField::class), $fields);
         $this->assertTrue(in_array(ExampleField::class, $fields));
     }
