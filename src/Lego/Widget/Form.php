@@ -81,6 +81,11 @@ class Form extends Widget implements HasMode
         return $this;
     }
 
+    protected function getFieldElementNamePrefix()
+    {
+        return 'lego-form-';
+    }
+
     public function process()
     {
         $this->processFields();

@@ -23,6 +23,7 @@ trait HtmlOperator
      */
     private $attributes = [];
 
+    private $elementNamePrefix;
     private $elementName;
 
     protected function initializeHtmlOperator()
@@ -37,7 +38,14 @@ trait HtmlOperator
 
     public function elementName()
     {
-        return $this->elementName;
+        return $this->elementNamePrefix . $this->elementName;
+    }
+
+    public function setElementNamePrefix($prefix)
+    {
+        $this->elementNamePrefix = $prefix;
+
+        return $this;
     }
 
     public function getInputType()
