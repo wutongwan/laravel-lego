@@ -17,6 +17,11 @@ class Filter extends Widget
         return view(config('lego.widgets.filter.default-view'), ['filter' => $this]);
     }
 
+    protected function getFieldElementNamePrefix()
+    {
+        return '';
+    }
+
     /**
      * Widget 的所有数据处理都放在此函数中, 渲染 view 前调用
      */
@@ -26,7 +31,7 @@ class Filter extends Widget
 
         $this->editableFields()->each(function (Field $field) {
             $field->placeholder($field->description());
-            $field->setNewValue(Request::get($field->elementName()));
+            $field->setNewValue(Request::query($field->elementName()));
 
             $value = $field->getNewValue();
             if ((is_string($value) && is_empty_string($value)) || !$value) {

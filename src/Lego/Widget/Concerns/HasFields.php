@@ -24,11 +24,18 @@ trait HasFields
         foreach (LegoFields::all() as $name => $class) {
             self::macro('add' . $name, function () use ($class) {
                 $args = func_get_args();
+                /** @var Field $field */
                 $field = new $class($args[0], $args[1] ?? null, $this->getStore());
+                $field->setElementNamePrefix($this->getFieldElementNamePrefix());
                 return $this->addField($field);
             });
         }
     }
+
+    /**
+     * 为避免同一页面有多个控件时的
+     */
+    abstract protected function getFieldElementNamePrefix();
 
     /**
      * all fields

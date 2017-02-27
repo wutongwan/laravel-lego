@@ -12,8 +12,8 @@ trait HasBatch
 
     public function addBatch($name, \Closure $action = null, $primaryKey = 'id')
     {
-        $action = new Batch($name, $this->query, $action, $primaryKey);
-        $this->batches[$name] = $action;
+        $batch = new Batch($name, $this->getQuery(), $action, $primaryKey);
+        $this->batches[$name] = $batch;
 
         if ($this->batchModeEnabled()) {
             $this->addButton(self::BTN_LEFT_TOP, '退出批处理', function () {
@@ -27,7 +27,7 @@ trait HasBatch
             });
         }
 
-        return $action;
+        return $batch;
     }
 
     public function batches()
