@@ -154,7 +154,7 @@ class Form extends Widget implements HasMode
     {
         $this->fields()->each(function (Field $field) {
             $field->setOriginalValue(
-                $field->store->get($field->getColumnPathOfRelation($field->column()))
+                $field->getStore()->get($field->getColumnPathOfRelation($field->column()))
             );
         });
     }
