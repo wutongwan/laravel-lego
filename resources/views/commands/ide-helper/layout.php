@@ -29,9 +29,10 @@ namespace Lego\Widget\Concerns {
     }
 }
 
-namespace Lego\Widget {
 
 <?php foreach ($widgets as $widget => $detail) {?>
+namespace <?= $detail['namespace'] ?> {
+
     /**
 <?php foreach ($detail['methods'] as $method) {?>
      * @method <?= $method['return'] ?> <?= $method['name'] ?>(<?= $method['arguments'] ?>)
@@ -44,6 +45,7 @@ namespace Lego\Widget {
     {
     }
 
+}
+
 <?php } ?>
 
-}

@@ -2,7 +2,7 @@
 
 use Carbon\Carbon;
 use Lego\Field\Field;
-use Lego\LegoAsset;
+use Lego\Foundation\Facades\LegoAssets;
 
 class Datetime extends Field
 {
@@ -99,11 +99,11 @@ class Datetime extends Field
          * 仅在 editable && 非移动端启用日期控件，移动端使用原生的输入控件
          */
         if ($this->isEditable() && !$this->isMobile()) {
-            LegoAsset::css('components/smalot-bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css');
-            LegoAsset::js('components/smalot-bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js');
+            LegoAssets::css('components/smalot-bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css');
+            LegoAssets::js('components/smalot-bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js');
 
             if ($this->localeIsNotEn()) {
-                LegoAsset::js("components/smalot-bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.{$this->getLocale()}.js");
+                LegoAssets::js("components/smalot-bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.{$this->getLocale()}.js");
             }
         }
     }

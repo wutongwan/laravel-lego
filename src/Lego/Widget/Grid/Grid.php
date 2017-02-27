@@ -2,7 +2,7 @@
 
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Support\Facades\Request;
-use Lego\LegoAsset;
+use Lego\Foundation\Facades\LegoAssets;
 use Lego\Register\HighPriorityResponse;
 use Lego\Widget\Filter;
 use Lego\Widget\Widget;
@@ -23,10 +23,15 @@ class Grid extends Widget
         if ($data instanceof Filter) {
             $this->filter = $data;
             $this->filter->process();
-            return $this->filter->data();
+            return $this->filter->getQuery();
         }
 
         return parent::transformer($data);
+    }
+
+    public function filter()
+    {
+        return $this->filter;
     }
 
     public function orderBy($attribute, bool $desc = false)
@@ -130,8 +135,8 @@ class Grid extends Widget
         }
 
         if ($this->batches()) {
-            LegoAsset::js('components/icheck/icheck.min.js');
-            LegoAsset::css('components/icheck/skins/square/blue.css');
+            LegoAssets::js('components/icheck/icheck.min.js');
+            LegoAssets::css('components/icheck/skins/square/blue.css');
         }
 
         $this->paginator();

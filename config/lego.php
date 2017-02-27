@@ -6,6 +6,19 @@
 
 return [
     /**
+     * 静态文件配置
+     */
+    'assets' => [
+        /**
+         * 下面静态文件是否全局自动引入，false 时，需要在外部自行引入相关静态文件
+         */
+        'global' => [
+            'bootstrap' => true,
+            'jQuery' => true,
+        ],
+    ],
+
+    /**
      * Field 的配置
      */
     'field' => [

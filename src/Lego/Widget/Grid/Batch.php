@@ -4,8 +4,8 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
+use Lego\Foundation\Facades\LegoAssets;
 use Lego\Lego;
-use Lego\LegoAsset;
 use Lego\Operator\Query\Query;
 use Lego\Operator\Store\Store;
 use Lego\Register\HighPriorityResponse;
@@ -77,14 +77,14 @@ class Batch
         $this->url = HighPriorityResponse::register(
             __METHOD__ . $this->name(),
             function () {
-                LegoAsset::clear();
-                LegoAsset::css('components/bootstrap/dist/css/bootstrap.min.css');
+                LegoAssets::reset();
+                LegoAssets::css('components/bootstrap/dist/css/bootstrap.min.css');
 
                 if (!$this->getIds()) {
                     return $this->fillIdsResponse();
                 }
 
-                LegoAsset::js('components/jquery/dist/jquery.min.js');
+                LegoAssets::js('components/jquery/dist/jquery.min.js');
                 return $this->formBuilder ? $this->formResponse() : $this->actionResponse();
             }
         );

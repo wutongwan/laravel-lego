@@ -26,13 +26,11 @@ return $form->view('layout', ['form' => $form]);
 <html lang="en">
 <head>
     @include('lego::styles')
-    <link href="//cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 
 	{!! $form !!}
 
-    <script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
     @include('lego::scripts')
 </body>
 </html>
@@ -56,7 +54,10 @@ composer require wutongwan/lego
 2、添加 Service Provider ，将下面的内容添加到 `config/app.php` 的 `providers` 数组中
 
 ```php
-\Lego\LegoServiceProvider::class,
+// Lego 依赖 LaravelCollective/html ，所以同时需要添加其 ServiceProvider .
+Collective\Html\HtmlServiceProvider::class,
+
+Lego\LegoServiceProvider::class,
 ```
 
 3、发布项目相关文件
@@ -64,6 +65,10 @@ composer require wutongwan/lego
 本项目使用 [bower](https://bower.io/) 管理静态文件，执行下面命令前，请确认已安装 bower
 
 ```bash
+# 1、发布配置文件
+php artisan vendor:publish --provider="Lego\LegoServiceProvider"
+
+# 2、使用 bower 更新静态文件并发布
 php artisan lego:update-components
 # 如果当前用户为 root
 php artisan lego:update-components --bower-allow-root

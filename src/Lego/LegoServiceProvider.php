@@ -3,8 +3,8 @@
 use Illuminate\Support\ServiceProvider;
 use Lego\Commands\GenerateIDEHelper;
 use Lego\Commands\UpdateComponents;
+use Lego\Foundation\Assets;
 use Lego\Foundation\Fields;
-use Lego\Register\UserDefinedField;
 
 /**
  * Lego Service Provider for Laravel
@@ -13,7 +13,9 @@ class LegoServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        if ($this->app->runningInConsole()) {
+        /** @var \Illuminate\Foundation\Application $app */
+        $app = $this->app;
+        if ($app->runningInConsole()) {
             $this->commands([
                 GenerateIDEHelper::class,
                 UpdateComponents::class,
@@ -35,13 +37,16 @@ class LegoServiceProvider extends ServiceProvider
         $this->loadViewsFrom($this->path('resources/views'), 'lego');
 
         // alias
-        $this->app->singleton(Fields::class, Fields::class);
+        $this->app->singleton('lego-fields', Fields::class);
+        $this->app->singleton('lego-assets', Assets::class);
     }
 
     private function publishAssets()
     {
         $this->publishes(
-            [$this->path('public/') => public_path(LegoAsset::ASSET_PATH)],
+            [
+                $this->path('public/') => public_path(Assets::PATH_PREFIX),
+            ],
             'public'
         );
     }

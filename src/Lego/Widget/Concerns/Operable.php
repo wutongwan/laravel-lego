@@ -19,12 +19,32 @@ trait Operable
     /**
      * @var Store
      */
-    public $store;
+    protected $store;
 
-    final protected function initializeOperator($data)
+    final protected function initializeDataOperator($data)
     {
-        $this->data = $data;
-        $this->query = Finder::query($data);
-        $this->store = Finder::store($data);
+        if ($data instanceof Store) {
+            $this->data = $data->getOriginalData();
+            $this->store = $data;
+            $this->query = Finder::query($this->data);
+        } elseif ($data instanceof Query) {
+            $this->data = $data->getOriginalData();
+            $this->store = Finder::store($this->data);
+            $this->query = $data;
+        } else {
+            $this->data = $data;
+            $this->query = Finder::query($data);
+            $this->store = Finder::store($data);
+        }
+    }
+
+    public function getStore()
+    {
+        return $this->store;
+    }
+
+    public function getQuery()
+    {
+        return $this->query;
     }
 }

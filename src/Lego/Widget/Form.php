@@ -133,7 +133,7 @@ class Form extends Widget implements HasMode
         });
 
         $this->fireEvent('saving');
-        if ($this->store->save()) {
+        if ($this->getStore()->save()) {
             $this->syncFieldsValueFromStore();
             $this->fireEvent('saved');
             return true;

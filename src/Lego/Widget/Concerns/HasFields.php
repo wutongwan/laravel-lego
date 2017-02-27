@@ -3,7 +3,7 @@
 use Illuminate\Support\Collection;
 
 use Lego\Field\Field;
-use Lego\Foundation\Fields;
+use Lego\Foundation\Facades\LegoFields;
 
 /**
  * Field 相关逻辑
@@ -21,10 +21,10 @@ trait HasFields
         $this->fields = collect([]);
 
         // addField Magic call
-        foreach (app(Fields::class)->all() as $name => $class) {
+        foreach (LegoFields::all() as $name => $class) {
             self::macro('add' . $name, function () use ($class) {
                 $args = func_get_args();
-                $field = new $class($args[0], $args[1] ?? null, $this->store);
+                $field = new $class($args[0], $args[1] ?? null, $this->getStore());
                 return $this->addField($field);
             });
         }

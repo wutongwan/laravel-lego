@@ -23,7 +23,7 @@ abstract class Widget implements ButtonLocations
 
     public function __construct($data)
     {
-        $this->initializeOperator(
+        $this->initializeDataOperator(
             $this->transformer($data)
         );
 

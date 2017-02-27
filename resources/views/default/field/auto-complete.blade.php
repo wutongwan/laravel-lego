@@ -1,13 +1,12 @@
 <?php /** @var \Lego\Field\Provider\AutoComplete $field */ ?>
-<?php $__field_show_value = $field->getDisplayValue() ?>
 
 <select name="{{ $field->elementName() }}" id="{{ $field->elementId() }}" class="form-control"
         style="width: 100%; min-width: 100%;">
-    @if($value = $field->getNewValue())
-        <option value="{{ $value }}">{{ $__field_show_value }}</option>
+    @if($value = $field->takeDefaultInputValue())
+        <option value="{{ $value }}">{{ $field->takeDefaultShowValue() }}</option>
     @endif
 </select>
-<input type="hidden" id="{{ $field->elementId() }}-text" name="{{ $field->elementName() }}-text" value="{{ $__field_show_value }}">
+<input type="hidden" id="{{ $field->elementId() }}-text" name="{{ $field->elementName() }}-text" value="{{ $field->takeDefaultShowValue() }}">
 
 @push('lego-scripts')
 <script>
