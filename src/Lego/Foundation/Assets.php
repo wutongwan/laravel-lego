@@ -11,6 +11,7 @@ class Assets
         ],
         'script' => [
             'jQuery' => 'components/jquery/dist/jquery.min.js',
+            'bootstrap' => 'components/bootstrap/dist/js/bootstrap.min.js',
         ],
     ];
 
