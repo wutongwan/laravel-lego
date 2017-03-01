@@ -116,7 +116,7 @@ class AutoComplete extends Field
 
     public function setOriginalValue($originalValue)
     {
-        return parent::setOriginalValue($this->store->get($this->foreignKey));
+        return parent::setOriginalValue($this->store->get($this->foreignKey) ?: null);
     }
 
     public function getDisplayValue()
