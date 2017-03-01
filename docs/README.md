@@ -1,4 +1,8 @@
-# Lego Documents
+## Demo
+
+- <http://lego.zhw.in>
+
+## Documents
 
 - [Form 表单](./form.md)
 - [Fields 支持的输入类型](./fields.md)
