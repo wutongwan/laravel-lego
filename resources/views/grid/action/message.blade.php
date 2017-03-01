@@ -1,4 +1,4 @@
-@extends('lego::grid.action.layout')
+@extends('lego::layout')
 
 @section('title')
     {{ $message }}
