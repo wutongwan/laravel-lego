@@ -1,3 +1,5 @@
+# Laravel Lego, Save you from CRUD.
+
 ## Demo
 
 - <http://lego.zhw.in>
