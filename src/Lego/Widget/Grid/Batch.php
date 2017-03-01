@@ -30,6 +30,13 @@ class Batch
      */
     private $primaryKey;
 
+    /**
+     * 确认信息，没有 form 操作时可以通过 message($message) 传入
+     *
+     * @var string
+     */
+    private $message;
+
     public function __construct($name, Query $query, \Closure $action = null, $primaryKey = 'id')
     {
         $this->name = $name;
@@ -44,6 +51,12 @@ class Batch
     public function name()
     {
         return $this->name;
+    }
+
+    public function message($message)
+    {
+        $this->message = $message;
+        return $this;
     }
 
     public function getPrimaryKey()
@@ -85,7 +98,21 @@ class Batch
                 }
 
                 LegoAssets::js('components/jquery/dist/jquery.min.js');
-                return $this->formBuilder ? $this->formResponse() : $this->actionResponse();
+
+                if ($this->formBuilder) {
+                    return $this->formResponse();
+                }
+
+                if ($this->message) {
+                    return Lego::confirm(
+                        $this->message . ' [共 ' . count($this->getIds()) . ' 条]',
+                        function ($sure) {
+                            return $sure ? $this->actionResponse() : redirect($this->exit());
+                        }
+                    );
+                }
+
+                return $this->actionResponse();
             }
         );
 

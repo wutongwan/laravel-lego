@@ -26,13 +26,13 @@ $hasBatch = boolval($grid->batches()) && $grid->batchModeEnabled();
                 <button class="btn btn-default" id="lego-selected-num">已选 0 项</button>
             </div>
 
-            <div class="btn-group btn-group-sm">
-                @foreach($grid->batches() as $batch)
-                    <button class="btn btn-default lego-batch-button" data-batch-action="{{ $batch->url() }}">
-                        <span class="glyphicon glyphicon-send"></span> {{ $batch->name() }}
-                    </button>
-                @endforeach
-            </div>
+            &middot;
+
+            @foreach($grid->batches() as $batch)
+                <button class="btn btn-default btn-sm lego-batch-button" data-batch-action="{{ $batch->url() }}">
+                    <span class="glyphicon glyphicon-send"></span> {{ $batch->name() }}
+                </button>
+            @endforeach
         </div>
     </div>
 

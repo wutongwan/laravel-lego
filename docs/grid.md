@@ -33,6 +33,15 @@ $grid->addBatch('批量删除')
     });
 ```
 
+### 带确认信息的批处理
+```php
+$grid->addBatch('批量删除')
+	->message('确认删除？')
+    ->action(function (Advance $advance) {
+        $advance->delete();
+    });
+```
+
 ### 带表单的批处理
 
 ```php
