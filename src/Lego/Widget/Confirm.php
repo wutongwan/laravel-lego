@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\URL;
  */
 class Confirm
 {
+    const CONFIRM_QUERY_NAME = '__lego_confirm';
+    const FROM_QUERY_NAME = '__lego_confirm_from';
+
     /**
      * 提示信息
      * @var string
@@ -25,10 +28,17 @@ class Confirm
      */
     protected $delay = 0;
 
+    private $confirmQueryName;
+    private $fromQueryName;
+
     public function __construct($message, callable $action, int $delay = null)
     {
         $this->message = $message;
         $this->action = $action;
+
+        $this->confirmQueryName = self::CONFIRM_QUERY_NAME;
+        $this->expectedConfirmValue = md5($message);
+        $this->fromQueryName = self::FROM_QUERY_NAME;
 
         if ($delay) {
             $this->delay = $delay;
@@ -37,22 +47,13 @@ class Confirm
 
     public function response()
     {
-        lego_assert(Request::isMethod('get'), __CLASS__ . ' only support GET method.');
-
-        // 生成confirm的query参数名 & 正确值
-        $confirmKey = md5($this->message);
-        $expectedValue = md5($confirmKey . 'dou ni wan');
-        $fromKey = '_from_' . $confirmKey;
-
-        // 计算出来源页面
         $previous = URL::previous();
         parse_str(last(explode('?', $previous)), $params);
-        $fromValue = Request::query($fromKey) ?: ($params[$fromKey] ?? $previous);
+        $from = Request::query($this->fromQueryName) ?: ($params[$this->fromQueryName] ?? $previous);
 
-        if ($confirmValue = Request::query($confirmKey)) {
-            $confirmed = $confirmValue === $expectedValue;
-            $reflect = new \ReflectionFunction($this->action);
-            if ($reflect->getNumberOfParameters() > 0) {
+        if ($confirmValue = Request::query($this->confirmQueryName)) {
+            $confirmed = $confirmValue === $this->expectedConfirmValue;
+            if ((new \ReflectionFunction($this->action))->getNumberOfParameters() > 0) {
                 // 回调函数接收参数时, 用户的取消行为也交由回调控制
                 $response = call_user_func($this->action, $confirmed);
             } elseif ($confirmed) {
@@ -60,19 +61,22 @@ class Confirm
                 $response = call_user_func($this->action);
             }
             // 其他情况返回来源页
-            return isset($response) ? $response : redirect($fromValue);
+            return isset($response) ? $response : redirect($from);
         }
 
-        $query = [
-            $confirmKey => $expectedValue,
-            $fromKey => $fromValue,
-        ];
-
         return view('lego::confirm', [
-            'confirm' => Request::fullUrlWithQuery($query),
-            'cancel' => Request::fullUrlWithQuery(array_merge($query, [$confirmKey => 'no'])),
             'message' => $this->message,
             'delay' => $this->delay,
+
+            'confirm' => Request::fullUrlWithQuery([
+                $this->confirmQueryName => $this->expectedConfirmValue,
+                $this->fromQueryName => $from,
+            ]),
+
+            'cancel' => Request::fullUrlWithQuery([
+                $this->confirmQueryName => 'no',
+                $this->fromQueryName => $from,
+            ]),
         ]);
     }
 }

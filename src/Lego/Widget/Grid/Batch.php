@@ -4,27 +4,29 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
+use Lego\Foundation\Exceptions\LegoException;
 use Lego\Foundation\Facades\LegoAssets;
 use Lego\Lego;
 use Lego\Operator\Query\Query;
 use Lego\Operator\Store\Store;
 use Lego\Register\HighPriorityResponse;
+use Lego\Widget\Confirm;
 
 /**
  * Grid 批处理的逻辑
  */
 class Batch
 {
-    const IDS_KEY = '__lego_batch_ids';
+    const IDS_QUERY_NAME = '__lego_batch_ids';
 
     private $name;
     private $url;
-    private $formBuilder;
-    private $action;
+
     /**
      * @var Query
      */
     private $query;
+
     /**
      * @var string
      */
@@ -33,19 +35,30 @@ class Batch
     /**
      * 确认信息，没有 form 操作时可以通过 message($message) 传入
      *
-     * @var string
+     * @var string|\Closure
      */
     private $message;
 
-    public function __construct($name, Query $query, \Closure $action = null, $primaryKey = 'id')
+    /**
+     * @var \Closure
+     */
+    private $form;
+
+    /**
+     * @var \Closure
+     */
+    private $each;
+
+    /**
+     * @var \Closure
+     */
+    private $handle;
+
+    public function __construct($name, Query $query, $primaryKey = 'id')
     {
         $this->name = $name;
         $this->query = $query;
         $this->primaryKey = $primaryKey;
-
-        if ($action) {
-            $this->action($action);
-        }
     }
 
     public function name()
@@ -64,114 +77,142 @@ class Batch
         return $this->primaryKey;
     }
 
+    public function primaryKey($key)
+    {
+        $this->primaryKey = $key;
+        return $this;
+    }
+
     public function url()
     {
         return $this->url;
     }
 
-    public function primaryKey($key)
+    public function form(\Closure $builder)
     {
-        $this->primaryKey = $key;
-
+        $this->form = $builder;
         return $this;
     }
 
-    public function form(\Closure $builder)
+    public function each(\Closure $closure)
     {
-        $this->formBuilder = $builder;
+        $this->each = $closure;
+        $this->register();
+        return $this;
+    }
 
+    public function handle(\Closure $closure)
+    {
+        $this->handle = $closure;
+        $this->register();
         return $this;
     }
 
     public function action(\Closure $action)
     {
-        $this->action = $action;
+        return $this->each($action);
+    }
 
+    private function register()
+    {
         $this->url = HighPriorityResponse::register(
             __METHOD__ . $this->name(),
             function () {
-                LegoAssets::reset();
-                LegoAssets::css('components/bootstrap/dist/css/bootstrap.min.css');
-
-                if (!$this->getIds()) {
-                    return $this->fillIdsResponse();
-                }
-
-                LegoAssets::js('components/jquery/dist/jquery.min.js');
-
-                if ($this->formBuilder) {
-                    return $this->formResponse();
-                }
-
-                if ($this->message) {
-                    return Lego::confirm(
-                        $this->message . ' [共 ' . count($this->getIds()) . ' 条]',
-                        function ($sure) {
-                            return $sure ? $this->actionResponse() : redirect($this->exit());
-                        }
-                    );
-                }
-
-                return $this->actionResponse();
+                return $this->response();
             }
         );
-
-        return $this;
     }
 
-    private function fillIdsResponse()
+    private function response()
+    {
+        LegoAssets::reset();
+        LegoAssets::css('components/bootstrap/dist/css/bootstrap.min.css');
+        LegoAssets::js('components/jquery/dist/jquery.min.js');
+
+        if (!$this->getIds()) {
+            return $this->saveIdsResponse();
+        }
+
+        if ($this->form) {
+            return $this->formResponse();
+        }
+
+        if ($this->message) {
+            $message = $this->message instanceof \Closure
+                ? call_user_func($this->message, $this->getDataCollection())
+                : $this->message;
+            return Lego::confirm($message, function ($sure) {
+                return $sure ? $this->callHandleClosure() : redirect($this->exit());
+            });
+        }
+
+        return $this->callHandleClosure();
+    }
+
+    private function saveIdsResponse()
     {
         if (!$ids = Request::input('ids')) {
-            return view('lego::grid.action.message', ['message' => '尚未选中任何记录！', 'level' => 'warning']);
+            return view('lego::message', ['message' => '尚未选中任何记录！', 'level' => 'warning']);
         }
 
         $ids = array_unique(is_array($ids) ? $ids : explode(',', $ids));
         $hash = md5(Session::getId() . microtime());
-        Cache::put(self::IDS_KEY . $hash, $ids, 10);
-        return Redirect::to(Request::fullUrlWithQuery([self::IDS_KEY => $hash]));
-    }
-
-    private function getIds()
-    {
-        if (!$key = Request::get(self::IDS_KEY)) {
-            return [];
-        }
-        $ids = Cache::get(self::IDS_KEY . $key);
-        return is_array($ids) ? $ids : [];
-    }
-
-    private function actionResponse()
-    {
-        $this->eachStore(function (Store $store) {
-            call_user_func($this->action, $store->getOriginalData());
-        });
-        return redirect($this->exit());
+        Cache::put(self::IDS_QUERY_NAME . $hash, $ids, 10);
+        return Redirect::to(Request::fullUrlWithQuery([self::IDS_QUERY_NAME => $hash]));
     }
 
     private function formResponse()
     {
         $form = Lego::form();
-        call_user_func($this->formBuilder, $form);
+        call_user_func($this->form, $form);
         $form->onSubmit(function ($form) {
-            $this->eachStore(function (Store $store) use ($form) {
-                call_user_func_array($this->action, [$store->getOriginalData(), $form]);
-            });
-            return redirect($this->exit());
+            return $this->callHandleClosure($form);
         });
         return $form->view('lego::grid.action.form', ['form' => $form, 'action' => $this]);
     }
 
-    private function eachStore(\Closure $closure)
+    private function callHandleClosure()
     {
-        $this->query->whereIn($this->primaryKey, $this->getIds())->get()->each($closure);
+        $params = func_get_args();
+        $collection = $this->getDataCollection();
+        if ($this->each) {
+            array_unshift($params, null);
+            $collection->each(function (Store $store) use ($params) {
+                $params[0] = $store->getOriginalData();
+                call_user_func_array($this->each, $params);
+            });
+            return redirect($this->exit());
+        } elseif ($this->handle) {
+            array_unshift($params, $collection);
+            return call_user_func_array($this->handle, $params);
+        } else {
+            throw new LegoException(__CLASS__ . ' does not set `handle` or `each`.');
+        }
+    }
+
+    private function getDataCollection()
+    {
+        return $this->query->whereIn($this->primaryKey, $this->getIds())->get();
+    }
+
+    private function getIds()
+    {
+        if (!$key = Request::get(self::IDS_QUERY_NAME)) {
+            return [];
+        }
+        $ids = Cache::get(self::IDS_QUERY_NAME . $key);
+        return is_array($ids) ? $ids : [];
     }
 
     private function exit()
     {
-        $query = Request::query();
-        $query[HighPriorityResponse::REQUEST_PARAM] = null;
-        $query[self::IDS_KEY] = null;
-
-        return Request::fullUrlWithQuery($query);
+        return Request::fullUrlWithQuery(
+            array_merge(Request::query(), [
+                self::IDS_QUERY_NAME => null,
+                HighPriorityResponse::REQUEST_PARAM => null,
+                Confirm::CONFIRM_QUERY_NAME => null,
+                Confirm::FROM_QUERY_NAME => null,
+            ])
+        );
     }
 }
