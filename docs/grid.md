@@ -33,15 +33,17 @@ $grid->addBatch('批量删除')
     });
 ```
 
+```php
 $grid->addBatch('汇总')
-	->handle(function (Collection $advances) {
-		return Lego::message('共 ' . $advances->sum('amount') . ' 元');
-	});
+    ->handle(function (Collection $advances) {
+        return Lego::message('共 ' . $advances->sum('amount') . ' 元');
+    });
+```
 
 ### 带确认信息的批处理
 ```php
 $grid->addBatch('批量删除')
-	->message('确认删除？')
+    ->message('确认删除？')
     ->each(function (Advance $advance) {
         $advance->delete();
     });
@@ -50,9 +52,9 @@ $grid->addBatch('批量删除')
 ### 带动态确认信息的批处理
 ```php
 $grid->addBatch('批量删除')
-	->message(function (Collection $advances) {
-	    return "确认删除 {$advances->count()} 条记录？"
-	})
+    ->message(function (Collection $advances) {
+        return "确认删除 {$advances->count()} 条记录？"
+    })
     ->each(function (Advance $advance) {
         $advance->delete();
     });
