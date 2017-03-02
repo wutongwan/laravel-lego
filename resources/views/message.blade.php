@@ -9,6 +9,11 @@
     h2 {
         margin-bottom: 2em;
     }
+    #lego-message {
+        font-size: 2.2em;
+        margin-top: 1.5em;
+        margin-bottom: 1.5em;
+    }
 </style>
 @endpush
 
@@ -16,10 +21,9 @@
 
 @section('content')
     <div class="text-center">
-        <h2 class="text-{{ $level }}">
-            <span class="glyphicon glyphicon-{{ $level }}-sign"></span>
+        <p id="lego-message" class="text-{{ $level }}">
             {{ $message }}
-        </h2>
+        </p>
         <p>
             <a href='javascript:history.go(-1);' class="btn btn-default">
                 <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>
