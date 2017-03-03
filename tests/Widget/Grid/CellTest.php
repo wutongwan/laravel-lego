@@ -8,15 +8,13 @@ class CellTest extends TestCase
 {
     public function testValue()
     {
-        $cell = new Cell('name', 'Name');
-        $cell->fill(['name' => 'zhwei']);
+        $cell = (new Cell('name', 'Name'))->fill(['name' => 'zhwei']);
         $this->assertEquals('zhwei', $cell->value());
     }
 
     public function testDefault()
     {
-        $cell = new Cell('name', 'Name');
-        $cell->default('default')->fill([]);
+        $cell = (new Cell('name', 'Name'))->default('default')->fill([]);
         $this->assertEquals('default', $cell->value());
     }
 
@@ -37,6 +35,7 @@ class CellTest extends TestCase
         return [
             ['trim', ' 123 ', '123'],
             ['trim', ' 123', '123'],
+
             ['date', 1488902400, '2017-03-08'],
             ['date', '2017-03-08', '2017-03-08'],
             ['date', '2017-03-08 12:00:00', '2017-03-08'],
@@ -68,8 +67,7 @@ class CellTest extends TestCase
             ->pipe(function ($value) {
                 $this->assertEquals(2, $value);
                 return $value + 19;
-            })
-        ;
+            });
 
         $this->assertEquals(21, $cell->value()->toHtml());
     }
