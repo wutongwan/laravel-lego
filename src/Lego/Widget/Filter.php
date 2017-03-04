@@ -6,7 +6,7 @@ use Lego\Widget\Grid\Grid;
 
 class Filter extends Widget
 {
-    use Concerns\HasFields, Concerns\HasGroups;
+    use Concerns\HasFields;
 
     /**
      * 渲染当前对象
