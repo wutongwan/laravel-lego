@@ -4,7 +4,7 @@ use Illuminate\Support\ServiceProvider;
 use Lego\Commands\GenerateIDEHelper;
 use Lego\Commands\UpdateComponents;
 use Lego\Foundation\Assets;
-use Lego\Foundation\Fields;
+use Lego\Field\FieldLoader;
 
 /**
  * Lego Service Provider for Laravel
@@ -37,7 +37,7 @@ class LegoServiceProvider extends ServiceProvider
         $this->loadViewsFrom($this->path('resources/views'), 'lego');
 
         // alias
-        $this->app->singleton('lego-fields', Fields::class);
+        $this->app->singleton('lego-fields', FieldLoader::class);
         $this->app->singleton('lego-assets', Assets::class);
     }
 
