@@ -37,17 +37,17 @@ class CellTest extends TestCase
             ['trim', ' 123 ', '123'],
             ['trim', ' 123', '123'],
 
-            ['date', Carbon::parse('2017-03-08')->timestamp, '2017-03-08'],
+            ['date', strtotime('2017-03-08'), '2017-03-08'],
             ['date', '2017-03-08', '2017-03-08'],
             ['date', '2017-03-08 12:00:00', '2017-03-08'],
             ['date', Carbon::now(), Carbon::today()->format('Y-m-d')],
 
-            ['datetime', Carbon::parse('2017-03-08')->timestamp, '2017-03-08 00:00:00'],
+            ['datetime', strtotime('2017-03-08'), '2017-03-08 00:00:00'],
             ['datetime', '2017-03-08', '2017-03-08 00:00:00'],
             ['datetime', '2017-03-08 12:00:00', '2017-03-08 12:00:00'],
             ['datetime', Carbon::now(), Carbon::now()->format('Y-m-d H:i:s')],
 
-            ['time', Carbon::parse('2017-03-08 00:00:01')->timestamp, '00:00:01'],
+            ['time', strtotime('2017-03-08 00:00:01'), '00:00:01'],
             ['time', '2017-03-08', '00:00:00'],
             ['time', '2017-03-08 12:00:00', '12:00:00'],
             ['time', Carbon::now(), Carbon::now()->format('H:i:s')],
