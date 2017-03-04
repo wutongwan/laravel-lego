@@ -1,12 +1,12 @@
-<?php namespace Lego\Foundation;
+<?php namespace Lego\Field;
 
 use Lego\Register\UserDefinedField;
 use Symfony\Component\ClassLoader\ClassMapGenerator;
 
 /**
- * call through app(Fields::class)
+ * call through app('lego-fields')
  */
-class Fields
+class FieldLoader
 {
     private $fields = [];
 
