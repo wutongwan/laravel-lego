@@ -14,7 +14,6 @@ class Form extends Widget implements HasMode
 {
     use ModeOperator,
         Concerns\HasFields,
-        Concerns\HasGroups,
         Concerns\HasEvents;
 
     private $action;
