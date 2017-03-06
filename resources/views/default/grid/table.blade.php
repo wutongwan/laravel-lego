@@ -15,7 +15,7 @@ $hasBatch = boolval($grid->batches()) && $grid->batchModeEnabled();
 
 @if($hasBatch)
     <div class="panel panel-default">
-        <div class="panel-body" style="padding: 5px;">
+        <div class="panel-body" style="padding: 5px; line-height: 2.67em;">
             <div class="btn-group btn-group-sm">
                 <button class="btn btn-default lego-select-all">
                     <span class="glyphicon glyphicon-check"></span> 全选
