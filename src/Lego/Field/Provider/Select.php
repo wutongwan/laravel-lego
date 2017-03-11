@@ -41,7 +41,7 @@ class Select extends Text
      * values([1, 2, 3]) === options([1 => 1, 2 => 2, 3 => 3])
      * values(1, 2, 3) === options([1 => 1, 2 => 2, 3 => 3])
      *
-     * @param array $values
+     * @param array|mixed $values
      * @return $this
      */
     public function values($values)

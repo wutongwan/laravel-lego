@@ -3,14 +3,14 @@
 use Illuminate\Support\Collection;
 
 use Lego\Field\Field;
-use Lego\Field\Group;
 use Lego\Foundation\Event;
-use Lego\Foundation\Exceptions\LegoException;
 use Lego\Foundation\Facades\LegoFields;
 use Lego\Foundation\Fields;
 
 /**
  * Field 相关逻辑
+ *
+ * @mixin HasGroups
  */
 trait HasFields
 {
@@ -62,8 +62,15 @@ trait HasFields
      */
     public function editableFields()
     {
-        return $this->fields()->filter(function (Field $field) {
-            return $field->isEditable();
+        $ignored = [];
+        foreach ($this->groups() as $group) {
+            if ($group->getCondition() && $group->getCondition()->fail()) {
+                $ignored = array_merge($ignored, $group->fieldNames());
+            }
+        }
+
+        return $this->fields()->filter(function (Field $field) use ($ignored) {
+            return $field->isEditable() && !in_array($field->name(), $ignored);
         });
     }
 
@@ -81,11 +88,7 @@ trait HasFields
     {
         $this->fields->add($field);
 
-        foreach ($this->getActiveGroups() as $group) {
-            $group->add($field->name());
-        }
-
-        Event::fire('after-add-field');
+        Event::fire('after-add-field', [$field]);
 
         return $field;
     }
@@ -117,109 +120,6 @@ trait HasFields
             $field->required();
         }
 
-        return $this;
-    }
-
-    /**
-     * when $field's value = $value, call $closure add fields
-     *
-     * @param Field|string $field
-     * @param string $operator
-     * @param mixed $value
-     * @param \Closure $closure
-     */
-    public function when($field, $operator = '=', $value = null, \Closure $closure)
-    {
-    }
-
-    /**
-     * Group
-     */
-
-    /**
-     * Group List
-     * @var Group[]
-     */
-    protected $groups = [];
-    /**
-     * @var Group[]
-     */
-    protected $activeGroups = [];
-
-    /**
-     * 注意：此函数会有两种返回值，此处略奇葩，但用起来方便，若需要通过 $name 获取 Group 请使用 getGroup 函数
-     *  1、传入 $callback 时，返回 Group
-     *  2、反之，返回 $this ，方便链式调用
-     */
-    public function group($name, \Closure $callback = null)
-    {
-        $group = $this->getGroup($name);
-
-        if ($callback) {
-            $this->startGroup($name);
-            call_user_func_array($callback, [$this, $group]);
-            $this->stopGroup($name);
-            return $group;
-        } else {
-            $this->startGroup($name);
-            Event::once('after-add-field', __METHOD__ . $name, function () use ($name) {
-                $this->stopGroup($name);
-            });
-            return $this;
-        }
-    }
-
-    public function getGroup($name): Group
-    {
-        if (isset($this->groups[$name])) {
-            $group = $this->groups[$name];
-        } else {
-            $group = new Group($this->fields, $name);
-            $this->groups[$name] = $group;
-        }
-        return $group;
-    }
-
-    protected function startGroup($name)
-    {
-        if (!isset($this->groups[$name])) {
-            throw new LegoException("Group `{$name}` does not exist.");
-        }
-
-        if (isset($this->activeGroups[$name])) {
-            throw new LegoException("Group `{$name}` started before.");
-        }
-
-        $this->activeGroups[$name] = $this->groups[$name];
-        return $this;
-    }
-
-    /**
-     * @return Group[]
-     */
-    protected function getActiveGroups()
-    {
-        return $this->activeGroups;
-    }
-
-    /**
-     * @return Group
-     */
-    protected function currentGroup()
-    {
-        if ($group = array_last($this->activeGroups)) {
-            return $this->getGroup($group);
-        }
-        return null;
-    }
-
-    protected function stopGroup($name = null)
-    {
-        if (is_null($name)) {
-            array_pop($this->activeGroups);
-        } else {
-            unset($this->activeGroups[$name]);
-        }
         return $this;
     }
 }

@@ -14,6 +14,7 @@ class Form extends Widget implements HasMode
 {
     use ModeOperator,
         Concerns\HasFields,
+        Concerns\HasGroups,
         Concerns\HasEvents;
 
     private $action;
@@ -43,6 +44,11 @@ class Form extends Widget implements HasMode
     public function getAction()
     {
         return $this->action;
+    }
+
+    public function elementId()
+    {
+        return 'lego-form-' . md5($this->action);
     }
 
     /**
@@ -101,7 +107,7 @@ class Form extends Widget implements HasMode
          */
         if ($this->isPost() && $this->isEditable() && $this->shouldAction()) {
             // Sync fields from request
-            $this->editableFields()->each(function (Field $field) {
+            $this->fields()->each(function (Field $field) {
                 $field->setNewValue(Request::input($field->elementName()));
             });
 
