@@ -65,7 +65,7 @@
                     var form = '{{ $form->elementId() }}';
                     var field = '{{ $group->getCondition()->field()->elementName() }}';
                     var operator = '{{ $group->getCondition()->operator() }}';
-                    var expected = '{{ $group->getCondition()->expected() }}';
+                    var expected = JSON.parse('{!! json_encode($group->getCondition()->expected()) !!}');
                     var target = '{{ $target->elementName() }}';
                     (new LegoConditionGroup('#' + form, field, operator, expected, target)).watch();
                 })
