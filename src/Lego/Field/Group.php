@@ -1,9 +1,12 @@
 <?php namespace Lego\Field;
 
+use Lego\Field\Concerns\ConditionOfGroup;
 use Lego\Foundation\Fields;
 
 class Group
 {
+    use ConditionOfGroup;
+
     protected $fields;
 
     protected $name; // Group Name
@@ -30,7 +33,7 @@ class Group
     {
         return $this->fields
             ->filter(function (Field $field) {
-                return in_array($field->name(), $this->fieldNames);
+                return isset($this->fieldNames[$field->name()]);
             });
     }
 

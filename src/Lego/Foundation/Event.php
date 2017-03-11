@@ -40,14 +40,14 @@ class Event
         self::$once[$event][$listener] = true;
     }
 
-    public static function fire($event)
+    public static function fire($event, $params = [])
     {
         if (!isset(self::$events[$event])) {
             return;
         }
 
         foreach (self::$events[$event] as $listener => $callback) {
-            call_user_func($callback);
+            call_user_func_array($callback, $params);
 
             // clear once listener
             if (isset(self::$once[$event][$listener])) {
