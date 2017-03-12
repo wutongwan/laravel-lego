@@ -37,6 +37,8 @@ class Grid extends Widget
     public function orderBy($attribute, bool $desc = false)
     {
         $this->query->orderBy($attribute, $desc);
+
+        return $this;
     }
 
     /**

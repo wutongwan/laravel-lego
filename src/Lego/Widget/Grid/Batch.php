@@ -183,8 +183,11 @@ class Batch
             });
             return redirect($this->exit());
         } elseif ($this->handle) {
-            array_unshift($params, $collection);
-            return call_user_func_array($this->handle, $params);
+            $collection = $collection->map(function (Store $store) {
+                return $store->getOriginalData();
+            });
+            call_user_func($this->handle, $collection, ...$params);
+            return redirect($this->exit());
         } else {
             throw new LegoException(__CLASS__ . ' does not set `handle` or `each`.');
         }
