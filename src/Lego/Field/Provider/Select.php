@@ -7,8 +7,22 @@ class Select extends Text
 {
     use FilterWhereEquals;
 
+    protected function initialize()
+    {
+        parent::initialize();
+
+        $this->validator(function ($value) {
+            $values = array_keys(array_flatten($this->getOptions()));
+            return in_array($value, $values) ? null : '非法选项';
+        });
+    }
+
     protected function renderEditable()
     {
+        if (!isset($options[null]) && is_null($this->getPlaceholder())) {
+            $this->placeholder($this->description());
+        }
+
         return FormFacade::select(
             $this->elementName(),
             $this->getOptions(),
@@ -19,7 +33,8 @@ class Select extends Text
 
     public function placeholder($placeholder = null)
     {
-        return parent::placeholder('* ' . trim($placeholder) . ' *');
+        $placeholder = trim($placeholder);
+        return parent::placeholder($placeholder ? "* {$placeholder} *" : $placeholder);
     }
 
     protected $options = [];
@@ -32,7 +47,7 @@ class Select extends Text
      */
     public function options($options)
     {
-        $this->options = func_num_args() > 1 ? func_get_args() : (array) $options;
+        $this->options = func_num_args() > 1 ? func_get_args() : (array)$options;
 
         return $this;
     }
@@ -46,7 +61,7 @@ class Select extends Text
      */
     public function values($values)
     {
-        $values = func_num_args() > 1 ? func_get_args() : (array) $values;
+        $values = func_num_args() > 1 ? func_get_args() : (array)$values;
         $this->options = array_combine($values, $values);
 
         return $this;
