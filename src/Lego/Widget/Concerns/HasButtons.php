@@ -20,7 +20,9 @@ trait HasButtons
             self::macro(
                 'add' . ucfirst(camel_case($location)) . 'Button',
                 function () use ($location) {
-                    call_user_func_array([$this, 'addButton'], array_merge([$location], func_get_args()));
+                    $args = func_get_args();
+                    array_unshift($args, $location);
+                    return $this->addButton(...$args);
                 }
             );
         }
