@@ -13,6 +13,8 @@ class Readonly extends Text
      */
     protected function initialize()
     {
+        $this->readonly();
+
         $this->readonlyValue = $this->description;
         $this->description = $this->column();
     }
