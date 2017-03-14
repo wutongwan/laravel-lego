@@ -13,7 +13,7 @@ class JSON extends Text
      */
     protected function initialize()
     {
-        $exploded = explode(':', $this->name(), 2);
+        $exploded = explode(':', $this->column(), 2);
 
         lego_assert(count($exploded) === 2, 'JSON field `name` example: `array:key:sub-key:...`');
 
@@ -38,10 +38,9 @@ class JSON extends Text
 
     public function syncValueToStore()
     {
-        $original = $this->decode(
-            $this->store->get($this->getColumnPathOfRelation($this->column()))
-        );
+        $column = $this->getColumnPathOfRelation($this->column());
+        $original = $this->decode($this->store->get($column));
         array_set($original, $this->jsonKey, $this->getNewValue());
-        $this->store->set($this->column(), $this->encode($original));
+        $this->store->set($column, $this->encode($original));
     }
 }
