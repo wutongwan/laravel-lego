@@ -15,7 +15,7 @@ class Readonly extends Text
     {
         $this->readonly();
 
-        $this->readonlyValue = $this->description;
+        $this->readonlyValue = $this->description();
         $this->description = $this->column();
     }
 

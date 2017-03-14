@@ -63,9 +63,8 @@ abstract class Field implements HasMode
          *  - relation : school.city
          *  - description <default> : School City Name
          */
-        $parts = explode('.', $name);
-        $this->column = last($parts);
-        $this->description = $description ?: ucwords(join(' ', $parts));
+        $this->column = last(explode('.', $name));
+        $this->description = $description;
 
         $this->initializeDataOperator($data);
 
@@ -89,7 +88,7 @@ abstract class Field implements HasMode
 
     public function description()
     {
-        return $this->description;
+        return $this->description ?: ucwords(str_replace(['.', ':'], ' ', $this->name()));
     }
 
     final public function applyFilter(Query $query)

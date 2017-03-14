@@ -115,7 +115,7 @@ trait ValidationOperator
             [$this->column => $value],
             [$this->column => $this->rules()],
             [],
-            [$this->column => $this->description]
+            [$this->column => $this->description()]
         );
 
 
