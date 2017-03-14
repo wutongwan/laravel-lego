@@ -186,8 +186,8 @@ class Batch
             $collection = $collection->map(function (Store $store) {
                 return $store->getOriginalData();
             });
-            call_user_func($this->handle, $collection, ...$params);
-            return redirect($this->exit());
+            $response = call_user_func($this->handle, $collection, ...$params);
+            return $response ?: redirect($this->exit());
         } else {
             throw new LegoException(__CLASS__ . ' does not set `handle` or `each`.');
         }
