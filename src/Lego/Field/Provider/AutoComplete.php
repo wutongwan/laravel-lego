@@ -30,7 +30,7 @@ class AutoComplete extends Field
 
         return $this->query
             ->getRelation($this->relation)
-            ->whereContains($this->column(), $keyword)
+            ->whereContains($this->column(), (string)$keyword)
             ->limit($this->getLimit())
             ->get()
             ->pluck($this->column(), $this->getValueColumn())
