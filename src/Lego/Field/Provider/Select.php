@@ -12,9 +12,17 @@ class Select extends Text
         parent::initialize();
 
         $this->validator(function ($value) {
-            $values = array_keys(array_flatten($this->getOptions()));
-            return in_array($value, $values) ? null : '非法选项';
+            return array_key_exists($value, $this->getOptions()) ? null : '非法选项';
         });
+    }
+
+    public function getDisplayValue()
+    {
+        $key = $this->takeDefaultInputValue();
+        return lego_default(
+            parent::getDisplayValue(),
+            array_key_exists($key, $this->getOptions()) ? $this->getOptions()[$key] : null
+        );
     }
 
     protected function renderEditable()
