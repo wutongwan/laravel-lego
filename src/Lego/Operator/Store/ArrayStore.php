@@ -21,4 +21,14 @@ class ArrayStore extends Store
     {
         return true;
     }
+
+    /**
+     * Get the instance as an array.
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return (array)$this->data;
+    }
 }
