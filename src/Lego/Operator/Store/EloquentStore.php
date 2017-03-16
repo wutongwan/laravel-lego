@@ -88,4 +88,14 @@ class EloquentStore extends Store
         $this->data = $this->data->fresh();
         return true;
     }
+
+    /**
+     * Get the instance as an array.
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return $this->data->toArray();
+    }
 }

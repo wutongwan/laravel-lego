@@ -1,11 +1,12 @@
 <?php namespace Lego\Operator\Store;
 
+use Illuminate\Contracts\Support\Arrayable;
 use Lego\Operator\Operator;
 
 /**
  * Store 为 Lego 提供统一的读写 API
  */
-abstract class Store extends Operator
+abstract class Store extends Operator implements Arrayable
 {
     public function getKeyName()
     {
