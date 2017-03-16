@@ -67,7 +67,7 @@ class Form extends Widget implements HasMode
     {
         $data = $this->editableFields()
             ->keyBy(function (Field $field) {
-                return $field->name();
+                return $field->elementName();
             })
             ->map(function (Field $field) {
                 return $field->getNewValue();
