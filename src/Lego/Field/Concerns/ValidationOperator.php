@@ -112,10 +112,10 @@ trait ValidationOperator
          */
 
         $validator = Validator::make(
-            $data ?: [$this->column => $value],
-            [$this->column => $this->rules()],
+            $data ?: [$this->elementName() => $value],
+            [$this->elementName() => $this->rules()],
             [],
-            [$this->column => $this->description()]
+            [$this->elementName() => $this->description()]
         );
 
 
