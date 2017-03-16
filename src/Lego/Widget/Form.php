@@ -65,8 +65,17 @@ class Form extends Widget implements HasMode
 
     private function validate()
     {
-        $this->editableFields()->each(function (Field $field) {
-            if (!$field->validate()) {
+        $data = $this->editableFields()
+            ->keyBy(function (Field $field) {
+                return $field->name();
+            })
+            ->map(function (Field $field) {
+                return $field->getNewValue();
+            })
+            ->all();
+
+        $this->editableFields()->each(function (Field $field) use ($data) {
+            if (!$field->validate($data)) {
                 $this->errors()->merge($field->errors());
             }
         });

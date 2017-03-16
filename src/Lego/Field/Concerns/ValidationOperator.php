@@ -91,7 +91,7 @@ trait ValidationOperator
      *
      * @return bool 是否通过验证
      */
-    public function validate()
+    public function validate($data = [])
     {
         if ($this->isReadonly()) {
             return true;
@@ -105,14 +105,14 @@ trait ValidationOperator
         $value = $this->getNewValue();
 
         /**
-         * 检查 Laravel Validation
+         * Run Laravel Validation
          * ide-helper comment
          * @var Field $this
          * @var \Illuminate\Validation\Validator $validator
          */
 
         $validator = Validator::make(
-            [$this->column => $value],
+            $data ?: [$this->column => $value],
             [$this->column => $this->rules()],
             [],
             [$this->column => $this->description()]
