@@ -1,6 +1,6 @@
 @extends('lego::layout')
 
-@section('title')
+@section('__lego-simple-title')
     {{ $message }}
 @endsection
 
@@ -19,7 +19,7 @@
 
 <?php $level = isset($level) ? $level : 'info' ?>
 
-@section('content')
+@section('__lego-simple-body')
     <div class="text-center">
         <p id="lego-message" class="text-{{ $level }}">
             {{ $message }}

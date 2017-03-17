@@ -76,7 +76,7 @@ class Grid extends Widget
         foreach ($this->paginator() as $store) {
             $_row = [];
             foreach ($this->cells() as $cell) {
-                $_row[$cell->name()] = $cell->copy()->fill($store)->getOriginalValue();
+                $_row[$cell->name()] = $cell->copy()->fill($store)->value();
             }
             $data [] = $_row;
         }

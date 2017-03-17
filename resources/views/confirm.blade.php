@@ -1,6 +1,6 @@
 @extends('lego::layout')
 
-@section('title')
+@section('__lego-simple-title')
     {{ $message }}
 @stop
 
@@ -18,7 +18,7 @@
 </style>
 @endpush
 
-@section('content')
+@section('__lego-simple-body')
     <div id="lego-confirm" class="text-center">
         <p id="lego-confirm-message">{{ $message }}</p>
         <p class="text-center">
