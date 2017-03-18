@@ -1,15 +1,11 @@
 # Grid
 
 
-## Example
+## Basic
 
 ```php
-$filter = \Lego::filter($query);
-$filter->addText('summary', '摘要');
-$filter->addDateRange('billing_date', '账单日');
-$filter->addText('receiver.name', '接收人');
+$grid = \Lego::grid($query);
 
-$grid = \Lego::grid($filter);
 $grid->add('id', 'ID'));
 $grid->add('summary', '摘要');
 $grid->add('billing_date|date', '账单日');
@@ -20,6 +16,131 @@ $grid->add('created_at', '创建时间');
 $grid->paginate(100)->orderBy('id', true); // order by id desc
 
 return $grid->view('view-file', compact('filter', 'grid'));
+```
+
+### insert to special location
+
+```php
+$grid->after('id')->add('column', 'Description');
+```
+
+### remove
+
+```php
+$grid->remove('id');
+$grid->remove('paid_at', 'created_at');
+$grid->remove(['paid_at', 'created_at']);
+```
+
+### set default value
+
+```php
+$grid->add('column', 'Description')->default('default value');
+```
+
+### add button
+
+```php
+$grid->addLeftTopButton('new', route('...'));
+```
+
+## Pipe
+
+### Basic
+
+```php
+$grid->add('name|trim|strip', 'Name');
+```
+
+```php
+$grid = Lego::grid(City::class);
+
+$grid->add('name|trim', 'Name')
+
+    ->pipe('strip')
+
+    ->pipe(function ($name) {
+        return do_some_thing($name);
+    })
+
+    ->pipe(function ($name, City $city) {
+        /**
+        * $city is the model of current row
+        */
+        return $name . '(' . $city->name .')';
+    })
+
+    ->pipe(function ($name, City $city, Cell $cell) {
+        /**
+        * $cell is instanceof \Lego\Widget\Grid\Cell
+        * 
+        * $cell->name() === 'name'; // Important: NO pipe name
+        * $cell->description() === 'Name';
+        * $cell->getOriginalValue();
+        */
+        
+        return $name;
+    });
+```
+
+### Available pipes
+
+- trim
+
+    ```php
+    $grid->add('name|trim', 'Name');
+    ```
+
+- strip, remove html tags
+
+	```php
+	$grid->add('name|strip', 'Name');
+	```
+
+- date, convert to date string
+
+    ```php
+    $grid->add('published_at|date', 'Published Date');
+    // eg: 2017-01-01 12:00:01 => 2017-01-01
+    ```
+
+- time, convert to time string
+
+    ```php
+    $grid->add('updated_at|time', 'Last Moidify Time');
+    // eg: 2017-01-01 12:00:01 => 12:00:01
+    ```
+
+### Self-Defined Pipe
+
+```php
+lego_register(
+    GridCellPipe::class,
+    function ($name, Model $model, Cell $cell) {
+        return $model->getAttribute($cell->name() . '_en')
+    }, 
+    'trans2en'
+)
+```
+
+```php
+$grid->add('name|trans2en', 'Name');
+```
+
+## Export as Excel (.xls)
+
+### Simple
+
+```php
+$grid->export('filename');
+```
+
+### Exporting callback
+
+```php
+$grid->export('filename', function (Grid $grid) {
+    $grid->paginate(1000); // export more
+})
 ```
 
 ## 批处理操作
