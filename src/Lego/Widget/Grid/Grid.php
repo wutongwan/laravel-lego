@@ -52,14 +52,14 @@ class Grid extends Widget
         return $this->exports;
     }
 
-    public function export($name, \Closure $onExport = null)
+    public function export($name, \Closure $exporting = null)
     {
         /** @var \Lego\Register\HighPriorityResponse $resp */
         $resp = lego_register(
             HighPriorityResponse::class,
-            function () use ($name, $onExport) {
-                if ($onExport) {
-                    call_user_func($onExport, $this);
+            function () use ($name, $exporting) {
+                if ($exporting) {
+                    call_user_func($exporting, $this);
                 }
                 return $this->exportAsExcel($name);
             },
@@ -74,11 +74,11 @@ class Grid extends Widget
     {
         $data = [];
         foreach ($this->paginator() as $store) {
-            $_row = [];
+            $row = [];
             foreach ($this->cells() as $cell) {
-                $_row[$cell->name()] = $cell->copy()->fill($store)->value();
+                $row[$cell->description()] = $cell->copy()->fill($store)->getPlainValue();
             }
-            $data [] = $_row;
+            $data[] = $row;
         }
 
         return Excel::create(
