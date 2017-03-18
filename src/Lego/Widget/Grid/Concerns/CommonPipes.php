@@ -7,6 +7,11 @@ trait CommonPipes
         return trim($value);
     }
 
+    protected function pipeStrip($value)
+    {
+        return strip_tags($value);
+    }
+
     protected function pipeDate($time)
     {
         return $this->formatTime($time, 'Y-m-d');

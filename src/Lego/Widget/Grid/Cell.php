@@ -114,11 +114,21 @@ class Cell
         return $this->store;
     }
 
+    /**
+     * cell original value before pipes is called
+     *
+     * @return string
+     */
     public function getOriginalValue()
     {
         return $this->store->get($this->name);
     }
 
+    /**
+     * cell value after pipes processed
+     *
+     * @return HtmlString
+     */
     public function value()
     {
         $value = lego_default($this->getOriginalValue(), $this->default);
@@ -126,6 +136,16 @@ class Cell
             $value = call_user_func_array($pipe, [$value, $this->data, $this]);
         }
         return new HtmlString((string)$value);
+    }
+
+    /**
+     * cell plain value after pipes processed
+     *
+     * @return string
+     */
+    public function getPlainValue()
+    {
+        return strip_tags($this->value()->toHtml());
     }
 
     public function __toString()
