@@ -135,6 +135,12 @@ $grid->add('name|trans2en', 'Name');
 $grid->export('filename');
 ```
 
+注意：Lego 导出功能依赖 [Laravel-Excel](https://github.com/Maatwebsite/Laravel-Excel)，所以需要将下面类注册到 `config/app.php` 的 `providers` 中：
+
+```php
+Maatwebsite\Excel\ExcelServiceProvider::class
+```
+
 ### Exporting callback
 
 ```php
