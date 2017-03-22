@@ -1,9 +1,9 @@
 @extends('lego::layout')
 
-@section('title')
+@section('__lego-simple-title')
     {{ $action->name() }}
 @endsection
 
-@section('content')
+@section('__lego-simple-body')
     {!! $form !!}
 @endsection
