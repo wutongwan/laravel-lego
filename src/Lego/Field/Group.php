@@ -81,4 +81,9 @@ class Group
         });
         return $this;
     }
+
+    function __toString()
+    {
+        return view('lego::default.group', ['group' => $this])->render();
+    }
 }
