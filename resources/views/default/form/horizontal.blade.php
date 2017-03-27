@@ -5,36 +5,7 @@
 @include('lego::default.messages', ['object' => $form])
 <form id="{{ $form->elementId() }}" method="post" class="form-horizontal" action="{{ $form->getAction() }}">
     @foreach($form->fields() as $field)
-        <?php
-        /** @var \Lego\Field\Field $field */
-        if ($field->errors()->any()) {
-            $field->container('class', 'has-error');
-        }
-        ?>
-        <div {!! \Collective\Html\HtmlFacade::attributes($field->containerAttributes()) !!}>
-            <label for="{{ $field->elementId() }}" class="col-sm-2 control-label">
-                @if($field->isRequired() && $field->isEditable())
-                    <span class="text-danger">*</span>
-                @endif
-                {{ $field->description() }}
-            </label>
-            <div class="col-sm-10">
-                {!! $field !!}
-                @if($field->messages()->any())
-                    @foreach($field->messages()->all() as $message)
-                        <p class="text-info">{!! $message !!}</p>
-                    @endforeach
-                @endif
-                @if($field->errors()->any())
-                    @foreach($field->errors()->all() as $error)
-                        <p class="text-danger">
-                            <i class="glyphicon glyphicon-warning-sign"></i>
-                            {!! $error !!}
-                        </p>
-                    @endforeach
-                @endif
-            </div>
-        </div>
+        @include('lego::default.form.horizontal-form-group', ['field' => $field])
     @endforeach
 
     @if($form->isEditable())
