@@ -12,33 +12,20 @@ class Select extends Text
         parent::initialize();
 
         $this->validator(function ($value) {
-            if (count($this->getOptions())==count($this->getOptions(), COUNT_RECURSIVE)) {
-                // 一维数组
-                return array_key_exists($value, $this->getOptions()) ? null : '非法选项';
-            } else {
-                // 多维数组
-                return $this->deepInArray($value, $this->getOptions()) ? null : '非法选项';
-            }
-
+            return $this->deepInArray($value, $this->getOptions()) ? null : '非法选项';
         });
     }
 
     protected function deepInArray($value, array $array) {
-        foreach($array as $item) {
-            if(!is_array($item)) {
-                if ($item == $value) {
-                    return true;
-                } else {
-                    continue;
-                }
-            }
-            if(in_array($value, $item)) {
+        foreach($array as $key => $item) {
+            if (is_array($item) && $this->deepInArray($value, $item)) {
                 return true;
-            } else if($this->deepInArray($value, $item)) {
+            } elseif ($value === $key) {
                 return true;
+            } else {
+                return false;
             }
         }
-        return false;
     }
 
     public function getDisplayValue()
