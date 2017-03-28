@@ -17,13 +17,13 @@ class Select extends Text
                 return array_key_exists($value, $this->getOptions()) ? null : '非法选项';
             } else {
                 // 多维数组
-                return $this->deep_in_array($value, $this->getOptions()) ? null : '非法选项';
+                return $this->deepInArray($value, $this->getOptions()) ? null : '非法选项';
             }
 
         });
     }
 
-    protected function deep_in_array($value, array $array) {
+    protected function deepInArray($value, array $array) {
         foreach($array as $item) {
             if(!is_array($item)) {
                 if ($item == $value) {
@@ -34,7 +34,7 @@ class Select extends Text
             }
             if(in_array($value, $item)) {
                 return true;
-            } else if($this->deep_in_array($value, $item)) {
+            } else if($this->deepInArray($value, $item)) {
                 return true;
             }
         }
