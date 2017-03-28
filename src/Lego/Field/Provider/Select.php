@@ -20,14 +20,13 @@ class Select extends Text
         foreach($array as $key => $item) {
             if (is_array($item) && $this->deepInArray($value, $item)) {
                 return true;
-            } elseif ($value === $key) {
+            } elseif ($value == $key) {
                 return true;
-            } else {
-                return false;
             }
         }
+        return false;
     }
-
+    
     public function getDisplayValue()
     {
         $key = $this->takeDefaultInputValue();
