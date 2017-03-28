@@ -7,12 +7,37 @@ class Select extends Text
 {
     use FilterWhereEquals;
 
+    function deep_in_array($value, $array) {
+        foreach($array as $item) {
+            if(!is_array($item)) {
+                if ($item == $value) {
+                    return true;
+                } else {
+                    continue;
+                }
+            }
+            if(in_array($value, $item)) {
+                return true;
+            } else if(self::deep_in_array($value, $item)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     protected function initialize()
     {
         parent::initialize();
 
         $this->validator(function ($value) {
-            return array_key_exists($value, $this->getOptions()) ? null : '非法选项';
+            if (count($this->getOptions())==count($this->getOptions(), COUNT_RECURSIVE)) {
+                // 一维数组
+                return array_key_exists($value, $this->getOptions()) ? null : '非法选项';
+            } else {
+                // 多维数组
+                return self::deep_in_array($value, $this->getOptions()) ? null : '非法选项';
+            }
+
         });
     }
 
