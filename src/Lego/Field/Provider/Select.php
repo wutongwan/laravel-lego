@@ -7,24 +7,6 @@ class Select extends Text
 {
     use FilterWhereEquals;
 
-    function deep_in_array($value, $array) {
-        foreach($array as $item) {
-            if(!is_array($item)) {
-                if ($item == $value) {
-                    return true;
-                } else {
-                    continue;
-                }
-            }
-            if(in_array($value, $item)) {
-                return true;
-            } else if(self::deep_in_array($value, $item)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     protected function initialize()
     {
         parent::initialize();
@@ -35,10 +17,28 @@ class Select extends Text
                 return array_key_exists($value, $this->getOptions()) ? null : '非法选项';
             } else {
                 // 多维数组
-                return self::deep_in_array($value, $this->getOptions()) ? null : '非法选项';
+                return $this->deep_in_array($value, $this->getOptions()) ? null : '非法选项';
             }
 
         });
+    }
+
+    protected function deep_in_array($value, array $array) {
+        foreach($array as $item) {
+            if(!is_array($item)) {
+                if ($item == $value) {
+                    return true;
+                } else {
+                    continue;
+                }
+            }
+            if(in_array($value, $item)) {
+                return true;
+            } else if($this->deep_in_array($value, $item)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function getDisplayValue()
