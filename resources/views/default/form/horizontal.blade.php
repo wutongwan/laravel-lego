@@ -24,5 +24,5 @@
 @include('lego::default.snippets.bottom-buttons', ['widget' => $form])
 
 @push('lego-scripts')
-    @include('lego::default.form.condition-group', ['groups' => $form->groups()])
+    @include('lego::default.form.condition-group', ['form' => $form])
 @endpush
