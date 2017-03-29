@@ -12,12 +12,13 @@ class Select extends Text
         parent::initialize();
 
         $this->validator(function ($value) {
-            return $this->deepInArray($value, $this->getOptions()) ? null : '非法选项';
+            return !$this->isRequired() || $this->deepInArray($value, $this->getOptions()) ? null : '非法选项';
         });
     }
 
-    protected function deepInArray($value, array $array) {
-        foreach($array as $key => $item) {
+    protected function deepInArray($value, array $array)
+    {
+        foreach ($array as $key => $item) {
             if (is_array($item) && $this->deepInArray($value, $item)) {
                 return true;
             } elseif ($value == $key) {
@@ -26,7 +27,7 @@ class Select extends Text
         }
         return false;
     }
-    
+
     public function getDisplayValue()
     {
         $key = $this->takeDefaultInputValue();

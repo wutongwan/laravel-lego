@@ -6,9 +6,18 @@ use Lego\Operator\Query\Query;
  * Field 中 Relation 的处理逻辑
  *
  * Relation example: school.city.name
+ *
+ * @mixin \Lego\Field\Field
  */
 trait HasRelation
 {
+    /**
+     * eg: city_id
+     *
+     * @var string
+     */
+    protected $foreignKey;
+
     /**
      * eg: school.city
      *
@@ -16,15 +25,33 @@ trait HasRelation
      */
     protected $relation;
 
+    /**
+     * eg: name
+     *
+     * @var string
+     */
+    protected $relationColumn;
+
     protected function initializeHasRelation()
     {
-        // Relationship
-        $this->relation = join('.', array_slice(explode('.', $this->name), 0, -1));
+        if (strpos($this->name, '.') === false) {
+            return;
+        }
+
+        $parts = explode('.', $this->name);
+        $this->relation = join('.', array_slice($parts, 0, -1));
+        $this->relationColumn = last($parts);
+        $this->foreignKey = $this->query->getForeignKeyOfRelation($this->relation);
     }
 
     public function relation()
     {
         return $this->relation;
+    }
+
+    public function foreignKey()
+    {
+        return $this->foreignKey;
     }
 
     public function getColumnPathOfRelation($column)
