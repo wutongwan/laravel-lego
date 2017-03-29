@@ -1,4 +1,4 @@
-@foreach($groups as $group)
+@foreach($form->groups() as $group)
     <?php /* @var \Lego\Field\Group $group */?>
     @if(!$group->getCondition())
         @continue
