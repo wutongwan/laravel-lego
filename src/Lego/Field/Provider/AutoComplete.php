@@ -8,12 +8,8 @@ use Lego\Register\AutoCompleteMatchHandler;
 
 class AutoComplete extends Field
 {
-    protected $foreignKey;
-
     protected function initialize()
     {
-        $this->foreignKey = $this->query->getForeignKeyOfRelation($this->relation);
-
         $this->match(function ($keyword) {
             return $this->defaultMatch($keyword);
         });
