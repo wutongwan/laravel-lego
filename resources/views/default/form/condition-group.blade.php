@@ -1,3 +1,5 @@
+<div id="lego-hide" class="hide"></div>
+
 @foreach($form->groups() as $group)
     <?php /* @var \Lego\Field\Group $group */?>
     @if(!$group->getCondition())

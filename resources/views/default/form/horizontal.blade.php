@@ -19,8 +19,6 @@
     @endif
 </form>
 
-<div id="lego-hide" class="hide"></div>
-
 @include('lego::default.snippets.bottom-buttons', ['widget' => $form])
 
 @push('lego-scripts')
