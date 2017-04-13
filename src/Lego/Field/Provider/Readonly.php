@@ -19,6 +19,11 @@ class Readonly extends Text
         $this->description = $this->column();
     }
 
+    public function description()
+    {
+        return $this->description;
+    }
+
     /**
      * 渲染当前对象
      * @return string
