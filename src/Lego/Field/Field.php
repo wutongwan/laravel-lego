@@ -88,7 +88,9 @@ abstract class Field implements HasMode
 
     public function description()
     {
-        return $this->description ?: ucwords(str_replace(['.', ':'], ' ', $this->name()));
+        return is_null($this->description) ?
+            ucwords(str_replace(['.', ':'], ' ', $this->name()))
+            : $this->description;
     }
 
     final public function applyFilter(Query $query)
