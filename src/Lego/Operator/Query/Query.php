@@ -203,6 +203,11 @@ abstract class Query extends Operator implements \ArrayAccess, Arrayable, \Count
         });
     }
 
+    public function __call($name, $arguments)
+    {
+        return call_user_func_array([$this->data, $name], $arguments);
+    }
+
     /** Array Access Interface Methods. */
 
     /**
