@@ -28,7 +28,7 @@ trait HtmlOperator
 
     protected function initializeHtmlOperator()
     {
-        $this->elementName = str_replace(['.', ':'], '-', $this->name());
+        $this->elementName = str_replace(['.', ':'], '_', $this->name());
     }
 
     public function elementId()
