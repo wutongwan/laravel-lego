@@ -126,7 +126,7 @@ $hasBatch = boolval($grid->batches()) && $grid->batchModeEnabled();
                     </td>
                 @endif
                 @foreach($grid->cells() as $cell)
-                    <td>{{ $cell->copy()->fill($row)->value() }}</td>
+                    <td>{{ $cell->fill($row)->value() }}</td>
                 @endforeach
             </tr>
         @endforeach

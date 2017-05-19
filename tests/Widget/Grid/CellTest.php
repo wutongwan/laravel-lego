@@ -2,9 +2,8 @@
 
 use Carbon\Carbon;
 use Lego\Widget\Grid\Cell;
-use PHPUnit\Framework\TestCase;
 
-class CellTest extends TestCase
+class CellTest extends \Lego\Tests\TestCase
 {
     public function testValue()
     {
@@ -19,9 +18,9 @@ class CellTest extends TestCase
     }
 
     /**
-     * @dataProvider commonPipesDataProvider
+     * @dataProvider builtInPipesDataProvider
      */
-    public function testCommonPipes($pipe, $input, $output)
+    public function testBuiltInPipes($pipe, $input, $output)
     {
         $cell = (new Cell('key', 'key'))
             ->fill(['key' => $input])
@@ -30,7 +29,7 @@ class CellTest extends TestCase
         $this->assertEquals($output, $cell->value()->toHtml());
     }
 
-    public function commonPipesDataProvider()
+    public function builtInPipesDataProvider()
     {
         Carbon::setTestNow('2017-03-08 01:02:03');
         return [
@@ -69,5 +68,12 @@ class CellTest extends TestCase
             });
 
         $this->assertEquals(21, $cell->value()->toHtml());
+    }
+
+    public function testPipeWithArgs()
+    {
+        $cell = new Cell('key|date-format:YmdHis', 'key');
+        $cell->fill(['key' => $time = Carbon::now()]);
+        $this->assertEquals($time->format('YmdHis'), $cell->getPlainValue());
     }
 }

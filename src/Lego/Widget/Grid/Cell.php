@@ -1,5 +1,6 @@
 <?php namespace Lego\Widget\Grid;
 
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 use Lego\Foundation\Exceptions\LegoException;
@@ -14,6 +15,10 @@ class Cell
 
     private $name;
     private $description;
+
+    /**
+     * @var PipeHandler[]
+     */
     private $pipes = [];
 
     private $data;
@@ -63,27 +68,9 @@ class Cell
      */
     public function pipe($pipe)
     {
-        if (is_string($pipe) && $callable = $this->getCallablePipe($pipe)) {
-            $this->pipes[] = $callable;
-        } elseif (is_callable($pipe)) {
-            $this->pipes[] = $pipe;
-        } else {
-            throw new LegoException('`$pipe` is not callable');
-        }
+        $this->pipes[] = new PipeHandler($pipe);
 
         return $this;
-    }
-
-    private function getCallablePipe($pipe)
-    {
-        $method = 'pipe' . ucfirst(Str::camel($pipe));
-        if (method_exists($this, $method)) {
-            return [$this, $method];
-        } elseif ($callable = LegoRegister::get(GridCellPipe::class, $pipe)) {
-            return $callable;
-        } else {
-            return false;
-        }
     }
 
     public function cell($callable)
@@ -124,6 +111,11 @@ class Cell
         return $this->store->get($this->name);
     }
 
+    public function getDefaultValue()
+    {
+        return $this->default;
+    }
+
     /**
      * cell value after pipes processed
      *
@@ -133,7 +125,7 @@ class Cell
     {
         $value = lego_default($this->getOriginalValue(), $this->default);
         foreach ($this->pipes as $pipe) {
-            $value = call_user_func_array($pipe, [$value, $this->data, $this]);
+            $value = $pipe->handle($value, $this->data, $this);
         }
         return new HtmlString((string)$value);
     }
