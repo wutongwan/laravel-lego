@@ -18,7 +18,7 @@ class PipeHandler
             return;
         }
 
-        if (empty($arguments) && Str::contains($pipe, ':s')) {
+        if (empty($arguments) && Str::contains($pipe, ':')) {
             list($pipe, $argumentsString) = explode(':', $pipe, 2);
             $this->arguments = explode(',', $argumentsString);
         } else {
