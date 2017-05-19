@@ -44,7 +44,7 @@ class PipeHandler
                 foreach ($rft->getMethods() as $method) {
                     if (Str::startsWith($method->name, 'handle')) {
                         $name = substr($method->name, 6);
-                        $registered[Str::kebab($name)] = [$pipesClass, $method->name];
+                        $registered[Str::snake($name, '-')] = [$pipesClass, $method->name];
                     }
                 }
             }
