@@ -70,7 +70,7 @@ return [
             'pipes' => [
                 \Lego\Widget\Grid\Pipes4Datetime::class,
                 \Lego\Widget\Grid\Pipes4String::class,
-            ]
-        ]
+            ],
+        ],
     ]
 ];
