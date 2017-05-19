@@ -1,5 +1,6 @@
 <?php namespace Lego\Register;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Request;
 use Lego\Foundation\Exceptions\InvalidRegisterData;
 
@@ -44,8 +45,9 @@ class AutoCompleteMatchHandler extends Data
      * @param array $items [ ['id' => 1, 'text' => 'Some Text', ...], ... ]
      * @return array
      */
-    private static function result(array $items)
+    private static function result($items)
     {
+        $items = (new Collection($items))->toArray();
         $count = count($items);
         if ($count > 0) {
             // 简单的接口校验
