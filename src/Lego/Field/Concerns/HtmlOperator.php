@@ -29,6 +29,10 @@ trait HtmlOperator
     protected function initializeHtmlOperator()
     {
         $this->elementName = str_replace(['.', ':'], '_', $this->name());
+        $this->attr([
+            'id' => $this->elementId(),
+            'name' => $this->elementName(),
+        ]);
     }
 
     public function elementId()
