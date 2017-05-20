@@ -44,6 +44,7 @@ find public/components \
 echo '# push to wutongwan/laravel-lego `release` branch'
 git branch -D release
 git checkout -b release
+git add .
 git commit -a -m 'build release'
 git push wutongwan --delete release
 git push wutongwan release
