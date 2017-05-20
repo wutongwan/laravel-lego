@@ -46,6 +46,5 @@ git branch -D release
 git checkout -b release
 git add .
 git commit -a -m 'build release'
-git push wutongwan --delete release
-git push wutongwan release
+git push wutongwan release --force
 echo 'done.'
