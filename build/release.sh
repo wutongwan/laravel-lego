@@ -42,7 +42,7 @@ find public/components \
 	| xargs rm -rf
 
 git add .
-git commit -a -m 'build release'
+git commit -a -m 'build release' -q
 git push git@github.com:wutongwan/laravel-lego.git release --force
 
 echo '-> Draft new release https://github.com/wutongwan/laravel-lego/releases/new'
