@@ -68,7 +68,7 @@ class Cell
      */
     public function pipe($pipe)
     {
-        $this->pipes[] = new PipeHandler($pipe);
+        $this->pipes[] = new PipeHandler($pipe, array_slice(func_get_args(), 1));
 
         return $this;
     }
