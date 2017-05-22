@@ -46,4 +46,5 @@ git checkout -b release
 git add .
 git commit -a -m 'build release'
 git push wutongwan release --force
-echo 'done.'
+
+echo 'Draft new release https://github.com/wutongwan/laravel-lego/releases/new'
