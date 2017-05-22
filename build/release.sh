@@ -41,9 +41,8 @@ find public/components \
 	-o -name 'LICENSE*' \
 	| xargs rm -rf
 
-echo '# push to wutongwan/laravel-lego `release` branch'
 git add .
 git commit -a -m 'build release'
-git push wutongwan release --force
+git push git@github.com:wutongwan/laravel-lego.git release --force
 
 echo '-> Draft new release https://github.com/wutongwan/laravel-lego/releases/new'
