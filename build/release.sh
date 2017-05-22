@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
 echo "# clear bower components"
-git checkout master
-git pull origin master
+git branch -D release
+git checkout -b release
+git pull git@github.com:wutongwan/laravel-lego.git master
 
 echo "# clear bower components"
 rm -rf public/components
@@ -40,11 +41,8 @@ find public/components \
 	-o -name 'LICENSE*' \
 	| xargs rm -rf
 
-echo '# push to wutongwan/laravel-lego `release` branch'
-git branch -D release
-git checkout -b release
 git add .
-git commit -a -m 'build release'
-git push wutongwan release --force
+git commit -a -m 'build release' -q
+git push git@github.com:wutongwan/laravel-lego.git release --force
 
 echo '-> Draft new release https://github.com/wutongwan/laravel-lego/releases/new'
