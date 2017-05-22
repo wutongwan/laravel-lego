@@ -2,7 +2,6 @@
 
 use Illuminate\Support\ServiceProvider;
 use Lego\Commands\GenerateIDEHelper;
-use Lego\Commands\UpdateComponents;
 use Lego\Foundation\Assets;
 use Lego\Field\FieldLoader;
 
@@ -16,10 +15,7 @@ class LegoServiceProvider extends ServiceProvider
         /** @var \Illuminate\Foundation\Application $app */
         $app = $this->app;
         if ($app->runningInConsole()) {
-            $this->commands([
-                GenerateIDEHelper::class,
-                UpdateComponents::class,
-            ]);
+            $this->commands([GenerateIDEHelper::class]);
         }
     }
 
@@ -47,7 +43,7 @@ class LegoServiceProvider extends ServiceProvider
             [
                 $this->path('public/') => public_path(Assets::PATH_PREFIX),
             ],
-            'public'
+            'lego-assets'
         );
     }
 

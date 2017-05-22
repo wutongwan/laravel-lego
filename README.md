@@ -66,17 +66,12 @@ Lego\LegoServiceProvider::class,
 
 3、发布项目相关文件
 
-本项目使用 [bower](https://bower.io/) 管理静态文件，执行下面命令前，请确认已安装 bower
-
 ```bash
-# 1、发布配置文件
 php artisan vendor:publish --provider="Lego\LegoServiceProvider"
-
-# 2、使用 bower 更新静态文件并发布
-php artisan lego:update-components
-# 如果当前用户为 root
-php artisan lego:update-components --bower-allow-root
 ```
+
+推荐将 `php artisan vendor:publish --tag=lego-assets --force` 添加到 composer 的 `post-update-cmd`
+以便在 lego 添加新的静态文件时及时更新
 
 4、仅开发环境
 
@@ -96,9 +91,21 @@ php artisan lego:update-components --bower-allow-root
 - [Grid - 列表页](./docs/grid.md)
 - [more ...](./docs/README.md)
 
-## 当前版本在以下环境中开发并维护
+## 开发
 
-- Mac、Ubuntu
+### 静态文件
+
+- 依赖静态文件需在 bower.json 中配置（暂用 bower ，后期准备换到 npm + laravel-mix）
+
+### 分支
+  - master
+    - 在 master 下开发及维护
+  - release
+    - 发布新版本前由脚本创建，添加了所有依赖的静态文件，方便 composer 安装
+
+### 当前版本在以下环境中开发并维护
+  - Mac
+  - Ubuntu
 
 * * *
 

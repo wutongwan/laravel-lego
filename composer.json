@@ -33,6 +33,11 @@
             "Lego\\Tests\\": "tests/"
         }
     },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "release"
+        }
+    },
     "prefer-stable": true,
     "minimum-stability": "dev"
 }
