@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-cd ..
 echo "# clear bower components"
 git checkout master
 git pull origin master
