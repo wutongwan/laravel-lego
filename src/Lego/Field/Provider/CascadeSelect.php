@@ -26,14 +26,19 @@ class CascadeSelect extends Select
             HighPriorityResponse::class,
             function () {
                 $depend = Request::query(CascadeSelect::DEPEND_QUERY_KEY);
-                $options = call_user_func_array($this->match, [$depend]);
-                return (new Collection($options))->toArray();
+                return $this->getOptionsFromMatch($depend);
             },
             md5($this->name())
         )->url();
         $this->remote = $this->remote . '&' . self::DEPEND_QUERY_KEY . '=';
 
         return $this;
+    }
+
+    private function getOptionsFromMatch($depend)
+    {
+        $options = call_user_func_array($this->match, [$depend]);
+        return (new Collection($options))->toArray();
     }
 
     public function getDependField()
@@ -49,9 +54,7 @@ class CascadeSelect extends Select
     public function getFEOptions()
     {
         if ($value = $this->depend->getNewValue()) {
-            $this->options(
-                (new Collection(call_user_func_array($this->match, [$value])))->toArray()
-            );
+            $this->options($this->getOptionsFromMatch($value));
         }
 
         return [
