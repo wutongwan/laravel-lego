@@ -15,15 +15,18 @@ class CascadeSelect extends Select
      */
     protected $depend;
     private $remote;
+    private $match;
+    protected $validateOption = false;
 
-    public function depend(Field $field, \Closure $closure)
+    public function depend(Field $field, \Closure $match)
     {
         $this->depend = $field;
+        $this->match = $match;
         $this->remote = lego_register(
             HighPriorityResponse::class,
-            function () use ($closure) {
+            function () {
                 $depend = Request::query(CascadeSelect::DEPEND_QUERY_KEY);
-                $options = call_user_func_array($closure, [$depend]);
+                $options = call_user_func_array($this->match, [$depend]);
                 return (new Collection($options))->toArray();
             },
             md5($this->name())
@@ -45,6 +48,12 @@ class CascadeSelect extends Select
 
     public function getFEOptions()
     {
+        if ($value = $this->depend->getNewValue()) {
+            $this->options(
+                (new Collection(call_user_func_array($this->match, [$value])))->toArray()
+            );
+        }
+
         return [
             'id' => $this->elementId(),
             'selected' => $this->takeDefaultInputValue(),

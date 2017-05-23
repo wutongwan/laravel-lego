@@ -7,13 +7,22 @@ class Select extends Text
 {
     use FilterWhereEquals;
 
+    protected $validateOption = true;
+
     protected function initialize()
     {
         parent::initialize();
 
         $this->validator(function ($value) {
-            return !$this->isRequired() || $this->deepInArray($value, $this->getOptions()) ? null : '非法选项';
+            return !$this->validateOption || !$this->isRequired() || $this->deepInArray($value, $this->getOptions())
+                ? null : '非法选项';
         });
+    }
+
+    public function disableValidateOption()
+    {
+        $this->validateOption = false;
+        return $this;
     }
 
     protected function deepInArray($value, array $array)
