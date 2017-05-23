@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 echo "# clear bower components"
+git checkout master
 git branch -D release
 git checkout -b release
 git pull git@github.com:wutongwan/laravel-lego.git master
