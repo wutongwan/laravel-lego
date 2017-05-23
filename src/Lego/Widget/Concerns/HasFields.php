@@ -55,10 +55,17 @@ trait HasFields
         return $this->fields->fields();
     }
 
-    public function values($fields)
+    public function values($fields = [])
     {
-        $fields = is_array($fields) ? $fields : func_get_args();
         $values = [];
+        if (!$fields) {
+            foreach ($this->fields() as $field) {
+                $values[] = $field->getNewValue();
+                return $values;
+            }
+        }
+
+        $fields = is_array($fields) ? $fields : func_get_args();
         foreach ($fields as $field) {
             $values[] = $this->field($field)->getNewValue();
         }
