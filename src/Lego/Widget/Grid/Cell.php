@@ -1,13 +1,9 @@
 <?php namespace Lego\Widget\Grid;
 
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\HtmlString;
-use Illuminate\Support\Str;
 use Lego\Foundation\Exceptions\LegoException;
-use Lego\LegoRegister;
 use Lego\Operator\Finder;
 use Lego\Operator\Store\Store;
-use Lego\Register\GridCellPipe;
 
 class Cell
 {
