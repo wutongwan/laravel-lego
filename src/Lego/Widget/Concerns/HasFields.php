@@ -61,8 +61,8 @@ trait HasFields
         if (!$fields) {
             foreach ($this->fields() as $field) {
                 $values[] = $field->getNewValue();
-                return $values;
             }
+            return $values;
         }
 
         $fields = is_array($fields) ? $fields : func_get_args();
