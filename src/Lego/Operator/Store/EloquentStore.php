@@ -82,7 +82,7 @@ class EloquentStore extends Store
             }
 
             if (!$this->data->save($options)) {
-                throw new LegoSaveFail(class_basename($related) . $this->data->toJson());
+                throw new LegoSaveFail(class_basename($this->data) . $this->data->toJson());
             }
         });
 
