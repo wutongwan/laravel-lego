@@ -137,8 +137,8 @@ class Grid extends Widget
         }
 
         if ($this->batches()) {
-            LegoAssets::js('components/icheck/icheck.min.js');
-            LegoAssets::css('components/icheck/skins/square/blue.css');
+            LegoAssets::js('check/check.js');
+            LegoAssets::css('check/skin.css');
         }
 
         $this->paginator();

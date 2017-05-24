@@ -99,11 +99,11 @@ class Datetime extends Field
          * 仅在 editable && 非移动端启用日期控件，移动端使用原生的输入控件
          */
         if ($this->isEditable() && !$this->isMobile()) {
-            LegoAssets::css('components/smalot-bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css');
-            LegoAssets::js('components/smalot-bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js');
+            LegoAssets::js('time-picker/picker.js');
+            LegoAssets::css('time-picker/theme.css');
 
             if ($this->localeIsNotEn()) {
-                LegoAssets::js("components/smalot-bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.{$this->getLocale()}.js");
+                LegoAssets::js("time-picker/locales/bootstrap-datetimepicker.{$this->getLocale()}.js");
             }
         }
     }

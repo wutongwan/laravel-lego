@@ -6,8 +6,8 @@
     window.cascadeSelectManager = new CascadeSelectManger();
 
     function CascadeSelectManger() {
-        var registered = {};
-        var dependency = {};
+        let registered = {};
+        let dependency = {};
 
         this.add = function (vue) {
             if (dependency[vue.depend]) {
@@ -24,7 +24,7 @@
 
         this.run = function (depend, value) {
             for (i = 0; i < dependency[depend].length; i++) {
-                var vue = dependency[depend][i];
+                let vue = dependency[depend][i];
                 vue.syncOptions(value);
             }
         }
