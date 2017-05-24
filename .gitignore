@@ -1,8 +1,9 @@
-vendor
+/docs/api
+/node_modules
+/vendor
+/.idea
+
 composer.lock
-.idea/
+yarn.lock
 .phpstorm.meta.php
-
-docs/api
-
 _ide_helper_lego.php

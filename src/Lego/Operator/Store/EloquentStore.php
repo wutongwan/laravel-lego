@@ -74,14 +74,15 @@ class EloquentStore extends Store
     public function save($options = [])
     {
         DB::transaction(function () use ($options) {
+            /** @var Model $related */
             foreach ($this->relations as $related) {
                 if (!$related->save()) {
-                    throw new LegoSaveFail(class_basename($related));
+                    throw new LegoSaveFail(class_basename($related) . $related->toJson());
                 }
             }
 
             if (!$this->data->save($options)) {
-                throw new LegoSaveFail(class_basename($this->data));
+                throw new LegoSaveFail(class_basename($this->data) . $this->data->toJson());
             }
         });
 
