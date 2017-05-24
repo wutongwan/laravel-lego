@@ -5,18 +5,22 @@ class Assets
     const PATH_PREFIX = 'packages/wutongwan/lego';
 
     private $all = [];
+    private $mix = [];
     private $globals = [
         'style' => [
-            'bootstrap' => 'components/bootstrap/dist/css/bootstrap.min.css',
+            'bootstrap' => 'bootstrap/bootstrap.css',
         ],
         'script' => [
-            'jQuery' => 'components/jquery/dist/jquery.min.js',
-            'bootstrap' => 'components/bootstrap/dist/js/bootstrap.min.js',
+            'jQuery' => 'jquery.js',
+            'bootstrap' => 'bootstrap/bootstrap.js',
         ],
     ];
 
     public function __construct()
     {
+        $manifest = file_get_contents(public_path(self::PATH_PREFIX . '/mix-manifest.json'));
+        $this->mix = json_decode($manifest, JSON_OBJECT_AS_ARRAY);
+
         $this->reset();
     }
 
@@ -75,15 +79,20 @@ class Assets
         }
 
         if (!isset($this->all[$type])) {
-            self::reset($type);
+            $this->reset($type);
         }
 
         if ($prefix) {
-            $path = $prefix . '/' . ltrim($path, '/');
+            $path = $prefix . $this->mix('/' . ltrim($path, '/'));
         }
 
         if (!in_array($path, $this->all[$type])) {
             $this->all[$type][] = $path;
         }
+    }
+
+    private function mix($path)
+    {
+        return isset($this->mix[$path]) ? $this->mix[$path] : $path;
     }
 }

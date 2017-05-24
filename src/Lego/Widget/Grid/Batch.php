@@ -126,8 +126,8 @@ class Batch
     private function response()
     {
         LegoAssets::reset();
-        LegoAssets::css('components/bootstrap/dist/css/bootstrap.min.css');
-        LegoAssets::js('components/jquery/dist/jquery.min.js');
+        LegoAssets::css('bootstrap.css');
+        LegoAssets::js('jquery.js');
 
         if (!$this->getIds()) {
             return $this->saveIdsResponse();
