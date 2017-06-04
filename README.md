@@ -49,13 +49,16 @@ return $form->view('layout', ['form' => $form]);
 
 ## Installment
 
-1、使用 Composer 添加依赖
+###1、修改composer.json 
 
-```bash
-composer require wutongwan/lego
-```
+```require```中添加:   ```"wutongwan/lego": "0.1.*"```
 
-2、添加 Service Provider ，将下面的内容添加到 `config/app.php` 的 `providers` 数组中
+`post-update-cmd` 中添加 
+`php artisan vendor:publish --tag=lego-assets --force` 
+让静态资源修改后能自动更新。
+
+###2、添加 Service Provider 
+将下面的内容添加到 `config/app.php` 的 `providers` 数组中
 
 ```php
 // Lego 依赖 LaravelCollective/html ，所以同时需要添加其 ServiceProvider .
@@ -64,24 +67,11 @@ Collective\Html\HtmlServiceProvider::class,
 Lego\LegoServiceProvider::class,
 ```
 
-3、发布项目相关文件
+### 3、安装Lego&发布静态资源
 
 ```bash
-php artisan vendor:publish --provider="Lego\LegoServiceProvider"
+composer update -vvv
 ```
-
-推荐将 `php artisan vendor:publish --tag=lego-assets --force` 添加到 composer 的 `post-update-cmd`
-以便在 lego 添加新的静态文件时及时更新
-
-4、仅开发环境
-
-- IDE Helper
-
-	为方便调用 widget 中的 addField 系列函数，推荐执行下面命令，该命令会在项目根目录创建 `_ide_helper_lego.php` 文件，方便 IDE 进行自动补全.
-	
-	```bash
-	php artisan lego:generate-ide-helper
-	```
 
 ## 文档
 
