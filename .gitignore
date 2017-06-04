@@ -1,5 +1,7 @@
 vendor
+node_modules
 composer.lock
+yarn.lock
 .idea/
 .phpstorm.meta.php
 
