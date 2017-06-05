@@ -73,16 +73,6 @@ php artisan vendor:publish --provider="Lego\LegoServiceProvider"
 推荐将 `php artisan vendor:publish --tag=lego-assets --force` 添加到 composer 的 `post-update-cmd`
 以便在 lego 添加新的静态文件时及时更新
 
-4、仅开发环境
-
-- IDE Helper
-
-	为方便调用 widget 中的 addField 系列函数，推荐执行下面命令，该命令会在项目根目录创建 `_ide_helper_lego.php` 文件，方便 IDE 进行自动补全.
-	
-	```bash
-	php artisan lego:generate-ide-helper
-	```
-
 ## 文档
 
 - [Form 表单](./docs/form.md)

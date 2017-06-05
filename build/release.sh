@@ -42,6 +42,9 @@ find public/components \
 	-o -name 'LICENSE*' \
 	| xargs rm -rf
 
+php build/generate-ide-helper.php
+
+
 git add .
 git commit -a -m 'build release' -q
 git push git@github.com:wutongwan/laravel-lego.git release --force

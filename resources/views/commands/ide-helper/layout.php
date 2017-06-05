@@ -28,24 +28,3 @@ namespace Lego\Widget\Concerns {
     {
     }
 }
-
-
-<?php foreach ($widgets as $widget => $detail) {?>
-namespace <?= $detail['namespace'] ?> {
-
-    /**
-<?php foreach ($detail['methods'] as $method) {?>
-     * @method <?= $method['return'] ?> <?= $method['name'] ?>(<?= $method['arguments'] ?>)
-<?php } ?>
-     *
-     * @see \<?= $widget . "\n" ?>
-     */
-    class <?= class_basename($widget) ?>
-
-    {
-    }
-
-}
-
-<?php } ?>
-

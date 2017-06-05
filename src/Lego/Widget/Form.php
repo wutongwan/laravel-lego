@@ -8,6 +8,7 @@ use Lego\Register\HighPriorityResponse;
 
 /**
  * Class Form
+ * @lego-ide-helper
  * @package Lego\Widget
  */
 class Form extends Widget implements HasMode

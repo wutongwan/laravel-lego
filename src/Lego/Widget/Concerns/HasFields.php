@@ -10,6 +10,7 @@ use Lego\Foundation\Fields;
 /**
  * Field 相关逻辑
  *
+ * @lego-ide-helper
  * @mixin HasGroups
  */
 trait HasFields
