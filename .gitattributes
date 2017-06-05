@@ -6,6 +6,7 @@
 .travis.yml export-ignore
 .gitattributes export-ignore
 .gitignore export-ignore
+.editorconfig export-ignore
 phpunit.xml export-ignore
 bower.json export-ignore
 sami.php export-ignore
