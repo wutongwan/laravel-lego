@@ -9,6 +9,11 @@ use Lego\Widget\Widget;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Writers\LaravelExcelWriter;
 
+/**
+ * Class Grid
+ * @lego-ide-helper
+ * @package Lego\Widget\Grid
+ */
 class Grid extends Widget
 {
     use Concerns\HasCells, Concerns\HasBatch;

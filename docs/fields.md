@@ -121,3 +121,37 @@ $form->addTestarea('Description', 'this is description of ...');
 ```
 
 Email field in <http://getbootstrap.com/css/#forms-controls-static>
+
+
+## 自定义 Field
+
+```php
+namespace LegoFields;
+
+class Email extends Lego\Field\Provider\Text
+{
+    protected fucntion initialize()
+    {
+        parent::initialize();
+        $this->rule('email');
+    }
+}
+```
+
+注册到配置文件：`lego.php`
+
+```php
+    /**
+     * 自定义的 Field
+     */
+    'user-defined-fields' => [
+        \LegoFields\Email::class,
+    ],
+```
+
+> Note  
+>
+> 为了方便 IDE 进行自动补全，Lego 内置的 Field 在 release 时会将 addXXX 系列函数的辅助注释写到 HasFields trait 中，Lego 外部定义的 Field 可以通过调用下面命令生成 `_ide_helper_lego.php` 文件到项目根目录
+> ```bash
+> php artisan lego:generate-ide-helper
+> ```

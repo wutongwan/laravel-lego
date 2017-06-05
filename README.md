@@ -49,7 +49,7 @@ return $form->view('layout', ['form' => $form]);
 
 ## Installment
 
-###1、修改composer.json 
+### 1、修改composer.json 
 
 ```require```中添加:   ```"wutongwan/lego": "0.1.*"```
 
@@ -57,7 +57,7 @@ return $form->view('layout', ['form' => $form]);
 `php artisan vendor:publish --tag=lego-assets --force` 
 让静态资源修改后能自动更新。
 
-###2、添加 Service Provider 
+### 2、添加 Service Provider 
 将下面的内容添加到 `config/app.php` 的 `providers` 数组中
 
 ```php

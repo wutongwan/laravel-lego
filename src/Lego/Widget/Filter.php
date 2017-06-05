@@ -4,6 +4,11 @@ use Illuminate\Support\Facades\Request;
 use Lego\Field\Field;
 use Lego\Widget\Grid\Grid;
 
+/**
+ * Class Filter
+ * @lego-ide-helper
+ * @package Lego\Widget
+ */
 class Filter extends Widget
 {
     use Concerns\HasFields, Concerns\HasGroups;
