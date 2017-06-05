@@ -149,7 +149,7 @@ class Email extends Lego\Field\Provider\Text
     ],
 ```
 
-> Note  
+> Note  
 >
 > 为了方便 IDE 进行自动补全，Lego 内置的 Field 在 release 时会将 addXXX 系列函数的辅助注释写到 HasFields trait 中，Lego 外部定义的 Field 可以通过调用下面命令生成 `_ide_helper_lego.php` 文件到项目根目录
 > ```bash
