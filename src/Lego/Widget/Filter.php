@@ -6,7 +6,10 @@ use Lego\Widget\Grid\Grid;
 
 /**
  * Class Filter
- * @lego-ide-helper
+ * @method \Lego\Foundation\Button addRightTopButton($text, $url = null, $id = null)
+ * @method \Lego\Foundation\Button addRightBottomButton($text, $url = null, $id = null)
+ * @method \Lego\Foundation\Button addLeftTopButton($text, $url = null, $id = null)
+ * @method \Lego\Foundation\Button addLeftBottomButton($text, $url = null, $id = null)
  * @package Lego\Widget
  */
 class Filter extends Widget

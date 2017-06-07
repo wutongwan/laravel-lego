@@ -11,7 +11,10 @@ use Maatwebsite\Excel\Writers\LaravelExcelWriter;
 
 /**
  * Class Grid
- * @lego-ide-helper
+ * @method \Lego\Foundation\Button addRightTopButton($text, $url = null, $id = null)
+ * @method \Lego\Foundation\Button addRightBottomButton($text, $url = null, $id = null)
+ * @method \Lego\Foundation\Button addLeftTopButton($text, $url = null, $id = null)
+ * @method \Lego\Foundation\Button addLeftBottomButton($text, $url = null, $id = null)
  * @package Lego\Widget\Grid
  */
 class Grid extends Widget
