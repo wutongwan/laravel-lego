@@ -24,6 +24,9 @@ class EloquentQuery extends Query
             case $data instanceof Model:
                 return new self($data->newQuery());
 
+            case $data instanceof Relation:
+                return new self($data->getQuery());
+
             // Laravel query builder
             case is_object($data)
                 && in_array(get_class($data), [QueryBuilder::class, EloquentQueryBuilder::class]):
