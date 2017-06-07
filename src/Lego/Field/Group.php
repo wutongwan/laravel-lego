@@ -48,7 +48,6 @@ class Group
         }
 
         if ($field instanceof Field) {
-            $this->fields()->add($field);
             $this->fieldNames[$field->name()] = $field->name();
         } else {
             $this->fieldNames[$field] = $field;
@@ -76,7 +75,7 @@ class Group
 
     private function callFieldsMethod($method, $params = [])
     {
-        $this->fields->each(function (Field $field) use ($method, $params) {
+        $this->fields()->each(function (Field $field) use ($method, $params) {
             call_user_func_array([$field, $method], $params);
         });
         return $this;
