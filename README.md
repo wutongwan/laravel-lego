@@ -33,7 +33,7 @@ return $form->view('layout', ['form' => $form]);
 </head>
 <body>
 
-	{!! $form !!}
+    {!! $form !!}
 
     @include('lego::scripts')
 </body>
