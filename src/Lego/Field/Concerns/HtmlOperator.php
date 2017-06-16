@@ -127,6 +127,11 @@ trait HtmlOperator
 
     public function note($message)
     {
+        return $this->hint($message);
+    }
+
+    public function hint($message)
+    {
         /** @var Field $this */
         $this->messages()->add('note', $message);
 
