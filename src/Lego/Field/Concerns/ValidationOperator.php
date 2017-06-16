@@ -74,12 +74,21 @@ trait ValidationOperator
 
     /**
      * 对 input 值的自定义校验，支持调用多次
-     * @param \Closure $validator
+     * @param string|\Closure $validator
+     * @param bool $condition
      * @return $this
      */
-    public function validator(\Closure $validator)
+    public function validator($validator, $condition = true)
     {
-        $this->validators[] = $validator;
+        if (!$condition) {
+            return $this;
+        }
+
+        if ($validator instanceof \Closure) {
+            $this->validators[] = $validator;
+        } else {
+            $this->rule($validator);
+        }
 
         return $this;
     }
