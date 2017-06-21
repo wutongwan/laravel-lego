@@ -4,7 +4,6 @@
 
 lego = require('../lego.coffee')
 lego.createGridBatch = (gridContainerId, ids, batches) ->
-
     new Vue
         el: "##{gridContainerId}",
 
@@ -22,7 +21,16 @@ lego.createGridBatch = (gridContainerId, ids, batches) ->
 
         methods:
             selectAll: ->
-                this.selectedIds = this.ids
+                @selectedIds = @ids
+
+            trigger: (id)->
+                if id not in @ids
+                    return
+
+                if id not in @selectedIds
+                    @selectedIds.push id
+                else
+                    @selectedIds = (_id for _id in @selectedIds when _id != id)
 
             selectReverse: ->
                 copy = @selectedIds

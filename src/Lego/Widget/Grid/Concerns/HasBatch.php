@@ -58,6 +58,10 @@ trait HasBatch
 
     public function enableBatchMode()
     {
+        if (!$this->batches()) {
+            return;
+        }
+
         Session::put($this->batchModeSessionKey, true);
     }
 
