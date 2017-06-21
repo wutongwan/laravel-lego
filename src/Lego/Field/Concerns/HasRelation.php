@@ -6,8 +6,6 @@ use Lego\Operator\Query\Query;
  * Field 中 Relation 的处理逻辑
  *
  * Relation example: school.city.name
- *
- * @mixin \Lego\Field\Field
  */
 trait HasRelation
 {

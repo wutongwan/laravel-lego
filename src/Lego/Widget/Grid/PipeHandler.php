@@ -39,7 +39,7 @@ class PipeHandler
         static $registered = [];
 
         if (empty($registered)) {
-            foreach (Config::get('lego.widgets.grid.pipes') as $pipesClass) {
+            foreach (Config::get('lego.widgets.grid.pipes', []) as $pipesClass) {
                 $rft = new \ReflectionClass($pipesClass);
                 foreach ($rft->getMethods() as $method) {
                     if (Str::startsWith($method->name, 'handle')) {

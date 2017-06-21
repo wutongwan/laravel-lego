@@ -21,11 +21,19 @@ abstract class Widget implements ButtonLocations
         Concerns\HasButtons,
         Concerns\Operable;
 
+    /**
+     * 控件 unique id ，注意：此 id 无法跨请求使用，每次请求都会重新生成
+     * @var string
+     */
+    protected $uniqueId;
+
     public function __construct($data)
     {
         $this->initializeDataOperator(
             $this->transformer($data)
         );
+
+        $this->uniqueId = str_replace('.', '-', uniqid(strtolower(class_basename(static::class)) . '-', true));
 
         // 初始化 traits & self
         $this->triggerInitialize();
@@ -37,6 +45,11 @@ abstract class Widget implements ButtonLocations
     protected function transformer($data)
     {
         return $data;
+    }
+
+    public function uniqueId()
+    {
+        return $this->uniqueId;
     }
 
     public function data()
