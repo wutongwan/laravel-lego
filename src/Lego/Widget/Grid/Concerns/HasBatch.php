@@ -6,6 +6,9 @@ use Lego\Widget\Grid\Batch;
 
 trait HasBatch
 {
+    /**
+     * @var Batch[]
+     */
     protected $batches = [];
     protected $batchModeUrl;
     protected $batchModeSessionKey = 'lego.batch-mode';
@@ -37,6 +40,15 @@ trait HasBatch
     public function batches()
     {
         return $this->batches;
+    }
+
+    public function batchesAsArray()
+    {
+        $array = [];
+        foreach ($this->batches as $batch) {
+            $array[$batch->name()] = $batch->url();
+        }
+        return $array;
     }
 
     public function batch($name)

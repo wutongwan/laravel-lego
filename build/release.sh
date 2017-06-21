@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 
-echo "# clear bower components"
+# fetch latest version
 git checkout master
 git branch -D release
 git checkout -b release
 git pull git@github.com:wutongwan/laravel-lego.git master
 
+# run bower
 echo "# clear bower components"
 rm -rf public/components
 echo "# update bower components"
@@ -42,9 +43,13 @@ find public/components \
 	-o -name 'LICENSE*' \
 	| xargs rm -rf
 
+# generate ide helpers
 php build/generate-ide-helper.php
 
+# run mix
+yarn prod
 
+# create release commit
 git add .
 git commit -a -m 'build release' -q
 git push git@github.com:wutongwan/laravel-lego.git release --force

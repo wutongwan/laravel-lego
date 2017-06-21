@@ -2,7 +2,6 @@ const { mix } = require('laravel-mix');
 
 // global config.
 mix.setPublicPath('public');
-mix.version();
 
 // for CoffeeScript
 mix.webpackConfig({
@@ -13,5 +12,8 @@ mix.webpackConfig({
     }
 });
 
-
 mix.js('resources/assets/grid/batch.coffee', 'public/js');
+
+if (mix.inProduction()) {
+    mix.version();
+}
