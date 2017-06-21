@@ -41,4 +41,3 @@ lego.createGridBatch = (gridContainerId, ids, batches) ->
 
             submitBatch: (action) ->
                 @currentBatchAction = action;
-                console.log $("##{gridContainerId}").find('form')
