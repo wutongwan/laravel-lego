@@ -1,8 +1,11 @@
 <?php namespace Lego\Widget\Grid;
 
 use Illuminate\Pagination\AbstractPaginator;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;
 use Lego\Foundation\Facades\LegoAssets;
+use Lego\Operator\Store\Store;
 use Lego\Register\HighPriorityResponse;
 use Lego\Widget\Filter;
 use Lego\Widget\Widget;
@@ -23,6 +26,12 @@ class Grid extends Widget
      */
     protected $filter;
 
+    /**
+     * 移动端列表页是否使用移动版
+     * @var bool
+     */
+    protected $responsive = false;
+
     protected function transformer($data)
     {
         if ($data instanceof Filter) {
@@ -34,6 +43,11 @@ class Grid extends Widget
         return parent::transformer($data);
     }
 
+    protected function initialize()
+    {
+        $this->responsive(Config::get('lego.widgets.grid.responsive'));
+    }
+
     public function filter()
     {
         return $this->filter;
@@ -43,6 +57,17 @@ class Grid extends Widget
     {
         $this->query->orderBy($attribute, $desc);
 
+        return $this;
+    }
+
+    /**
+     * 移动端列表页是否使用移动版
+     * @param bool $condition
+     * @return $this
+     */
+    public function responsive($condition = true)
+    {
+        $this->responsive = boolval($condition);
         return $this;
     }
 
@@ -142,8 +167,8 @@ class Grid extends Widget
         }
 
         if ($this->batches()) {
-            LegoAssets::js('components/icheck/icheck.min.js');
-            LegoAssets::css('components/icheck/skins/square/blue.css');
+            LegoAssets::js('components/vue/dist/vue.min.js');
+            LegoAssets::js('js/batch.js');
         }
 
         $this->paginator();
@@ -155,6 +180,41 @@ class Grid extends Widget
      */
     public function render()
     {
-        return view('lego::default.grid.table', ['grid' => $this])->render();
+        $view = $this->responsive && (new \Mobile_Detect())->isMobile()
+            ? view('lego::default.grid.list-group')
+            : view('lego::default.grid.table');
+        return $view->with('grid', $this)->render();
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getKeys()
+    {
+        return $this->paginator()->map(function (Store $row) {
+            return $row->getKey();
+        });
+    }
+
+    public function getResult($plain = false)
+    {
+        $result = new Collection();
+
+        foreach ($this->paginator() as $row) {
+            $line = [];
+            foreach ($this->cells() as $cell) {
+                /** @var Cell $cell */
+                $value = $plain ? $cell->fill($row)->getPlainValue() : (string)$cell->fill($row)->value();
+                $line[$cell->description()] = $value;
+            }
+            $result->push($line);
+        }
+
+        return $result;
+    }
+
+    public function getPlainResult()
+    {
+        return $this->getResult(true);
     }
 }
