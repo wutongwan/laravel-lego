@@ -44,36 +44,43 @@ return $form->view('layout', ['form' => $form]);
 
 
 ## Required
-  - php >= 7.0 (短时间很多人肯定还没用上 PHP7, but who cares ? 一切向前看！)
+  - php >= 7.0 (短时间很多人肯定还没用上 PHP7, But who cares? For a better tomorrow！)
   - Laravel >= 5.2
 
 ## Installment
 
-### 1、修改composer.json 
+### 1、composer.json 
 
-```require```中添加:   ```"wutongwan/lego": "0.1.*"```
+- Add to `require`
 
-`post-update-cmd` 中添加 
-`php artisan vendor:publish --tag=lego-assets --force` 
-让静态资源修改后能自动更新。
+	```
+	"wutongwan/lego": "0.1.*"
+	```
 
-### 2、添加 Service Provider 
-将下面的内容添加到 `config/app.php` 的 `providers` 数组中
+- Add to `post-update-cmd`, In order to update lego statc files Automatically.
+
+	```
+	php artisan vendor:publish --tag=lego-assets --force
+	``` 
+
+### 2、Service Provider 
+
+Add these lines to `providres` array of config file `config/app.php`.
 
 ```php
-// Lego 依赖 LaravelCollective/html ，所以同时需要添加其 ServiceProvider .
+// Lego require LaravelCollective/html ，So need to add it's ServiceProvider.
 Collective\Html\HtmlServiceProvider::class,
 
 Lego\LegoServiceProvider::class,
 ```
 
-### 3、安装Lego&发布静态资源
+### 3、Install Lego and Publish assets
 
 ```bash
 composer update -vvv
 ```
 
-## 文档
+## Documents
 
 - [Form 表单](./docs/form.md)
 - [Fields 支持的输入类型](./docs/fields.md)
@@ -81,7 +88,7 @@ composer update -vvv
 - [Grid - 列表页](./docs/grid.md)
 - [more ...](./docs/README.md)
 
-## 开发
+## Development
 
 - 静态文件
 	- 依赖静态文件需在 bower.json 中配置（暂用 bower ，后期准备换到 npm + laravel-mix）
