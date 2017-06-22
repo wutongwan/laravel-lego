@@ -14,6 +14,4 @@ mix.webpackConfig({
 
 mix.js('resources/assets/grid/batch.coffee', 'public/js');
 
-if (mix.inProduction()) {
-    mix.version();
-}
+mix.version();
