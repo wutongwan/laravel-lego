@@ -8,7 +8,7 @@ git pull git@github.com:wutongwan/laravel-lego.git master
 
 # run bower
 echo "# clear bower components"
-rm -rf public/components
+rm -rf public/components public/.gitignore
 echo "# update bower components"
 bower update
 echo "# remove useless assets"
@@ -47,7 +47,7 @@ find public/components \
 php build/generate-ide-helper.php
 
 # run mix
-yarn prod
+yarn upgrade && yarn prod
 
 # create release commit
 git add .
