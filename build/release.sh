@@ -8,7 +8,7 @@ git pull git@github.com:wutongwan/laravel-lego.git master
 
 # run bower
 echo "# clear bower components"
-rm -rf public/components public/.gitignore
+rm -rf public/components public/js public/.gitignore
 echo "# update bower components"
 bower update
 echo "# remove useless assets"
