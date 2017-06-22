@@ -8,6 +8,9 @@
 .gitattributes export-ignore
 .gitignore export-ignore
 .editorconfig export-ignore
+.bowerrc export-ignore
 phpunit.xml export-ignore
 bower.json export-ignore
+package.json export-ignore
+webpack.mix.js export-ignore
 sami.php export-ignore
