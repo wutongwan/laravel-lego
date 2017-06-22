@@ -10,7 +10,22 @@ use Lego\Foundation\Fields;
 /**
  * Field 相关逻辑
  *
- * @lego-ide-helper
+ * @method \Lego\Field\Provider\AutoComplete addAutoComplete(string $fieldName, $fieldDescription = null)
+ * @method \Lego\Field\Provider\CascadeSelect addCascadeSelect(string $fieldName, $fieldDescription = null)
+ * @method \Lego\Field\Provider\Date addDate(string $fieldName, $fieldDescription = null)
+ * @method \Lego\Field\Provider\DateRange addDateRange(string $fieldName, $fieldDescription = null)
+ * @method \Lego\Field\Provider\Datetime addDatetime(string $fieldName, $fieldDescription = null)
+ * @method \Lego\Field\Provider\DatetimeRange addDatetimeRange(string $fieldName, $fieldDescription = null)
+ * @method \Lego\Field\Provider\Hidden addHidden(string $fieldName, $fieldDescription = null)
+ * @method \Lego\Field\Provider\JSON addJSON(string $fieldName, $fieldDescription = null)
+ * @method \Lego\Field\Provider\Number addNumber(string $fieldName, $fieldDescription = null)
+ * @method \Lego\Field\Provider\NumberRange addNumberRange(string $fieldName, $fieldDescription = null)
+ * @method \Lego\Field\Provider\Readonly addReadonly(string $fieldName, $fieldDescription = null)
+ * @method \Lego\Field\Provider\Select addSelect(string $fieldName, $fieldDescription = null)
+ * @method \Lego\Field\Provider\Text addText(string $fieldName, $fieldDescription = null)
+ * @method \Lego\Field\Provider\Textarea addTextarea(string $fieldName, $fieldDescription = null)
+ * @method \Lego\Field\Provider\Time addTime(string $fieldName, $fieldDescription = null)
+ * @method \Lego\Field\Provider\TimeRange addTimeRange(string $fieldName, $fieldDescription = null)
  * @mixin HasGroups
  */
 trait HasFields

@@ -47,7 +47,7 @@ find public/components \
 php build/generate-ide-helper.php
 
 # run mix
-yarn prod
+yarn upgrade && yarn prod
 
 # create release commit
 git add .
