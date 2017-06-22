@@ -83,17 +83,19 @@ composer update -vvv
 
 ## 开发
 
-### 静态文件
+- 静态文件
+	- 依赖静态文件需在 bower.json 中配置（暂用 bower ，后期准备换到 npm + laravel-mix）
+	- JavaScript
+		- 现在项目中并没有固定的技术栈，可以各显神通，mix 应该能满足常见技术栈的编译需求
+		- 我比较喜欢 CoffeeScript :)
 
-- 依赖静态文件需在 bower.json 中配置（暂用 bower ，后期准备换到 npm + laravel-mix）
-
-### 分支
+- 分支
   - master
     - 在 master 下开发及维护
   - release
     - 发布新版本前由脚本创建，添加了所有依赖的静态文件，方便 composer 安装
 
-### 当前版本在以下环境中开发并维护
+- 当前版本在以下环境中开发并维护
   - Mac
   - Ubuntu
 
