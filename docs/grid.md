@@ -44,6 +44,27 @@ $grid->add('column', 'Description')->default('default value');
 $grid->addLeftTopButton('new', route('...'));
 ```
 
+## Responsive view
+
+Responsive view is enabled by default, you can disabled it in config file `lego.php`,  
+In addition , you can call `responsive()` method to enable it for current instance.
+
+- Disable Responsive view Globally
+```php
+[
+    'widgets' => [
+        'grid' => [
+            'responsive' => false,
+        ]
+    ]
+]
+```
+
+- Enable responsive view for current `$grid` instance
+```php
+$grid->responsive();
+```
+
 ## Pipe
 
 ### Basic
