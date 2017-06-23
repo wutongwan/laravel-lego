@@ -82,6 +82,7 @@ composer update -vvv
 
 ## Documents
 
+- Demo http://lego.zhw.in
 - [Form 表单](./docs/form.md)
 - [Fields 支持的输入类型](./docs/fields.md)
 - [Filter 筛选器](./docs/filter.md) 
