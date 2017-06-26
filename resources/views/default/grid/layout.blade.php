@@ -60,11 +60,13 @@ $hasBatch = $grid->batchModeEnabled();
 @if($hasBatch)
     @push('lego-scripts')
     <script>
-        lego.createGridBatch(
-            '{{ $grid->uniqueId() }}-container',
-            {{ $grid->getKeys()->toJson() }},
-            {!! json_encode($grid->batchesAsArray()) !!}
-        )
+        $(document).ready(function () {
+            lego.createGridBatch(
+                '{{ $grid->uniqueId() }}-container',
+                {{ $grid->getKeys()->toJson() }},
+                {!! json_encode($grid->batchesAsArray()) !!}
+            )
+        });
     </script>
     @endpush
 @endif
