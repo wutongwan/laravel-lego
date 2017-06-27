@@ -18,7 +18,7 @@ class Assets
 
     public function __construct()
     {
-        $manifest = file_get_contents(public_path(self::PATH_PREFIX . '/mix-manifest.json'));
+        $manifest = @file_get_contents(public_path(self::PATH_PREFIX . '/mix-manifest.json'));
         $this->mix = json_decode($manifest, JSON_OBJECT_AS_ARRAY);
 
         $this->reset();
