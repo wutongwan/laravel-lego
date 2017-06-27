@@ -58,7 +58,7 @@ trait HasBatch
 
     public function enableBatchMode()
     {
-        if (count($this->batches())) {
+        if (count($this->batches()) === 0) {
             return;
         }
 
