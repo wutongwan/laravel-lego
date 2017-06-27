@@ -58,7 +58,7 @@ trait HasBatch
 
     public function enableBatchMode()
     {
-        if (!$this->batches()) {
+        if (count($this->batches())) {
             return;
         }
 
@@ -72,6 +72,6 @@ trait HasBatch
 
     public function batchModeEnabled()
     {
-        return Session::get($this->batchModeSessionKey, false);
+        return count($this->batches()) && Session::get($this->batchModeSessionKey, false);
     }
 }
