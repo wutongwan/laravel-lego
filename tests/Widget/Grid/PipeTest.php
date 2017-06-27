@@ -4,9 +4,33 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
 use Lego\Tests\TestCase;
 use Lego\Widget\Grid\Cell;
+use Lego\Widget\Grid\PipeHandler;
+use Lego\Widget\Grid\Pipes4Datetime;
+use Lego\Widget\Grid\Pipes4String;
 
 class PipeTest extends TestCase
 {
+    public function testAbc()
+    {
+        $cell = new Cell('key|trim|date', 'Key');
+        $this->assertEquals('key', $cell->name());
+
+        $pipes = (new \ReflectionClass(Cell::class))->getProperty('pipes');
+        $pipes->setAccessible(true);
+
+        $pipeClass = (new \ReflectionClass(PipeHandler::class))->getProperty('pipeClass');
+        $pipeClass->setAccessible(true);
+        $this->assertEquals(
+            [Pipes4String::class, Pipes4Datetime::class],
+            array_map(
+                function ($handler) use ($pipeClass) {
+                    return $pipeClass->getValue($handler);
+                },
+                $pipes->getValue($cell)
+            )
+        );
+    }
+
     /**
      * @dataProvider builtInPipesDataProvider
      */
