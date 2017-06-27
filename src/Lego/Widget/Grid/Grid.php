@@ -166,7 +166,7 @@ class Grid extends Widget
             $this->addButton(self::BTN_RIGHT_TOP, $name, $url, 'lego-export-' . $name);
         }
 
-        if ($this->batches()) {
+        if (count($this->batches())) {
             LegoAssets::js('components/vue/dist/vue.min.js');
             LegoAssets::js('js/batch.js');
         }
