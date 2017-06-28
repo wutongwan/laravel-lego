@@ -114,4 +114,11 @@ class PipeTest extends TestCase
             ['return-attribute-code', '007']
         ];
     }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+
+        PipeHandler::forgetRegistered();
+    }
 }

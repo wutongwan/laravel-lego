@@ -79,7 +79,7 @@ class Cell
         return clone $this;
     }
 
-    public function fill($data)
+    public function fill($data): self
     {
         if ($data instanceof Store) {
             $this->data = $data->getOriginalData();
