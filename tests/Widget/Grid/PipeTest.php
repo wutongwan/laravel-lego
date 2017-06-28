@@ -2,6 +2,7 @@
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
+use Lego\Foundation\Exceptions\LegoException;
 use Lego\Tests\TestCase;
 use Lego\Widget\Grid\Cell;
 use Lego\Widget\Grid\PipeHandler;
@@ -50,6 +51,9 @@ class PipeTest extends TestCase
             ['trim', ' 123 ', '123'],
             ['trim', ' 123', '123'],
 
+            ['strip', 'abc ', 'abc '],
+            ['strip', '<h1>abc </h1>', 'abc '],
+
             ['date', strtotime('2017-03-08'), '2017-03-08'],
             ['date', '2017-03-08', '2017-03-08'],
             ['date', '2017-03-08 12:00:00', '2017-03-08'],
@@ -64,6 +68,12 @@ class PipeTest extends TestCase
             ['time', '2017-03-08', '00:00:00'],
             ['time', '2017-03-08 12:00:00', '12:00:00'],
             ['time', Carbon::now(), Carbon::now()->format('H:i:s')],
+
+            ['date-format:Y年n月j号', '2017-03-08', '2017年3月8号'],
+            ['date-format:Y年n月j号', null, null],
+
+            // callable build in functions
+            ['strtoupper', 'abc', 'ABC'],
         ];
     }
 
@@ -111,7 +121,8 @@ class PipeTest extends TestCase
             ['always:lego', 'lego'],
             ['increment', 2],
             ['increment-by:7', 8],
-            ['return-attribute-code', '007']
+            ['return-attribute-code', '007'],
+            ['return-cell-description', 'ABC'],
         ];
     }
 
@@ -120,5 +131,15 @@ class PipeTest extends TestCase
         parent::tearDown();
 
         PipeHandler::forgetRegistered();
+    }
+
+    public function testIllegal()
+    {
+        try {
+            new PipeHandler('ha-ha-ha');
+            $this->assertTrue(false, 'This line should not run.');
+        } catch (LegoException $e) {
+            $this->assertEquals('illegal $pipe', $e->getMessage());
+        }
     }
 }

@@ -7,8 +7,6 @@ use Lego\Operator\Store\Store;
 
 class Cell
 {
-    use Concerns\CommonPipes;
-
     private $name;
     private $description;
 

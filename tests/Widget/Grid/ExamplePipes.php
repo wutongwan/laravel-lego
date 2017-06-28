@@ -28,4 +28,9 @@ class ExamplePipes extends Pipes
     {
         return data_get($this->data(), 'code');
     }
+
+    public function handleReturnCellDescription()
+    {
+        return $this->cell()->description();
+    }
 }
