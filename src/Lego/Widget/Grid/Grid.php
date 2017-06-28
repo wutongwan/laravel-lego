@@ -53,11 +53,16 @@ class Grid extends Widget
         return $this->filter;
     }
 
-    public function orderBy($attribute, bool $desc = false)
+    public function orderBy($column, bool $desc = false)
     {
-        $this->query->orderBy($attribute, $desc);
+        $this->query->orderBy($column, $desc);
 
         return $this;
+    }
+
+    public function orderByDesc($column)
+    {
+        return $this->orderBy($column, true);
     }
 
     /**
@@ -91,7 +96,7 @@ class Grid extends Widget
                 if ($exporting) {
                     call_user_func($exporting, $this);
                 }
-                return $this->exportAsExcel($name);
+                $this->exportAsExcel($name)->download();
             },
             md5('grid export' . $name)
         );
@@ -100,7 +105,10 @@ class Grid extends Widget
         return $this;
     }
 
-    private function exportAsExcel($filename)
+    /**
+     * @return \Maatwebsite\Excel\Writers\LaravelExcelWriter
+     */
+    public function exportAsExcel($filename)
     {
         $data = [];
         foreach ($this->paginator() as $store) {
@@ -120,7 +128,7 @@ class Grid extends Widget
                     }
                 );
             }
-        )->export('xls');
+        );
     }
 
     /**

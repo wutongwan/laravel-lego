@@ -62,6 +62,11 @@ class PipeHandler
     {
 
         if ($this->pipe) {
+            // if pipe is build in global function , pass single param only.
+            if (is_callable($this->pipe) && !$this->pipe instanceof \Closure) {
+                $arguments = array_slice($arguments, 0, 1);
+            }
+
             return call_user_func_array($this->pipe, $arguments);
         }
 
