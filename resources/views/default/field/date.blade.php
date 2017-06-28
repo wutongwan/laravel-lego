@@ -3,7 +3,7 @@
        class="form-control" value="{{ $field->takeDefaultInputValue() }}"
        placeholder="{{ $field->getPlaceholder($field->description()) }}">
 
-@if(!(new Mobile_Detect())->isMobile())
+@if(!app(\Mobile_Detect::class)->isMobile())
     @push('lego-scripts')
     <script>
         $(document).ready(function () {

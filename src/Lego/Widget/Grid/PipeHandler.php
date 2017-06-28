@@ -11,6 +11,8 @@ class PipeHandler
     private $pipeClassMethod;
     private $arguments = [];
 
+    protected static $registered = [];
+
     public function __construct($pipe, $arguments = [])
     {
         if ($pipe instanceof \Closure) {
@@ -36,21 +38,24 @@ class PipeHandler
 
     protected function getPipeClassAndMethod($pipe)
     {
-        static $registered = [];
-
-        if (empty($registered)) {
+        if (empty(static::$registered)) {
             foreach (Config::get('lego.widgets.grid.pipes', []) as $pipesClass) {
                 $rft = new \ReflectionClass($pipesClass);
                 foreach ($rft->getMethods() as $method) {
                     if (Str::startsWith($method->name, 'handle')) {
                         $name = substr($method->name, 6);
-                        $registered[Str::snake($name, '-')] = [$pipesClass, $method->name];
+                        static::$registered[Str::snake($name, '-')] = [$pipesClass, $method->name];
                     }
                 }
             }
         }
 
-        return isset($registered[$pipe]) ? $registered[$pipe] : false;
+        return isset(static::$registered[$pipe]) ? static::$registered[$pipe] : false;
+    }
+
+    public static function forgetRegistered()
+    {
+        static::$registered = [];
     }
 
     public function handle(...$arguments)
