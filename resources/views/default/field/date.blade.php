@@ -1,6 +1,6 @@
 <?php /** @var \Lego\Field\Field $field */ ?>
 <input type="{{ $field->getInputType() }}" name="{{ $field->elementName() }}" id="{{ $field->elementId() }}"
-       class="form-control" value="{{ $field->takeDefaultInputValue() }}"
+       class="form-control" value="{{ $field->takeInputValue() }}"
        placeholder="{{ $field->getPlaceholder($field->description()) }}">
 
 @if(!app(\Mobile_Detect::class)->isMobile())

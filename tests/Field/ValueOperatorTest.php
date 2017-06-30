@@ -13,31 +13,31 @@ class ValueOperatorTest extends TestCase
         lego_register(UserDefinedField::class, ExampleField::class);
     }
 
-    public function testTakeDefaultInputValue()
+    public function testTakeInputValue()
     {
         $field = new Text('basic', 'Basic', []);
 
         $field->setOriginalValue('original');
-        $this->assertEquals($field->takeDefaultInputValue(), 'original');
+        $this->assertEquals($field->takeInputValue(), 'original');
 
         $field->default('default');
-        $this->assertEquals($field->takeDefaultInputValue(), 'default');
+        $this->assertEquals($field->takeInputValue(), 'default');
 
         $field->setNewValue('new');
-        $this->assertEquals($field->takeDefaultInputValue(), 'new');
+        $this->assertEquals($field->takeInputValue(), 'new');
     }
 
-    public function testTakeDefaultShowValue()
+    public function testTakeShowValue()
     {
         $field = new Text('basic', 'Basic', []);
 
         $field->setOriginalValue('original');
-        $this->assertEquals($field->takeDefaultShowValue(), 'original');
+        $this->assertEquals($field->takeShowValue(), 'original');
 
         $field->default('default');
-        $this->assertEquals($field->takeDefaultShowValue(), 'default');
+        $this->assertEquals($field->takeShowValue(), 'default');
 
         $field->setDisplayValue('display');
-        $this->assertEquals($field->takeDefaultShowValue(), 'display');
+        $this->assertEquals($field->takeShowValue(), 'display');
     }
 }

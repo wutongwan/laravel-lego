@@ -59,7 +59,7 @@ class CascadeSelect extends Select
 
         return [
             'id' => $this->elementId(),
-            'selected' => $this->takeDefaultInputValue(),
+            'selected' => $this->takeInputValue(),
             'options' => $this->getOptions(),
             'depend' => $this->getDependField()->elementId(),
             'remote' => $this->getRemote(),

@@ -17,6 +17,6 @@ class ExampleField extends Field
      */
     public function render()
     {
-        return $this->takeDefaultInputValue();
+        return $this->takeInputValue();
     }
 }

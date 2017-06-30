@@ -1,6 +1,7 @@
 <?php namespace Lego\Field\Provider;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\App;
 use Lego\Field\Field;
 use Lego\Foundation\Facades\LegoAssets;
 
@@ -77,7 +78,7 @@ class Datetime extends Field
         ];
     }
 
-    protected function autoFormat($datetime)
+    protected function mutateTakingValue($datetime)
     {
         if (!$datetime) {
             return null;
@@ -108,19 +109,9 @@ class Datetime extends Field
         }
     }
 
-    public function takeDefaultInputValue()
-    {
-        return $this->autoFormat(parent::takeDefaultInputValue());
-    }
-
-    public function takeDefaultShowValue()
-    {
-        return $this->autoFormat(parent::takeDefaultShowValue());
-    }
-
     private function isMobile()
     {
-        return (new \Mobile_Detect())->isMobile();
+        return App::make(\Mobile_Detect::class)->isMobile();
     }
 
     /**

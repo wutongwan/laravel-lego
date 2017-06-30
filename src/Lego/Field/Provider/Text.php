@@ -18,7 +18,7 @@ class Text extends Field
         return FormFacade::input(
             $this->getInputType(),
             $this->elementName(),
-            $this->takeDefaultInputValue(),
+            $this->takeInputValue(),
             $this->getAttributes()
         );
     }
