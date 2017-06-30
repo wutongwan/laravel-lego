@@ -37,13 +37,10 @@ class Select extends Text
         return false;
     }
 
-    public function getDisplayValue()
+    protected function renderReadonly()
     {
-        $key = $this->takeDefaultInputValue();
-        return lego_default(
-            parent::getDisplayValue(),
-            array_key_exists($key, $this->getOptions()) ? $this->getOptions()[$key] : null
-        );
+        $key = $this->takeShowValue();
+        return array_key_exists($key, $this->options) ? $this->options[$key] : null;
     }
 
     protected function renderEditable()
@@ -55,7 +52,7 @@ class Select extends Text
         return FormFacade::select(
             $this->elementName(),
             $this->getOptions(),
-            $this->takeDefaultInputValue(),
+            $this->takeInputValue(),
             $this->getAttributes()
         );
     }

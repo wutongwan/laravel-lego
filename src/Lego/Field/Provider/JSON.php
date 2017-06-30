@@ -26,6 +26,16 @@ class JSON extends Text
         return array_get($this->decode($this->originalValue), $this->jsonKey);
     }
 
+    protected function mutateTakingValue($json)
+    {
+        return $this->decode($json);
+    }
+
+    protected function mutateSavingValue($value)
+    {
+        return $this->encode($value);
+    }
+
     protected function decode($json)
     {
         return is_string($json) ? json_decode($json, JSON_OBJECT_AS_ARRAY) : $json;
@@ -41,6 +51,6 @@ class JSON extends Text
         $column = $this->getColumnPathOfRelation($this->column());
         $original = $this->decode($this->store->get($column));
         array_set($original, $this->jsonKey, $this->getNewValue());
-        $this->store->set($column, $this->encode($original));
+        $this->store->set($column, $this->mutateSavingValue($original));
     }
 }

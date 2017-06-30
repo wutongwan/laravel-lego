@@ -96,7 +96,7 @@ trait ModeOperator
 
     protected function renderReadonly()
     {
-        return HtmlFacade::tag('p', (string)$this->takeDefaultShowValue(), [
+        return HtmlFacade::tag('p', (string)$this->takeShowValue(), [
             'id' => $this->elementId(),
             'class' => 'form-control-static',
         ]);

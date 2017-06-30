@@ -8,7 +8,7 @@ class Textarea extends Text
     {
         return FormFacade::textarea(
             $this->elementName(),
-            $this->takeDefaultInputValue(),
+            $this->takeInputValue(),
             $this->getAttributes()
         );
     }

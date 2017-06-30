@@ -2,11 +2,11 @@
 
 <select name="{{ $field->elementName() }}" id="{{ $field->elementId() }}" class="form-control"
         style="width: 100%; min-width: 100%;">
-    @if($value = $field->takeDefaultInputValue())
-        <option value="{{ $value }}">{{ $field->takeDefaultShowValue() }}</option>
+    @if($value = $field->takeInputValue())
+        <option value="{{ $value }}">{{ $field->takeShowValue() }}</option>
     @endif
 </select>
-<input type="hidden" id="{{ $field->elementId() }}-text" name="{{ $field->elementName() }}-text" value="{{ $field->takeDefaultShowValue() }}">
+<input type="hidden" id="{{ $field->elementId() }}-text" name="{{ $field->elementName() }}-text" value="{{ $field->takeShowValue() }}">
 
 @push('lego-scripts')
 <script>

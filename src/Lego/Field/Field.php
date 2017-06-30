@@ -88,8 +88,8 @@ abstract class Field implements HasMode
 
     public function description()
     {
-        return is_null($this->description) ?
-            ucwords(str_replace(['.', ':'], ' ', $this->name()))
+        return is_null($this->description)
+            ? ucwords(str_replace(['.', ':'], ' ', $this->name()))
             : $this->description;
     }
 
@@ -113,7 +113,10 @@ abstract class Field implements HasMode
      */
     public function syncValueToStore()
     {
-        $this->store->set($this->getColumnPathOfRelation($this->column), $this->getNewValue());
+        $this->store->set(
+            $this->getColumnPathOfRelation($this->column),
+            $this->mutateSavingValue($this->getNewValue())
+        );
     }
 
     protected function view($view, $data = [])
