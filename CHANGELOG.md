@@ -3,7 +3,7 @@
 ## Unreleased
 
 ### Added
-- new Field : [Checkboxes](docs/fields.md#Checkboxes) [#94](https://github.com/wutongwan/laravel-lego/pull/94)
+- new Field : [Checkboxes](docs/fields.md#checkboxes) [#94](https://github.com/wutongwan/laravel-lego/pull/94)
 - Field 的 mutate 系列函数
 
 ### Changed
