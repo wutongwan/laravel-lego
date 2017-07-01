@@ -2,13 +2,12 @@
 
 use Collective\Html\HtmlFacade;
 use Lego\Field\Concerns\FilterWhereContains;
-use Lego\Field\Concerns\HasOptions;
-use Lego\Foundation\Facades\LegoAssets;
 
-class Checkboxes extends Text
+class Checkboxes extends Radios
 {
     use FilterWhereContains;
-    use HasOptions;
+
+    protected $inputType = 'checkbox';
 
     /**
      * 存储到数据库时的分隔符
@@ -29,14 +28,6 @@ class Checkboxes extends Text
         }
     }
 
-    protected function renderEditable()
-    {
-        LegoAssets::js('components/icheck/icheck.min.js');
-        LegoAssets::css('components/icheck/skins/square/blue.css');
-
-        return $this->view('lego::default.field.checkboxes');
-    }
-
     protected function renderReadonly()
     {
         $labels = array_filter(
@@ -49,6 +40,11 @@ class Checkboxes extends Text
         );
 
         return HtmlFacade::ul($labels);
+    }
+
+    public function isChecked($value)
+    {
+        return in_array($value, $this->takeInputValue());
     }
 
     protected function mutateSavingValue($value)
