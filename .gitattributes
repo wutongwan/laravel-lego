@@ -14,3 +14,4 @@ bower.json export-ignore
 package.json export-ignore
 webpack.mix.js export-ignore
 sami.php export-ignore
+CHANGELOG.md export-ignore
