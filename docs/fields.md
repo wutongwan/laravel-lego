@@ -107,8 +107,7 @@ $form->addTime('daily_at', 'Select Time');
 长文本输入框
 
 ```php
-$form = Lego::form([]);
-$form->addTestarea('description', 'Description');
+$form->addTextarea('description', 'Description');
 ```
 
 ## Readonly
@@ -116,11 +115,32 @@ $form->addTestarea('description', 'Description');
 只读文本
 
 ```php
-$form = Lego::form([]);
-$form->addTestarea('Description', 'this is description of ...');
+$form->addReadonly('Description', 'this is description of ...');
 ```
 
-Email field in <http://getbootstrap.com/css/#forms-controls-static>
+## Checkboxes
+
+由于 checkboxes 是多选框，在存储到数据库时，默认使用 `|` 间隔拼接成字符串，如果需要修改间隔符号，
+可以调用 `->separator($glue)` 传入。
+
+> 如果需要全局修改，可在配置文件 `lego.php` 中 `field.provider` 中添加下面配置
+> 
+> ```php
+> \Lego\Field\Provider\Checkboxes::class => [
+>     'separator' => '|'
+> ]
+> ```
+> 
+
+```php
+$form->addCheckboxes('status')
+    ->values([1, 2, 3])
+    // or
+    ->options([
+        0 => 'deactive',
+        1 => 'active',
+    ])
+```
 
 
 ## 自定义 Field
@@ -137,6 +157,9 @@ class Email extends Lego\Field\Provider\Text
     }
 }
 ```
+
+Email field in <http://getbootstrap.com/css/#forms-controls-static>
+
 
 注册到配置文件：`lego.php`
 

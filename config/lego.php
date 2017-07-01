@@ -28,6 +28,12 @@ return [
         'attributes' => [
             'class' => 'form-control',
         ],
+
+        'provider' => [
+            \Lego\Field\Provider\Checkboxes::class => [
+                'separator' => '|'
+            ]
+        ],
     ],
 
     /**

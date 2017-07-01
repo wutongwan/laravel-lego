@@ -26,6 +26,7 @@ abstract class Field implements HasMode
         Concerns\ScopeOperator,
         Concerns\HasRelation,
         Concerns\HasLocale,
+        Concerns\HasConfig,
         Concerns\FilterWhereEquals;
 
     /**

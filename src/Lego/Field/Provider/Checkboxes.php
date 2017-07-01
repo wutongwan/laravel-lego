@@ -4,7 +4,7 @@ use Collective\Html\HtmlFacade;
 use Lego\Field\Concerns\FilterWhereContains;
 use Lego\Foundation\Facades\LegoAssets;
 
-class CheckboxGroup extends Select
+class Checkboxes extends Select
 {
     use FilterWhereContains;
 
@@ -22,6 +22,9 @@ class CheckboxGroup extends Select
 
     protected function initialize()
     {
+        if ($separator = $this->config('separator')) {
+            $this->separator = $separator;
+        }
     }
 
     protected function renderEditable()
@@ -29,7 +32,7 @@ class CheckboxGroup extends Select
         LegoAssets::js('components/icheck/icheck.min.js');
         LegoAssets::css('components/icheck/skins/square/blue.css');
 
-        return $this->view('lego::default.field.checkbox-group');
+        return $this->view('lego::default.field.checkboxes');
     }
 
     protected function renderReadonly()
