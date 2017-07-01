@@ -114,9 +114,9 @@ $grid->add('name|trim', 'Name')
 
 - strip, remove html tags
 
-	```php
-	$grid->add('name|strip', 'Name');
-	```
+    ```php
+    $grid->add('name|strip', 'Name');
+    ```
 
 - date, convert to date string
 
@@ -134,14 +134,32 @@ $grid->add('name|trim', 'Name')
 
 ### Self-Defined Pipe
 
+使用者可以继承 `\Lego\Widget\Grid\Pipes` 实现自己的 Pipes ，然后将其注册到 lego 的配置文件的 `widgets.grid.pipes` 数组中，这样在 Grid 就可以使用 `|` 引入 pipe。
+
+下面示例创建了一个用于翻译的 pipes 类，其中所有以 `handle` 开头的成员函数将会被识别为可以直接使用的 pipe
+
+`\Lego\Widget\Grid\Pipes` 有三个成员函数，用于获取管道需要的数据：
+
+- `value()` 输入 `pipe` 的值，例如下面的 `handleUpper`
+- `data()` 这一行对应的原始数据，如果数据源是 Laravel Model ，此函数返回值为 Model 实例
+- `cell()` 返回 `\Lego\Widget\Grid\Cell` 实例，当前单元格的描述、对应的数据库字段，都可以通过此实例获取
+
+
 ```php
-lego_register(
-    GridCellPipe::class,
-    function ($name, Model $model, Cell $cell) {
-        return $model->getAttribute($cell->name() . '_en')
-    }, 
-    'trans2en'
-)
+class Pipes extends \Lego\Widget\Grid\Pipes
+{
+    pubilc function handleUpper()
+    {
+        return strtoupper($this->value());
+    }
+
+    public function handleTrans2en()
+    {
+        return $this->data()->getAttribute(
+            $this->cell()->name() . 'en'
+        );
+    }
+}
 ```
 
 ```php

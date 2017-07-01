@@ -1,4 +1,4 @@
-<?php /* @var \Lego\Field\Provider\CheckboxGroup $field */ ?>
+<?php /* @var \Lego\Field\Provider\Checkboxes $field */ ?>
 <div id="{{ $field->elementId() }}" class="checkbox">
     <ul class="list-group">
         @forelse($field->getOptions() as $value => $label)
