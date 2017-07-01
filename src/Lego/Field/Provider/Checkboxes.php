@@ -2,11 +2,13 @@
 
 use Collective\Html\HtmlFacade;
 use Lego\Field\Concerns\FilterWhereContains;
+use Lego\Field\Concerns\HasOptions;
 use Lego\Foundation\Facades\LegoAssets;
 
-class Checkboxes extends Select
+class Checkboxes extends Text
 {
     use FilterWhereContains;
+    use HasOptions;
 
     /**
      * 存储到数据库时的分隔符

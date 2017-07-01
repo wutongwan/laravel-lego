@@ -120,6 +120,9 @@ abstract class Field implements HasMode
         );
     }
 
+    /**
+     * @return \Illuminate\View\View
+     */
     protected function view($view, $data = [])
     {
         return view($view, $data)->with('field', $this);

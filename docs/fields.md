@@ -56,6 +56,29 @@ $form->addNumber('price')
     ->min(0)
 ```
 
+### Select
+
+```php
+$form->addSelect('status')
+    ->values('active', 'deactive')
+    // or
+    ->options([
+        0 => 'deactive',
+        1 => 'active',
+    ])
+```
+
+### Select2
+
+Select2 - The jQuery replacement for select boxes
+
+Select 选项很多时，推荐使用 Select2 ，用户体验会好很多
+
+```php
+$form->addSelect2('reason')
+    ->values(...)
+```
+
 
 ### AutoComplete
 

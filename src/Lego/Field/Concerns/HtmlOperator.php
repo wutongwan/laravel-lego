@@ -106,13 +106,21 @@ trait HtmlOperator
             return $this;
         }
 
-        $this->attributes [$attributeOrAttributes] = $value;
+        $this->attributes[$attributeOrAttributes] = $value;
         return $this;
     }
 
     public function getAttribute($attribute, $default = null)
     {
         return array_get($this->getAttributes(), $attribute, $default);
+    }
+
+    public function removeAttribute($attribute)
+    {
+        foreach (func_get_args() as $attr) {
+            unset($this->attributes[$attr]);
+        }
+        return $this;
     }
 
     public function placeholder($placeholder = null)

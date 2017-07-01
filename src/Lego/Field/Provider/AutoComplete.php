@@ -1,13 +1,14 @@
 <?php namespace Lego\Field\Provider;
 
 use Illuminate\Support\Facades\Request;
-use Lego\Field\Field;
-use Lego\Foundation\Facades\LegoAssets;
+use Lego\Field\Concerns\HasSelect2Assets;
 use Lego\Operator\Query\Query;
 use Lego\Register\AutoCompleteMatchHandler;
 
-class AutoComplete extends Field
+class AutoComplete extends Text
 {
+    use HasSelect2Assets;
+
     protected function initialize()
     {
         $this->match(function ($keyword) {
@@ -128,31 +129,9 @@ class AutoComplete extends Field
         return lego_default($this->valueColumn, $this->store->getKeyName());
     }
 
-    public function process()
-    {
-        // 以下文件仅在 editable 时加载
-        if ($this->isEditable()) {
-            LegoAssets::css('components/select2/dist/css/select2.min.css');
-            LegoAssets::css('components/select2-bootstrap-theme/dist/select2-bootstrap.min.css');
-            LegoAssets::js('components/select2/dist/js/select2.full.min.js');
-
-            if ($this->localeIsNotEn()) {
-                LegoAssets::js("components/select2/dist/js/i18n/{$this->getLocale()}.js");
-            }
-        }
-    }
-
-    /**
-     * 渲染当前对象
-     * @return string
-     */
-    public function render()
-    {
-        return $this->renderByMode();
-    }
-
     protected function renderEditable()
     {
+        $this->includeSelect2Assets();
         return $this->view('lego::default.field.auto-complete');
     }
 

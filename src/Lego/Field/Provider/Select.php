@@ -2,10 +2,12 @@
 
 use Collective\Html\FormFacade;
 use Lego\Field\Concerns\FilterWhereEquals;
+use Lego\Field\Concerns\HasOptions;
 
 class Select extends Text
 {
     use FilterWhereEquals;
+    use HasOptions;
 
     protected $validateOption = true;
 
@@ -45,56 +47,25 @@ class Select extends Text
 
     protected function renderEditable()
     {
-        if (!isset($options[null]) && is_null($this->getPlaceholder())) {
+        if (!isset($this->options[null]) && is_null($this->getPlaceholder())) {
             $this->placeholder($this->description());
+        }
+
+        $attributes = $this->getAttributes();
+        if ($this->getPlaceholder() === false) {
+            unset($attributes['placeholder']);
         }
 
         return FormFacade::select(
             $this->elementName(),
             $this->getOptions(),
             $this->takeInputValue(),
-            $this->getAttributes()
+            $attributes
         );
     }
 
     public function placeholder($placeholder = null)
     {
-        $placeholder = trim($placeholder);
         return parent::placeholder($placeholder ? "* {$placeholder} *" : $placeholder);
-    }
-
-    protected $options = [];
-
-    /**
-     * options(['active' => 'Active', 'disabled' => 'Disabled'])
-     *
-     * @param array $options
-     * @return $this
-     */
-    public function options($options)
-    {
-        $this->options = func_num_args() > 1 ? func_get_args() : (array)$options;
-
-        return $this;
-    }
-
-    /**
-     * values([1, 2, 3]) === options([1 => 1, 2 => 2, 3 => 3])
-     * values(1, 2, 3) === options([1 => 1, 2 => 2, 3 => 3])
-     *
-     * @param array|mixed $values
-     * @return $this
-     */
-    public function values($values)
-    {
-        $values = func_num_args() > 1 ? func_get_args() : (array)$values;
-        $this->options = array_combine($values, $values);
-
-        return $this;
-    }
-
-    public function getOptions()
-    {
-        return $this->options;
     }
 }
