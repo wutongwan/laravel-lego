@@ -167,10 +167,21 @@ $form->addJSON('bedroom:wall:bottom')
 
 > 上面代码最后的嵌套 key 之所以使用 `:` 分隔是为了避免与 Laravel 的 Relation 写法冲突
 
+### Radios
+
+单选框
+
+```php
+$form->addRadios('confirm')
+    ->values('yes', 'no')
+```
+
 
 ### Checkboxes
 
-由于 checkboxes 是多选框，在存储到数据库时，默认使用 `|` 间隔拼接成字符串，如果需要修改间隔符号，
+多选框
+
+由于 checkboxes 会产生多个值，在存储到数据库时，默认使用 `|` 间隔拼接成字符串，如果需要修改间隔符号，
 可以调用 `->separator($glue)` 传入。
 
 > 如果需要全局修改，可在配置文件 `lego.php` 中 `field.provider` 中添加下面配置

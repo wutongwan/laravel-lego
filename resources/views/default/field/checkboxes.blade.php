@@ -1,12 +1,16 @@
-<?php /* @var \Lego\Field\Provider\Checkboxes $field */ ?>
+<?php /* @var \Lego\Field\Provider\Radios $field */ ?>
 <div id="{{ $field->elementId() }}" class="checkbox">
     <ul class="list-group">
+
+        <?php $isArray = is_array($field->takeInputValue()) ?>
+
         @forelse($field->getOptions() as $value => $label)
             <li class="list-group-item">
-                <input type="checkbox"
-                       name="{{ $field->elementName() }}[]"
-                       value="{{ $value }}"
-                    {{ in_array($value, $field->takeInputValue()) ? 'checked' : null }}
+                <input
+                    type="{{ $field->getInputType() }}"
+                    name="{{ $field->elementName() }}{{ $isArray ? '[]' : null }}"
+                    value="{{ $value }}"
+                    {{ $field->isChecked($value) ? 'checked' : null }}
                 >
                 <span style="margin-left: 1em;">{{ $label }}</span>
             </li>
@@ -21,7 +25,10 @@
     (function () {
         $('#{{ $field->elementId() }} input').each(function (idx, box) {
             var $box = $(box);
-            $box.iCheck({checkboxClass: 'icheckbox_square-blue'});
+            $box.iCheck({
+                checkboxClass: 'icheckbox_square-blue',
+                radioClass: 'iradio_square-blue'
+            });
             $box.closest('.list-group-item').on('click', function () {
                 $box.iCheck('toggle')
             });

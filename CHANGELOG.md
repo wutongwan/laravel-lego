@@ -3,9 +3,10 @@
 ## Unreleased
 
 ### Added
+- new Field : [Radios](docs/fields.md#radios) [#94](https://github.com/wutongwan/laravel-lego/pull/94)
 - new Field : [Checkboxes](docs/fields.md#checkboxes) [#94](https://github.com/wutongwan/laravel-lego/pull/94)
 - new Field : [Select2](docs/fields.md#select2) [#94](https://github.com/wutongwan/laravel-lego/pull/94)
-- Field 的 mutate 系列函数
+- Field `mutate` 系列函数
 - Field `removeAttribute($attribute)` 函数
 
 ### Changed
