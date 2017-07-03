@@ -2,13 +2,11 @@
 <div id="{{ $field->elementId() }}" class="checkbox">
     <ul class="list-group">
 
-        <?php $isArray = is_array($field->takeInputValue()) ?>
-
         @forelse($field->getOptions() as $value => $label)
             <li class="list-group-item">
                 <input
                     type="{{ $field->getInputType() }}"
-                    name="{{ $field->elementName() }}{{ $isArray ? '[]' : null }}"
+                    name="{{ $field->getInputName() }}"
                     value="{{ $value }}"
                     {{ $field->isChecked($value) ? 'checked' : null }}
                 >
