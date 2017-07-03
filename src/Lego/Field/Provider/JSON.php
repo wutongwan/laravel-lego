@@ -28,7 +28,7 @@ class JSON extends Text
 
     protected function mutateTakingValue($json)
     {
-        return $this->decode($json);
+        return $this->decode($json) ?: $this->getDefaultValue();
     }
 
     protected function mutateSavingValue($value)
