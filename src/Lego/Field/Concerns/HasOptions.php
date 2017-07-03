@@ -36,4 +36,26 @@ trait HasOptions
     {
         return $this->options;
     }
+
+    /**
+     * 在 Select 控件中，选项有可能是嵌套数组，所以有此函数
+     */
+    public function getOptionLabelByValue($value)
+    {
+        return $this->getNestedLabel($this->options, $value);
+    }
+
+    private function getNestedLabel(array $options, $target)
+    {
+        foreach ($options as $key => $label) {
+            if (is_array($label)) {
+                return $this->getNestedLabel($label, $target);
+            }
+
+            if ($key === $target) {
+                return $label;
+            }
+        }
+        return null;
+    }
 }
