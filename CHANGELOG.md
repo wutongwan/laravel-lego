@@ -1,6 +1,6 @@
 # Release Notes
 
-## 0.1.33
+## 0.1.33 (2017-07-03)
 
 ### Added
 - new Field : [Radios](docs/fields.md#radios) [#94](https://github.com/wutongwan/laravel-lego/pull/94)
