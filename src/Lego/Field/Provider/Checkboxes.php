@@ -49,7 +49,7 @@ class Checkboxes extends Radios
 
     protected function mutateSavingValue($value)
     {
-        return join($this->separator, $value);
+        return join($this->separator, $value ?: []);
     }
 
     protected function mutateTakingValue($value)
