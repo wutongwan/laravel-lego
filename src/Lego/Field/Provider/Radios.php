@@ -29,4 +29,9 @@ class Radios extends Text
     {
         return $this->takeInputValue() == $value;
     }
+
+    public function getInputName()
+    {
+        return $this->elementName();
+    }
 }

@@ -9,6 +9,11 @@ class Checkboxes extends Radios
 
     protected $inputType = 'checkbox';
 
+    public function getInputName()
+    {
+        return parent::elementName() . '[]';
+    }
+
     /**
      * 存储到数据库时的分隔符
      * @var string
