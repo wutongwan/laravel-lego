@@ -219,6 +219,14 @@ $form->addCascadeSelect('street')
     });
 ```
 
+### RichText
+
+继承自 Textarea ，前端使用 [tinymce](https://www.tinymce.com/)
+
+```php
+$form->addRichText('introduction')
+```
+
 
 ## 自定义 Field
 
