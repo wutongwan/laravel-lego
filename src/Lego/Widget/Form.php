@@ -8,7 +8,10 @@ use Lego\Register\HighPriorityResponse;
 
 /**
  * Class Form
- * @lego-ide-helper
+ * @method \Lego\Foundation\Button addRightTopButton($text, $url = null, $id = null)
+ * @method \Lego\Foundation\Button addRightBottomButton($text, $url = null, $id = null)
+ * @method \Lego\Foundation\Button addLeftTopButton($text, $url = null, $id = null)
+ * @method \Lego\Foundation\Button addLeftBottomButton($text, $url = null, $id = null)
  * @package Lego\Widget
  */
 class Form extends Widget implements HasMode
