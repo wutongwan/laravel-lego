@@ -1,5 +1,11 @@
 # Release Notes
 
+## 0.1.35 (2017-07-16)
+
+### Added
+- new Field : RichText [#98](https://github.com/wutongwan/laravel-lego/pull/94)
+- Field Textarea : `cols($num)` and `rows($num)`
+
 ## 0.1.33 (2017-07-03)
 
 ### Added
