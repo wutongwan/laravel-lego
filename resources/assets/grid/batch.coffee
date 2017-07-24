@@ -12,6 +12,7 @@ lego.createGridBatch = (gridContainerId, ids, batches) ->
             selectedIds: []
             batches: batches,
             currentBatchAction: null,
+            currentBatchFormTarget: null,
 
         computed:
             selected: ->
@@ -39,5 +40,16 @@ lego.createGridBatch = (gridContainerId, ids, batches) ->
                     if id not in copy
                         @selectedIds.push id
 
-            submitBatch: (action) ->
-                @currentBatchAction = action;
+            submitBatch: (batch) ->
+                @currentBatchAction = batch.url;
+                if typeof(batch.open_target) == "object"
+                    windowName = "Lego_Popup_Window_Batch_#{batch.name}"
+                    window.open(
+                        'about:blank',
+                        windowName,
+                        "width=#{batch.open_target.width},height=#{batch.open_target.height},resizeable=no"
+                    )
+                    @currentBatchFormTarget = windowName
+                else
+                    console.log batch.open_target
+                    @currentBatchFormTarget = batch.open_target

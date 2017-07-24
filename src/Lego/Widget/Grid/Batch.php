@@ -1,5 +1,6 @@
 <?php namespace Lego\Widget\Grid;
 
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
@@ -15,9 +16,10 @@ use Lego\Widget\Confirm;
 /**
  * Grid 批处理的逻辑
  */
-class Batch
+class Batch implements Arrayable
 {
     const IDS_QUERY_NAME = '__lego_batch_ids';
+    const OPEN_TARGET_DEFAULT = '_self';
 
     private $name;
     private $url;
@@ -54,6 +56,8 @@ class Batch
      */
     private $handle;
 
+    private $openTarget = self::OPEN_TARGET_DEFAULT;
+
     public function __construct($name, Query $query, $primaryKey = 'id')
     {
         $this->name = $name;
@@ -86,6 +90,28 @@ class Batch
     public function url()
     {
         return $this->url;
+    }
+
+    public function openInNewTab($condition = true)
+    {
+        if ($condition) {
+            $this->openTarget = '_blank';
+        }
+        return $this;
+    }
+
+    public function openInPopup($width = 500, $height = 500, $condition = true)
+    {
+        if ($condition) {
+            $this->openTarget = compact('height', 'width');
+        }
+        return $this;
+    }
+
+    public function resetOpenTarget()
+    {
+        $this->openTarget = static::OPEN_TARGET_DEFAULT;
+        return $this;
     }
 
     public function form(\Closure $builder)
@@ -217,5 +243,14 @@ class Batch
                 Confirm::FROM_QUERY_NAME => null,
             ])
         );
+    }
+
+    public function toArray()
+    {
+        return [
+            'name' => $this->name(),
+            'url' => $this->url(),
+            'open_target' => $this->openTarget,
+        ];
     }
 }
