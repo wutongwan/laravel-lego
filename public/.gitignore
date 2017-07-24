@@ -1,3 +1,5 @@
 *
+# component files was ignored by standalone .gitignore in that directory
+!components
 !field
 !.gitignore
