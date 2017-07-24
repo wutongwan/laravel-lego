@@ -1,5 +1,13 @@
 # Release Notes
 
+## 0.1.36 (2017-07-24)
+
+### Added
+- Grid 批处理操作可以在其他窗口打开，默认在当前 tab 打开
+    - addBatch(...)->openInNewTab()
+    - addBatch(...)->openInPopup($width = ..., $height = ...)
+    - addBatch(...)->resetOpenTarget()
+
 ## 0.1.35 (2017-07-16)
 
 ### Added
