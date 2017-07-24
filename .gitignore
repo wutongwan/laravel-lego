@@ -5,8 +5,6 @@ yarn.lock
 .idea/
 .phpstorm.meta.php
 
-public/components
-
 docs/api
 
 _ide_helper_lego.php
