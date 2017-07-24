@@ -30,13 +30,18 @@ $hasBatch = $grid->batchModeEnabled();
 
                 &middot;
 
-                <form :action="currentBatchAction" method="post" style="display: inline;">
+                <form
+                    method="post"
+                    style="display: inline;"
+                    :action="currentBatchAction"
+                    :target="currentBatchFormTarget"
+                >
                     <input type="hidden" name="ids" id="lego-grid-batch-input-ids" :value="selectedIdsValue">
                     {{ csrf_field() }}
 
                     <button
-                        v-for="(action, name) in batches"
-                        v-on:click="submitBatch(action)"
+                        v-for="(batch, name) in batches"
+                        v-on:click="submitBatch(batch)"
                         class="btn btn-default btn-sm"
                         style="margin-left: 2px;"
                         type="submit"
