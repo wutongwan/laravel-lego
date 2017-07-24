@@ -46,7 +46,7 @@ trait HasBatch
     {
         $array = [];
         foreach ($this->batches as $batch) {
-            $array[$batch->name()] = $batch->url();
+            $array[$batch->name()] = $batch->toArray();
         }
         return $array;
     }

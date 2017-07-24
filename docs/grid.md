@@ -240,3 +240,10 @@ $grid->addBatch('变更状态')
 ```
 
 
+> **Tips: 在新 tab、新窗口发起批处理**
+>
+> ```php
+> $grid->addBatch(...)->openInNewTab();
+> $grid->addBatch(...)->openInPopup($width = ..., $height = ...);
+> $grid->addBatch(...)->resetOpenTarget()
+```
