@@ -41,15 +41,18 @@ lego.createGridBatch = (gridContainerId, ids, batches) ->
                         @selectedIds.push id
 
             submitBatch: (batch) ->
-                @currentBatchAction = batch.url;
+                that = this;
+                @currentBatchAction = batch.url
                 if typeof(batch.open_target) == "object"
-                    windowName = "Lego_Popup_Window_Batch_#{batch.name}"
-                    window.open(
+                    @currentBatchFormTarget = "Lego_Popup_Window_Batch_#{batch.name}"
+                    win = window.open(
                         'about:blank',
-                        windowName,
+                        @currentBatchFormTarget,
                         "width=#{batch.open_target.width},height=#{batch.open_target.height},resizeable=no"
                     )
-                    @currentBatchFormTarget = windowName
+                    win.onload = ->
+                        that.$refs.form.submit()
                 else
-                    console.log batch.open_target
-                    @currentBatchFormTarget = batch.open_target
+                    that.currentBatchFormTarget = batch.open_target
+                    Vue.nextTick ->
+                        that.$refs.form.submit()
