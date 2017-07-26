@@ -1,5 +1,10 @@
 # Release Notes
 
+## 0.1.38 (2017-07-26)
+
+### Fixed
+- [批处理功能在 Firefox 等浏览器中的 JS 执行时序问题](https://github.com/wutongwan/laravel-lego/commit/177869147a)
+
 ## 0.1.36 (2017-07-24)
 
 ### Added
