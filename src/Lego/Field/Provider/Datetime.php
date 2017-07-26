@@ -91,6 +91,11 @@ class Datetime extends Field
         return date($this->format, strtotime($datetime));
     }
 
+    protected function mutateSavingValue($value)
+    {
+        return $this->mutateTakingValue($value);
+    }
+
     /**
      * 数据处理逻辑
      */
