@@ -22,6 +22,8 @@ find public/components \
 	-o -path '*/examples/*' \
 	-o -path '*/benchmarks/*' \
 	-o -path '*/flow/*' \
+	-o -path '*/vendor/*' \
+	-o -path '*/external/*' \
 	-o -name '*.less' \
 	-o -name '*.sass' \
 	-o -name '*.scss' \
@@ -41,7 +43,11 @@ find public/components \
 	-o -name 'package.js' \
 	-o -name 'LICENCE*' \
 	-o -name 'LICENSE*' \
+	-o -name 'jquery.tinymce.*' \
+	-o -name 'tinymce.jquery.*' \
 	| xargs rm -rf
+
+find public/components -type d -empty | xargs rm -rf
 
 # generate ide helpers
 php build/generate-ide-helper.php
