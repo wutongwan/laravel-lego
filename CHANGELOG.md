@@ -1,11 +1,11 @@
 # Release Notes
 
-## 0.1.38 (2017-07-26)
+## 0.1.39 (2017-07-26)
 
 ### Fixed
 - [批处理功能在 Firefox 等浏览器中的 JS 执行时序问题](https://github.com/wutongwan/laravel-lego/commit/177869147a)
 
-## 0.1.36 (2017-07-24)
+## 0.1.37 (2017-07-24)
 
 ### Added
 - Grid 批处理操作可以在其他窗口打开，默认在当前 tab 打开
