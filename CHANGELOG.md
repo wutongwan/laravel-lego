@@ -1,5 +1,11 @@
 # Release Notes
 
+## 0.1.39 (2017-07-31)
+
+### Fixed
+
+- 为 RangeField 添加 scope 支持
+
 ## 0.1.39 (2017-07-26)
 
 ### Fixed
