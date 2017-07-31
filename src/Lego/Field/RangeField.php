@@ -69,7 +69,9 @@ abstract class RangeField extends Field
 
     public function getNewValue()
     {
-        return !is_empty_string($this->lower->getNewValue()) && !is_empty_string($this->upper->getNewValue());
+        $lower = $this->lower->getNewValue();
+        $upper = $this->lower->getNewValue();
+        return ($lower || $upper) ? [$lower, $upper] : [];
     }
 
     /**
