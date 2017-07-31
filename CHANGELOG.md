@@ -1,12 +1,12 @@
 # Release Notes
 
-## 0.1.39 (2017-07-31)
+## 0.1.40 (2017-07-31)
 
 ### Fixed
 
 - 为 RangeField 添加 scope 支持
 
-## 0.1.40 (2017-07-26)
+## 0.1.39 (2017-07-26)
 
 ### Fixed
 - [批处理功能在 Firefox 等浏览器中的 JS 执行时序问题](https://github.com/wutongwan/laravel-lego/commit/177869147a)
