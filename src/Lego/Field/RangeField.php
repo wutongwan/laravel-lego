@@ -70,7 +70,7 @@ abstract class RangeField extends Field
     public function getNewValue()
     {
         $lower = $this->lower->getNewValue();
-        $upper = $this->lower->getNewValue();
+        $upper = $this->upper->getNewValue();
         return ($lower || $upper) ? [$lower, $upper] : [];
     }
 
