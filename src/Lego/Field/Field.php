@@ -47,6 +47,7 @@ abstract class Field implements HasMode
      */
     protected $column;
 
+
     /**
      * Field constructor.
      * @param string $name 该字段的唯一标记, 同一个控件中不能存在相同name的field
@@ -102,7 +103,6 @@ abstract class Field implements HasMode
             $this->filter($query);
         }
     }
-
 
     /**
      * 数据处理逻辑
