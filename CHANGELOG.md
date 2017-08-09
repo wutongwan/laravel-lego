@@ -1,5 +1,12 @@
 # Release Notes
 
+## 0.1.41 (2017-08-09)
+
+### Added
+
+- Text
+    - emptyStringToNull: 若输入值为空字符串，存储时转换为 null
+
 ## 0.1.40 (2017-07-31)
 
 ### Fixed
