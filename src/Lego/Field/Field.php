@@ -48,6 +48,12 @@ abstract class Field implements HasMode
     protected $column;
 
     /**
+     * 若输入值为空字符串，存储时转换为 null
+     * @var bool
+     */
+    protected $emptyStringToNull = false;
+
+    /**
      * Field constructor.
      * @param string $name 该字段的唯一标记, 同一个控件中不能存在相同name的field
      * @param string $description 描述、标签
@@ -103,6 +109,16 @@ abstract class Field implements HasMode
         }
     }
 
+    /**
+     * 若输入值为空字符串，存储时转换为 null
+     * @return $this
+     */
+    public function emptyStringToNull()
+    {
+        $this->emptyStringToNull = true;
+        return $this;
+    }
+
 
     /**
      * 数据处理逻辑
@@ -114,9 +130,15 @@ abstract class Field implements HasMode
      */
     public function syncValueToStore()
     {
+        $value = $this->getNewValue();
+
+        if ($this->emptyStringToNull && is_empty_string($value)) {
+            $value = null;
+        }
+
         $this->store->set(
             $this->getColumnPathOfRelation($this->column),
-            $this->mutateSavingValue($this->getNewValue())
+            $this->mutateSavingValue($value)
         );
     }
 
