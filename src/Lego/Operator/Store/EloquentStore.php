@@ -70,23 +70,34 @@ class EloquentStore extends Store
      *
      * @param array $options
      * @return bool
+     * @throws LegoSaveFail
      */
     public function save($options = [])
     {
-        DB::transaction(function () use ($options) {
-            foreach ($this->relations as $related) {
-                if (!$related->save()) {
-                    throw new LegoSaveFail(class_basename($related));
-                }
+        foreach ($this->relations as $related) {
+            if (!$related->save()) {
+                $this->throwSaveError($related);
             }
+        }
 
-            if (!$this->data->save($options)) {
-                throw new LegoSaveFail(class_basename($this->data));
-            }
-        });
+        if (!$this->data->save($options)) {
+            $this->throwSaveError($this->data);
+        }
 
         $this->data = $this->data->fresh();
         return true;
+    }
+
+    private function throwSaveError($data)
+    {
+        $class = class_basename($data);
+        try {
+            $dataString = json_encode($data, JSON_UNESCAPED_UNICODE);
+        } catch (\Exception $e) {
+            $dataString = '[json encode fail]';
+        }
+
+        throw new LegoSaveFail($class . ' save fail, ' . $dataString);
     }
 
     /**
