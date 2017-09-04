@@ -17,7 +17,7 @@
  *      - 例如：mutateSavingValue($value) ：数据入库前将通过此函数进行必要修正
  *
  */
-trait ValueOperator
+trait HasValues
 {
     /**
      * 原始值，一般读取自数据库等数据源
