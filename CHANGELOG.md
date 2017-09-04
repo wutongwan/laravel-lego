@@ -5,6 +5,7 @@
 ### Added
 
 - [Field：Scope name 默认取用 Field name](docs/filter.md#query-scope)
+- [Field: 不需要存储到 Model 的 Field](docs/fields.md#不需要存储到-Model-的-Field)
 
 ## 0.1.43 (2017-08-23)
 

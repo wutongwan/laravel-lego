@@ -39,6 +39,8 @@ trait HasValues
      */
     protected $defaultValue;
 
+    protected $doesntStore = false;
+
     /**
      * 数据库原始值
      */
@@ -162,5 +164,22 @@ trait HasValues
     protected function mutateSavingValue($value)
     {
         return $value;
+    }
+
+    /**
+     * 标记此字段不用存储到 Store ，即 Model
+     *
+     * @param bool $condition
+     * @return $this
+     */
+    public function doesntStore($condition = true)
+    {
+        $this->doesntStore = $condition;
+        return $this;
+    }
+
+    public function isDoesntStore()
+    {
+        return $this->doesntStore;
     }
 }
