@@ -23,7 +23,7 @@ abstract class Field implements HasMode
         Concerns\FieldContainer,
         Concerns\ValidationOperator,
         Concerns\ValueOperator,
-        Concerns\ScopeOperator,
+        Concerns\HasScope,
         Concerns\HasRelation,
         Concerns\HasLocale,
         Concerns\HasConfig,

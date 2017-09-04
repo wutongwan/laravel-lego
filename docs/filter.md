@@ -21,3 +21,10 @@ $filter->addSelect('custom')->values('hot', 'normal')
 	        : $query->whereLte('pv', 1000)
 	})
 ```
+
+
+使用 Field name 作为 Scope name
+
+```php
+$filter->addSelect('hotOrNormal')->scope()
+```
