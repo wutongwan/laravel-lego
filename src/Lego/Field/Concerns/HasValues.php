@@ -17,7 +17,7 @@
  *      - 例如：mutateSavingValue($value) ：数据入库前将通过此函数进行必要修正
  *
  */
-trait ValueOperator
+trait HasValues
 {
     /**
      * 原始值，一般读取自数据库等数据源
@@ -38,6 +38,8 @@ trait ValueOperator
      * 默认值
      */
     protected $defaultValue;
+
+    protected $doesntStore = false;
 
     /**
      * 数据库原始值
@@ -162,5 +164,22 @@ trait ValueOperator
     protected function mutateSavingValue($value)
     {
         return $value;
+    }
+
+    /**
+     * 标记此字段不用存储到 Store ，即 Model
+     *
+     * @param bool $condition
+     * @return $this
+     */
+    public function doesntStore($condition = true)
+    {
+        $this->doesntStore = $condition;
+        return $this;
+    }
+
+    public function isDoesntStore()
+    {
+        return $this->doesntStore;
     }
 }

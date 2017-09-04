@@ -6,7 +6,7 @@ use Lego\Foundation\Exceptions\LegoException;
 use Lego\LegoRegister;
 use Lego\Register\FieldSelfDefinedValidation;
 
-trait ValidationOperator
+trait HasValidation
 {
     /**
      * 改 Field 所有 Validation

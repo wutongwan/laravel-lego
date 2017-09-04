@@ -263,3 +263,14 @@ Email field in <http://getbootstrap.com/css/#forms-controls-static>
 > ```bash
 > php artisan lego:generate-ide-helper
 > ```
+
+
+## 不需要存储到 Model 的 Field
+
+```php
+$form->addText('abc', 'Abc')->doesntStore();
+
+Model::saving(function (Model $model) {
+    dump($model->abc); // is null
+})
+```

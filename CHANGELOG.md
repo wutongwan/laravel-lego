@@ -1,5 +1,18 @@
 # Release Notes
 
+## 0.1.44 (2017-09-04)
+
+### Added
+
+- [Field：Scope name 默认取用 Field name](docs/filter.md#query-scope)
+- [Field: 不需要存储到 Model 的 Field](docs/fields.md#不需要存储到-Model-的-Field)
+
+## 0.1.43 (2017-08-23)
+
+### Removed
+
+- 取消 Save 事务
+
 ## 0.1.42 (2017-08-09)
 
 ### Added

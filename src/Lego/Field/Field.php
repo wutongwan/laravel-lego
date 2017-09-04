@@ -21,9 +21,9 @@ abstract class Field implements HasMode
 
     use Concerns\HtmlOperator,
         Concerns\FieldContainer,
-        Concerns\ValidationOperator,
-        Concerns\ValueOperator,
-        Concerns\ScopeOperator,
+        Concerns\HasValidation,
+        Concerns\HasValues,
+        Concerns\HasScope,
         Concerns\HasRelation,
         Concerns\HasLocale,
         Concerns\HasConfig,
