@@ -28,8 +28,8 @@ class EloquentQuery extends Query
                 return new self($data->getQuery());
 
             // Laravel query builder
-            case is_object($data)
-                && in_array(get_class($data), [QueryBuilder::class, EloquentQueryBuilder::class]):
+            case $data instanceof QueryBuilder:
+            case $data instanceof EloquentQueryBuilder:
                 return new self($data);
 
             default:
