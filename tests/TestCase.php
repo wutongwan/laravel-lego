@@ -16,6 +16,7 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
         // register lego
         $app->register(\Collective\Html\HtmlServiceProvider::class);
         $app->register(\Maatwebsite\Excel\ExcelServiceProvider::class);
+        $app->register(\Mews\Purifier\PurifierServiceProvider::class);
         $app->register(LegoServiceProvider::class);
 
         // add test view namespace
