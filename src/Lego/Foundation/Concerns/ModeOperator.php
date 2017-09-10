@@ -94,9 +94,23 @@ trait ModeOperator
         throw new LegoException('show be rewrite.');
     }
 
+    protected $escape = true;
+
+    public function disableEscape()
+    {
+        $this->escape = false;
+        return $this;
+    }
+
     protected function renderReadonly()
     {
-        return HtmlFacade::tag('p', (string)$this->takeShowValue(), [
+        $html = (string)$this->takeShowValue();
+
+        if ($this->escape) {
+            $html = htmlspecialchars($html, ENT_QUOTES, 'UTF-8');
+        }
+
+        return HtmlFacade::tag('p', $html, [
             'id' => $this->elementId(),
             'class' => 'form-control-static',
         ]);

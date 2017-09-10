@@ -1,5 +1,11 @@
 # Release Notes
 
+## 0.2.2 (2017-09-11)
+
+### Added
+
+- Field 只读模式时启用 escape
+
 ## 0.2.1 (2017-09-10)
 
 ### Added
