@@ -11,7 +11,6 @@ class ConditionTest extends \Lego\Tests\TestCase
     public function testMain($left, $operator, $right, $pass = true)
     {
         $field = new Text('test', 'Text', []);
-        $field->disablePurifier();
         $field->setNewValue($left);
         $c = new Condition($field, $operator, $right);
         $this->assertEquals($pass, $c->pass());

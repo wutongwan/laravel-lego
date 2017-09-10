@@ -111,7 +111,7 @@ trait HasValues
      */
     public function setNewValue($value)
     {
-        if (!$this->disablePurifier) {
+        if ((!$this->disablePurifier) && $value && is_string($value)) {
             $value = Purifier::clean($value, $this->purifierConfig);
         }
 
