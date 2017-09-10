@@ -45,6 +45,12 @@ trait HasValues
     protected $doesntStore = false;
 
     /**
+     * 禁用 HTML Purifier
+     * @var bool
+     */
+    protected $disablePurifier = false;
+
+    /**
      * HTML purifier config
      */
     protected $purifierConfig = null;
@@ -82,6 +88,12 @@ trait HasValues
         return $this->newValue;
     }
 
+    public function disablePurifier($condition = true)
+    {
+        $this->disablePurifier = $condition;
+        return $this;
+    }
+
     /**
      * 自定义 purifier config
      *
@@ -99,7 +111,9 @@ trait HasValues
      */
     public function setNewValue($value)
     {
-        $value = Purifier::clean($value, $this->purifierConfig);
+        if (!$this->disablePurifier) {
+            $value = Purifier::clean($value, $this->purifierConfig);
+        }
 
         $this->newValue = $value;
 
