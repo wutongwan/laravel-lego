@@ -71,8 +71,20 @@ Add these lines to `providres` array of config file `config/app.php`.
 // Lego require LaravelCollective/html ，So need to add it's ServiceProvider.
 Collective\Html\HtmlServiceProvider::class,
 
+// Lego require mewebstudio/Purifier ，So need to add it's ServiceProvider.
+Mews\Purifier\PurifierServiceProvider::class,
+
 Lego\LegoServiceProvider::class,
 ```
+
+> Lego require `mewebstudio/Purifier` , So need to publish it's assets
+> 
+> Visit <https://github.com/mewebstudio/Purifier> for more detail.
+> 
+> ``` bash
+> php artisan vendor:publish --provider="Mews\Purifier\PurifierServiceProvider"
+> ```
+
 
 ### 3、Install Lego and Publish assets
 
