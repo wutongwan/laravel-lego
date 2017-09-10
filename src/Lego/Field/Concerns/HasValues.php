@@ -1,5 +1,8 @@
 <?php namespace Lego\Field\Concerns;
 
+use Illuminate\Support\Facades\Config;
+use Mews\Purifier\Facades\Purifier;
+
 /**
  * Field 中数据承载部分
  *
@@ -42,6 +45,18 @@ trait HasValues
     protected $doesntStore = false;
 
     /**
+     * HTML purifier config
+     */
+    protected $purifierConfig = null;
+
+    protected function initializeHasValues()
+    {
+        $config = $this->config('purifier') ?: Config::get('lego.field.purifier');
+
+        $this->purifierConfig = $config;
+    }
+
+    /**
      * 数据库原始值
      */
     public function getOriginalValue()
@@ -68,10 +83,24 @@ trait HasValues
     }
 
     /**
+     * 自定义 purifier config
+     *
+     * @param array|string|null $config
+     * @return $this
+     */
+    public function withPurifierConfig($config)
+    {
+        $this->purifierConfig = is_array($config) ? array_merge($this->purifierConfig, $config) : $config;
+        return $this;
+    }
+
+    /**
      * 当前表单中提交的值，不推荐在 Lego 外部调用，也就是不推荐在 Lego 外部修改
      */
     public function setNewValue($value)
     {
+        $value = Purifier::clean($value, $this->purifierConfig);
+
         $this->newValue = $value;
 
         return $this;

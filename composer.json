@@ -14,7 +14,8 @@
         "laravelcollective/html": "~5.2",
         "mobiledetect/mobiledetectlib": "^2.8",
         "maatwebsite/excel": "~2.1.0",
-        "symfony/class-loader": "~3.2"
+        "symfony/class-loader": "~3.2",
+        "mews/purifier": "^2.0"
     },
     "require-dev": {
         "phpunit/phpunit": "~5.2",
