@@ -4,6 +4,7 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Request;
 use Lego\Operator\Finder;
 use Lego\Operator\Operator;
 use Lego\Operator\Store\Store;
@@ -116,7 +117,7 @@ abstract class Query extends Operator implements \ArrayAccess, Arrayable, \Count
     {
         return null;
     }
-    
+
     /**
      * 关联查询
      * @param $relation
@@ -148,7 +149,7 @@ abstract class Query extends Operator implements \ArrayAccess, Arrayable, \Count
      * @param null $page
      * @return AbstractPaginator
      */
-    abstract protected function createPaginator($perPage = null, $columns = ['*'], $pageName = 'page', $page = null);
+    abstract protected function createPaginator($perPage, $columns, $pageName, $page);
 
     /**
      * Paginator API
@@ -164,6 +165,7 @@ abstract class Query extends Operator implements \ArrayAccess, Arrayable, \Count
         $perPage = is_null($perPage) ? config('lego.paginator.per-page') : $perPage;
         $pageName = is_null($pageName) ? config('lego.paginator.page-name') : $pageName;
         $columns = is_null($columns) ? ['*'] : $columns;
+        $page = $page ?: Request::query($pageName, 1);
 
         $this->paginator = $this->createPaginator($perPage, $columns, $pageName, $page);
         $this->paginator->setCollection(

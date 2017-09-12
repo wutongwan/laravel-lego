@@ -230,7 +230,7 @@ class ArrayQuery extends Query
         return $this;
     }
 
-    protected function createPaginator($perPage = null, $columns = ['*'], $pageName = 'page', $page = null)
+    protected function createPaginator($perPage, $columns, $pageName, $page)
     {
         return new LengthAwarePaginator($this->collection, $this->collection->count(), $perPage, $page, [
             'pageName' => $pageName,

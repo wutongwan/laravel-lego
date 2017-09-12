@@ -6,6 +6,7 @@ class Finder
 {
     const QUERY_LIST = [
         Query\EloquentQuery::class,
+        Query\PlasticQuery::class,
         Query\ArrayQuery::class,
     ];
 

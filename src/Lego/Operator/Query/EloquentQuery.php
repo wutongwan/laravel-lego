@@ -244,9 +244,9 @@ class EloquentQuery extends Query
      * @param int|null $page
      * @return AbstractPaginator
      */
-    protected function createPaginator($perPage = null, $columns = null, $pageName = null, $page = null)
+    protected function createPaginator($perPage, $columns, $pageName, $page)
     {
-        return $this->data->paginate($perPage, ['*'], 'page', $page);
+        return $this->data->paginate($perPage, $columns, $pageName, $page);
     }
 
     protected function select(array $columns)

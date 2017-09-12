@@ -1,12 +1,15 @@
 <?php namespace Lego\Operator\Query;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Support\Collection;
 
+use Lego\Foundation\Exceptions\LegoException;
 use ONGR\ElasticsearchDSL\Query\TermLevel\PrefixQuery;
 use ONGR\ElasticsearchDSL\Query\TermLevel\RangeQuery;
 use ONGR\ElasticsearchDSL\Sort\FieldSort;
 use Sleimanx2\Plastic\DSL\SearchBuilder;
+use Sleimanx2\Plastic\PlasticPaginator;
 
 class PlasticQuery extends Query
 {
@@ -15,18 +18,34 @@ class PlasticQuery extends Query
      *  当前类能处理该类型数据，则返回实例化后的 Operator ;
      *  反之 false ，返回 false 时，继续尝试下一个 Operator 子类
      *
-     * @param $data
+     * @param SearchBuilder $data
      * @return static|false
      */
     public static function attempt($data)
     {
-        return $data instanceof SearchBuilder;
+        return $data instanceof SearchBuilder ? new static($data) : false;
     }
 
     /**
      * @var SearchBuilder
      */
     protected $data;
+
+    /**
+     * @var Model
+     */
+    protected $model;
+
+    protected function initialize()
+    {
+        /**
+         * TODO 耍流氓的办法，等整个调通一起去提 PR
+         */
+        $rft = new \ReflectionClass(SearchBuilder::class);
+        $property = $rft->getProperty('model');
+        $property->setAccessible(true);
+        $this->model = $property->getValue($this->data);
+    }
 
     /**
      * 当前属性是否等于某值
@@ -36,7 +55,7 @@ class PlasticQuery extends Query
      */
     public function whereEquals($attribute, $value)
     {
-        $this->data->must()->match($attribute, $value);
+        $this->data->must()->term($attribute, $value);
         return $this;
     }
 
@@ -48,14 +67,7 @@ class PlasticQuery extends Query
      */
     public function whereIn($attribute, array $values)
     {
-        $this->data->must()->nested(
-            $attribute,
-            function (SearchBuilder $builder) use ($attribute, $values) {
-                foreach ($values as $value) {
-                    $builder->filter()->match($attribute, $value);
-                }
-            }
-        );
+        $this->data->must()->terms($attribute, $values);
         return $this;
     }
 
@@ -150,18 +162,17 @@ class PlasticQuery extends Query
      */
     public function where(\Closure $closure)
     {
+        call_user_func($closure, new self($this->data->must()));
+
         return $this;
     }
 
     /**
      * Get the relation instance for the given relation name.
-     *
-     * @param $name
-     * @return static
      */
     public function getRelation($name)
     {
-        // TODO: Implement getRelation() method.
+        throw new LegoException(__METHOD__ . ' is not defined yet.');
     }
 
     /**
@@ -181,6 +192,8 @@ class PlasticQuery extends Query
         return $this;
     }
 
+    protected $limit;
+
     /**
      * 限制条数
      * @param $limit
@@ -188,7 +201,7 @@ class PlasticQuery extends Query
      */
     public function limit($limit)
     {
-        $this->data->paginate($limit);
+        $this->limit = $limit;
         return $this;
     }
 
@@ -212,9 +225,16 @@ class PlasticQuery extends Query
      * @param null $page
      * @return AbstractPaginator
      */
-    protected function createPaginator($perPage = null, $columns = ['*'], $pageName = 'page', $page = null)
+    protected function createPaginator($perPage, $columns, $pageName, $page)
     {
-        // TODO: Implement createPaginator() method.
+        $perPage = $perPage ?: $this->limit;
+
+        $from = $perPage * ($page - 1);
+        $size = $perPage;
+
+        $result = $this->from($from)->size($size)->get();
+
+        return new PlasticPaginator($result, $size, $page);
     }
 
     /**
@@ -225,7 +245,8 @@ class PlasticQuery extends Query
      */
     protected function select(array $columns)
     {
-        // TODO convert to eloquent models
-        return $this->data->get()->hits();
+        $this->data->size($this->limit);
+        $ids = $this->data->get()->hits()->pluck('id')->toArray();
+        return $this->model->findMany($ids, $columns);
     }
 }
