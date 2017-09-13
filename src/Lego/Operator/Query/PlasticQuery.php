@@ -1,15 +1,16 @@
 <?php namespace Lego\Operator\Query;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Support\Collection;
+use Illuminate\Pagination\AbstractPaginator;
 
-use Lego\Foundation\Exceptions\LegoException;
-use ONGR\ElasticsearchDSL\Query\TermLevel\PrefixQuery;
 use ONGR\ElasticsearchDSL\Query\TermLevel\RangeQuery;
 use ONGR\ElasticsearchDSL\Sort\FieldSort;
 use Sleimanx2\Plastic\DSL\SearchBuilder;
 use Sleimanx2\Plastic\PlasticPaginator;
+use Sleimanx2\Plastic\PlasticResult;
+
+use Lego\Foundation\Exceptions\LegoException;
+
 
 class PlasticQuery extends Query
 {
@@ -31,20 +32,18 @@ class PlasticQuery extends Query
      */
     protected $data;
 
-    /**
-     * @var Model
-     */
-    protected $model;
+    protected $with = [];
 
-    protected function initialize()
+    /**
+     * Query with eager loading
+     *
+     * @param array $relations
+     * @return static
+     */
+    public function with(array $relations)
     {
-        /**
-         * TODO 耍流氓的办法，等整个调通一起去提 PR
-         */
-        $rft = new \ReflectionClass(SearchBuilder::class);
-        $property = $rft->getProperty('model');
-        $property->setAccessible(true);
-        $this->model = $property->getValue($this->data);
+        $this->with = array_unique(array_merge($this->with, $relations));
+        return $this;
     }
 
     /**
@@ -228,12 +227,13 @@ class PlasticQuery extends Query
     protected function createPaginator($perPage, $columns, $pageName, $page)
     {
         $perPage = $perPage ?: $this->limit;
-
         $from = $perPage * ($page - 1);
         $size = $perPage;
 
-        $result = $this->from($from)->size($size)->get();
+        $this->data->from($from)->size($size);
 
+        /** @var PlasticResult $result */
+        $result = $this->performSelect($columns);
         return new PlasticPaginator($result, $size, $page);
     }
 
@@ -245,8 +245,15 @@ class PlasticQuery extends Query
      */
     protected function select(array $columns)
     {
-        $this->data->size($this->limit);
-        $ids = $this->data->get()->hits()->pluck('id')->toArray();
-        return $this->model->findMany($ids, $columns);
+        return $this->performSelect($columns)->hits();
+    }
+
+    protected function performSelect(array $columns)
+    {
+        $filler = new PlasticEloquentFiller();
+        $filler->select($columns)->with($this->with);
+
+        $this->data->setModelFiller($filler);
+        return $this->data->get();
     }
 }

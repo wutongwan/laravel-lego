@@ -22,6 +22,14 @@ abstract class Query extends Operator implements \ArrayAccess, Arrayable, \Count
     protected $paginator;
 
     /**
+     * Query with eager loading
+     *
+     * @param array $relations
+     * @return static
+     */
+    abstract public function with(array $relations);
+
+    /**
      * 当前属性是否等于某值
      * @param $attribute
      * @param null $value

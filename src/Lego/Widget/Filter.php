@@ -47,6 +47,16 @@ class Filter extends Widget
         });
     }
 
+    public function with($relations)
+    {
+        if (is_string($relations)) {
+            $relations = func_get_args();
+        }
+
+        $this->query->with($relations);
+        return $this;
+    }
+
     /** @var Grid $grid */
     private $grid;
 

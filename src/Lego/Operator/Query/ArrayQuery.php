@@ -42,6 +42,11 @@ class ArrayQuery extends Query
         });
     }
 
+    public function with(array $relations)
+    {
+        return $this;
+    }
+
     /**
      * 当前属性是否等于某值
      * @param $attribute

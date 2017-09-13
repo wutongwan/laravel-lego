@@ -42,6 +42,19 @@ class EloquentQuery extends Query
      */
     protected $data;
 
+
+    /**
+     * Query with eager loading
+     *
+     * @param array $relations
+     * @return static
+     */
+    public function with(array $relations)
+    {
+        $this->data->with($relations);
+        return $this;
+    }
+
     /**
      * 当前属性是否等于某值
      * @param $attribute
