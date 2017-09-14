@@ -28,8 +28,8 @@ class EloquentQuery extends Query
                 return new self($data->getQuery());
 
             // Laravel query builder
-            case is_object($data)
-                && in_array(get_class($data), [QueryBuilder::class, EloquentQueryBuilder::class]):
+            case $data instanceof QueryBuilder:
+            case $data instanceof EloquentQueryBuilder:
                 return new self($data);
 
             default:
@@ -41,6 +41,19 @@ class EloquentQuery extends Query
      * @var Model|QueryBuilder|EloquentQueryBuilder
      */
     protected $data;
+
+
+    /**
+     * Query with eager loading
+     *
+     * @param array $relations
+     * @return static
+     */
+    public function with(array $relations)
+    {
+        $this->data->with($relations);
+        return $this;
+    }
 
     /**
      * 当前属性是否等于某值
@@ -244,9 +257,9 @@ class EloquentQuery extends Query
      * @param int|null $page
      * @return AbstractPaginator
      */
-    protected function createPaginator($perPage = null, $columns = null, $pageName = null, $page = null)
+    protected function createPaginator($perPage, $columns, $pageName, $page)
     {
-        return $this->data->paginate($perPage, ['*'], 'page', $page);
+        return $this->data->paginate($perPage, $columns, $pageName, $page);
     }
 
     protected function select(array $columns)
