@@ -1,5 +1,14 @@
 # Release Notes
 
+## 0.2.3 (2017-09-14)
+
+### Added
+
+- Elasticsearch Query
+  + Lego 使用 [Plastic](https://github.com/sleimanx2/plastic) 调用 Elasticsearch 接口，请自行安装
+  + 使用方式：`$filter = Lego::filter(YourModel::search())`
+
+
 ## 0.2.2 (2017-09-11)
 
 ### Added
