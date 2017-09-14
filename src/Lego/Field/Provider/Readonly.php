@@ -6,6 +6,8 @@ class Readonly extends Text
 {
     use DisabledInFilter;
 
+    protected $escape = false;
+
     protected $readonlyValue;
 
     /**

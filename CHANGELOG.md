@@ -1,5 +1,43 @@
 # Release Notes
 
+## 0.2.2 (2017-09-11)
+
+### Added
+
+- Field 只读模式时启用 escape
+
+## 0.2.1 (2017-09-10)
+
+### Added
+
+- [使用 HTML Purifier 过滤所有请求数据](docs/html-purifier.md)
+
+  > Breaking: 
+  > 
+  > 本次更新中引入了新的 composer package [mewebstudio/Purifier](https://github.com/mewebstudio/Purifier)，请手动添加 ServiceProvider、发布 Assets.
+  > 
+  > - ServiceProvider
+  >   - `Mews\Purifier\PurifierServiceProvider::class`
+  > - Publish Assets
+  >   - `php artisan vendor:publish --provider="Mews\Purifier\PurifierServiceProvider"`
+
+- Filter 页面添加了新的栅格系统布局，可以通过配置文件进行配置：
+
+  ```php
+  [
+        'widgets' => [
+            'filter' => [
+                // Bootstrap inline form
+                'default-view' => 'lego::default.filter.inline',
+                // or Bootstrap grid system
+                'default-view' => 'lego::default.filter.rows',
+            ],
+        ]
+    ]
+  ```
+
+
+
 ## 0.1.44 (2017-09-04)
 
 ### Added
