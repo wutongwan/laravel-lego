@@ -11,7 +11,6 @@ use Sleimanx2\Plastic\PlasticResult;
 
 use Lego\Foundation\Exceptions\LegoException;
 
-
 class PlasticQuery extends Query
 {
     /**

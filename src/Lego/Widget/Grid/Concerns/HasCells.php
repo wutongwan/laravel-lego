@@ -12,7 +12,7 @@ trait HasCells
 
     public function add($name, $description)
     {
-        $cell = new Cell($name, $description);;
+        $cell = new Cell($name, $description);
         if ($after = $this->__once_after ?: $this->__after) {
             $idx = array_search($after, array_keys($this->cells)) + 1;
             $this->cells = array_slice($this->cells, 0, $idx, true)
