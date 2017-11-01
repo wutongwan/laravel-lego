@@ -122,7 +122,8 @@ class Grid extends Widget
         return Excel::create(
             $filename,
             function (LaravelExcelWriter $excel) use ($data) {
-                $excel->sheet('SheetName',
+                $excel->sheet(
+                    'SheetName',
                     function (\PHPExcel_Worksheet $sheet) use ($data) {
                         $sheet->fromArray($data);
                     }

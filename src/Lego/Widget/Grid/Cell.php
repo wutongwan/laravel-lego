@@ -22,7 +22,7 @@ class Cell
     private $store;
     private $default;
 
-    function __construct($name, $description)
+    public function __construct($name, $description)
     {
         $pipes = explode('|', $name);
         $this->name = $pipes[0];

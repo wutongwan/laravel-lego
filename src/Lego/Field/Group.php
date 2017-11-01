@@ -13,7 +13,7 @@ class Group
 
     protected $fieldNames = []; // field name list belongs to group
 
-    function __construct(Fields $fields, $name)
+    public function __construct(Fields $fields, $name)
     {
         $this->fields = $fields;
         $this->name = $name;
@@ -81,7 +81,7 @@ class Group
         return $this;
     }
 
-    function __toString()
+    public function __toString()
     {
         return view('lego::default.group', ['group' => $this])->render();
     }

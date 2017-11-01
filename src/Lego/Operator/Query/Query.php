@@ -13,7 +13,13 @@ use Traversable;
 /**
  * Query 类为 Lego 提供统一的 query API
  */
-abstract class Query extends Operator implements \ArrayAccess, Arrayable, \Countable, \IteratorAggregate, Jsonable, \JsonSerializable
+abstract class Query extends Operator implements
+    \ArrayAccess,
+    Arrayable,
+    \Countable,
+    \IteratorAggregate,
+    Jsonable,
+    \JsonSerializable
 {
 
     /**
@@ -338,7 +344,7 @@ abstract class Query extends Operator implements \ArrayAccess, Arrayable, \Count
      * which is a value of any type other than a resource.
      * @since 5.4.0
      */
-    function jsonSerialize()
+    public function jsonSerialize()
     {
         return $this->paginator()->jsonSerialize();
     }

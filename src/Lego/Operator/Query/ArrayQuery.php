@@ -15,8 +15,7 @@ class ArrayQuery extends Query
 {
     public static function attempt($data)
     {
-        if (
-            is_array($data)
+        if (is_array($data)
             || $data instanceof Collection
             || $data instanceof Arrayable
             || $data instanceof Jsonable

@@ -9,4 +9,11 @@ class Time extends Datetime
     protected $maxView = 'day';
 
     protected $startView = 'day';
+
+    protected function initialize()
+    {
+        parent::initialize();
+
+        $this->removeRule('date');
+    }
 }
