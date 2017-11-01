@@ -136,7 +136,7 @@ class Button
         return is_null($size) ? $this : $this->class('btn-' . $size);
     }
 
-    function __toString()
+    public function __toString()
     {
         $this->attribute('id', $this->id);
         $attributes = array_map(

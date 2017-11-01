@@ -10,7 +10,7 @@ class FieldLoader
 {
     private $fields = [];
 
-    function __construct()
+    public function __construct()
     {
         $this->addBuildInFields();
         UserDefinedField::registerFromConfiguration();

@@ -36,12 +36,12 @@ abstract class Store extends Operator implements Arrayable
         return $this->get($name);
     }
 
-    function __set($name, $value)
+    public function __set($name, $value)
     {
         $this->set($name, $value);
     }
 
-    function __isset($name)
+    public function __isset($name)
     {
         return $this->get($name);
     }
