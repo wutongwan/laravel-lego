@@ -10,8 +10,8 @@
     @endforeach
 
     <div class="form-group">
-        <input type="submit" class="btn btn-primary" value="查询">
-        <a href="?" class="btn btn-default">清空</a>
+        <input type="submit" class="btn btn-primary" value="{{ $filter->getSubmitText() }}">
+        <a href="?" class="btn btn-default">{{ $filter->getResetText() }}</a>
     </div>
 </form>
 
