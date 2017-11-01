@@ -11,7 +11,14 @@ use Lego\Widget\Grid\Grid;
  */
 class Filter extends Widget
 {
-    use Concerns\HasFields, Concerns\HasGroups;
+    use Concerns\HasFields,
+        Concerns\HasGroups,
+        Concerns\HasTexts;
+
+    protected function initialize()
+    {
+        $this->submitText('查询');
+    }
 
     /**
      * 渲染当前对象
