@@ -112,6 +112,29 @@ $form = Lego::form(new Book);
 $form->addDatetime('checked_at', 'Checked At');
 ```
 
+> 日期输入控件在移动端会自动触发原生日期控件，有两种方式禁用此特性：
+> 
+> - 全局禁用，可在配置文件中添加如下配置：
+> 
+>   ```php
+>   'field' => [
+>     'provider' => [
+>         \Lego\Field\Provider\Datetime::class => [
+>             'disable-native-picker' => true
+>         ]
+>     ]
+>   ]
+>   ```
+>   **注意**：上面配置仅针对 Datetime 输入，其他如 Date、Time 还需要单独添加如上配置
+> 
+> - 禁用当前 Field
+> 
+>   ```php
+>     $form->addDatetime(...)->disableNativePicker();
+>   ```
+> 
+> 
+
 ### Date
 
 日期输入框
