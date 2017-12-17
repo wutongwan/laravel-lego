@@ -7,13 +7,29 @@ use Lego\Foundation\Facades\LegoAssets;
 
 class Datetime extends Field
 {
+    const DATETIME_LOCAL = 'datetime-local';
+    const DATETIME_LOCAL_FORMAT = 'Y-m-d\TH:i';
+
     /**
      * 日期格式，eg：Y-m-d
      * @var string
      */
     protected $format = 'Y-m-d H:i:s';
 
-    protected $inputType = 'datetime-local';
+    protected $inputType = self::DATETIME_LOCAL;
+
+    /**
+     * User Agent Detector
+     *
+     * @var \Mobile_Detect
+     */
+    protected $detector;
+
+    /**
+     * 是否禁用原生日期控件
+     * @var bool
+     */
+    protected $disableNativePicker = false;
 
     /**
      * 初始化对象
@@ -22,7 +38,9 @@ class Datetime extends Field
     {
         $this->rule('date');
 
-        if (!$this->isMobile()) {
+        $this->detector = App::make(\Mobile_Detect::class);
+
+        if (!$this->nativePickerIsEnabled()) {
             $this->inputType = 'text';
         }
     }
@@ -39,6 +57,10 @@ class Datetime extends Field
         return $this->format;
     }
 
+    /**
+     * 当前 format 的 JS format
+     * @return string
+     */
     public function getJavaScriptFormat()
     {
         return str_replace(
@@ -63,6 +85,10 @@ class Datetime extends Field
 
     protected $startView = 'month';
 
+    /**
+     * Bootstrap DatetimePicker 的配置项
+     * @return array
+     */
     public function getPickerOptions()
     {
         return [
@@ -80,20 +106,60 @@ class Datetime extends Field
 
     protected function mutateTakingValue($datetime)
     {
+        // datetime-local 格式比较特殊
+        $format = $this->nativePickerIsEnabled() && $this->inputType === self::DATETIME_LOCAL
+            ? self::DATETIME_LOCAL_FORMAT
+            : $this->format;
+
+        return $this->formatDatetimeString($datetime, $format);
+    }
+
+    protected function mutateSavingValue($datetime)
+    {
+        return $this->formatDatetimeString($datetime);
+    }
+
+    /**
+     * 将传入的 datetime 使用 strtotime 解析，然后转为指定格式
+     * @param $datetime
+     * @param null $format
+     * @return null|string
+     */
+    protected function formatDatetimeString($datetime, $format = null)
+    {
+        $format = $format ?: $this->format;
+
         if (!$datetime) {
             return null;
         }
 
         if ($datetime instanceof Carbon) {
-            return $datetime->format($this->format);
+            return $datetime->format($format);
         }
 
-        return date($this->format, strtotime($datetime));
+        return date($format, strtotime($datetime));
     }
 
-    protected function mutateSavingValue($value)
+    /**
+     * 禁止当前 Field 使用原生日期控件
+     * @param bool $condition
+     * @return $this
+     */
+    public function disableNativePicker($condition = true)
     {
-        return $this->mutateTakingValue($value);
+        $this->disableNativePicker = (bool)$condition;
+        return $this;
+    }
+
+    /**
+     * 当前是否启用了原生日期控件
+     * @return bool
+     */
+    public function nativePickerIsEnabled()
+    {
+        return (!$this->disableNativePicker)
+            && (!$this->config('disable-native-picker'))
+            && $this->detector->isMobile();
     }
 
     /**
@@ -104,7 +170,7 @@ class Datetime extends Field
         /**
          * 仅在 editable && 非移动端启用日期控件，移动端使用原生的输入控件
          */
-        if ($this->isEditable() && !$this->isMobile()) {
+        if ($this->isEditable() && !$this->nativePickerIsEnabled()) {
             $prefix = 'components/smalot-bootstrap-datetimepicker';
             LegoAssets::css($prefix . '/css/bootstrap-datetimepicker.min.css');
             LegoAssets::js($prefix . '/js/bootstrap-datetimepicker.min.js');
@@ -113,11 +179,6 @@ class Datetime extends Field
                 LegoAssets::js($prefix . "/js/locales/bootstrap-datetimepicker.{$this->getLocale()}.js");
             }
         }
-    }
-
-    private function isMobile()
-    {
-        return App::make(\Mobile_Detect::class)->isMobile();
     }
 
     /**
@@ -132,5 +193,14 @@ class Datetime extends Field
     protected function renderEditable()
     {
         return $this->view('lego::default.field.date');
+    }
+
+    /**
+     * 获取 Carbon 类型的当前输入值
+     * @return Carbon
+     */
+    public function getCarbonNewValue()
+    {
+        return new Carbon($this->getNewValue());
     }
 }

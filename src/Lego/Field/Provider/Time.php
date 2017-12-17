@@ -2,7 +2,7 @@
 
 class Time extends Datetime
 {
-    protected $format = 'H:i:s';
+    protected $format = 'H:i';
 
     protected $inputType = 'time';
 
