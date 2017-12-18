@@ -9,6 +9,11 @@ class FakeMobileDetect extends \Mobile_Detect
         static::$mocks['is-mobile'] = $condition;
     }
 
+    public static function mockIs($key, $condition = true)
+    {
+        static::$mocks[$key] = $condition;
+    }
+
     public static function forgetMocks()
     {
         static::$mocks = [];
@@ -21,5 +26,14 @@ class FakeMobileDetect extends \Mobile_Detect
         }
 
         return parent::isMobile($userAgent, $httpHeaders);
+    }
+
+    public function is($key, $userAgent = null, $httpHeaders = null)
+    {
+        if (isset(static::$mocks[$key])) {
+            return static::$mocks[$key];
+        }
+
+        return parent::is($key, $userAgent, $httpHeaders);
     }
 }

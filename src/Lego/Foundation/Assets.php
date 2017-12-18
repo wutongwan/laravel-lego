@@ -54,7 +54,7 @@ class Assets
         if (is_null($type)) {
             $this->all = [];
             foreach (array_keys($this->globals) as $type) {
-                self::reset($type);
+                $this->reset($type);
             }
             return;
         }
