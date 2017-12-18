@@ -205,6 +205,7 @@ class Form extends Widget implements HasMode
     /**
      * 渲染当前对象
      * @return string
+     * @throws \Throwable
      */
     public function render()
     {

@@ -40,9 +40,7 @@ class Datetime extends Field
 
         $this->detector = App::make(\Mobile_Detect::class);
 
-        if (!$this->nativePickerIsEnabled()) {
-            $this->inputType = 'text';
-        }
+        $this->disableNativePicker($this->config('disable-native-picker'));
     }
 
     public function format($format)
@@ -157,9 +155,7 @@ class Datetime extends Field
      */
     public function nativePickerIsEnabled()
     {
-        return (!$this->disableNativePicker)
-            && (!$this->config('disable-native-picker'))
-            && $this->detector->isMobile();
+        return (!$this->disableNativePicker) && $this->detector->isMobile();
     }
 
     /**
@@ -171,6 +167,8 @@ class Datetime extends Field
          * 仅在 editable && 非移动端启用日期控件，移动端使用原生的输入控件
          */
         if ($this->isEditable() && !$this->nativePickerIsEnabled()) {
+            $this->inputType = 'text';
+
             $prefix = 'components/smalot-bootstrap-datetimepicker';
             LegoAssets::css($prefix . '/css/bootstrap-datetimepicker.min.css');
             LegoAssets::js($prefix . '/js/bootstrap-datetimepicker.min.js');

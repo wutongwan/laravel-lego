@@ -16,8 +16,6 @@ trait RenderStringOperator
      */
     abstract public function render();
 
-    private $rendered;
-
     final public function __toString()
     {
         return (string)$this->render();
