@@ -112,7 +112,24 @@ $form = Lego::form(new Book);
 $form->addDatetime('checked_at', 'Checked At');
 ```
 
-> 日期输入控件在移动端会自动触发原生日期控件，有两种方式禁用此特性：
+### Date
+
+日期输入框
+
+- 目标数据示例：`2016-11-11`
+- example usage：
+
+```php
+$form = Lego::form(new Human);
+$form->addDate('birthday', 'Birthday');
+```
+
+
+> 日期输入控件在移动端会自动触发原生日期控件
+> 
+> > **注意：由于 `datetime-local` 在不同浏览器的表现行为不统一，所以 Datetime 不会触发原生日期控件**
+> 
+> 有两种方式禁用此特性：
 > 
 > - 全局禁用，可在配置文件中添加如下配置：
 > 
@@ -133,19 +150,7 @@ $form->addDatetime('checked_at', 'Checked At');
 >     $form->addDatetime(...)->disableNativePicker();
 >   ```
 > 
-> 
 
-### Date
-
-日期输入框
-
-- 目标数据示例：`2016-11-11`
-- example usage：
-
-```php
-$form = Lego::form(new Human);
-$form->addDate('birthday', 'Birthday');
-```
 
 ### Time
 

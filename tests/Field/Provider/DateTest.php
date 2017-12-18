@@ -6,20 +6,20 @@ use Lego\Tests\TestCase;
 use Lego\Tests\Tools\FakeMobileDetect;
 use Lego\Widget\Form;
 
-class DatetimeTest extends TestCase
+class DateTest extends TestCase
 {
     public function testDisableNativePicker()
     {
         $js = '$("#lego-test").datetimepicker';
 
         $form = new Form([]);
-        $field = $form->addDatetime('test');
+        $field = $form->addDate('test');
         $this->assertContains($js, $this->render2html($form));
         $this->assertEquals('text', $field->getInputType());
 
         // 禁用一次
         $form = new Form([]);
-        $field = $form->addDatetime('test')->disableNativePicker();
+        $field = $form->addDate('test')->disableNativePicker();
         $this->assertContains($js, $this->render2html($form));
         $this->assertEquals('text', $field->getInputType());
 
@@ -27,7 +27,7 @@ class DatetimeTest extends TestCase
         $key = 'lego.field.provider.' . Datetime::class . '.disable-native-picker';
         Config::set($key, true);
         $form = new Form([]);
-        $field = $form->addDatetime('test');
+        $field = $form->addDate('test');
         $this->assertContains($js, $this->render2html($form));
         $this->assertEquals('text', $field->getInputType());
         Config::set('lego.field.provider.' . Datetime::class . '.disable-native-picker', false);
@@ -35,8 +35,8 @@ class DatetimeTest extends TestCase
         // 判断 UA 自动启用
         FakeMobileDetect::mockIsMobile();
         $form = new Form([]);
-        $field = $form->addDatetime('test');
+        $field = $form->addDate('test');
         $this->assertNotContains($js, $this->render2html($form));
-        $this->assertEquals('datetime-local', $field->getInputType());
+        $this->assertEquals('date', $field->getInputType());
     }
 }

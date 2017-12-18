@@ -8,7 +8,6 @@ use Lego\Foundation\Facades\LegoAssets;
 class Datetime extends Field
 {
     const DATETIME_LOCAL = 'datetime-local';
-    const DATETIME_LOCAL_FORMAT = 'Y-m-d\TH:i';
 
     /**
      * 日期格式，eg：Y-m-d
@@ -40,7 +39,9 @@ class Datetime extends Field
 
         $this->detector = App::make(\Mobile_Detect::class);
 
-        $this->disableNativePicker($this->config('disable-native-picker'));
+        $this->disableNativePicker(
+            $this->inputType === self::DATETIME_LOCAL || $this->config('disable-native-picker')
+        );
     }
 
     public function format($format)
@@ -104,12 +105,7 @@ class Datetime extends Field
 
     protected function mutateTakingValue($datetime)
     {
-        // datetime-local 格式比较特殊
-        $format = $this->nativePickerIsEnabled() && $this->inputType === self::DATETIME_LOCAL
-            ? self::DATETIME_LOCAL_FORMAT
-            : $this->format;
-
-        return $this->formatDatetimeString($datetime, $format);
+        return $this->formatDatetimeString($datetime);
     }
 
     protected function mutateSavingValue($datetime)
