@@ -100,6 +100,7 @@ class Datetime extends Field
             'todayHighlight' => true,
             'autoclose' => true,
             'disableTouchKeyboard' => true,
+            'ignoreReadonly' => true,
         ];
     }
 
