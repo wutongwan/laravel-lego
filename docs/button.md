@@ -8,7 +8,7 @@
 $filter->addRightTopButton('分派工单', $url);
 ```
 
-## 按钮一键操作
+## 按钮添加响应行为
 
 ```php
 $form->addRightTopButton('Delete')
@@ -17,4 +17,11 @@ $form->addRightTopButton('Delete')
 		flash('Blog removed.')
 		return redirect('/blog-list');
 	})
+```
+
+## 防止重复点击
+
+```php
+$form->addRightTopButton('Pay')
+    ->preventRepeatClick();
 ```
