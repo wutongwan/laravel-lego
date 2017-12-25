@@ -35,7 +35,8 @@ trait HasBottomButtons
         $btn = $this->addButton($this->bottomLocation, $this->submitButtonKey);
         $btn->bootstrapStyle('primary')
             ->text('提交')
-            ->attribute('type', 'submit');
+            ->attribute('type', 'submit')
+            ->preventRepeatClick();
     }
 
     /**
