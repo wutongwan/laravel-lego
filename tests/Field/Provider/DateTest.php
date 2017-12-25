@@ -10,7 +10,7 @@ class DateTest extends TestCase
 {
     public function testDisableNativePicker()
     {
-        $js = '$("#lego-test").datetimepicker';
+        $js = '.datetimepicker({"';
 
         $form = new Form([]);
         $field = $form->addDate('test');

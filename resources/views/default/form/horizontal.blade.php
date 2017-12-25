@@ -13,7 +13,9 @@
 
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-primary">{{ $form->getSubmitText() }}</button>
+                @foreach($form->getBottomButtons() as $button)
+                    {!! $button !!}
+                @endforeach
             </div>
         </div>
     @endif
