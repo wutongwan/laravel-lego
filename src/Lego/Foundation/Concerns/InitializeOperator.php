@@ -12,7 +12,7 @@ trait InitializeOperator
          *
          * call each trait's `initializeTraitName()` method.
          */
-        foreach (class_uses_recursive(static::class) as $trait) {
+        foreach ($this->listTraits() as $trait) {
             $method = 'initialize' . class_basename($trait);
             if (method_exists($this, $method)) {
                 call_user_func_array([$this, $method], []);
@@ -21,6 +21,25 @@ trait InitializeOperator
 
         // 初始化自身
         $this->initialize();
+    }
+
+    /**
+     * 列出当前类所有引入的 trait
+     *
+     * laravel class_uses_recursive 输出的顺序并不是引入的顺序，不符合预期
+     *
+     * @return array
+     */
+    protected function listTraits()
+    {
+        $result = [];
+
+        $classes = array_reverse(class_parents(static::class)) + [static::class];
+        foreach ($classes as $class) {
+            $result += trait_uses_recursive($class);
+        }
+
+        return array_unique($result);
     }
 
     /**

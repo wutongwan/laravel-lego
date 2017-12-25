@@ -17,20 +17,20 @@ class Form extends Widget implements HasMode
         Concerns\HasFields,
         Concerns\HasGroups,
         Concerns\HasEvents,
-        Concerns\HasTexts;
+        Concerns\HasBottomButtons;
 
-    private $action;
+    protected $action;
 
     /**
      * 此属性设置后将不再调用默认的数据处理逻辑
      * @var \Closure
      */
-    private $submit;
+    protected $submit;
 
     /**
      * 成功后的回调、跳转链接、任意 Response 内容
      */
-    private $success;
+    protected $success;
 
     public function action($url)
     {
@@ -65,7 +65,7 @@ class Form extends Widget implements HasMode
         return $this;
     }
 
-    private function validate()
+    protected function validate()
     {
         $data = [];
         foreach ($this->editableFields() as $field) {
@@ -145,7 +145,7 @@ class Form extends Widget implements HasMode
     /**
      * sync field's value to source.
      */
-    private function saveFieldsValueToStore()
+    protected function saveFieldsValueToStore()
     {
         $this->editableFields()->each(function (Field $field) {
             if ($field->isDoesntStore()) {
@@ -173,7 +173,7 @@ class Form extends Widget implements HasMode
     /**
      * Sync field's original from store
      */
-    private function syncFieldsValueFromStore()
+    protected function syncFieldsValueFromStore()
     {
         $this->fields()->each(function (Field $field) {
             $field->setOriginalValue(
@@ -185,7 +185,7 @@ class Form extends Widget implements HasMode
     /**
      * 数据处理成功后的回调
      */
-    private function returnSuccessResponse()
+    protected function returnSuccessResponse()
     {
         if (!$this->success) {
             return;

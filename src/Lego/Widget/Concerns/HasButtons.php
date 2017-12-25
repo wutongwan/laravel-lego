@@ -30,11 +30,26 @@ trait HasButtons
 
     public function getButtons($location)
     {
-        lego_assert(in_array($location, $this->buttonLocations()), "{$location} does not exists.");
         return $this->buttons[$location];
     }
 
-    public function addButton($location, $text, $url = null, $id = null)
+    /**
+     * 根据位置和按钮文本获取按钮实例
+     *
+     * 注意：此处 text 是添加按钮时提供的 text ，
+     *      如果 addButton 之后通过 ->text() 重新修改了按钮文本，
+     *      此处仍只能使用最初的文本获取
+     *
+     * @param $location
+     * @param $text
+     * @return Button
+     */
+    public function getButton($location, $text)
+    {
+        return $this->getButtons($location)[$text];
+    }
+
+    public function addButton($location, $text, $url = null, $id = null): Button
     {
         $button = new Button($text, $url, $id);
         $this->buttons[$location][$text] = $button;

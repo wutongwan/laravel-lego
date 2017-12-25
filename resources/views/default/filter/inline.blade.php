@@ -10,8 +10,9 @@
     @endforeach
 
     <div class="form-group">
-        <input type="submit" class="btn btn-primary" value="{{ $filter->getSubmitText() }}">
-        <a href="?" class="btn btn-default">{{ $filter->getResetText() }}</a>
+        @foreach($filter->getBottomButtons() as $button)
+            {!! $button !!}
+        @endforeach
     </div>
 </form>
 

@@ -1,6 +1,7 @@
 <?php namespace Lego\Foundation;
 
 use Collective\Html\HtmlFacade;
+use Illuminate\Support\Facades\View;
 use Lego\Register\HighPriorityResponse;
 
 /**
@@ -11,19 +12,25 @@ class Button
     /**
      * button link
      */
-    private $url;
+    protected $url;
 
     /**
      * button text
      */
-    private $text;
+    protected $text;
 
     /**
      * button id
      */
-    private $id;
+    protected $id;
 
-    private $attributes = [];
+    protected $attributes = [];
+
+    /**
+     * 防止重复点击
+     * @var bool
+     */
+    protected $preventRepeatClick = false;
 
     public function __construct($text, $url = null, $id = null)
     {
@@ -43,15 +50,30 @@ class Button
         return $this;
     }
 
+    public function getText()
+    {
+        return $this->text;
+    }
+
     public function url($url)
     {
         $this->url = $url;
         return $this;
     }
 
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
     public function id($id)
     {
         $this->id = $id;
+    }
+
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -136,21 +158,36 @@ class Button
         return is_null($size) ? $this : $this->class('btn-' . $size);
     }
 
+    /**
+     * 防止重复点击
+     *
+     * @param bool $condition
+     * @return $this
+     */
+    public function preventRepeatClick(bool $condition = true)
+    {
+        $this->preventRepeatClick = $condition;
+        return $this;
+    }
+
+    public function isPreventRepeatClick()
+    {
+        return $this->preventRepeatClick;
+    }
+
     public function __toString()
     {
-        $this->attribute('id', $this->id);
+        $this->attributes['id'] = $this->id;
         $attributes = array_map(
             function ($value) {
                 return is_array($value) ? join(' ', $value) : $value;
             },
             $this->attributes
         );
+        $attributes = HtmlFacade::attributes($attributes);
 
-        /** @var \Illuminate\Support\HtmlString $html */
-        $html = $this->url
-            ? link_to($this->url, $this->text, $attributes)
-            : HtmlFacade::tag('button', $this->text, $attributes);
-
-        return $html->toHtml();
+        /** @var \Illuminate\Contracts\View\View $view */
+        $view = View::make('lego::default.button', ['button' => $this, 'attributes' => $attributes]);
+        return $view->render();
     }
 }

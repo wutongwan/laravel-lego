@@ -13,11 +13,11 @@ class Filter extends Widget
 {
     use Concerns\HasFields,
         Concerns\HasGroups,
-        Concerns\HasTexts;
+        Concerns\HasBottomButtons;
 
     protected function initialize()
     {
-        $this->submitText('查询');
+        $this->addBottomResetButton();
     }
 
     /**

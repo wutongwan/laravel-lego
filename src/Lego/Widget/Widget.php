@@ -1,5 +1,6 @@
 <?php namespace Lego\Widget;
 
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\Traits\Macroable;
 use Lego\Foundation\Concerns\InitializeOperator;
 use Lego\Foundation\Concerns\MessageOperator;
@@ -15,9 +16,8 @@ abstract class Widget implements ButtonLocations
     use MessageOperator,
         InitializeOperator,
         RenderStringOperator,
-        Macroable;
-
-    use Concerns\RequestOperator,
+        Macroable,
+        Concerns\RequestOperator,
         Concerns\HasButtons,
         Concerns\Operable;
 
@@ -82,7 +82,7 @@ abstract class Widget implements ButtonLocations
      */
     public function view($view, $data = [], $mergeData = [])
     {
-        return $this->response(view($view, $data, $mergeData));
+        return $this->response(View::make($view, $data, $mergeData));
     }
 
     /**
