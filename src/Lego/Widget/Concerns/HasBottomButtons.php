@@ -45,7 +45,7 @@ trait HasBottomButtons
     protected function addBottomResetButton()
     {
         /** @var Button $btn */
-        $btn = $this->addButton($this->bottomLocation, $this->resetButtonKey, URL::full());
+        $btn = $this->addButton($this->bottomLocation, $this->resetButtonKey, URL::current());
         $btn->text('清空');
     }
 
