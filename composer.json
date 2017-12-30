@@ -10,7 +10,7 @@
     ],
     "require": {
         "php": ">=7.0.0",
-        "laravel/framework": "~5.2",
+        "laravel/framework": "5.2.* || 5.3.* || 5.4.* || 5.5.*",
         "laravelcollective/html": "~5.2",
         "mobiledetect/mobiledetectlib": "^2.8",
         "maatwebsite/excel": "~2.1.0",
