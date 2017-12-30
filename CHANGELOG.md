@@ -1,5 +1,11 @@
 # Release Notes
 
+## 0.2.13 (2017-12-30)
+
+### Fixed
+
+- Avoid installing unstable Laravel versions
+
 ## 0.2.11 (2017-12-25)
 
 ### Added
