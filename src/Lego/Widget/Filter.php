@@ -1,6 +1,5 @@
 <?php namespace Lego\Widget;
 
-use Illuminate\Support\Facades\Request;
 use Lego\Field\Field;
 use Lego\Widget\Grid\Grid;
 
@@ -13,6 +12,7 @@ class Filter extends Widget
 {
     use Concerns\HasFields,
         Concerns\HasGroups,
+        Concerns\HasInput,
         Concerns\HasBottomButtons;
 
     protected function initialize()
@@ -43,7 +43,7 @@ class Filter extends Widget
 
         $this->editableFields()->each(function (Field $field) {
             $field->placeholder($field->description());
-            $field->setNewValue(Request::query($field->elementName()));
+            $field->setNewValue($this->getInput($field->elementName()));
 
             $value = $field->getNewValue();
             if ((is_string($value) && is_empty_string($value)) || !$value) {
