@@ -2,6 +2,12 @@
 
 ## 0.2.14 (2018-01-20)
 
+### Changed
+
+- Number Field: 表单传入空值时转换为 null
+
+## 0.2.14 (2018-01-20)
+
 ### Added
 
 - Filter 支持自定义输入，默认还是 Request
