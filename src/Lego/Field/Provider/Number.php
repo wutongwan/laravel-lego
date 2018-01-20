@@ -6,6 +6,8 @@ class Number extends Text
 {
     use FilterWhereEquals;
 
+    protected $emptyStringToNull = true;
+
     /**
      * 初始化对象
      */
