@@ -20,7 +20,7 @@
                         </td>
                     @endif
                     @foreach($grid->cells() as $cell)
-                        <td>{{ $cell->fill($row)->value() }}</td>
+                        <td v-pre>{{ $cell->fill($row)->value() }}</td>
                     @endforeach
                 </tr>
             @endforeach

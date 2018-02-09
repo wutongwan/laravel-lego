@@ -16,7 +16,7 @@
                     @endif
 
                     @foreach($grid->cells() as $cell)
-                        <p>
+                        <p v-pre>
                             @if($description = $cell->description())
                                 <small>{{ $description }}：</small>
                             @endif
