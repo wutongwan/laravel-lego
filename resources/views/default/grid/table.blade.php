@@ -1,10 +1,13 @@
 @extends('lego::default.grid.layout')
 
 @section('grid-body')
+    <?php /** @var \Lego\Widget\Grid\Grid $grid */ ?>
+    <?php $batchModeEnabled = $grid->batchModeEnabled(); ?>
+
     <div class="table-responsive">
         <table class="table" id="{{ $grid->uniqueId() }}">
             <tr>
-                @if($grid->batchModeEnabled())
+                @if($batchModeEnabled)
                     <th>#</th>
                 @endif
                 @foreach($grid->cells() as $cell)
@@ -14,7 +17,7 @@
             <?php /** @var \Lego\Operator\Store\Store $row */ ?>
             @foreach($grid->paginator() as $row)
                 <tr>
-                    @if($grid->batchModeEnabled())
+                    @if($batchModeEnabled)
                         <td>
                             @include('lego::default.grid.batch-checkbox', ['batchId' => $row->getKey()])
                         </td>
