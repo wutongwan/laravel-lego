@@ -1,5 +1,12 @@
 # Release Notes
 
+## 0.2.17 (2018-02-12)
+
+### Fixed
+
+- fix range query bug 
+- 减少批处理判断中的 Session 请求 
+
 ## 0.2.16 (2018-02-09)
 
 ### Fixed
