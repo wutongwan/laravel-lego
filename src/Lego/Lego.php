@@ -10,7 +10,7 @@ class Lego
     /**
      * Lego version.
      */
-    const VERSION = '0.2.17';
+    const VERSION = '0.2.18';
 
     public static function filter($source)
     {
