@@ -1,5 +1,11 @@
 # Release Notes
 
+## 0.2.18 (2018-03-09)
+
+### Fixed
+
+- 修正 RangeFiled 的 placeholder 传递
+
 ## 0.2.17 (2018-02-12)
 
 ### Fixed

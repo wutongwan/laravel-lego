@@ -108,4 +108,18 @@ abstract class RangeField extends Field
     {
         return $this->view('lego::default.field.range');
     }
+
+    public function placeholder($placeholder = null)
+    {
+        if (is_array($placeholder)) {
+            list($lower, $upper) = $placeholder;
+        } else {
+            $lower = $upper = $placeholder;
+        }
+
+        $this->lower->placeholder($lower);
+        $this->upper->placeholder($upper);
+
+        return $this;
+    }
 }
