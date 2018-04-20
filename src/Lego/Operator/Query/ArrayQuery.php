@@ -41,11 +41,6 @@ class ArrayQuery extends Query
         });
     }
 
-    public function with(array $relations)
-    {
-        return $this;
-    }
-
     /**
      * 当前属性是否等于某值
      * @param $attribute
@@ -158,51 +153,7 @@ class ArrayQuery extends Query
         });
     }
 
-    /**
-     * 嵌套查询
-     *
-     * @param \Closure $closure
-     * @return static
-     */
-    public function where(\Closure $closure)
-    {
-        call_user_func($closure, $this);
-
-        return $this;
-    }
-
-
-    /**
-     * Get the relation instance for the given relation name.
-     *
-     * @param $name
-     * @return static
-     */
-    public function getRelation($name)
-    {
-        return new self($this->collection->pluck($name));
-    }
-
-    /**
-     * 关联查询
-     * @param $relation
-     * @param $callback
-     * @return static
-     */
-    public function whereHas($relation, $callback)
-    {
-        return $this->addFilter(function (Store $store) use ($relation, $callback) {
-            $related = $store->get($relation);
-            if (!$related) {
-                return false;
-            }
-
-            $query = new self([$related]);
-            return $query->where($callback)->count() === 1;
-        });
-    }
-
-    private function addFilter(\Closure $filter)
+    protected function addFilter(\Closure $filter)
     {
         $this->collection = $this->collection->filter($filter);
 

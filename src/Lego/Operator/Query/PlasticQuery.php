@@ -153,43 +153,6 @@ class PlasticQuery extends Query
         return $this;
     }
 
-    /**
-     * 嵌套查询
-     * @param \Closure $closure
-     * @return static
-     */
-    public function where(\Closure $closure)
-    {
-        call_user_func($closure, new self($this->data->must()));
-
-        return $this;
-    }
-
-    /**
-     * Get the relation instance for the given relation name.
-     */
-    public function getRelation($name)
-    {
-        throw new LegoException(__METHOD__ . ' is not defined yet.');
-    }
-
-    /**
-     * 关联查询
-     * @param $relation
-     * @param $callback
-     * @return static
-     */
-    public function whereHas($relation, $callback)
-    {
-        $this->data->nested(
-            $relation,
-            function ($builder) use ($callback) {
-                call_user_func($callback, new self($builder));
-            }
-        );
-        return $this;
-    }
-
     protected $limit;
 
     /**

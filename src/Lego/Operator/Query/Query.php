@@ -33,7 +33,10 @@ abstract class Query extends Operator implements
      * @param array $relations
      * @return static
      */
-    abstract public function with(array $relations);
+    public function with(array $relations)
+    {
+        return $this;
+    }
 
     /**
      * 当前属性是否等于某值
@@ -113,34 +116,6 @@ abstract class Query extends Operator implements
     abstract public function whereBetween($attribute, $min, $max);
 
     /**
-     * 嵌套查询
-     * @param \Closure $closure
-     * @return static
-     */
-    abstract public function where(\Closure $closure);
-
-    /**
-     * Get the relation instance for the given relation name.
-     *
-     * @param $name
-     * @return static
-     */
-    abstract public function getRelation($name);
-
-    public function getForeignKeyOfRelation($name)
-    {
-        return null;
-    }
-
-    /**
-     * 关联查询
-     * @param $relation
-     * @param $callback
-     * @return static
-     */
-    abstract public function whereHas($relation, $callback);
-
-    /**
      * 限制条数
      * @param $limit
      * @return static
@@ -217,11 +192,6 @@ abstract class Query extends Operator implements
         return $this->select($columns)->map(function ($row) {
             return Finder::store($row);
         });
-    }
-
-    public function __call($name, $arguments)
-    {
-        return call_user_func_array([$this->data, $name], $arguments);
     }
 
     /** Array Access Interface Methods. */

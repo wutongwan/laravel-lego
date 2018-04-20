@@ -1,7 +1,7 @@
 <?php namespace Lego\Operator\Store;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
+use Lego\Field\FieldNameSlicer;
 use Lego\Foundation\Exceptions\LegoSaveFail;
 
 class EloquentStore extends Store
@@ -48,17 +48,18 @@ class EloquentStore extends Store
      */
     public function set($attribute, $value)
     {
-        $parts = explode('.', $attribute);
+        list($relationArray, $column, $jsonArray) = FieldNameSlicer::split($attribute);
+        $column = $jsonArray ? ($column . '->' . join('->', $jsonArray)) : $column;
 
-        if (count($parts) === 1) {
-            $this->data->setAttribute($attribute, $value);
+        if (count($relationArray) === 0) {
+            $this->data->setAttribute($column, $value);
             return;
         }
 
-        $relation = join('.', array_slice($parts, 0, -1));
-        $related = data_get($this->data, $relation);
+        $relation = join('.', $relationArray);
+        $related = $this->data->getRelationValue($relation);
         if ($related && $related instanceof Model) {
-            $related->setAttribute(last($parts), $value);
+            $related->setAttribute($column, $value);
             $this->relations[$relation] = $related;
         }
     }

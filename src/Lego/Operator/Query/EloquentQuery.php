@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder as QueryBuilder;
-use Illuminate\Pagination\AbstractPaginator;
+use Lego\Field\FieldNameSlicer;
 
 /**
  * Laravel ORM : Eloquent
@@ -63,15 +63,48 @@ class EloquentQuery extends Query
      */
     public function whereEquals($attribute, $value)
     {
-        $this->data->where($attribute, '=', $value);
+        return $this->parseWhere($attribute, '=', $value);
+    }
+
+    protected function parseWhere($attribute, $operator, $value)
+    {
+        list($relation, $column, $json) = FieldNameSlicer::split($attribute);
+        $queryColumn = $json ? ($column . '->' . join('->', $json)) : $column;
+
+        // simple where
+        if (!$relation) {
+            $this->addWhere($this->data, $queryColumn, $operator, $value);
+            return $this;
+        }
+
+        // whereHas
+        $this->data->whereHas(join('.', $relation), function ($query) use ($queryColumn, $operator, $value) {
+            /** @var QueryBuilder $query */
+            return $this->addWhere($query, $queryColumn, $operator, $value);
+        });
 
         return $this;
     }
 
+    /**
+     * @param QueryBuilder $query
+     * @param $column
+     * @param $operator
+     * @param $value
+     * @return QueryBuilder
+     */
+    protected function addWhere($query, $column, $operator, $value)
+    {
+        if ('in' === $operator) {
+            return $query->whereIn($column, $value);
+        } else {
+            return $query->where($column, $operator, $value);
+        }
+    }
+
     public function whereIn($attribute, array $values)
     {
-        $this->data->whereIn($attribute, $values);
-        return $this;
+        return $this->parseWhere($attribute, 'in', $values);
     }
 
     /**
@@ -83,9 +116,7 @@ class EloquentQuery extends Query
      */
     public function whereGt($attribute, $value, bool $equals = false)
     {
-        $this->data->where($attribute, $equals ? '>=' : '>', $value);
-
-        return $this;
+        return $this->parseWhere($attribute, $equals ? '>=' : '>', $value);
     }
 
     /**
@@ -97,9 +128,7 @@ class EloquentQuery extends Query
      */
     public function whereLt($attribute, $value, bool $equals = false)
     {
-        $this->data->where($attribute, $equals ? '<=' : '<', $value);
-
-        return $this;
+        return $this->parseWhere($attribute, $equals ? '<=' : '<', $value);
     }
 
     /**
@@ -110,13 +139,7 @@ class EloquentQuery extends Query
      */
     public function whereContains($attribute, string $value)
     {
-        if (is_empty_string($value)) {
-            return $this;
-        }
-
-        $this->data->where($attribute, 'like', '%' . trim($value, '%') . '%');
-
-        return $this;
+        return $this->whereLike($attribute, '%' . trim($value, '%') . '%');
     }
 
     /**
@@ -127,13 +150,7 @@ class EloquentQuery extends Query
      */
     public function whereStartsWith($attribute, string $value)
     {
-        if (is_empty_string($value)) {
-            return $this;
-        }
-
-        $this->data->where($attribute, 'like', trim($value, '%') . '%');
-
-        return $this;
+        return $this->whereLike($attribute, trim($value, '%') . '%');
     }
 
     /**
@@ -144,13 +161,16 @@ class EloquentQuery extends Query
      */
     public function whereEndsWith($attribute, string $value)
     {
+        return $this->whereLike($attribute, '%' . trim($value, '%'));
+    }
+
+    protected function whereLike($attribute, $value)
+    {
         if (is_empty_string($value)) {
             return $this;
         }
 
-        $this->data->where($attribute, 'like', '%' . trim($value, '%'));
-
-        return $this;
+        return $this->parseWhere($attribute, 'like', $value);
     }
 
     /**
@@ -162,31 +182,24 @@ class EloquentQuery extends Query
      */
     public function whereBetween($attribute, $min, $max)
     {
-        $this->data->whereBetween($attribute, [$min, $max]);
-
-        return $this;
+        return $this->parseWhere($attribute, 'between', [$min, $max]);
     }
 
     /**
-     * 嵌套查询
-     *
-     * @param \Closure $closure
-     * @return static
+     * @param $name
+     * @return EloquentQuery
+     * @deprecated
      */
-    public function where(\Closure $closure)
-    {
-        $this->data->where(function ($query) use ($closure) {
-            call_user_func($closure, new self($query));
-        });
-
-        return $this;
-    }
-
     public function getRelation($name)
     {
         return new self($this->getNestedRelation($name));
     }
 
+    /**
+     * @param $name
+     * @return null|string
+     * @deprecated
+     */
     public function getForeignKeyOfRelation($name)
     {
         $relation = $this->getNestedRelation($name);
@@ -198,6 +211,7 @@ class EloquentQuery extends Query
     /**
      * @param string $name school.city.country
      * @return Relation|null
+     * @deprecated
      */
     private function getNestedRelation($name)
     {
@@ -218,6 +232,7 @@ class EloquentQuery extends Query
      * @param $relation
      * @param \Closure $callback 由于此处 Closure 接受的参数是 Table 类，所以下面调用时封装了一次
      * @return static
+     * @deprecated
      */
     public function whereHas($relation, $callback)
     {
@@ -255,7 +270,7 @@ class EloquentQuery extends Query
      * 翻页
      * @param int $perPage
      * @param int|null $page
-     * @return AbstractPaginator
+     * @return \Illuminate\Contracts\Pagination\Paginator
      */
     protected function createPaginator($perPage, $columns, $pageName, $page)
     {

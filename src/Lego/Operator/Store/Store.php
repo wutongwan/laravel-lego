@@ -8,11 +8,19 @@ use Lego\Operator\Operator;
  */
 abstract class Store extends Operator implements Arrayable
 {
+    /**
+     * @return null
+     * @deprecated
+     */
     public function getKeyName()
     {
         return null;
     }
 
+    /**
+     * @return mixed
+     * @deprecated
+     */
     public function getKey()
     {
         return $this->get($this->getKeyName());
