@@ -12,8 +12,8 @@ trait HasValidation
      * 改 Field 所有 Validation
      * eg: ['required', 'email']
      */
-    private $rules = [];
-    private $discardedRules = [];
+    protected $rules = [];
+    protected $discardedRules = [];
 
     public function rules(): array
     {
@@ -70,7 +70,7 @@ trait HasValidation
      * 自定义的 validator closure
      * @var \Closure[]
      */
-    private $validators = [];
+    protected $validators = [];
 
     /**
      * 对 input 值的自定义校验，支持调用多次

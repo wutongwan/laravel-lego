@@ -11,7 +11,7 @@ use Lego\Widget\Concerns\ButtonLocations;
 /**
  * Lego中所有大型控件的基类
  */
-abstract class Widget implements ButtonLocations
+abstract class Widget implements ButtonLocations, \JsonSerializable
 {
     use MessageOperator,
         InitializeOperator,
@@ -26,6 +26,8 @@ abstract class Widget implements ButtonLocations
      * @var string
      */
     protected $uniqueId;
+
+    protected $extra = [];
 
     public function __construct($data)
     {
@@ -135,4 +137,15 @@ abstract class Widget implements ButtonLocations
      * Widget 的所有数据处理都放在此函数中, 渲染 view 前调用
      */
     abstract public function process();
+
+    public function jsonSerialize()
+    {
+        return [
+            'element_id' => $this->uniqueId(),
+            'buttons' => $this->buttons,
+            'messages' => $this->messages,
+            'errors' => $this->errors,
+            'extra' => $this->extra,
+        ];
+    }
 }

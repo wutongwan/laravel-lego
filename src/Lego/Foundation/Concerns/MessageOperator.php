@@ -8,13 +8,13 @@ trait MessageOperator
      * 所有提示信息
      * @var MessageBag
      */
-    private $messages;
+    protected $messages;
 
     /**
      * 所有错误信息
      * @var MessageBag
      */
-    private $errors;
+    protected $errors;
 
     protected function initializeMessageOperator()
     {

@@ -11,7 +11,7 @@ use Lego\Widget\Concerns\Operable;
 /**
  * 输入输出控件的基类
  */
-abstract class Field implements HasMode
+abstract class Field implements HasMode, \JsonSerializable
 {
     use MessageOperator,
         InitializeOperator,
@@ -33,7 +33,7 @@ abstract class Field implements HasMode
      * 字段的唯一标记
      * @var string
      */
-    private $name;
+    protected $name;
 
     /**
      * 字段描述
@@ -46,6 +46,12 @@ abstract class Field implements HasMode
      * @var string
      */
     protected $column;
+
+    /**
+     * 需要传递到前端的其他配置项
+     * @var array
+     */
+    protected $extra = [];
 
 
     /**
@@ -126,5 +132,23 @@ abstract class Field implements HasMode
     protected function view($view, $data = [])
     {
         return view($view, $data)->with('field', $this);
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'element_name' => $this->elementName(),
+            'element_id' => $this->elementId(),
+            'name' => $this->name(),
+            'description' => $this->description(),
+            'attributes' => $this->getAttributes(),
+            'mode' => $this->getMode(),
+            'init_value' => $this->takeInputValue(),
+            'locale' => $this->getLocale(),
+            'messages' => $this->messages(),
+            'errors' => $this->errors(),
+            'rules' => $this->rules,
+            'extra' => $this->extra,
+        ];
     }
 }
