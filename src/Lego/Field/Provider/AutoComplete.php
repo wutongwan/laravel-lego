@@ -1,44 +1,32 @@
 <?php namespace Lego\Field\Provider;
 
 use Illuminate\Support\Facades\Request;
+use Lego\Field\Concerns\FilterWhereEquals;
 use Lego\Field\Concerns\HasSelect2Assets;
-use Lego\Operator\Query\Query;
+use Lego\Operator\SuggestResult;
 use Lego\Register\AutoCompleteMatchHandler;
 
 class AutoComplete extends Text
 {
     use HasSelect2Assets;
+    use FilterWhereEquals;
 
     protected function initialize()
     {
         $this->match(function ($keyword) {
-            return $this->defaultMatch($keyword);
+            if (strlen($keyword) < $this->min) {
+                return new SuggestResult([]);
+            }
+
+            return $this->query->suggest($this->name(), $keyword, $this->valueColumn, $this->limit);
         });
-    }
-
-    /**
-     * 默认的自动补全逻辑
-     */
-    private function defaultMatch($keyword)
-    {
-        if (!$this->relation) {
-            return [];
-        }
-
-        return $this->query
-            ->getRelation($this->relation)
-            ->whereContains($this->column(), (string)$keyword)
-            ->limit($this->getLimit())
-            ->get()
-            ->pluck($this->column(), $this->getValueColumn())
-            ->all();
     }
 
     /**
      * 自动补全结果的数目
      * @var int
      */
-    private $limit = 20;
+    protected $limit = 20;
 
     public function limit(int $limit)
     {
@@ -55,7 +43,7 @@ class AutoComplete extends Text
     /**
      * @var integer 触发自动补全的最低字符数
      */
-    private $min;
+    protected $min;
 
     public function min(int $length)
     {
@@ -73,14 +61,12 @@ class AutoComplete extends Text
      * 自动补全结果的后端链接
      * @var string
      */
-    private $remote;
+    protected $remote;
 
     public function remote()
     {
         return $this->remote;
     }
-
-    protected $matchIsModified;
 
     /**
      * 自动补全的结果集
@@ -94,12 +80,11 @@ class AutoComplete extends Text
             $callable,
             md5(__CLASS__ . $this->name())
         )->remote();
-        $this->matchIsModified = true;
 
         return $this;
     }
 
-    private $valueColumn;
+    protected $valueColumn;
 
     /**
      * 自动补全结果集的 key 即 存储到数据库的值
@@ -111,22 +96,12 @@ class AutoComplete extends Text
         return $this;
     }
 
-    public function setOriginalValue($originalValue)
-    {
-        return parent::setOriginalValue($this->store->get($this->foreignKey) ?: null);
-    }
-
     public function getDisplayValue()
     {
         return lego_default(
             Request::input($this->elementName() . '-text'),
-            $this->store->get($this->getColumnPathOfRelation($this->column()))
+            $this->store->get($this->name())
         );
-    }
-
-    protected function getValueColumn()
-    {
-        return lego_default($this->valueColumn, $this->store->getKeyName());
     }
 
     protected function renderEditable()
@@ -135,27 +110,17 @@ class AutoComplete extends Text
         return $this->view('lego::default.field.auto-complete');
     }
 
-    /**
-     * Filter 检索数据时, 构造此字段的查询
-     * @param Query $query
-     * @return Query
-     */
-    public function filter(Query $query)
+    public function syncValueFromStore()
     {
-        if (!$this->relation) {
-            return $query->whereEquals($this->column, $this->getNewValue());
+        $associated = $this->store->getAssociated($this->name());
+        if ($associated) {
+            $column = $this->valueColumn ?: $associated->getKeyName();
+            $this->setOriginalValue($associated->get($column));
         }
-
-        return $query->whereHas($this->relation, function (Query $query) {
-            $column = $this->getValueColumn() ?: $this->column;
-            return $query->whereEquals($column, $this->getNewValue());
-        });
     }
 
     public function syncValueToStore()
     {
-        if ($this->foreignKey) {
-            $this->store->set($this->foreignKey, $this->getNewValue());
-        }
+        $this->store->associate($this->name(), $this->getNewValue());
     }
 }

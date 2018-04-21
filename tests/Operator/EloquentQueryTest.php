@@ -1,6 +1,6 @@
 <?php namespace Lego\Tests\Operator;
 
-use Lego\Operator\Query\EloquentQuery;
+use Lego\Operator\Eloquent\EloquentQuery;
 use Lego\Tests\Models\ExampleModel;
 use Lego\Tests\TestCase;
 
@@ -10,7 +10,7 @@ class EloquentQueryTest extends TestCase
     {
         $query = ExampleModel::query();
 
-        $legoQuery = EloquentQuery::attempt($query);
+        $legoQuery = EloquentQuery::parse($query);
         $legoQuery
             ->whereEquals('equals', 'equals_value')
             ->whereIn('in_column', ['in_value1', 'in_value2'])

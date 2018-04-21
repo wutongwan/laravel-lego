@@ -17,7 +17,7 @@ abstract class Operator
      * @param $data
      * @return static|false
      */
-    abstract public static function attempt($data);
+    abstract public static function parse($data);
 
     protected $data;
 

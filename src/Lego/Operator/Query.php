@@ -1,13 +1,10 @@
-<?php namespace Lego\Operator\Query;
+<?php namespace Lego\Operator;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Request;
-use Lego\Operator\Finder;
-use Lego\Operator\Operator;
-use Lego\Operator\Store\Store;
 use Traversable;
 
 /**
@@ -116,6 +113,26 @@ abstract class Query extends Operator implements
     abstract public function whereBetween($attribute, $min, $max);
 
     /**
+     * Query Scope
+     */
+    abstract public function whereScope($scope, $value);
+
+    /**
+     * 特定字段的 自动补全、推荐 结果
+     * @param $attribute
+     * @param string $keyword
+     * @param string $valueColumn default null，默认返回主键
+     * @param int $limit
+     * @return SuggestResult
+     */
+    abstract public function suggest(
+        $attribute,
+        string $keyword,
+        string $valueColumn = null,
+        int $limit = 20
+    ): SuggestResult;
+
+    /**
      * 限制条数
      * @param $limit
      * @return static
@@ -159,7 +176,7 @@ abstract class Query extends Operator implements
         $this->paginator = $this->createPaginator($perPage, $columns, $pageName, $page);
         $this->paginator->setCollection(
             $this->paginator->getCollection()->map(function ($row) {
-                return Finder::store($row);
+                return Finder::createStore($row);
             })
         );
 
@@ -190,7 +207,7 @@ abstract class Query extends Operator implements
     public function get($columns = ['*'])
     {
         return $this->select($columns)->map(function ($row) {
-            return Finder::store($row);
+            return Finder::createStore($row);
         });
     }
 

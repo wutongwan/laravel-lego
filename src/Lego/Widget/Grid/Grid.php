@@ -5,7 +5,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;
 use Lego\Foundation\Facades\LegoAssets;
-use Lego\Operator\Store\Store;
+use Lego\Operator\Store;
 use Lego\Register\HighPriorityResponse;
 use Lego\Widget\Filter;
 use Lego\Widget\Widget;

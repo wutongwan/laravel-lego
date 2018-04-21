@@ -5,15 +5,15 @@ use Lego\Foundation\Exceptions\LegoException;
 class Finder
 {
     protected $operators = [
-        Query\Query::class => [
-            Query\EloquentQuery::class,
-            Query\ArrayQuery::class,
+        Query::class => [
+            Eloquent\EloquentQuery::class,
+            Collection\ArrayQuery::class,
         ],
 
-        Store\Store::class => [
-            Store\EloquentStore::class,
-            Store\ArrayStore::class,
-            Store\ObjectStore::class,
+        Store::class => [
+            Eloquent\EloquentStore::class,
+            Collection\ArrayStore::class,
+            Collection\ObjectStore::class,
         ],
     ];
 
@@ -21,7 +21,7 @@ class Finder
     {
         // test plastic is installed
         if (class_exists(\Sleimanx2\Plastic\Facades\Plastic::class)) {
-            $this->operators[Query\Query::class][] = Query\PlasticQuery::class;
+            $this->operators[Query::class][] = Plastic\PlasticQuery::class;
         }
     }
 
@@ -31,9 +31,9 @@ class Finder
             return $data;
         }
 
-        /** @var Operator|Store\Store|Query\Query $item */
+        /** @var Operator|\Lego\Operator\Store|\Lego\Operator\Query $item */
         foreach ($this->operators[$operatorType] as $item) {
-            if ($operator = $item::attempt($data)) {
+            if ($operator = $item::parse($data)) {
                 return $operator;
             }
         }
@@ -59,23 +59,23 @@ class Finder
      * Query Operator finder
      *
      * @param $data
-     * @return Query\Query
+     * @return \Lego\Operator\Query
      * @throws LegoException
      */
-    public static function query($data)
+    public static function createQuery($data)
     {
-        return static::instance()->parse(Query\Query::class, $data);
+        return static::instance()->parse(\Lego\Operator\Query::class, $data);
     }
 
     /**
      * Store Operator finder
      *
      * @param $data
-     * @return Store\Store
+     * @return \Lego\Operator\Store
      * @throws LegoException
      */
-    public static function store($data)
+    public static function createStore($data)
     {
-        return static::instance()->parse(Store\Store::class, $data);
+        return static::instance()->parse(\Lego\Operator\Store::class, $data);
     }
 }

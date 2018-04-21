@@ -1,15 +1,15 @@
-<?php namespace Lego\Operator\Query;
+<?php namespace Lego\Operator\Plastic;
 
 use Illuminate\Support\Collection;
 use Illuminate\Pagination\AbstractPaginator;
 
+use Lego\Operator\Query;
+use Lego\Operator\SuggestResult;
 use ONGR\ElasticsearchDSL\Query\TermLevel\RangeQuery;
 use ONGR\ElasticsearchDSL\Sort\FieldSort;
 use Sleimanx2\Plastic\DSL\SearchBuilder;
 use Sleimanx2\Plastic\PlasticPaginator;
 use Sleimanx2\Plastic\PlasticResult;
-
-use Lego\Foundation\Exceptions\LegoException;
 
 class PlasticQuery extends Query
 {
@@ -21,7 +21,7 @@ class PlasticQuery extends Query
      * @param SearchBuilder $data
      * @return static|false
      */
-    public static function attempt($data)
+    public static function parse($data)
     {
         return $data instanceof SearchBuilder ? new static($data) : false;
     }
@@ -217,5 +217,21 @@ class PlasticQuery extends Query
 
         $this->data->setModelFiller($filler);
         return $this->data->get();
+    }
+
+    /**
+     * Query Scope
+     */
+    public function whereScope($scope, $value)
+    {
+    }
+
+    public function suggest(
+        $attribute,
+        string $keyword,
+        string $valueColumn = null,
+        int $limit = 20
+    ): SuggestResult {
+        return new SuggestResult([]);
     }
 }

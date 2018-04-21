@@ -1,12 +1,22 @@
-<?php namespace Lego\Operator\Store;
+<?php namespace Lego\Operator\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Lego\Field\FieldNameSlicer;
 use Lego\Foundation\Exceptions\LegoSaveFail;
+use Lego\Operator\Finder;
+use Lego\Operator\Store;
 
+/**
+ * Class EloquentStore
+ * @package Lego\Operator\Store
+ * @property Model $data
+ */
 class EloquentStore extends Store
 {
-    public static function attempt($data)
+    use HasRelation;
+
+    public static function parse($data)
     {
         if ($data instanceof Model) {
             return new self($data);
@@ -18,9 +28,6 @@ class EloquentStore extends Store
 
         return false;
     }
-
-    /** @var Model $data */
-    protected $data;
 
     protected $relations = [];
 
@@ -101,13 +108,65 @@ class EloquentStore extends Store
         throw new LegoSaveFail($class . ' save fail, ' . $dataString);
     }
 
-    /**
-     * Get the instance as an array.
-     *
-     * @return array
-     */
     public function toArray()
     {
         return $this->data->toArray();
+    }
+
+    public function associate($attribute, $id)
+    {
+        $this->getRelationOfAttribute($attribute)->associate($id);
+    }
+
+    public function dissociate($attribute)
+    {
+        $this->getRelationOfAttribute($attribute)->dissociate();
+    }
+
+    public function attach($attribute, array $ids, array $attributes = [])
+    {
+        $this->getRelationOfAttribute($attribute)->attach($ids, $attributes);
+    }
+
+    public function detach($attribute, array $ids)
+    {
+        $this->getRelationOfAttribute($attribute)->detach($ids);
+    }
+
+    protected function getRelationOfAttribute($attribute)
+    {
+        list($relationArray) = FieldNameSlicer::split($attribute);
+
+        return $this->getNestedRelation($this->getModel(), $relationArray);
+    }
+
+    /**
+     * 当前关联数据
+     */
+    public function getAssociated($attribute)
+    {
+        $model = $this->getRelationValue($attribute);
+
+        return $model ? Finder::createStore($model) : null;
+    }
+
+    /**
+     * 当前关联数据
+     * @param $attribute
+     * @return Collection|Store[]
+     */
+    public function getAttached($attribute): Collection
+    {
+        /** @var Collection $coll */
+        $coll = $this->getRelationValue($attribute);
+        return $coll->map(function ($data) {
+            return Finder::createStore($data);
+        });
+    }
+
+    protected function getRelationValue($attribute)
+    {
+        list($relationArray) = FieldNameSlicer::split($attribute);
+        return data_get($this->data, join('.', $relationArray));
     }
 }

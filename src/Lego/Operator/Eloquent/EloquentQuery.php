@@ -1,18 +1,23 @@
-<?php namespace Lego\Operator\Query;
+<?php namespace Lego\Operator\Eloquent;
 
 use Illuminate\Database\Eloquent\Builder as EloquentQueryBuilder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Lego\Field\FieldNameSlicer;
+use Lego\Operator\Query;
+use Lego\Operator\SuggestResult;
 
 /**
  * Laravel ORM : Eloquent
+ *
+ * @property QueryBuilder|EloquentQueryBuilder $data
  */
 class EloquentQuery extends Query
 {
-    public static function attempt($data)
+    use HasRelation;
+
+    public static function parse($data)
     {
         switch (true) {
             // eg: School::class
@@ -36,12 +41,6 @@ class EloquentQuery extends Query
                 return false;
         }
     }
-
-    /**
-     * @var Model|QueryBuilder|EloquentQueryBuilder
-     */
-    protected $data;
-
 
     /**
      * Query with eager loading
@@ -185,65 +184,38 @@ class EloquentQuery extends Query
         return $this->parseWhere($attribute, 'between', [$min, $max]);
     }
 
-    /**
-     * @param $name
-     * @return EloquentQuery
-     * @deprecated
-     */
-    public function getRelation($name)
+    public function whereScope($scope, $value)
     {
-        return new self($this->getNestedRelation($name));
-    }
-
-    /**
-     * @param $name
-     * @return null|string
-     * @deprecated
-     */
-    public function getForeignKeyOfRelation($name)
-    {
-        $relation = $this->getNestedRelation($name);
-        return $relation instanceof BelongsTo
-            ? trim($name, $relation->getRelation()) . $relation->getForeignKey()
-            : null;
-    }
-
-    /**
-     * @param string $name school.city.country
-     * @return Relation|null
-     * @deprecated
-     */
-    private function getNestedRelation($name)
-    {
-        $model = $this->data;
-        $relation = null;
-        foreach (explode('.', $name) as $relation) {
-            /** @var Relation $relation */
-            $relation = $model->newQuery()->getRelation($relation);
-            if ($relation) {
-                $model = $relation->getRelated();
-            }
-        }
-        return $relation;
-    }
-
-    /**
-     * 关联查询
-     * @param $relation
-     * @param \Closure $callback 由于此处 Closure 接受的参数是 Table 类，所以下面调用时封装了一次
-     * @return static
-     * @deprecated
-     */
-    public function whereHas($relation, $callback)
-    {
-        $this->data->whereHas(
-            $relation,
-            function ($query) use ($callback) {
-                call_user_func($callback, new self($query));
-            }
-        );
+        $this->data->{$scope}($value);
 
         return $this;
+    }
+
+    public function suggest($attribute, string $keyword, string $valueColumn = null, int $limit = 20): SuggestResult
+    {
+        list($relationArray, $column) = FieldNameSlicer::split($attribute);
+
+        $pattern = '%' . trim($keyword, '%') . '%';
+
+        if (!$relationArray) {
+            $result = $this->data->newQuery()
+                ->selectRaw('DISTINCT ' . $column)
+                ->where($column, 'like', $pattern)
+                ->limit($limit)
+                ->get()
+                ->pluck($column)
+                ->toArray();
+        } else {
+            $relation = $this->getNestedRelation($this->getModel(), $relationArray);
+            $related = $relation->getRelated();
+            $result = $relation->newQuery()
+                ->where($column, 'like', $pattern)
+                ->limit($limit)
+                ->pluck($column, $valueColumn ?: $related->getKeyName())
+                ->toArray();
+        }
+
+        return new SuggestResult($result);
     }
 
     public function limit($limit)

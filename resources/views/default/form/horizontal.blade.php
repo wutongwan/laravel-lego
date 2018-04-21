@@ -3,7 +3,7 @@
 @include('lego::default.snippets.top-buttons', ['widget' => $form])
 
 @include('lego::default.messages', ['object' => $form])
-<form id="{{ $form->elementId() }}" method="post" class="form-horizontal" action="{{ $form->getAction() }}">
+<form id="{{ $form->elementId() }}" method="{{ $form->getMethod() }}" class="form-horizontal" action="{{ $form->getAction() }}">
     @foreach($form->fields() as $field)
         @include('lego::default.form.horizontal-form-group', ['field' => $field])
     @endforeach

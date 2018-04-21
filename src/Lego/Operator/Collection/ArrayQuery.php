@@ -1,4 +1,4 @@
-<?php namespace Lego\Operator\Query;
+<?php namespace Lego\Operator\Collection;
 
 use Carbon\Carbon;
 use Illuminate\Contracts\Support\Arrayable;
@@ -7,14 +7,16 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Lego\Operator\Finder;
-use Lego\Operator\Store\Store;
+use Lego\Operator\Query;
+use Lego\Operator\SuggestResult;
+use Lego\Operator\Store;
 
 /**
  * ArrayAble
  */
 class ArrayQuery extends Query
 {
-    public static function attempt($data)
+    public static function parse($data)
     {
         if (is_array($data)
             || $data instanceof Collection
@@ -38,7 +40,7 @@ class ArrayQuery extends Query
     {
         $this->collection = new Collection($this->data);
         $this->collection = $this->collection->map(function ($item) {
-            return Finder::store($item);
+            return Finder::createStore($item);
         });
     }
 
@@ -196,5 +198,23 @@ class ArrayQuery extends Query
     protected function select(array $columns)
     {
         return $this->collection;
+    }
+
+    public function suggest($attribute, string $keyword, string $valueColumn = null, int $limit = 20): SuggestResult
+    {
+        $items = (new Collection($this->data))
+            ->filter(function ($item) use ($attribute, $keyword) {
+                return Str::contains(data_get($item, $attribute), $keyword);
+            })
+            ->take($limit)
+            ->pluck($attribute, $valueColumn ?: $attribute)
+            ->toArray();
+
+        return new SuggestResult($items);
+    }
+
+    public function whereScope($scope, $value)
+    {
+        return $this;
     }
 }

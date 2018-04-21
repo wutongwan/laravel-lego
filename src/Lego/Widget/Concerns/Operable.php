@@ -1,8 +1,8 @@
 <?php namespace Lego\Widget\Concerns;
 
 use Lego\Operator\Finder;
-use Lego\Operator\Query\Query;
-use Lego\Operator\Store\Store;
+use Lego\Operator\Query;
+use Lego\Operator\Store;
 
 /**
  * Operator 的承载类，用于拆分代码
@@ -17,7 +17,7 @@ trait Operable
     protected $query;
 
     /**
-     * @var Store
+     * @var \Lego\Operator\Store
      */
     protected $store;
 
@@ -26,15 +26,15 @@ trait Operable
         if ($data instanceof Store) {
             $this->data = $data->getOriginalData();
             $this->store = $data;
-            $this->query = Finder::query($this->data);
+            $this->query = Finder::createQuery($this->data);
         } elseif ($data instanceof Query) {
             $this->data = $data->getOriginalData();
-            $this->store = Finder::store($this->data);
+            $this->store = Finder::createStore($this->data);
             $this->query = $data;
         } else {
             $this->data = $data;
-            $this->query = Finder::query($data);
-            $this->store = Finder::store($data);
+            $this->query = Finder::createQuery($data);
+            $this->store = Finder::createStore($data);
         }
     }
 

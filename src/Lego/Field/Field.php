@@ -5,7 +5,7 @@ use Lego\Foundation\Concerns\ModeOperator;
 use Lego\Foundation\Concerns\MessageOperator;
 use Lego\Foundation\Concerns\InitializeOperator;
 use Lego\Foundation\Concerns\RenderStringOperator;
-use Lego\Operator\Query\Query;
+use Lego\Operator\Query;
 use Lego\Widget\Concerns\Operable;
 
 /**
@@ -24,7 +24,6 @@ abstract class Field implements HasMode, \JsonSerializable
         Concerns\HasValidation,
         Concerns\HasValues,
         Concerns\HasScope,
-        Concerns\HasRelation,
         Concerns\HasLocale,
         Concerns\HasConfig,
         Concerns\FilterWhereEquals;
@@ -42,10 +41,22 @@ abstract class Field implements HasMode, \JsonSerializable
     protected $description;
 
     /**
+     * Relation Path
+     * @var array
+     */
+    protected $relationPath;
+
+    /**
      * 对应的数据表字段名
      * @var string
      */
     protected $column;
+
+    /**
+     * Json Path
+     * @var array
+     */
+    protected $jsonPath;
 
     /**
      * 需要传递到前端的其他配置项
@@ -63,16 +74,9 @@ abstract class Field implements HasMode, \JsonSerializable
     public function __construct(string $name, string $description = null, $data = [])
     {
         $this->name = $name;
-
-        /**
-         * Example
-         *  - name : school.city.name
-         *  - column : name
-         *  - relation : school.city
-         *  - description <default> : School City Name
-         */
-        $this->column = last(explode('.', $name));
         $this->description = $description;
+
+        list($this->relationPath, $this->column, $this->jsonPath) = FieldNameSlicer::split($name);
 
         $this->initializeDataOperator($data);
 
@@ -114,17 +118,6 @@ abstract class Field implements HasMode, \JsonSerializable
      * 数据处理逻辑
      */
     abstract public function process();
-
-    /**
-     * 将新的数据存储到 Store
-     */
-    public function syncValueToStore()
-    {
-        $this->store->set(
-            $this->getColumnPathOfRelation($this->column),
-            $this->mutateSavingValue($this->getNewValue())
-        );
-    }
 
     /**
      * @return \Illuminate\View\View

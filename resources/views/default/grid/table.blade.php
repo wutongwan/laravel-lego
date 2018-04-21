@@ -14,7 +14,7 @@
                     <th>{{ $cell->description() }}</th>
                 @endforeach
             </tr>
-            <?php /** @var \Lego\Operator\Store\Store $row */ ?>
+            <?php /** @var \Lego\Operator\Store $row */ ?>
             @foreach($grid->paginator() as $row)
                 <tr>
                     @if($batchModeEnabled)

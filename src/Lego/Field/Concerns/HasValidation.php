@@ -154,7 +154,7 @@ trait HasValidation
      */
     public function unique($id = null, $idColumn = null, $extra = null)
     {
-        if (!$this->store instanceof \Lego\Operator\Store\EloquentStore) {
+        if (!$this->store instanceof \Lego\Operator\Eloquent\EloquentStore) {
             throw new LegoException(
                 'Validation: `unique` rule only worked for Eloquent, ' .
                 'you can use `validator($closure)` implement unique validation.'

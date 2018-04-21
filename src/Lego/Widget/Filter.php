@@ -65,7 +65,7 @@ class Filter extends Widget
     }
 
     /** @var Grid $grid */
-    private $grid;
+    protected $grid;
 
     public function grid($syncFields = false)
     {

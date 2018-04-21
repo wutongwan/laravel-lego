@@ -45,12 +45,4 @@ class JSON extends Text
     {
         return json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     }
-
-    public function syncValueToStore()
-    {
-        $column = $this->getColumnPathOfRelation($this->column());
-        $original = $this->decode($this->store->get($column));
-        array_set($original, $this->jsonKey, $this->getNewValue());
-        $this->store->set($column, $this->mutateSavingValue($original));
-    }
 }

@@ -1,6 +1,6 @@
 <?php namespace Lego\Field\Concerns;
 
-use Lego\Operator\Query\Query;
+use Lego\Operator\Query;
 
 /**
  * Class HasScope
@@ -17,7 +17,7 @@ trait HasScope
      *  - string ：见 Eloquent Query Scopes
      *  - null ：同上 string ，自动使用当前 field name 作为 scope 函数名
      *  - Closure ：传入的 Closure 接收两个参数
-     *      - $query , instanceof \Lego\Operator\Query\Query ，注意：此处不是 Laravel 中的 Query Builder
+     *      - $query , instanceof \Lego\Operator\Query ，注意：此处不是 Laravel 中的 Query Builder
      *      - $value , 此项的输入值
      *
      *
@@ -41,6 +41,7 @@ trait HasScope
      *
      * @param string|\Closure $scope
      * @return $this
+     * @throws \Lego\Foundation\Exceptions\LegoException
      */
     public function scope($scope = null)
     {
@@ -54,7 +55,7 @@ trait HasScope
     public function callScope(Query $query)
     {
         if (is_string($this->scope)) {
-            $query->{$this->scope}($this->getNewValue());
+            $query->whereScope($this->scope, $this->getNewValue());
         } else {
             call_user_func_array($this->scope, [$query, $this->getNewValue()]);
         }

@@ -1,13 +1,11 @@
 <?php namespace Lego\Field\Concerns;
 
-use Lego\Operator\Query\Query;
+use Lego\Operator\Query;
 
 trait FilterWhereContains
 {
     public function filter(Query $query)
     {
-        return $this->filterWithRelation($query, function (Query $query) {
-            return $query->whereContains($this->column(), $this->getNewValue());
-        });
+        return $query->whereContains($this->name(), $this->getNewValue());
     }
 }

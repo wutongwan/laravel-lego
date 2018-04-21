@@ -1,7 +1,7 @@
 <?php namespace Lego\Field;
 
 use Illuminate\Support\Facades\Request;
-use Lego\Operator\Query\Query;
+use Lego\Operator\Query;
 
 abstract class RangeField extends Field
 {
@@ -79,24 +79,22 @@ abstract class RangeField extends Field
      */
     public function filter(Query $query)
     {
-        return $this->filterWithRelation($query, function (Query $query) {
-            $min = $this->lower->getNewValue();
-            $max = $this->upper->getNewValue();
+        $min = $this->lower->getNewValue();
+        $max = $this->upper->getNewValue();
 
-            switch (true) {
-                case !is_empty_string($min) && !is_empty_string($max):
-                    return $query->whereBetween($this->column(), $min, $max);
+        switch (true) {
+            case !is_empty_string($min) && !is_empty_string($max):
+                return $query->whereBetween($this->name(), $min, $max);
 
-                case !is_empty_string($min):
-                    return $query->whereGte($this->column(), $min);
+            case !is_empty_string($min):
+                return $query->whereGte($this->name(), $min);
 
-                case !is_empty_string($max):
-                    return $query->whereLte($this->column(), $max);
+            case !is_empty_string($max):
+                return $query->whereLte($this->name(), $max);
 
-                default:
-                    return $query;
-            }
-        });
+            default:
+                return $query;
+        }
     }
 
     public function render()

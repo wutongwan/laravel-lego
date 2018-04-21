@@ -1,6 +1,6 @@
 <?php namespace Lego\Tests\Operator;
 
-use Lego\Operator\Store\ArrayStore;
+use Lego\Operator\Collection\ArrayStore;
 use Lego\Tests\TestCase;
 
 class ArrayStoreTest extends TestCase
@@ -13,7 +13,7 @@ class ArrayStoreTest extends TestCase
 
     public function testArrayAccess()
     {
-        $store = ArrayStore::attempt($this->exampleArray);
+        $store = ArrayStore::parse($this->exampleArray);
 
         self::assertSame('b', $store['a']);
 
@@ -26,7 +26,7 @@ class ArrayStoreTest extends TestCase
 
     public function testObjectAccess()
     {
-        $store = ArrayStore::attempt($this->exampleArray);
+        $store = ArrayStore::parse($this->exampleArray);
         self::assertSame('b', $store->a);
 
         $store->a = 'bb';
