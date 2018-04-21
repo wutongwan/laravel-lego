@@ -6,7 +6,7 @@ use Lego\Operator\Operator;
 /**
  * Store 为 Lego 提供统一的读写 API
  */
-abstract class Store extends Operator implements Arrayable
+abstract class Store extends Operator implements Arrayable, \ArrayAccess
 {
     /**
      * @return null
@@ -54,8 +54,33 @@ abstract class Store extends Operator implements Arrayable
         return $this->get($name);
     }
 
+    public function __unset($name)
+    {
+        $this->set($name, null);
+    }
+
     public function __call($name, $arguments)
     {
         return call_user_func_array([$this->original, $name], $arguments);
+    }
+
+    public function offsetExists($offset)
+    {
+        return $this->get($offset);
+    }
+
+    public function offsetGet($offset)
+    {
+        return $this->get($offset);
+    }
+
+    public function offsetSet($offset, $value)
+    {
+        $this->set($offset, $value);
+    }
+
+    public function offsetUnset($offset)
+    {
+        $this->set($offset, null);
     }
 }

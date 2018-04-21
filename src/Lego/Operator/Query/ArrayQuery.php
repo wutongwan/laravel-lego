@@ -5,6 +5,7 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Lego\Operator\Finder;
 use Lego\Operator\Store\Store;
 
@@ -36,7 +37,7 @@ class ArrayQuery extends Query
     protected function initialize()
     {
         $this->collection = new Collection($this->data);
-        $this->collection->map(function ($item) {
+        $this->collection = $this->collection->map(function ($item) {
             return Finder::store($item);
         });
     }
@@ -104,7 +105,7 @@ class ArrayQuery extends Query
     public function whereContains($attribute, string $value)
     {
         return $this->addFilter(function (Store $store) use ($attribute, $value) {
-            return str_contains($store->get($attribute), $value);
+            return Str::contains($store->get($attribute), $value);
         });
     }
 
@@ -117,7 +118,7 @@ class ArrayQuery extends Query
     public function whereStartsWith($attribute, string $value)
     {
         return $this->addFilter(function (Store $store) use ($attribute, $value) {
-            return starts_with($store->get($attribute), $value);
+            return Str::startsWith($store->get($attribute), $value);
         });
     }
 
@@ -130,7 +131,7 @@ class ArrayQuery extends Query
     public function whereEndsWith($attribute, string $value)
     {
         return $this->addFilter(function (Store $store) use ($attribute, $value) {
-            return ends_with($store->get($attribute), $value);
+            return Str::endsWith($store->get($attribute), $value);
         });
     }
 
@@ -194,6 +195,6 @@ class ArrayQuery extends Query
 
     protected function select(array $columns)
     {
-        return new Collection($this->collection->all());
+        return $this->collection;
     }
 }
