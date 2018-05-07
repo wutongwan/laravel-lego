@@ -8,6 +8,12 @@
         "admin",
         "widget"
     ],
+    "authors": [
+        {
+            "name": "zhwei",
+            "email": "zhwei.yes@gmail.com"
+        }
+    ],
     "require": {
         "php": ">=7.0.0",
         "illuminate/support": "5.2.* || 5.3.* || 5.4.* || 5.5.*",
@@ -39,6 +45,13 @@
     },
     "suggest": {
         "sleimanx2/plastic": "Required to use the Elasticsearch Query (~0.3.0)."
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Lego\\LegoServiceProvider"
+            ]
+        }
     },
     "prefer-stable": true,
     "minimum-stability": "dev"
