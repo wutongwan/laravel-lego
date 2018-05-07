@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Request;
 use Traversable;
 
 /**
- * OutgoingQuery 类为 Lego 提供统一的 query API
+ * Query 类为 Lego 提供统一的 query API
  */
 abstract class Query extends Operator implements
     \ArrayAccess,
@@ -25,7 +25,7 @@ abstract class Query extends Operator implements
     protected $paginator;
 
     /**
-     * OutgoingQuery with eager loading
+     * Query with eager loading
      *
      * @param array $relations
      * @return static
@@ -113,7 +113,7 @@ abstract class Query extends Operator implements
     abstract public function whereBetween($attribute, $min, $max);
 
     /**
-     * OutgoingQuery Scope
+     * Query Scope
      */
     abstract public function whereScope($scope, $value);
 
