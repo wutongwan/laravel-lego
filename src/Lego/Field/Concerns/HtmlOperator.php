@@ -1,9 +1,6 @@
 <?php namespace Lego\Field\Concerns;
 
-use Illuminate\Support\Facades\Config;
 use Lego\Field\Field;
-use Lego\Utility\HasHtmlAttributes;
-use Lego\Utility\HtmlUtility;
 
 /**
  * Class HtmlOperator
@@ -63,7 +60,7 @@ trait HtmlOperator
 
     public function getPlaceholder($default = null)
     {
-        return $this->getAttribute('placeholder', $default);
+        return $this->getAttributeString('placeholder', $default);
     }
 
     public function note($message)

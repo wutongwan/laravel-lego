@@ -26,12 +26,13 @@ class HighPriorityResponse extends Data
         return Request::fullUrlWithQuery($query);
     }
 
-    private static $tree = [];
-    private static $current;
+    protected static $tree = [];
+    protected static $current;
 
-    public static function getResponse()
+    public static function getResponse($path = null)
     {
-        if (!$path = Request::get(self::REQUEST_PARAM)) {
+        $path = $path ?: Request::get(self::REQUEST_PARAM);
+        if (!$path) {
             return null;
         }
 

@@ -15,6 +15,7 @@ trait HasFieldContainer
     protected function initializeHasFieldContainer()
     {
         $this->container = new FieldContainer();
+        $this->container->setAttribute('class', 'form-group');
     }
 
     public function container($attributeOrAttributes, $value = null)

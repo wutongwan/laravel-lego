@@ -4,7 +4,7 @@ if ($field->errors()->any()) {
     $field->getContainer()->setAttribute('class', 'has-error');
 }
 ?>
-<div {!! $field->getContainer()->geAttributesString() !!}>
+<div {!! $field->getContainer()->getAttributesString() !!}>
     <label for="{{ $field->elementId() }}" class="col-sm-2 control-label">
         @if($field->isRequired() && $field->isEditable())
             <span class="text-danger">*</span>

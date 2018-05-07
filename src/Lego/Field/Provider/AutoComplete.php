@@ -18,7 +18,7 @@ class AutoComplete extends Text
                 return new SuggestResult([]);
             }
 
-            return $this->query->suggest($this->name(), $keyword, $this->valueColumn, $this->limit);
+            return $this->query->suggest($this->name(), strval($keyword), $this->valueColumn, $this->limit);
         });
     }
 

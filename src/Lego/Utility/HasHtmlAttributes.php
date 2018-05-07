@@ -22,17 +22,28 @@ trait HasHtmlAttributes
     public function setAttribute($attribute, $value = null)
     {
         if (is_array($attribute)) {
-            $this->attributes = array_merge($this->attributes, $attribute);
+            $this->attributes = array_merge_recursive($this->attributes, $attribute);
             return $this;
         }
 
-        $this->attributes[$attribute] = $value;
+        if (is_array($value)) {
+            $this->attributes[$attribute] = array_merge((array)$this->attributes[$attribute] ?? [], $value);
+        } else {
+            $this->attributes[$attribute] = $value;
+        }
+
         return $this;
     }
 
     public function getAttribute($attribute, $default = null)
     {
         return array_get($this->attributes, $attribute, $default);
+    }
+
+    public function getAttributeString($attribute, $default = '')
+    {
+        $values = $this->getAttribute($attribute);
+        return is_null($values) ? $default : join(' ', (array)$values);
     }
 
     public function removeAttribute($attribute)
@@ -48,7 +59,7 @@ trait HasHtmlAttributes
         return $this->attributes;
     }
 
-    public function geAttributesString()
+    public function getAttributesString()
     {
         return HtmlUtility::renderAttributes($this->attributes);
     }
