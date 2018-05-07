@@ -13,17 +13,8 @@ class JSON extends Text
      */
     protected function initialize()
     {
-        $exploded = explode(':', $this->column(), 2);
-
-        lego_assert(count($exploded) === 2, 'JSON field `name` example: `array:key:sub-key:...`');
-
-        $this->column = $exploded[0];
-        $this->jsonKey = str_replace(':', '.', $exploded[1]);
-    }
-
-    public function getOriginalValue()
-    {
-        return array_get($this->decode($this->originalValue), $this->jsonKey);
+        lego_assert(count($this->jsonPath) > 0, 'JSON field `name` example: `array:key:sub-key:...`');
+        $this->jsonKey = join('.', $this->jsonPath);
     }
 
     protected function mutateTakingValue($json)
@@ -31,14 +22,14 @@ class JSON extends Text
         return $this->decode($json) ?: $this->getDefaultValue();
     }
 
-    protected function mutateSavingValue($value)
-    {
-        return $this->encode($value);
-    }
-
     protected function decode($json)
     {
-        return is_string($json) ? json_decode($json, JSON_OBJECT_AS_ARRAY) : $json;
+        if (is_string($json)) {
+            $data = json_decode($json, JSON_OBJECT_AS_ARRAY);
+            return is_null($data) ? $json : $data;
+        }
+
+        return $json;
     }
 
     protected function encode($data)

@@ -129,7 +129,7 @@ abstract class Field implements HasMode, \JsonSerializable
 
             // lego attributes
             'lego-type' => 'Field',
-            'lego-field-type' => class_basename($this),
+            'lego-field-type' => class_basename(static::class),
             'lego-field-mode' => $this->mode,
         ]);
 

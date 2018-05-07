@@ -15,7 +15,7 @@ trait HasFieldContainer
     protected function initializeHasFieldContainer()
     {
         $this->container = new FieldContainer();
-        $this->container->setAttribute('class', 'form-group');
+        $this->container->setAttribute('class', ['lego-field-container', 'form-group']);
     }
 
     public function container($attributeOrAttributes, $value = null)

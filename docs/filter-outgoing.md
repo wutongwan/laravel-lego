@@ -41,3 +41,24 @@ $gird = Lego::grid($rows);
 ...
 
 ```
+
+
+## `operator` 列表
+
+- `=`
+- `>`
+- `>=`
+- `<`
+- `<=`
+- `in`
+- `between`
+- `contains`
+- `contains:starts_with`
+- `contains:ends_with`
+- `scope`
+
+
+
+
+
+

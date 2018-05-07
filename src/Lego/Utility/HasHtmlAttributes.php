@@ -27,7 +27,8 @@ trait HasHtmlAttributes
         }
 
         if (is_array($value)) {
-            $this->attributes[$attribute] = array_merge((array)$this->attributes[$attribute] ?? [], $value);
+            $old = $this->attributes[$attribute] ?? [];
+            $this->attributes[$attribute] = array_merge((array)$old, $value);
         } else {
             $this->attributes[$attribute] = $value;
         }

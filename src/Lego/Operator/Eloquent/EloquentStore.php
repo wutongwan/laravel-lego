@@ -45,7 +45,16 @@ class EloquentStore extends Store
      */
     public function get($attribute, $default = null)
     {
-        return data_get($this->data, $attribute, $default);
+        list($relationArray, $column, $jsonArray) = FieldNameSlicer::split($attribute);
+        $key = join('.', array_merge($relationArray, [$column]));
+        $value = data_get($this->data, $key);
+
+        if ($jsonArray) {
+            $value = is_string($value) ? json_decode($value) : $value;
+            return data_get($value, join('.', $jsonArray), $default);
+        }
+
+        return is_null($value) ? $default : $value;
     }
 
     /**

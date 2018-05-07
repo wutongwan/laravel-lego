@@ -9,10 +9,10 @@ class FieldContainerTest extends TestCase
     {
         $field = new Text('txt');
         $c = $field->getContainer();
-        self::assertEquals(['class' => 'form-group'], $c->getAttributes());
+        self::assertEquals(['class' => ['lego-field-container', 'form-group']], $c->getAttributes());
 
         $field->container('class', ['zhwei']);
-        self::assertEquals(['class' => ['form-group', 'zhwei']], $c->getAttributes());
+        self::assertEquals(['class' => ['lego-field-container', 'form-group', 'zhwei']], $c->getAttributes());
 
         $field->container('class', 'zhwei');
         self::assertEquals(['class' => 'zhwei'], $c->getAttributes());
