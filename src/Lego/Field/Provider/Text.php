@@ -28,5 +28,15 @@ class Text extends Field
      */
     public function process()
     {
+        parent::process();
+
+        $this->setAttribute([
+            'type' => $this->getInputType(),
+            'value' => $this->takeInputValue(),
+        ]);
+
+        if ($this->isDisabled()) {
+            $this->setAttribute('disabled', 'disabled');
+        }
     }
 }

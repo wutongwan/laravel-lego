@@ -8,6 +8,6 @@ class Hidden extends Text
     {
         parent::initialize();
 
-        $this->container('class', 'hide');
+        $this->getContainer()->setAttribute('class', 'hide');
     }
 }

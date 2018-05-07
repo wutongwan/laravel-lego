@@ -7,11 +7,13 @@ class Finder
     protected $operators = [
         Query::class => [
             Eloquent\EloquentQuery::class,
+            Outgoing\OutgoingQuery::class,
             Collection\ArrayQuery::class,
         ],
 
         Store::class => [
             Eloquent\EloquentStore::class,
+            Outgoing\OutgoingStore::class,
             Collection\ArrayStore::class,
             Collection\ObjectStore::class,
         ],
@@ -56,7 +58,7 @@ class Finder
     }
 
     /**
-     * Query Operator finder
+     * OutgoingQuery Operator finder
      *
      * @param $data
      * @return \Lego\Operator\Query

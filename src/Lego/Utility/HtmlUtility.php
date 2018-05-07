@@ -1,5 +1,7 @@
 <?php namespace Lego\Utility;
 
+use Illuminate\Support\HtmlString;
+
 class HtmlUtility
 {
     /**
@@ -18,5 +20,18 @@ class HtmlUtility
         }
 
         return $attributes;
+    }
+
+    // 将属性列表渲染成 HTML 属性字符串
+    public static function renderAttributes($attributes)
+    {
+        $attributes = self::mergeAttributes($attributes);
+
+        $html = '';
+        foreach ($attributes as $key => $value) {
+            $html .= " {$key}=\"{$value}\"";
+        }
+
+        return new HtmlString(trim($html));
     }
 }

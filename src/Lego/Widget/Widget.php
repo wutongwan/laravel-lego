@@ -121,7 +121,7 @@ abstract class Widget implements ButtonLocations, \JsonSerializable
             return $registeredResponse;
         }
 
-        $this->process();
+        $this->processOnce();
 
         /**
          * if rewriteResponse() called
@@ -131,6 +131,17 @@ abstract class Widget implements ButtonLocations, \JsonSerializable
         }
 
         return $response;
+    }
+
+    protected $processed = false;
+
+    public function processOnce()
+    {
+        if (!$this->processed) {
+            $this->process();
+
+            $this->processed = true;
+        }
     }
 
     /**

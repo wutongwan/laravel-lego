@@ -14,10 +14,10 @@ trait HasScope
      * 自定义的过滤逻辑
      *
      * $scope 可以为 string 或 Closure
-     *  - string ：见 Eloquent Query Scopes
+     *  - string ：见 Eloquent OutgoingQuery Scopes
      *  - null ：同上 string ，自动使用当前 field name 作为 scope 函数名
      *  - Closure ：传入的 Closure 接收两个参数
-     *      - $query , instanceof \Lego\Operator\Query ，注意：此处不是 Laravel 中的 Query Builder
+     *      - $query , instanceof \Lego\Operator\OutgoingQuery ，注意：此处不是 Laravel 中的 OutgoingQuery Builder
      *      - $value , 此项的输入值
      *
      *
@@ -31,7 +31,7 @@ trait HasScope
      *      => $value could be `low` or `high`
      *
      * - $scope is Closure
-     *  $field->scope(function (Query $filter, $value) {
+     *  $field->scope(function (OutgoingQuery $filter, $value) {
      *      if ($value == 'low') {
      *          return $filter->whereLte('floor', 10);
      *      } else {

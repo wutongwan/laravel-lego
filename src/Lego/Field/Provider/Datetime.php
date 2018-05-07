@@ -160,6 +160,8 @@ class Datetime extends Field
      */
     public function process()
     {
+        parent::process();
+
         /**
          * 仅在 editable && 非移动端启用日期控件，移动端使用原生的输入控件
          */

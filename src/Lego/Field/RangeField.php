@@ -60,6 +60,8 @@ abstract class RangeField extends Field
 
     public function process()
     {
+        parent::process();
+
         $this->upper->setNewValue(Request::get($this->upper->elementName()));
         $this->upper->process();
 

@@ -36,7 +36,7 @@ class Grid extends Widget
     {
         if ($data instanceof Filter) {
             $this->filter = $data;
-            $this->filter->process();
+            $this->filter->processOnce();
             return $this->filter->getQuery();
         }
 

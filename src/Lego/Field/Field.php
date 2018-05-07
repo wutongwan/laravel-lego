@@ -1,11 +1,13 @@
 <?php namespace Lego\Field;
 
+use Illuminate\Support\Facades\Config;
 use Lego\Foundation\Concerns\HasMode;
 use Lego\Foundation\Concerns\ModeOperator;
 use Lego\Foundation\Concerns\MessageOperator;
 use Lego\Foundation\Concerns\InitializeOperator;
 use Lego\Foundation\Concerns\RenderStringOperator;
 use Lego\Operator\Query;
+use Lego\Utility\HasHtmlAttributes;
 use Lego\Widget\Concerns\Operable;
 
 /**
@@ -17,10 +19,11 @@ abstract class Field implements HasMode, \JsonSerializable
         InitializeOperator,
         RenderStringOperator,
         ModeOperator, // 必须放在 `RenderStringOperator`后面
-        Operable;
+        Operable,
+        HasHtmlAttributes;
 
     use Concerns\HtmlOperator,
-        Concerns\FieldContainer,
+        Concerns\HasFieldContainer,
         Concerns\HasValidation,
         Concerns\HasValues,
         Concerns\HasScope,
@@ -117,7 +120,22 @@ abstract class Field implements HasMode, \JsonSerializable
     /**
      * 数据处理逻辑
      */
-    abstract public function process();
+    public function process()
+    {
+        $this->setAttribute([
+            // html attributes
+            'id' => $this->elementId(),
+            'name' => $this->elementName(),
+
+            // lego attributes
+            'lego-type' => 'Field',
+            'lego-field-type' => class_basename($this),
+            'lego-field-mode' => $this->mode,
+        ]);
+
+        // user defined attributes
+        $this->setAttribute(Config::get('lego.field.attributes', []));
+    }
 
     /**
      * @return \Illuminate\View\View

@@ -34,7 +34,7 @@ class PlasticQuery extends Query
     protected $with = [];
 
     /**
-     * Query with eager loading
+     * OutgoingQuery with eager loading
      *
      * @param array $relations
      * @return static
@@ -220,7 +220,7 @@ class PlasticQuery extends Query
     }
 
     /**
-     * Query Scope
+     * OutgoingQuery Scope
      */
     public function whereScope($scope, $value)
     {
