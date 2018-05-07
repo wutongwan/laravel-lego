@@ -17,6 +17,11 @@ class Lego
         return new Filter($source);
     }
 
+    public static function outgoingFilter()
+    {
+        return new Filter(\Lego\Operator\Outgoing\OutgoingInterface::class);
+    }
+
     public static function grid($source = [])
     {
         return new Grid($source);
