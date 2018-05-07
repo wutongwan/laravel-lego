@@ -1,4 +1,6 @@
-<?php namespace Lego\Utility;
+<?php namespace Lego\Foundation\Concerns;
+
+use Lego\Utility\HtmlUtility;
 
 trait HasHtmlAttributes
 {

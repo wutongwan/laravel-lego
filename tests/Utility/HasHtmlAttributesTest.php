@@ -2,7 +2,7 @@
 
 use Illuminate\Support\HtmlString;
 use Lego\Tests\TestCase;
-use Lego\Utility\HasHtmlAttributes;
+use Lego\Foundation\Concerns\HasHtmlAttributes;
 
 class HasHtmlAttributesTest extends TestCase
 {
@@ -41,5 +41,5 @@ class HasHtmlAttributesTest extends TestCase
 
 class ExampleUsedHasHtmlAttributes
 {
-    use HasHtmlAttributes;
+    use \Lego\Foundation\Concerns\HasHtmlAttributes;
 }

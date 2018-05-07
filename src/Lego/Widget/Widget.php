@@ -2,9 +2,7 @@
 
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Traits\Macroable;
-use Lego\Foundation\Concerns\InitializeOperator;
-use Lego\Foundation\Concerns\MessageOperator;
-use Lego\Foundation\Concerns\RenderStringOperator;
+use Lego\Foundation\Concerns as FoundationConcerns;
 use Lego\Register\HighPriorityResponse;
 use Lego\Widget\Concerns\ButtonLocations;
 
@@ -13,9 +11,10 @@ use Lego\Widget\Concerns\ButtonLocations;
  */
 abstract class Widget implements ButtonLocations, \JsonSerializable
 {
-    use MessageOperator,
-        InitializeOperator,
-        RenderStringOperator,
+    use FoundationConcerns\MessageOperator,
+        FoundationConcerns\InitializeOperator,
+        FoundationConcerns\RenderStringOperator,
+        FoundationConcerns\HasEvents,
         Macroable,
         Concerns\RequestOperator,
         Concerns\HasButtons,

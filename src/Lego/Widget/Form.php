@@ -16,7 +16,7 @@ class Form extends Widget implements HasMode
     use ModeOperator,
         Concerns\HasFields,
         Concerns\HasGroups,
-        Concerns\HasEvents,
+        Concerns\HasFormEvents,
         Concerns\HasBottomButtons;
 
     protected $action;
@@ -166,10 +166,10 @@ class Form extends Widget implements HasMode
             $field->syncValueToStore();
         });
 
-        $this->fireEvent('saving');
+        $this->events->fire('saving', [$this->data, $this]);
         if ($this->getStore()->save()) {
             $this->syncFieldsValueFromStore();
-            $this->fireEvent('saved');
+            $this->events->fire('saved', [$this->data, $this]);
             return true;
         }
 

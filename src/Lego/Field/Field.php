@@ -1,26 +1,22 @@
 <?php namespace Lego\Field;
 
 use Illuminate\Support\Facades\Config;
-use Lego\Foundation\Concerns\HasMode;
-use Lego\Foundation\Concerns\ModeOperator;
-use Lego\Foundation\Concerns\MessageOperator;
-use Lego\Foundation\Concerns\InitializeOperator;
-use Lego\Foundation\Concerns\RenderStringOperator;
 use Lego\Operator\Query;
-use Lego\Utility\HasHtmlAttributes;
 use Lego\Widget\Concerns\Operable;
+use Lego\Foundation\Concerns as FoundationConcerns;
 
 /**
  * 输入输出控件的基类
  */
-abstract class Field implements HasMode, \JsonSerializable
+abstract class Field implements FoundationConcerns\HasMode, \JsonSerializable
 {
-    use MessageOperator,
-        InitializeOperator,
-        RenderStringOperator,
-        ModeOperator, // 必须放在 `RenderStringOperator`后面
+    use FoundationConcerns\MessageOperator,
+        FoundationConcerns\InitializeOperator,
+        FoundationConcerns\RenderStringOperator,
+        FoundationConcerns\ModeOperator, // 必须放在 `RenderStringOperator`后面
         Operable,
-        HasHtmlAttributes;
+        FoundationConcerns\HasHtmlAttributes,
+        FoundationConcerns\HasEvents;
 
     use Concerns\HtmlOperator,
         Concerns\HasFieldContainer,

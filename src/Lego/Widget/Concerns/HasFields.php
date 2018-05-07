@@ -3,7 +3,6 @@
 use Illuminate\Support\Collection;
 
 use Lego\Field\Field;
-use Lego\Foundation\Event;
 use Lego\Foundation\Facades\LegoFields;
 use Lego\Foundation\Fields;
 
@@ -12,6 +11,7 @@ use Lego\Foundation\Fields;
  *
  * @lego-ide-helper
  * @mixin HasGroups
+ * @mixin \Lego\Foundation\Concerns\HasEvents
  */
 trait HasFields
 {
@@ -106,7 +106,7 @@ trait HasFields
     {
         $this->fields->add($field);
 
-        Event::fire('after-add-field', [$field]);
+        $this->events->fire('after-add-field', [$field]);
 
         return $field;
     }
