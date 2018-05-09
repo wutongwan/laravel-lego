@@ -147,6 +147,11 @@ abstract class Query extends Operator implements
      */
     abstract public function orderBy($attribute, bool $desc = false);
 
+    public function orderByDesc($attribute)
+    {
+        return $this->orderBy($attribute, true);
+    }
+
     /**
      * Create Paginator
      * @param null $perPage

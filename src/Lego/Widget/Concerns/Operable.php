@@ -12,7 +12,7 @@ trait Operable
     protected $data;
 
     /**
-     * @var Query
+     * @var \Lego\Operator\Query
      */
     protected $query;
 
