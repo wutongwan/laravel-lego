@@ -34,6 +34,8 @@ $filter->addDateRange('created_at', 'Create Time');
  *  ]
  *
  */
+ 
+$filter->processOnce();
 $conditions = $filter->getQuery()->toArray();
 
 $rows = parseAndCallSomeAPI($conditions);
