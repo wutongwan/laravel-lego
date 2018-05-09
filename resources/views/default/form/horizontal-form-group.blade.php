@@ -1,10 +1,10 @@
 <?php
 /** @var \Lego\Field\Field $field */
 if ($field->errors()->any()) {
-    $field->container('class', 'has-error');
+    $field->getContainer()->setAttribute('class', 'has-error');
 }
 ?>
-<div {!! \Collective\Html\HtmlFacade::attributes($field->containerAttributes()) !!}>
+<div {!! $field->getContainer()->getAttributesString() !!}>
     <label for="{{ $field->elementId() }}" class="col-sm-2 control-label">
         @if($field->isRequired() && $field->isEditable())
             <span class="text-danger">*</span>

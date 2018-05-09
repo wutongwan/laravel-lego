@@ -1,19 +1,22 @@
-<?php namespace Lego\Operator\Query;
+<?php namespace Lego\Operator\Collection;
 
 use Carbon\Carbon;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Lego\Operator\Finder;
-use Lego\Operator\Store\Store;
+use Lego\Operator\Query;
+use Lego\Operator\SuggestResult;
+use Lego\Operator\Store;
 
 /**
  * ArrayAble
  */
 class ArrayQuery extends Query
 {
-    public static function attempt($data)
+    public static function parse($data)
     {
         if (is_array($data)
             || $data instanceof Collection
@@ -36,14 +39,9 @@ class ArrayQuery extends Query
     protected function initialize()
     {
         $this->collection = new Collection($this->data);
-        $this->collection->map(function ($item) {
-            return Finder::store($item);
+        $this->collection = $this->collection->map(function ($item) {
+            return Finder::createStore($item);
         });
-    }
-
-    public function with(array $relations)
-    {
-        return $this;
     }
 
     /**
@@ -109,7 +107,7 @@ class ArrayQuery extends Query
     public function whereContains($attribute, string $value)
     {
         return $this->addFilter(function (Store $store) use ($attribute, $value) {
-            return str_contains($store->get($attribute), $value);
+            return Str::contains($store->get($attribute), $value);
         });
     }
 
@@ -122,7 +120,7 @@ class ArrayQuery extends Query
     public function whereStartsWith($attribute, string $value)
     {
         return $this->addFilter(function (Store $store) use ($attribute, $value) {
-            return starts_with($store->get($attribute), $value);
+            return Str::startsWith($store->get($attribute), $value);
         });
     }
 
@@ -135,7 +133,7 @@ class ArrayQuery extends Query
     public function whereEndsWith($attribute, string $value)
     {
         return $this->addFilter(function (Store $store) use ($attribute, $value) {
-            return ends_with($store->get($attribute), $value);
+            return Str::endsWith($store->get($attribute), $value);
         });
     }
 
@@ -158,51 +156,7 @@ class ArrayQuery extends Query
         });
     }
 
-    /**
-     * 嵌套查询
-     *
-     * @param \Closure $closure
-     * @return static
-     */
-    public function where(\Closure $closure)
-    {
-        call_user_func($closure, $this);
-
-        return $this;
-    }
-
-
-    /**
-     * Get the relation instance for the given relation name.
-     *
-     * @param $name
-     * @return static
-     */
-    public function getRelation($name)
-    {
-        return new self($this->collection->pluck($name));
-    }
-
-    /**
-     * 关联查询
-     * @param $relation
-     * @param $callback
-     * @return static
-     */
-    public function whereHas($relation, $callback)
-    {
-        return $this->addFilter(function (Store $store) use ($relation, $callback) {
-            $related = $store->get($relation);
-            if (!$related) {
-                return false;
-            }
-
-            $query = new self([$related]);
-            return $query->where($callback)->count() === 1;
-        });
-    }
-
-    private function addFilter(\Closure $filter)
+    protected function addFilter(\Closure $filter)
     {
         $this->collection = $this->collection->filter($filter);
 
@@ -243,6 +197,24 @@ class ArrayQuery extends Query
 
     protected function select(array $columns)
     {
-        return new Collection($this->collection->all());
+        return $this->collection;
+    }
+
+    public function suggest($attribute, string $keyword, string $valueColumn = null, int $limit = 20): SuggestResult
+    {
+        $items = (new Collection($this->data))
+            ->filter(function ($item) use ($attribute, $keyword) {
+                return Str::contains(data_get($item, $attribute), $keyword);
+            })
+            ->take($limit)
+            ->pluck($attribute, $valueColumn ?: $attribute)
+            ->toArray();
+
+        return new SuggestResult($items);
+    }
+
+    public function whereScope($scope, $value)
+    {
+        return $this;
     }
 }

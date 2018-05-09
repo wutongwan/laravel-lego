@@ -13,7 +13,8 @@ class Filter extends Widget
     use Concerns\HasFields,
         Concerns\HasGroups,
         Concerns\HasInput,
-        Concerns\HasBottomButtons;
+        Concerns\HasBottomButtons,
+        Concerns\HasQueryHelpers;
 
     protected function initialize()
     {
@@ -54,18 +55,8 @@ class Filter extends Widget
         });
     }
 
-    public function with($relations)
-    {
-        if (is_string($relations)) {
-            $relations = func_get_args();
-        }
-
-        $this->query->with($relations);
-        return $this;
-    }
-
     /** @var Grid $grid */
-    private $grid;
+    protected $grid;
 
     public function grid($syncFields = false)
     {

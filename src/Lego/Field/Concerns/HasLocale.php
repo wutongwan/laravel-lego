@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\App;
  */
 trait HasLocale
 {
-    private $locale;
+    protected $locale;
 
     protected function initializeHasLocale()
     {

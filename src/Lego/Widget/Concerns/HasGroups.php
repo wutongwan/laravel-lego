@@ -12,7 +12,7 @@ trait HasGroups
 {
     protected function initializeHasGroups()
     {
-        Event::register('after-add-field', __CLASS__, function (Field $field) {
+        $this->events->register('after-add-field', __CLASS__, function (Field $field) {
             foreach ($this->getActiveGroups() as $group) {
                 $group->add($field->name());
             }
@@ -79,7 +79,7 @@ trait HasGroups
             return $group;
         } else {
             $this->startGroup($name);
-            Event::once('after-add-field', __METHOD__ . $name, function () use ($name) {
+            $this->events->once('after-add-field', __METHOD__ . $name, function () use ($name) {
                 $this->stopGroup($name);
             });
             return $this;

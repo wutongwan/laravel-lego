@@ -5,8 +5,9 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;
 use Lego\Foundation\Facades\LegoAssets;
-use Lego\Operator\Store\Store;
+use Lego\Operator\Store;
 use Lego\Register\HighPriorityResponse;
+use Lego\Widget\Concerns\HasQueryHelpers;
 use Lego\Widget\Filter;
 use Lego\Widget\Widget;
 use Maatwebsite\Excel\Facades\Excel;
@@ -19,7 +20,9 @@ use Maatwebsite\Excel\Writers\LaravelExcelWriter;
  */
 class Grid extends Widget
 {
-    use Concerns\HasCells, Concerns\HasBatch;
+    use Concerns\HasCells,
+        Concerns\HasBatch,
+        HasQueryHelpers;
 
     /**
      * @var Filter
@@ -36,7 +39,7 @@ class Grid extends Widget
     {
         if ($data instanceof Filter) {
             $this->filter = $data;
-            $this->filter->process();
+            $this->filter->processOnce();
             return $this->filter->getQuery();
         }
 
@@ -51,18 +54,6 @@ class Grid extends Widget
     public function filter()
     {
         return $this->filter;
-    }
-
-    public function orderBy($column, bool $desc = false)
-    {
-        $this->query->orderBy($column, $desc);
-
-        return $this;
-    }
-
-    public function orderByDesc($column)
-    {
-        return $this->orderBy($column, true);
     }
 
     /**

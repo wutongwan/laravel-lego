@@ -16,7 +16,7 @@ class Form extends Widget implements HasMode
     use ModeOperator,
         Concerns\HasFields,
         Concerns\HasGroups,
-        Concerns\HasEvents,
+        Concerns\HasFormEvents,
         Concerns\HasBottomButtons;
 
     protected $action;
@@ -32,6 +32,12 @@ class Form extends Widget implements HasMode
      */
     protected $success;
 
+    /**
+     * 请求方式
+     * @var string
+     */
+    protected $method = 'POST';
+
     public function action($url)
     {
         if ($url instanceof \Closure) {
@@ -46,6 +52,11 @@ class Form extends Widget implements HasMode
     public function getAction()
     {
         return $this->action;
+    }
+
+    public function getMethod()
+    {
+        return $this->method;
     }
 
     public function elementId()
@@ -132,7 +143,7 @@ class Form extends Widget implements HasMode
                 return;
             }
 
-            // Save to store <default>
+            // Save to createStore <default>
             if ($this->saveFieldsValueToStore()) {
                 $this->returnSuccessResponse();
                 $this->messages()->add('success', '操作成功');
@@ -155,10 +166,10 @@ class Form extends Widget implements HasMode
             $field->syncValueToStore();
         });
 
-        $this->fireEvent('saving');
+        $this->events->fire('saving', [$this->data, $this]);
         if ($this->getStore()->save()) {
             $this->syncFieldsValueFromStore();
-            $this->fireEvent('saved');
+            $this->events->fire('saved', [$this->data, $this]);
             return true;
         }
 
@@ -171,14 +182,12 @@ class Form extends Widget implements HasMode
     }
 
     /**
-     * Sync field's original from store
+     * Sync field's original from createStore
      */
     protected function syncFieldsValueFromStore()
     {
         $this->fields()->each(function (Field $field) {
-            $field->setOriginalValue(
-                $field->getStore()->get($field->getColumnPathOfRelation($field->column()))
-            );
+            $field->syncValueFromStore();
         });
     }
 

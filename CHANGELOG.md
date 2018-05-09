@@ -66,7 +66,7 @@
 
 ### Added
 
-- Elasticsearch Query
+- ElasticSearch Query
   + Lego 使用 [Plastic](https://github.com/sleimanx2/plastic) 调用 Elasticsearch 接口，请自行安装
   + 使用方式：`$filter = Lego::filter(YourModel::search())`
 

@@ -4,7 +4,7 @@ use Lego\Foundation\Button;
 
 trait HasButtons
 {
-    private $buttons = [];
+    protected $buttons = [];
 
     /**
      * 按钮位置列表，eg：[left-bottom, right-bottom, left-top, ...]

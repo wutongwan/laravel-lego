@@ -1,10 +1,6 @@
 <?php /* @var \Lego\Field\Provider\RichText $field */ ?>
 
-<textarea
-    name="{{ $field->elementName() }}"
-    id="{{ $field->elementId() }}"
-    {!! \Collective\Html\HtmlFacade::attributes($field->getAttributes()) !!}
->
+<textarea {{ $field->getAttributesString() }}>
     {!! $field->takeInputValue() !!}
 </textarea>
 

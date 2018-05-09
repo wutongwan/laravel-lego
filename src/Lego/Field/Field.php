@@ -1,30 +1,28 @@
 <?php namespace Lego\Field;
 
-use Lego\Foundation\Concerns\HasMode;
-use Lego\Foundation\Concerns\ModeOperator;
-use Lego\Foundation\Concerns\MessageOperator;
-use Lego\Foundation\Concerns\InitializeOperator;
-use Lego\Foundation\Concerns\RenderStringOperator;
-use Lego\Operator\Query\Query;
+use Illuminate\Support\Facades\Config;
+use Lego\Operator\Query;
 use Lego\Widget\Concerns\Operable;
+use Lego\Foundation\Concerns as FoundationConcerns;
 
 /**
  * 输入输出控件的基类
  */
-abstract class Field implements HasMode
+abstract class Field implements FoundationConcerns\HasMode, \JsonSerializable
 {
-    use MessageOperator,
-        InitializeOperator,
-        RenderStringOperator,
-        ModeOperator, // 必须放在 `RenderStringOperator`后面
-        Operable;
+    use FoundationConcerns\MessageOperator,
+        FoundationConcerns\InitializeOperator,
+        FoundationConcerns\RenderStringOperator,
+        FoundationConcerns\ModeOperator, // 必须放在 `RenderStringOperator`后面
+        Operable,
+        FoundationConcerns\HasHtmlAttributes,
+        FoundationConcerns\HasEvents;
 
     use Concerns\HtmlOperator,
-        Concerns\FieldContainer,
+        Concerns\HasFieldContainer,
         Concerns\HasValidation,
         Concerns\HasValues,
         Concerns\HasScope,
-        Concerns\HasRelation,
         Concerns\HasLocale,
         Concerns\HasConfig,
         Concerns\FilterWhereEquals;
@@ -33,7 +31,7 @@ abstract class Field implements HasMode
      * 字段的唯一标记
      * @var string
      */
-    private $name;
+    protected $name;
 
     /**
      * 字段描述
@@ -42,10 +40,28 @@ abstract class Field implements HasMode
     protected $description;
 
     /**
+     * Relation Path
+     * @var array
+     */
+    protected $relationPath;
+
+    /**
      * 对应的数据表字段名
      * @var string
      */
     protected $column;
+
+    /**
+     * Json Path
+     * @var array
+     */
+    protected $jsonPath;
+
+    /**
+     * 需要传递到前端的其他配置项
+     * @var array
+     */
+    protected $extra = [];
 
 
     /**
@@ -57,16 +73,9 @@ abstract class Field implements HasMode
     public function __construct(string $name, string $description = null, $data = [])
     {
         $this->name = $name;
-
-        /**
-         * Example
-         *  - name : school.city.name
-         *  - column : name
-         *  - relation : school.city
-         *  - description <default> : School City Name
-         */
-        $this->column = last(explode('.', $name));
         $this->description = $description;
+
+        list($this->relationPath, $this->column, $this->jsonPath) = FieldNameSlicer::split($name);
 
         $this->initializeDataOperator($data);
 
@@ -107,17 +116,21 @@ abstract class Field implements HasMode
     /**
      * 数据处理逻辑
      */
-    abstract public function process();
-
-    /**
-     * 将新的数据存储到 Store
-     */
-    public function syncValueToStore()
+    public function process()
     {
-        $this->store->set(
-            $this->getColumnPathOfRelation($this->column),
-            $this->mutateSavingValue($this->getNewValue())
-        );
+        $this->setAttribute([
+            // html attributes
+            'id' => $this->elementId(),
+            'name' => $this->elementName(),
+
+            // lego attributes
+            'lego-type' => 'Field',
+            'lego-field-type' => class_basename(static::class),
+            'lego-field-mode' => $this->mode,
+        ]);
+
+        // user defined attributes
+        $this->setAttribute(Config::get('lego.field.attributes', []));
     }
 
     /**
@@ -126,5 +139,23 @@ abstract class Field implements HasMode
     protected function view($view, $data = [])
     {
         return view($view, $data)->with('field', $this);
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'element_name' => $this->elementName(),
+            'element_id' => $this->elementId(),
+            'name' => $this->name(),
+            'description' => $this->description(),
+            'attributes' => $this->getAttributes(),
+            'mode' => $this->getMode(),
+            'init_value' => $this->takeInputValue(),
+            'locale' => $this->getLocale(),
+            'messages' => $this->messages(),
+            'errors' => $this->errors(),
+            'rules' => $this->rules,
+            'extra' => $this->extra,
+        ];
     }
 }

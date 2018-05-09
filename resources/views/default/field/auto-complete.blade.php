@@ -35,7 +35,12 @@
                     params.page = params.page || 1;
 
                     return {
-                        results: data.items,
+                        results: data.items.map(function (item) {
+                            return {
+                                id: item.value,
+                                text: item.label,
+                            }
+                        }),
                         pagination: {
                             more: (params.page * 30) < data.total_count
                         }

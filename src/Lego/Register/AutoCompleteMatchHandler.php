@@ -3,6 +3,7 @@
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Request;
 use Lego\Foundation\Exceptions\InvalidRegisterData;
+use Lego\Operator\SuggestResult;
 
 class AutoCompleteMatchHandler extends Data
 {
@@ -20,7 +21,7 @@ class AutoCompleteMatchHandler extends Data
     /**
      * @var HighPriorityResponse
      */
-    private $response;
+    protected $response;
 
     public function afterRegistered()
     {
@@ -47,21 +48,11 @@ class AutoCompleteMatchHandler extends Data
      */
     private static function result($items)
     {
-        $items = (new Collection($items))->toArray();
-        $count = count($items);
-        if ($count > 0) {
-            // 简单的接口校验
-            if (is_scalar($first = array_first($items))) {
-                foreach ($items as $id => &$text) {
-                    $text = ['id' => $id, 'text' => $text];
-                }
-                $items = array_values($items);
-            }
+        if ($items instanceof SuggestResult) {
+            return $items->toArray();
         }
 
-        return [
-            'items' => $items,
-            'total_count' => $count,
-        ];
+        $sr = new SuggestResult($items);
+        return $sr->toArray();
     }
 }

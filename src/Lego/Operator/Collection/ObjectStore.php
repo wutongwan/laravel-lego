@@ -1,11 +1,11 @@
-<?php namespace Lego\Operator\Store;
+<?php namespace Lego\Operator\Collection;
 
 /**
  * 这个的兼容性比较暴力，推荐放到 STORE_LIST 的最底部
  */
 class ObjectStore extends ArrayStore
 {
-    public static function attempt($data)
+    public static function parse($data)
     {
         return is_object($data) ? new self($data) : false;
     }

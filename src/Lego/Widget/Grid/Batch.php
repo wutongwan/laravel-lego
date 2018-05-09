@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Session;
 use Lego\Foundation\Exceptions\LegoException;
 use Lego\Foundation\Facades\LegoAssets;
 use Lego\Lego;
-use Lego\Operator\Query\Query;
-use Lego\Operator\Store\Store;
+use Lego\Operator\Query;
+use Lego\Operator\Store;
 use Lego\Register\HighPriorityResponse;
 use Lego\Widget\Confirm;
 
@@ -25,7 +25,7 @@ class Batch implements Arrayable
     private $url;
 
     /**
-     * @var Query
+     * @var \Lego\Operator\Query
      */
     private $query;
 

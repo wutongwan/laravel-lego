@@ -1,6 +1,7 @@
 <?php namespace Lego\Foundation\Concerns;
 
 use Collective\Html\HtmlFacade;
+use Illuminate\Support\HtmlString;
 use Lego\Foundation\Exceptions\LegoException;
 
 /**
@@ -114,6 +115,17 @@ trait ModeOperator
             'id' => $this->elementId(),
             'class' => 'form-control-static',
         ]);
+    }
+
+    public function takeReadonlyValue()
+    {
+        $html = (string)$this->takeShowValue();
+
+        if ($this->escape) {
+            $html = htmlspecialchars($html, ENT_QUOTES, 'UTF-8');
+        }
+
+        return new HtmlString($html);
     }
 
     protected function renderDisabled()

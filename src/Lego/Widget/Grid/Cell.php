@@ -3,7 +3,7 @@
 use Illuminate\Support\HtmlString;
 use Lego\Foundation\Exceptions\LegoException;
 use Lego\Operator\Finder;
-use Lego\Operator\Store\Store;
+use Lego\Operator\Store;
 
 class Cell
 {
@@ -84,7 +84,7 @@ class Cell
             $this->store = $data;
         } else {
             $this->data = $data;
-            $this->store = Finder::store($data);
+            $this->store = Finder::createStore($data);
         }
 
         return $this;

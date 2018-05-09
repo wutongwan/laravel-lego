@@ -7,7 +7,7 @@ use Lego\Register\HighPriorityResponse;
 /**
  * Html button or link.
  */
-class Button
+class Button implements \JsonSerializable
 {
     /**
      * button link
@@ -178,16 +178,31 @@ class Button
     public function __toString()
     {
         $this->attributes['id'] = $this->id;
-        $attributes = array_map(
-            function ($value) {
-                return is_array($value) ? join(' ', $value) : $value;
-            },
-            $this->attributes
-        );
+        $attributes = $this->getFlattenAttributes();
         $attributes = HtmlFacade::attributes($attributes);
 
         /** @var \Illuminate\Contracts\View\View $view */
         $view = View::make('lego::default.button', ['button' => $this, 'attributes' => $attributes]);
         return $view->render();
+    }
+
+    protected function getFlattenAttributes()
+    {
+        return array_map(
+            function ($value) {
+                return is_array($value) ? join(' ', $value) : $value;
+            },
+            $this->attributes
+        );
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->id,
+            'url' => $this->url,
+            'text' => $this->text,
+            'attributes' => $this->getFlattenAttributes(),
+        ];
     }
 }

@@ -225,4 +225,41 @@ trait HasValues
     {
         return $this->doesntStore;
     }
+
+
+    /**
+     * 若输入值为空，存储时转换为 null
+     * @var bool
+     */
+    protected $emptyToNull = false;
+
+    public function emptyToNull()
+    {
+        $this->emptyToNull = true;
+        return $this;
+    }
+
+    /**
+     * 同步原始数据到 original value
+     */
+    public function syncValueFromStore()
+    {
+        $this->setOriginalValue(
+            $this->store->get($this->name())
+        );
+    }
+
+    /**
+     * 将新的数据存储到 Store
+     */
+    public function syncValueToStore()
+    {
+        $value = $this->getNewValue();
+
+        if ($this->emptyToNull && is_empty_string($value)) {
+            $value = null;
+        }
+
+        $this->store->set($this->name(), $this->mutateSavingValue($value));
+    }
 }

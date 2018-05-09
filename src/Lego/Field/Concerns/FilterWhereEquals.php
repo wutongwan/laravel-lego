@@ -1,6 +1,6 @@
 <?php namespace Lego\Field\Concerns;
 
-use Lego\Operator\Query\Query;
+use Lego\Operator\Query;
 
 trait FilterWhereEquals
 {
@@ -11,8 +11,6 @@ trait FilterWhereEquals
      */
     public function filter(Query $query)
     {
-        return $this->filterWithRelation($query, function (Query $query) {
-            return $query->whereEquals($this->column(), $this->getNewValue());
-        });
+        return $query->whereEquals($this->name(), $this->getNewValue());
     }
 }

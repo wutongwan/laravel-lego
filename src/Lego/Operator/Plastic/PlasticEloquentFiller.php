@@ -1,4 +1,4 @@
-<?php namespace Lego\Operator\Query;
+<?php namespace Lego\Operator\Plastic;
 
 use Illuminate\Database\Eloquent\Model;
 use Sleimanx2\Plastic\Fillers\FillerInterface;

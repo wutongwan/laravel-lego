@@ -1,6 +1,6 @@
 <?php namespace Lego\Field\Concerns;
 
-use Lego\Operator\Query\Query;
+use Lego\Operator\Query;
 
 trait DisabledInFilter
 {

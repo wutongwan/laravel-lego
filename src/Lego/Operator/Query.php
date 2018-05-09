@@ -1,13 +1,10 @@
-<?php namespace Lego\Operator\Query;
+<?php namespace Lego\Operator;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Request;
-use Lego\Operator\Finder;
-use Lego\Operator\Operator;
-use Lego\Operator\Store\Store;
 use Traversable;
 
 /**
@@ -33,7 +30,10 @@ abstract class Query extends Operator implements
      * @param array $relations
      * @return static
      */
-    abstract public function with(array $relations);
+    public function with(array $relations)
+    {
+        return $this;
+    }
 
     /**
      * 当前属性是否等于某值
@@ -113,32 +113,24 @@ abstract class Query extends Operator implements
     abstract public function whereBetween($attribute, $min, $max);
 
     /**
-     * 嵌套查询
-     * @param \Closure $closure
-     * @return static
+     * Query Scope
      */
-    abstract public function where(\Closure $closure);
+    abstract public function whereScope($scope, $value);
 
     /**
-     * Get the relation instance for the given relation name.
-     *
-     * @param $name
-     * @return static
+     * 特定字段的 自动补全、推荐 结果
+     * @param $attribute
+     * @param string $keyword
+     * @param string $valueColumn default null，默认返回主键
+     * @param int $limit
+     * @return SuggestResult
      */
-    abstract public function getRelation($name);
-
-    public function getForeignKeyOfRelation($name)
-    {
-        return null;
-    }
-
-    /**
-     * 关联查询
-     * @param $relation
-     * @param $callback
-     * @return static
-     */
-    abstract public function whereHas($relation, $callback);
+    abstract public function suggest(
+        $attribute,
+        string $keyword,
+        string $valueColumn = null,
+        int $limit = 20
+    ): SuggestResult;
 
     /**
      * 限制条数
@@ -154,6 +146,11 @@ abstract class Query extends Operator implements
      * @return static
      */
     abstract public function orderBy($attribute, bool $desc = false);
+
+    public function orderByDesc($attribute)
+    {
+        return $this->orderBy($attribute, true);
+    }
 
     /**
      * Create Paginator
@@ -184,7 +181,7 @@ abstract class Query extends Operator implements
         $this->paginator = $this->createPaginator($perPage, $columns, $pageName, $page);
         $this->paginator->setCollection(
             $this->paginator->getCollection()->map(function ($row) {
-                return Finder::store($row);
+                return Finder::createStore($row);
             })
         );
 
@@ -215,13 +212,8 @@ abstract class Query extends Operator implements
     public function get($columns = ['*'])
     {
         return $this->select($columns)->map(function ($row) {
-            return Finder::store($row);
+            return Finder::createStore($row);
         });
-    }
-
-    public function __call($name, $arguments)
-    {
-        return call_user_func_array([$this->data, $name], $arguments);
     }
 
     /** Array Access Interface Methods. */
