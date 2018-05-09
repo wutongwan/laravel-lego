@@ -54,7 +54,7 @@ return $form->view('layout', ['form' => $form]);
 - Add to `require`
 
 	```
-	"wutongwan/lego": "0.2.*"
+	"wutongwan/lego": "0.3.*"
 	```
 
 - Add to `post-update-cmd`, In order to update lego statc files Automatically.
