@@ -1,13 +1,11 @@
 <?php namespace Lego\Widget\Grid;
 
-use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Request;
 use Lego\Foundation\Facades\LegoAssets;
 use Lego\Operator\Store;
 use Lego\Register\HighPriorityResponse;
-use Lego\Widget\Concerns\HasQueryHelpers;
+use Lego\Widget\Concerns as WidgetConcerns;
 use Lego\Widget\Filter;
 use Lego\Widget\Widget;
 use Maatwebsite\Excel\Facades\Excel;
@@ -22,7 +20,8 @@ class Grid extends Widget
 {
     use Concerns\HasCells,
         Concerns\HasBatch,
-        HasQueryHelpers;
+        WidgetConcerns\HasQueryHelpers,
+        WidgetConcerns\HasPagination;
 
     /**
      * @var Filter
@@ -121,40 +120,6 @@ class Grid extends Widget
                 );
             }
         );
-    }
-
-    /**
-     * @var AbstractPaginator
-     */
-    private $paginator;
-
-    /**
-     * how many rows per page
-     * @var int
-     */
-    private $paginatorPerPage = 100;
-    private $paginatorPageName;
-
-    public function paginate(int $perPage, $pageName = null)
-    {
-        $this->paginatorPerPage = $perPage;
-        $this->paginatorPageName = $pageName;
-
-        return $this;
-    }
-
-    public function paginator()
-    {
-        if (!$this->paginator) {
-            $this->paginator = $this->query->paginate(
-                $this->paginatorPerPage,
-                null,
-                $this->paginatorPageName
-            );
-            $this->paginator->appends(Request::input());
-        }
-
-        return $this->paginator;
     }
 
     /**

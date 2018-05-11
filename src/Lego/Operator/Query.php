@@ -153,32 +153,53 @@ abstract class Query extends Operator implements
     }
 
     /**
-     * Create Paginator
-     * @param null $perPage
-     * @param array $columns
-     * @param string $pageName
-     * @param null $page
-     * @return AbstractPaginator
+     * 需要查询总数的分页器
+     * @param int $perPage     每页条数
+     * @param array $columns   需要的字段列表
+     * @param string $pageName 分页的 GET 参数名称
+     * @param int $page        当前页码
+     * @return \Illuminate\Pagination\LengthAwarePaginator
      */
-    abstract protected function createPaginator($perPage, $columns, $pageName, $page);
+    abstract protected function createLengthAwarePaginator($perPage, $columns, $pageName, $page);
+
+    /**
+     * 不需要查询总数的分页器
+     * @param int $perPage     每页条数
+     * @param array $columns   需要的字段列表
+     * @param string $pageName 分页的 GET 参数名称
+     * @param int $page        当前页码
+     * @return \Illuminate\Pagination\Paginator
+     */
+    abstract protected function createLengthNotAwarePaginator($perPage, $columns, $pageName, $page);
 
     /**
      * Paginator API
      *
-     * @param null $perPage
-     * @param array $columns
-     * @param null $pageName
-     * @param null $page
+     * @param int $perPage      每页条数
+     * @param array $columns    需要的字段列表
+     * @param string $pageName  分页的 GET 参数名称
+     * @param int $page         当前页码
+     * @param bool $lengthAware 是否需要查询总页数
      * @return AbstractPaginator|Store[]
      */
-    public function paginate($perPage = null, $columns = null, $pageName = null, $page = null)
-    {
+    public function paginate(
+        $perPage = null,
+        $columns = null,
+        $pageName = null,
+        $page = null,
+        bool $lengthAware = true
+    ) {
         $perPage = is_null($perPage) ? config('lego.paginator.per-page') : $perPage;
         $pageName = is_null($pageName) ? config('lego.paginator.page-name') : $pageName;
         $columns = is_null($columns) ? ['*'] : $columns;
         $page = $page ?: Request::query($pageName, 1);
 
-        $this->paginator = $this->createPaginator($perPage, $columns, $pageName, $page);
+        if ($lengthAware) {
+            $this->paginator = $this->createLengthAwarePaginator($perPage, $columns, $pageName, $page);
+        } else {
+            $this->paginator = $this->createLengthNotAwarePaginator($perPage, $columns, $pageName, $page);
+        }
+
         $this->paginator->setCollection(
             $this->paginator->getCollection()->map(function ($row) {
                 return Finder::createStore($row);

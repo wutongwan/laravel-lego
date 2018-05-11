@@ -238,15 +238,14 @@ class EloquentQuery extends Query
         return $this;
     }
 
-    /**
-     * 翻页
-     * @param int $perPage
-     * @param int|null $page
-     * @return \Illuminate\Contracts\Pagination\Paginator
-     */
-    protected function createPaginator($perPage, $columns, $pageName, $page)
+    protected function createLengthAwarePaginator($perPage, $columns, $pageName, $page)
     {
         return $this->data->paginate($perPage, $columns, $pageName, $page);
+    }
+
+    protected function createLengthNotAwarePaginator($perPage, $columns, $pageName, $page)
+    {
+        return $this->data->simplePaginate($perPage, $columns, $pageName, $page);
     }
 
     protected function select(array $columns)

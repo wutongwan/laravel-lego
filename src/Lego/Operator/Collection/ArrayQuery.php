@@ -4,6 +4,7 @@ use Carbon\Carbon;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Lego\Operator\Finder;
@@ -188,9 +189,16 @@ class ArrayQuery extends Query
         return $this;
     }
 
-    protected function createPaginator($perPage, $columns, $pageName, $page)
+    protected function createLengthAwarePaginator($perPage, $columns, $pageName, $page)
     {
         return new LengthAwarePaginator($this->collection, $this->collection->count(), $perPage, $page, [
+            'pageName' => $pageName,
+        ]);
+    }
+
+    protected function createLengthNotAwarePaginator($perPage, $columns, $pageName, $page)
+    {
+        return new Paginator($this->collection, $perPage, $page, [
             'pageName' => $pageName,
         ]);
     }
