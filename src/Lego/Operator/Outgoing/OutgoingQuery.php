@@ -1,5 +1,7 @@
 <?php namespace Lego\Operator\Outgoing;
 
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 use Lego\Foundation\Exceptions\NotSupportedException;
 use Lego\Operator\SuggestResult;
 
@@ -8,8 +10,9 @@ class OutgoingQuery extends \Lego\Operator\Query
     use OutgoingParser;
 
     protected $wheres = [];
-    protected $limit = 100;
+    protected $limit;
     protected $orders = [];
+    protected $pagination = [];
 
     public function whereEquals($attribute, $value)
     {
@@ -94,9 +97,32 @@ class OutgoingQuery extends \Lego\Operator\Query
         return $this;
     }
 
-    protected function createPaginator($perPage, $columns, $pageName, $page)
+    protected function createLengthAwarePaginator($perPage, $columns, $pageName, $page)
     {
-        throw new NotSupportedException();
+        $paginator = new LengthAwarePaginator([], 0, $perPage, $page);
+
+        $this->pagination = [
+            'perPage' => $paginator->perPage(),
+            'pageName' => $pageName,
+            'page' => $paginator->currentPage(),
+            'lengthAware' => true,
+        ];
+
+        return $paginator;
+    }
+
+    protected function createLengthNotAwarePaginator($perPage, $columns, $pageName, $page)
+    {
+        $paginator = new Paginator([], $perPage, $page);
+
+        $this->pagination = [
+            'perPage' => $paginator->perPage(),
+            'pageName' => $pageName,
+            'page' => $paginator->currentPage(),
+            'lengthAware' => false,
+        ];
+
+        return $paginator;
     }
 
     protected function select(array $columns)
@@ -110,6 +136,7 @@ class OutgoingQuery extends \Lego\Operator\Query
             'wheres' => $this->wheres,
             'orders' => $this->orders,
             'limit' => $this->limit,
+            'pagination' => $this->pagination,
         ];
     }
 

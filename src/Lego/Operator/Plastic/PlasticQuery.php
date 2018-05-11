@@ -1,7 +1,6 @@
 <?php namespace Lego\Operator\Plastic;
 
 use Illuminate\Support\Collection;
-use Illuminate\Pagination\AbstractPaginator;
 
 use Lego\Operator\Query;
 use Lego\Operator\SuggestResult;
@@ -178,15 +177,7 @@ class PlasticQuery extends Query
         return $this;
     }
 
-    /**
-     * Create Paginator
-     * @param null $perPage
-     * @param array $columns
-     * @param string $pageName
-     * @param null $page
-     * @return AbstractPaginator
-     */
-    protected function createPaginator($perPage, $columns, $pageName, $page)
+    protected function createLengthAwarePaginator($perPage, $columns, $pageName, $page)
     {
         $perPage = $perPage ?: $this->limit;
         $from = $perPage * ($page - 1);
@@ -197,6 +188,11 @@ class PlasticQuery extends Query
         /** @var PlasticResult $result */
         $result = $this->performSelect($columns);
         return new PlasticPaginator($result, $size, $page);
+    }
+
+    protected function createLengthNotAwarePaginator($perPage, $columns, $pageName, $page)
+    {
+        return $this->createLengthAwarePaginator($perPage, $columns, $pageName, $page);
     }
 
     /**

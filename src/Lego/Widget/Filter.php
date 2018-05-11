@@ -14,7 +14,8 @@ class Filter extends Widget
         Concerns\HasGroups,
         Concerns\HasInput,
         Concerns\HasBottomButtons,
-        Concerns\HasQueryHelpers;
+        Concerns\HasQueryHelpers,
+        Concerns\HasPagination;
 
     protected function initialize()
     {
@@ -53,6 +54,8 @@ class Filter extends Widget
 
             $field->applyFilter($this->query);
         });
+
+        $this->paginator();
     }
 
     /** @var Grid $grid */
@@ -71,5 +74,12 @@ class Filter extends Widget
         }
 
         return $this->grid;
+    }
+
+    public function getResult()
+    {
+        $this->processOnce();
+
+        return $this->getQuery()->toArray();
     }
 }

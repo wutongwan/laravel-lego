@@ -117,6 +117,27 @@ class OutgoingQueryTest extends TestCase
         self::assertEquals($expected, $q->getConditions());
         self::assertEquals($expected, $q->toArray());
     }
+
+    public function testPagination()
+    {
+        $f = Lego::outgoingFilter();
+        $f->paginate(666);
+        self::assertEquals([
+            "perPage" => 666,
+            "pageName" => "page",
+            "page" => 1,
+            "lengthAware" => true,
+        ], $f->getResult()['pagination']);
+
+        $f = Lego::outgoingFilter();
+        $f->simplePaginate(777);
+        self::assertEquals([
+            "perPage" => 777,
+            "pageName" => "page",
+            "page" => 1,
+            "lengthAware" => false,
+        ], $f->getResult()['pagination']);
+    }
 }
 
 class ExampleOutgoing implements OutgoingInterface
