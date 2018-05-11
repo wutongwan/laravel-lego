@@ -6,7 +6,13 @@ use Illuminate\Support\Facades\Request;
 trait HasPagination
 {
     /**
-     * 翻页器实例
+     * 是否有启用分页器
+     * @var bool
+     */
+    protected $paginatorEnabled = false;
+
+    /**
+     * 分页器实例
      * @var AbstractPaginator
      */
     protected $paginator;
@@ -31,6 +37,7 @@ trait HasPagination
 
     public function paginate(int $perPage, $pageName = null)
     {
+        $this->paginatorEnabled = true;
         $this->paginatorPerPage = $perPage;
         $this->paginatorPageName = $pageName;
         $this->paginatorLengthAware = true;
@@ -40,6 +47,7 @@ trait HasPagination
 
     public function simplePaginate(int $perPage, $pageName = null)
     {
+        $this->paginatorEnabled = true;
         $this->paginatorPerPage = $perPage;
         $this->paginatorPageName = $pageName;
         $this->paginatorLengthAware = false;
@@ -61,5 +69,13 @@ trait HasPagination
         }
 
         return $this->paginator;
+    }
+
+    /**
+     * 是否启用分页器
+     */
+    public function isPaginatorEnabled()
+    {
+        return $this->paginatorEnabled;
     }
 }
