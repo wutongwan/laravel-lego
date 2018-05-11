@@ -121,6 +121,8 @@ class OutgoingQueryTest extends TestCase
     public function testPagination()
     {
         $f = Lego::outgoingFilter();
+        self::assertFalse($f->isPaginatorEnabled());
+
         $f->paginate(666);
         self::assertEquals([
             "perPage" => 666,
@@ -128,6 +130,7 @@ class OutgoingQueryTest extends TestCase
             "page" => 1,
             "lengthAware" => true,
         ], $f->getResult()['pagination']);
+        self::assertTrue($f->isPaginatorEnabled());
 
         $f = Lego::outgoingFilter();
         $f->simplePaginate(777);
