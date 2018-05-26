@@ -47,12 +47,9 @@ class Filter extends Widget
             $field->placeholder($field->description());
             $field->setNewValue($this->getInput($field->elementName()));
 
-            $value = $field->getNewValue();
-            if ((is_string($value) && is_empty_string($value)) || !$value) {
-                return;
+            if (!is_empty_string($field->getNewValue())) {
+                $field->applyFilter($this->query);
             }
-
-            $field->applyFilter($this->query);
         });
 
         $this->paginator();
