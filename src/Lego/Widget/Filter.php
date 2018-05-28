@@ -47,7 +47,8 @@ class Filter extends Widget
             $field->placeholder($field->description());
             $field->setNewValue($this->getInput($field->elementName()));
 
-            if (!is_empty_string($field->getNewValue())) {
+            $value = $field->getNewValue();
+            if (is_string($value) && !is_empty_string($value)) {
                 $field->applyFilter($this->query);
             }
         });
