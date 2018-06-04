@@ -1,21 +1,22 @@
 <?php namespace Lego\Operator;
 
+use Illuminate\Support\Facades\Config;
 use Lego\Foundation\Exceptions\LegoException;
 
 class Finder
 {
     protected $operators = [
         Query::class => [
-            Eloquent\EloquentQuery::class,
-            Outgoing\OutgoingQuery::class,
-            Collection\ArrayQuery::class,
+            100 => Eloquent\EloquentQuery::class,
+            200 => Outgoing\OutgoingQuery::class,
+            300 => Collection\ArrayQuery::class,
         ],
 
         Store::class => [
-            Eloquent\EloquentStore::class,
-            Outgoing\OutgoingStore::class,
-            Collection\ArrayStore::class,
-            Collection\ObjectStore::class,
+            100 => Eloquent\EloquentStore::class,
+            200 => Outgoing\OutgoingStore::class,
+            300 => Collection\ArrayStore::class,
+            400 => Collection\ObjectStore::class,
         ],
     ];
 
@@ -23,8 +24,13 @@ class Finder
     {
         // test plastic is installed
         if (class_exists(\Sleimanx2\Plastic\Facades\Plastic::class)) {
-            $this->operators[Query::class][] = Plastic\PlasticQuery::class;
+            $this->operators[Query::class][110] = Plastic\PlasticQuery::class;
         }
+
+        $this->operators = array_merge_recursive(
+            $this->operators,
+            Config::get('lego.operators', [])
+        );
     }
 
     public function parse($operatorType, $data)
@@ -33,8 +39,11 @@ class Finder
             return $data;
         }
 
+        $operators = array_filter($this->operators[$operatorType]);
+        ksort($operators);
+
         /** @var Operator|\Lego\Operator\Store|\Lego\Operator\Query $item */
-        foreach ($this->operators[$operatorType] as $item) {
+        foreach ($operators as $item) {
             if ($operator = $item::parse($data)) {
                 return $operator;
             }
