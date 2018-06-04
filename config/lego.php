@@ -105,5 +105,17 @@ return [
                 \Lego\Widget\Grid\Pipes4String::class,
             ],
         ],
-    ]
+    ],
+
+    /**
+     * user defined operators
+     */
+    'operators' => [
+        \Lego\Operator\Query::class => [
+
+        ],
+        \Lego\Operator\Store::class => [
+
+        ],
+    ],
 ];
