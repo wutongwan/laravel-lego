@@ -27,10 +27,18 @@ class Finder
             $this->operators[Query::class][110] = Plastic\PlasticQuery::class;
         }
 
-        $this->operators = array_merge_recursive(
-            $this->operators,
-            Config::get('lego.operators', [])
-        );
+        $configs = Config::get('lego.operators', []);
+        foreach (array_keys($this->operators) as $type) {
+            $registered = $configs[$type] ?? [];
+            foreach ($registered as $order => $operator) {
+                $this->operators[$type][$order] = $operator;
+            }
+        }
+    }
+
+    public function getOperators()
+    {
+        return $this->operators;
     }
 
     public function parse($operatorType, $data)
