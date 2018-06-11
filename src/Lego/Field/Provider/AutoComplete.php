@@ -100,7 +100,8 @@ class AutoComplete extends Text
     {
         return lego_default(
             Request::input($this->elementName() . '-text'),
-            $this->store->get($this->name())
+            $this->store->get($this->name()),
+            $this->displayValue
         );
     }
 
