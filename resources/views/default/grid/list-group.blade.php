@@ -1,6 +1,8 @@
 @extends('lego::default.grid.layout')
 
 @section('grid-body')
+    <?php /** @var \Lego\Widget\Grid\Grid $grid */ ?>
+
     <div id="{{ $grid->uniqueId() }}">
         <ul class="list-group">
             @foreach($grid->paginator() as $row)
@@ -11,7 +13,7 @@
                 >
                     @if($grid->batchModeEnabled())
                         <span class="pull-right">
-                        @include('lego::default.grid.batch-checkbox', ['batchId' => $row->getKey()])
+                        @include('lego::default.grid.batch-checkbox', ['batchId' => $grid->getBatchIdName()])
                         </span>
                     @endif
 

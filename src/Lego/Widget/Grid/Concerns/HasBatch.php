@@ -12,10 +12,11 @@ trait HasBatch
     protected $batches = [];
     protected $batchModeUrl;
     protected $batchModeSessionKey = 'lego.batch-mode';
+    protected $batchIdName = 'id';
 
-    public function addBatch($name, \Closure $action = null, $primaryKey = 'id')
+    public function addBatch($name, \Closure $action = null, $primaryKey = null)
     {
-        $batch = new Batch($name, $this->getQuery(), $primaryKey);
+        $batch = new Batch($name, $this->getQuery(), $primaryKey ?: $this->batchIdName);
         $this->batches[$name] = $batch;
 
         if ($action) {
@@ -74,4 +75,26 @@ trait HasBatch
     {
         return count($this->batches()) && Session::get($this->batchModeSessionKey, false);
     }
+
+    /**
+     * 设置每条数据的标记字段名
+     *
+     * @param string $keyName
+     * @return $this
+     */
+    public function setBatchIdName(string $keyName)
+    {
+        $this->batchIdName = $keyName;
+        return $this;
+    }
+
+    /**
+     * 每条数据的标记字段名
+     * @return string
+     */
+    public function getBatchIdName()
+    {
+        return $this->batchIdName;
+    }
+
 }
