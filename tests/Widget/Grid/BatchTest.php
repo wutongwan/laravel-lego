@@ -26,4 +26,13 @@ class BatchTest extends TestCase
         $this->assertContains('退出批处理', $html);
         $this->assertContains('Batch Test', $html);
     }
+
+    public function testBatchIdName()
+    {
+        $grid = new Grid([]);
+        self::assertEquals('id', $grid->getBatchIdName());
+
+        $grid->setBatchIdName('uid');
+        self::assertEquals('uid', $grid->getBatchIdName());
+    }
 }

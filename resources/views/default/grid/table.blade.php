@@ -19,7 +19,7 @@
                 <tr>
                     @if($batchModeEnabled)
                         <td>
-                            @include('lego::default.grid.batch-checkbox', ['batchId' => $row->getKey()])
+                            @include('lego::default.grid.batch-checkbox', ['batchId' => $grid->getBatchIdName()])
                         </td>
                     @endif
                     @foreach($grid->cells() as $cell)
