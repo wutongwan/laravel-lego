@@ -5,6 +5,7 @@ RELEASE_BRANCH=$1
 # fetch latest version
 git checkout master
 git checkout $RELEASE_BRANCH
+git pull git@github.com:wutongwan/laravel-lego.git $RELEASE_BRANCH
 git pull git@github.com:wutongwan/laravel-lego.git master
 
 # run bower
