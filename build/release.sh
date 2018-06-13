@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
+RELEASE_BRANCH=$1
+
 # fetch latest version
 git checkout master
-git branch -D release
-git checkout -b release
+git checkout $RELEASE_BRANCH
 git pull git@github.com:wutongwan/laravel-lego.git master
 
 # run bower
@@ -57,7 +58,7 @@ yarn prod
 
 # create release commit
 git add .
-git commit -a -m 'build release' -q
-git push git@github.com:wutongwan/laravel-lego.git release --force
+git commit -a -m "build $RELEASE_BRANCH" -q
+git push git@github.com:wutongwan/laravel-lego.git $RELEASE_BRANCH
 
 echo '-> Draft new release https://github.com/wutongwan/laravel-lego/releases/new'
