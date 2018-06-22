@@ -68,7 +68,7 @@ $hasBatch = $grid->batchModeEnabled();
         $(document).ready(function () {
             lego.createGridBatch(
                 '{{ $grid->uniqueId() }}-container',
-                {{ $grid->getKeys()->toJson() }},
+                {{ json_encode($grid->pluckBatchIds()) }},
                 {!! json_encode($grid->batchesAsArray()) !!}
             )
         });

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
+use Lego\Operator\Store;
 use Lego\Widget\Grid\Batch;
 
 trait HasBatch
@@ -95,6 +96,23 @@ trait HasBatch
     public function getBatchIdName()
     {
         return $this->batchIdName;
+    }
+
+    /**
+     * 获取批处理 id 列表
+     *
+     * @return array
+     */
+    public function pluckBatchIds(): array
+    {
+        $ids = [];
+
+        /** @var Store $store */
+        foreach ($this->paginator() as $store) {
+            $ids[]= $store->get($this->batchIdName);
+        }
+
+        return $ids;
     }
 
 }

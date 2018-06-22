@@ -27,7 +27,7 @@ trait HasPagination
      * 分页器 GET 参数，eg：page
      * @var string
      */
-    protected $paginatorPageName;
+    protected $paginatorPageName = 'page';
 
     /**
      * 分页器是否需要查询总条数
@@ -77,5 +77,24 @@ trait HasPagination
     public function isPaginatorEnabled()
     {
         return $this->paginatorEnabled;
+    }
+
+    /**
+     * 获取当前页码
+     *
+     * @return int
+     */
+    public function getPaginatorCurrentPage()
+    {
+        return Request::query($this->paginatorPageName, 1);
+    }
+
+    /**
+     * 每页条数
+     * @return int
+     */
+    public function getPaginatorPerPage()
+    {
+        return $this->paginatorPerPage;
     }
 }

@@ -113,6 +113,7 @@ class OutgoingQueryTest extends TestCase
                 ['order_desc', 'desc'],
             ],
             "limit" => 67,
+            "pagination" => [],
         ];
         self::assertEquals($expected, $q->getConditions());
         self::assertEquals($expected, $q->toArray());

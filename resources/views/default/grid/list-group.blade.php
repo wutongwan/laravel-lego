@@ -1,19 +1,23 @@
 @extends('lego::default.grid.layout')
 
+<?php
+/** @var \Lego\Widget\Grid\Grid $grid */
+/** @var \Lego\Operator\Store $row */
+?>
+
 @section('grid-body')
-    <?php /** @var \Lego\Widget\Grid\Grid $grid */ ?>
 
     <div id="{{ $grid->uniqueId() }}">
         <ul class="list-group">
             @foreach($grid->paginator() as $row)
                 <li class="list-group-item"
                     @if($grid->batchModeEnabled())
-                    v-on:click="trigger({{ $row->getKey() }})"
+                    v-on:click="trigger({{ $row->get($grid->getBatchIdName()) }})"
                     @endif
                 >
                     @if($grid->batchModeEnabled())
                         <span class="pull-right">
-                        @include('lego::default.grid.batch-checkbox', ['batchId' => $grid->getBatchIdName()])
+                            <input type="checkbox" v-model="selectedIds" value="{{ $row->get($grid->getBatchIdName()) }}">
                         </span>
                     @endif
 
