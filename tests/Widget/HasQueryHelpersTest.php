@@ -21,6 +21,7 @@ class HasQueryHelpersTest extends TestCase
                     ["desc_column", "desc"],
                 ],
                 "limit" => 67,
+                "pagination" => [],
             ],
             $filter->getQuery()->toArray()
         );
