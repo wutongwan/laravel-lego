@@ -10,7 +10,7 @@ abstract class Store extends Operator implements Arrayable, \ArrayAccess
 {
     public function getKeyName()
     {
-        return null;
+        return 'id';
     }
 
     public function getKey()
