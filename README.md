@@ -49,21 +49,13 @@ return $form->view('layout', ['form' => $form]);
 
 ## Installment
 
-### 1、composer.json 
+### 1、Composer
 
-- Add to `require`
+```bash
+composer require "wutongwan/lego"
+```
 
-	```
-	"wutongwan/lego": "0.2.*"
-	```
-
-- Add to `post-update-cmd`, In order to update lego statc files Automatically.
-
-	```
-	php artisan vendor:publish --tag=lego-assets --force
-	``` 
-
-### 2、Service Provider 
+### 2、Service Provider (Laravel < 5.5 Only)
 
 Add these lines to `providres` array of config file `config/app.php`.
 
@@ -86,15 +78,19 @@ Lego\LegoServiceProvider::class,
 > ```
 
 
-### 3、Install Lego and Publish assets
+### 3、Publish lego assets
 
 ```bash
-composer update -vvv
+php artisan vendor:publish --tag=lego-assets --force
 ```
+
+> **Tips:**
+> 
+> Add to `post-update-cmd`, In order to update lego statc files Automatically.
 
 ## Documents
 
-- Demo http://lego.zhw.in
+- Demo <http://lego.zhw.in>
 - [Form 表单](./docs/form.md)
 - [Fields 支持的输入类型](./docs/fields.md)
 - [Filter 筛选器](./docs/filter.md) 
