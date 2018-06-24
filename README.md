@@ -86,7 +86,7 @@ php artisan vendor:publish --tag=lego-assets --force
 
 > **Tips:**
 > 
-> Add to `post-update-cmd`, In order to update lego statc files Automatically.
+> Add to `post-update-cmd`, In order to update lego static files Automatically.
 
 ## Documents
 
