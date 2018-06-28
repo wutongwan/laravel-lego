@@ -208,7 +208,7 @@ class EloquentQuery extends Query
         } else {
             $relation = $this->getNestedRelation($this->getModel(), $relationArray);
             $related = $relation->getRelated();
-            $result = $relation->newQuery()
+            $result = $related->newQuery()
                 ->where($column, 'like', $pattern)
                 ->limit($limit)
                 ->pluck($column, $valueColumn ?: $related->getKeyName())
