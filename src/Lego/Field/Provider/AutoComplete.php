@@ -1,4 +1,6 @@
-<?php namespace Lego\Field\Provider;
+<?php
+
+namespace Lego\Field\Provider;
 
 use Illuminate\Support\Facades\Request;
 use Lego\Field\Concerns\FilterWhereEquals;
@@ -23,7 +25,8 @@ class AutoComplete extends Text
     }
 
     /**
-     * 自动补全结果的数目
+     * 自动补全结果的数目.
+     *
      * @var int
      */
     protected $limit = 20;
@@ -41,7 +44,7 @@ class AutoComplete extends Text
     }
 
     /**
-     * @var integer 触发自动补全的最低字符数
+     * @var int 触发自动补全的最低字符数
      */
     protected $min;
 
@@ -58,7 +61,8 @@ class AutoComplete extends Text
     }
 
     /**
-     * 自动补全结果的后端链接
+     * 自动补全结果的后端链接.
+     *
      * @var string
      */
     protected $remote;
@@ -69,8 +73,10 @@ class AutoComplete extends Text
     }
 
     /**
-     * 自动补全的结果集
+     * 自动补全的结果集.
+     *
      * @param callable $callable
+     *
      * @return $this
      */
     public function match($callable)
@@ -108,6 +114,7 @@ class AutoComplete extends Text
     protected function renderEditable()
     {
         $this->includeSelect2Assets();
+
         return $this->view('lego::default.field.auto-complete');
     }
 

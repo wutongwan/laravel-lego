@@ -1,4 +1,6 @@
-<?php namespace Lego\Foundation;
+<?php
+
+namespace Lego\Foundation;
 
 /**
  * Lego Simple Event.
@@ -14,9 +16,10 @@ class Event
     /**
      * Register event.
      *
-     * @param string $event event name
-     * @param string $listener listener name
+     * @param string   $event    event name
+     * @param string   $listener listener name
      * @param \Closure $callback call when fire
+     *
      * @return string|int
      */
     public function register($event, $listener, \Closure $callback)
@@ -37,7 +40,7 @@ class Event
     }
 
     /**
-     * fire only once
+     * fire only once.
      */
     public function once($event, $listener, \Closure $callback)
     {
@@ -69,7 +72,8 @@ class Event
     }
 
     /**
-     * 所有事件
+     * 所有事件.
+     *
      * @return \Closure[]
      */
     public function getEvents()
@@ -78,7 +82,8 @@ class Event
     }
 
     /**
-     * 所有一次性事件
+     * 所有一次性事件.
+     *
      * @return \Closure[]
      */
     public function getOnceEvents()

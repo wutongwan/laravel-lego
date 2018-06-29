@@ -1,4 +1,6 @@
-<?php namespace Lego\Tests\Field;
+<?php
+
+namespace Lego\Tests\Field;
 
 use Lego\Field\Provider\Text;
 use Lego\Tests\TestCase;

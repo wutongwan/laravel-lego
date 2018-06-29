@@ -1,4 +1,6 @@
-<?php namespace Lego\Tests\Foundation;
+<?php
+
+namespace Lego\Tests\Foundation;
 
 use Illuminate\Support\Facades\Redirect;
 use Lego\Foundation\Button;
@@ -22,6 +24,7 @@ class ButtonTest extends TestCase
     {
         $url = (new \ReflectionClass($btn))->getProperty('url');
         $url->setAccessible(true);
+
         return $url->getValue($btn);
     }
 }

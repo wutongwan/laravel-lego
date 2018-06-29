@@ -1,4 +1,6 @@
-<?php namespace Lego\Tests\Tools;
+<?php
+
+namespace Lego\Tests\Tools;
 
 class FakeMobileDetect extends \Mobile_Detect
 {

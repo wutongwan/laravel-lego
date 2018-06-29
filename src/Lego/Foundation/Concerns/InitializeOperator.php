@@ -1,13 +1,15 @@
-<?php namespace Lego\Foundation\Concerns;
+<?php
+
+namespace Lego\Foundation\Concerns;
 
 trait InitializeOperator
 {
     /**
-     * 触发函数, 推荐在构造函数中调用
+     * 触发函数, 推荐在构造函数中调用.
      */
     protected function triggerInitialize()
     {
-        /**
+        /*
          * Initialize Traits
          *
          * call each trait's `initializeTraitName()` method.
@@ -24,7 +26,7 @@ trait InitializeOperator
     }
 
     /**
-     * 列出当前类所有引入的 trait
+     * 列出当前类所有引入的 trait.
      *
      * laravel class_uses_recursive 输出的顺序并不是引入的顺序，不符合预期
      *

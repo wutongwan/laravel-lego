@@ -1,4 +1,6 @@
-<?php namespace Lego\Operator\Eloquent;
+<?php
+
+namespace Lego\Operator\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
@@ -8,8 +10,8 @@ use Lego\Operator\Finder;
 use Lego\Operator\Store;
 
 /**
- * Class EloquentStore
- * @package Lego\Operator\Store
+ * Class EloquentStore.
+ *
  * @property Model $data
  */
 class EloquentStore extends Store
@@ -23,7 +25,7 @@ class EloquentStore extends Store
         }
 
         if (is_string($data) && is_subclass_of($data, Model::class)) {
-            return new self(new $data);
+            return new self(new $data());
         }
 
         return false;
@@ -41,6 +43,7 @@ class EloquentStore extends Store
      *
      * @param $attribute
      * @param null $default
+     *
      * @return mixed
      */
     public function get($attribute, $default = null)
@@ -51,6 +54,7 @@ class EloquentStore extends Store
 
         if ($jsonArray) {
             $value = is_string($value) ? json_decode($value) : $value;
+
             return data_get($value, join('.', $jsonArray), $default);
         }
 
@@ -59,6 +63,7 @@ class EloquentStore extends Store
 
     /**
      * 修改属性值
+     *
      * @param $attribute
      * @param $value
      */
@@ -69,6 +74,7 @@ class EloquentStore extends Store
 
         if (count($relationArray) === 0) {
             $this->data->setAttribute($column, $value);
+
             return;
         }
 
@@ -81,13 +87,15 @@ class EloquentStore extends Store
     }
 
     /**
-     * 存储操作
+     * 存储操作.
      *
      * 存储时尝试先存储 Relation ，再存储 Model ，任一失败则回滚
      *
      * @param array $options
-     * @return bool
+     *
      * @throws LegoSaveFail
+     *
+     * @return bool
      */
     public function save($options = [])
     {
@@ -102,12 +110,14 @@ class EloquentStore extends Store
         }
 
         $this->data = $this->data->fresh();
+
         return true;
     }
 
     private function throwSaveError($data)
     {
         $class = class_basename($data);
+
         try {
             $dataString = json_encode($data, JSON_UNESCAPED_UNICODE);
         } catch (\Exception $e) {
@@ -150,7 +160,7 @@ class EloquentStore extends Store
     }
 
     /**
-     * 当前关联数据
+     * 当前关联数据.
      */
     public function getAssociated($attribute)
     {
@@ -160,14 +170,17 @@ class EloquentStore extends Store
     }
 
     /**
-     * 当前关联数据
+     * 当前关联数据.
+     *
      * @param $attribute
+     *
      * @return Collection|Store[]
      */
     public function getAttached($attribute): Collection
     {
         /** @var Collection $coll */
         $coll = $this->getRelationValue($attribute);
+
         return $coll->map(function ($data) {
             return Finder::createStore($data);
         });
@@ -176,6 +189,7 @@ class EloquentStore extends Store
     protected function getRelationValue($attribute)
     {
         list($relationArray) = FieldNameSlicer::split($attribute);
+
         return data_get($this->data, join('.', $relationArray));
     }
 }

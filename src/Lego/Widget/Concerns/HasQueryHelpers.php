@@ -1,4 +1,6 @@
-<?php namespace Lego\Widget\Concerns;
+<?php
+
+namespace Lego\Widget\Concerns;
 
 trait HasQueryHelpers
 {
@@ -9,6 +11,7 @@ trait HasQueryHelpers
         }
 
         $this->query->with($relations);
+
         return $this;
     }
 

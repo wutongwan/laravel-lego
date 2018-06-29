@@ -1,10 +1,12 @@
-<?php namespace Lego\Widget;
+<?php
+
+namespace Lego\Widget;
 
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\URL;
 
 /**
- * Confirm 操作
+ * Confirm 操作.
  */
 class Confirm
 {
@@ -12,7 +14,8 @@ class Confirm
     const FROM_QUERY_NAME = '__lego_confirm_from';
 
     /**
-     * 提示信息
+     * 提示信息.
+     *
      * @var string
      */
     protected $message;
@@ -23,7 +26,8 @@ class Confirm
     protected $action;
 
     /**
-     * 等待 $delay 秒才可确认
+     * 等待 $delay 秒才可确认.
+     *
      * @var int
      */
     protected $delay = 0;
@@ -66,16 +70,16 @@ class Confirm
 
         return view('lego::confirm', [
             'message' => $this->message,
-            'delay' => $this->delay,
+            'delay'   => $this->delay,
 
             'confirm' => Request::fullUrlWithQuery([
                 $this->confirmQueryName => $this->expectedConfirmValue,
-                $this->fromQueryName => $from,
+                $this->fromQueryName    => $from,
             ]),
 
             'cancel' => Request::fullUrlWithQuery([
                 $this->confirmQueryName => 'no',
-                $this->fromQueryName => $from,
+                $this->fromQueryName    => $from,
             ]),
         ]);
     }

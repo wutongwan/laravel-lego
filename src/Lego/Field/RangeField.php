@@ -1,4 +1,6 @@
-<?php namespace Lego\Field;
+<?php
+
+namespace Lego\Field;
 
 use Illuminate\Support\Facades\Request;
 use Lego\Operator\Query;
@@ -8,13 +10,15 @@ abstract class RangeField extends Field
     const RANGE_TYPE = 'should be rewrite';
 
     /**
-     * 上限
+     * 上限.
+     *
      * @var Field
      */
     protected $upper;
 
     /**
-     * 下限
+     * 下限.
+     *
      * @var Field
      */
     protected $lower;
@@ -73,11 +77,12 @@ abstract class RangeField extends Field
     {
         $lower = $this->lower->getNewValue();
         $upper = $this->upper->getNewValue();
+
         return (!is_empty_string($lower) || !is_empty_string($upper)) ? [$lower, $upper] : [];
     }
 
     /**
-     * Filter 检索数据时, 构造此字段的查询
+     * Filter 检索数据时, 构造此字段的查询.
      */
     public function filter(Query $query)
     {

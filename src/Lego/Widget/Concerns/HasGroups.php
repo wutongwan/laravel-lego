@@ -1,8 +1,9 @@
-<?php namespace Lego\Widget\Concerns;
+<?php
+
+namespace Lego\Widget\Concerns;
 
 use Lego\Field\Field;
 use Lego\Field\Group;
-use Lego\Foundation\Event;
 use Lego\Foundation\Exceptions\LegoException;
 
 /**
@@ -20,12 +21,13 @@ trait HasGroups
     }
 
     /**
-     * when $field's value = $value, call $closure add fields
+     * when $field's value = $value, call $closure add fields.
      *
      * @param Field|string $field
-     * @param string $operator
-     * @param mixed $expected
-     * @param \Closure $closure
+     * @param string       $operator
+     * @param mixed        $expected
+     * @param \Closure     $closure
+     *
      * @return $this
      */
     public function when($field, $operator, $expected, \Closure $closure)
@@ -41,11 +43,12 @@ trait HasGroups
     }
 
     /**
-     * Group
+     * Group.
      */
 
     /**
-     * Group List
+     * Group List.
+     *
      * @var Group[]
      */
     protected $groups = [];
@@ -66,7 +69,7 @@ trait HasGroups
     /**
      * 注意：此函数会有两种返回值，此处略奇葩，但用起来方便，若需要通过 $name 获取 Group 请使用 getGroup 函数
      *  1、传入 $callback 时，返回 Group
-     *  2、反之，返回 $this ，方便链式调用
+     *  2、反之，返回 $this ，方便链式调用.
      */
     public function group($name, \Closure $callback = null)
     {
@@ -76,12 +79,14 @@ trait HasGroups
             $this->startGroup($name);
             call_user_func_array($callback, [$this, $group]);
             $this->stopGroup($name);
+
             return $group;
         } else {
             $this->startGroup($name);
             $this->events->once('after-add-field', __METHOD__ . $name, function () use ($name) {
                 $this->stopGroup($name);
             });
+
             return $this;
         }
     }
@@ -94,6 +99,7 @@ trait HasGroups
             $group = new Group($this->fields, $name);
             $this->groups[$name] = $group;
         }
+
         return $group;
     }
 
@@ -108,6 +114,7 @@ trait HasGroups
         }
 
         $this->activeGroups[$name] = $this->groups[$name];
+
         return $this;
     }
 
@@ -127,6 +134,7 @@ trait HasGroups
         if ($group = array_last($this->activeGroups)) {
             return $this->getGroup($group);
         }
+
         return null;
     }
 
@@ -137,6 +145,7 @@ trait HasGroups
         } else {
             unset($this->activeGroups[$name]);
         }
+
         return $this;
     }
 }

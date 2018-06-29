@@ -1,4 +1,6 @@
-<?php namespace Lego\Foundation\Facades;
+<?php
+
+namespace Lego\Foundation\Facades;
 
 use Illuminate\Support\Facades\Facade;
 

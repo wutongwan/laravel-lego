@@ -1,4 +1,6 @@
-<?php namespace Lego\Widget\Grid;
+<?php
+
+namespace Lego\Widget\Grid;
 
 abstract class Pipes
 {

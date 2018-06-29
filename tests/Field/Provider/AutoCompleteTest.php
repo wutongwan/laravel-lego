@@ -1,4 +1,6 @@
-<?php namespace Lego\Tests\Field\Provider;
+<?php
+
+namespace Lego\Tests\Field\Provider;
 
 use Lego\Field\Provider\AutoComplete;
 use Lego\Register\HighPriorityResponse;
@@ -21,7 +23,7 @@ class AutoCompleteTest extends TestCase
         $data = HighPriorityResponse::getResponse($path);
 
         self::assertEquals(
-            ["total_count" => 1, "items" => [["value" => "hello", "label" => null]]],
+            ['total_count' => 1, 'items' => [['value' => 'hello', 'label' => null]]],
             $data
         );
     }

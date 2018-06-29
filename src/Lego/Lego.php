@@ -1,4 +1,6 @@
-<?php namespace Lego;
+<?php
+
+namespace Lego;
 
 use Lego\Widget\Confirm;
 use Lego\Widget\Filter;

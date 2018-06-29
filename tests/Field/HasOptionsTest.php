@@ -1,4 +1,6 @@
-<?php namespace Lego\Tests\Field;
+<?php
+
+namespace Lego\Tests\Field;
 
 use Lego\Field\Concerns\HasOptions;
 use Lego\Field\Provider\Text;
@@ -19,7 +21,6 @@ class HasOptionsTest extends TestCase
         $this->assertEquals('A B C', $field->getOptionLabelByValue('abc'));
     }
 }
-
 
 class HasOptionsExample extends Text
 {

@@ -1,4 +1,6 @@
-<?php namespace Lego\Field\Provider;
+<?php
+
+namespace Lego\Field\Provider;
 
 use Lego\Field\Concerns\DisabledInFilter;
 
@@ -28,11 +30,13 @@ class Readonly extends Text
 
     /**
      * 渲染当前对象
+     *
      * @return string
      */
     public function render()
     {
         $this->setDisplayValue($this->readonlyValue);
+
         return parent::renderReadonly();
     }
 

@@ -1,12 +1,14 @@
-<?php namespace Lego\Field;
+<?php
+
+namespace Lego\Field;
 
 use Illuminate\Support\Facades\Config;
+use Lego\Foundation\Concerns as FoundationConcerns;
 use Lego\Operator\Query;
 use Lego\Widget\Concerns\Operable;
-use Lego\Foundation\Concerns as FoundationConcerns;
 
 /**
- * 输入输出控件的基类
+ * 输入输出控件的基类.
  */
 abstract class Field implements FoundationConcerns\HasMode, \JsonSerializable
 {
@@ -17,7 +19,6 @@ abstract class Field implements FoundationConcerns\HasMode, \JsonSerializable
         Operable,
         FoundationConcerns\HasHtmlAttributes,
         FoundationConcerns\HasEvents;
-
     use Concerns\HtmlOperator,
         Concerns\HasFieldContainer,
         Concerns\HasValidation,
@@ -28,47 +29,53 @@ abstract class Field implements FoundationConcerns\HasMode, \JsonSerializable
         Concerns\FilterWhereEquals;
 
     /**
-     * 字段的唯一标记
+     * 字段的唯一标记.
+     *
      * @var string
      */
     protected $name;
 
     /**
-     * 字段描述
+     * 字段描述.
+     *
      * @var string
      */
     protected $description;
 
     /**
-     * Relation Path
+     * Relation Path.
+     *
      * @var array
      */
     protected $relationPath;
 
     /**
-     * 对应的数据表字段名
+     * 对应的数据表字段名.
+     *
      * @var string
      */
     protected $column;
 
     /**
-     * Json Path
+     * Json Path.
+     *
      * @var array
      */
     protected $jsonPath;
 
     /**
-     * 需要传递到前端的其他配置项
+     * 需要传递到前端的其他配置项.
+     *
      * @var array
      */
     protected $extra = [];
 
-
     /**
      * Field constructor.
-     * @param string $name 该字段的唯一标记, 同一个控件中不能存在相同name的field
+     *
+     * @param string $name        该字段的唯一标记, 同一个控件中不能存在相同name的field
      * @param string $description 描述、标签
-     * @param mixed $data 数据域
+     * @param mixed  $data        数据域
      */
     public function __construct(string $name, string $description = null, $data = [])
     {
@@ -84,9 +91,8 @@ abstract class Field implements FoundationConcerns\HasMode, \JsonSerializable
 
     /**
      * Getter.Start
-     * 下面 Getter 函数见对应的 属性注释
+     * 下面 Getter 函数见对应的 属性注释.
      */
-
     public function name()
     {
         return $this->name;
@@ -114,17 +120,17 @@ abstract class Field implements FoundationConcerns\HasMode, \JsonSerializable
     }
 
     /**
-     * 数据处理逻辑
+     * 数据处理逻辑.
      */
     public function process()
     {
         $this->setAttribute([
             // html attributes
-            'id' => $this->elementId(),
+            'id'   => $this->elementId(),
             'name' => $this->elementName(),
 
             // lego attributes
-            'lego-type' => 'Field',
+            'lego-type'       => 'Field',
             'lego-field-type' => class_basename(static::class),
             'lego-field-mode' => $this->mode,
         ]);
@@ -145,17 +151,17 @@ abstract class Field implements FoundationConcerns\HasMode, \JsonSerializable
     {
         return [
             'element_name' => $this->elementName(),
-            'element_id' => $this->elementId(),
-            'name' => $this->name(),
-            'description' => $this->description(),
-            'attributes' => $this->getAttributes(),
-            'mode' => $this->getMode(),
-            'init_value' => $this->takeInputValue(),
-            'locale' => $this->getLocale(),
-            'messages' => $this->messages(),
-            'errors' => $this->errors(),
-            'rules' => $this->rules,
-            'extra' => $this->extra,
+            'element_id'   => $this->elementId(),
+            'name'         => $this->name(),
+            'description'  => $this->description(),
+            'attributes'   => $this->getAttributes(),
+            'mode'         => $this->getMode(),
+            'init_value'   => $this->takeInputValue(),
+            'locale'       => $this->getLocale(),
+            'messages'     => $this->messages(),
+            'errors'       => $this->errors(),
+            'rules'        => $this->rules,
+            'extra'        => $this->extra,
         ];
     }
 }

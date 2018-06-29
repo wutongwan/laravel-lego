@@ -2,9 +2,9 @@
 
 namespace Lego\Tests;
 
-use Lego\Widget\Widget;
 use Lego\LegoServiceProvider;
 use Lego\Tests\Tools\FakeMobileDetect;
+use Lego\Widget\Widget;
 
 abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
 {

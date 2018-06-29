@@ -1,4 +1,6 @@
-<?php namespace Lego\Field\Provider;
+<?php
+
+namespace Lego\Field\Provider;
 
 use Collective\Html\FormFacade;
 use Collective\Html\HtmlFacade;
@@ -25,6 +27,7 @@ class Select extends Text
     public function disableValidateOption()
     {
         $this->validateOption = false;
+
         return $this;
     }
 
@@ -37,6 +40,7 @@ class Select extends Text
                 return true;
             }
         }
+
         return false;
     }
 
@@ -44,8 +48,8 @@ class Select extends Text
     {
         $content = $this->getOptionLabelByValue($this->takeShowValue());
 
-        return HtmlFacade::tag('p', (string)$content, [
-            'id' => $this->elementId(),
+        return HtmlFacade::tag('p', (string) $content, [
+            'id'    => $this->elementId(),
             'class' => 'form-control-static',
         ]);
     }

@@ -1,26 +1,28 @@
-<?php namespace Lego\Foundation\Concerns;
+<?php
+
+namespace Lego\Foundation\Concerns;
 
 use Collective\Html\HtmlFacade;
 use Illuminate\Support\HtmlString;
 use Lego\Foundation\Exceptions\LegoException;
 
 /**
- * 推荐宿主类实现接口 HasMode
+ * 推荐宿主类实现接口 HasMode.
  *
  * use 时, 必须放在 `RenderStringOperator`后面
  *
  * Class ModeOperator
- * @package Lego\Helper
  */
 trait ModeOperator
 {
     /**
-     * 模式, eg:editable、readonly、disabled
+     * 模式, eg:editable、readonly、disabled.
      */
     private $mode = self::MODE_EDITABLE;
 
     /**
-     * 是否通过函数修改过模式，用于判断组件间 mode 的继承与否
+     * 是否通过函数修改过模式，用于判断组件间 mode 的继承与否.
+     *
      * @var bool
      */
     private $modeIsModified = false;
@@ -100,26 +102,27 @@ trait ModeOperator
     public function disableEscape()
     {
         $this->escape = false;
+
         return $this;
     }
 
     protected function renderReadonly()
     {
-        $html = (string)$this->takeShowValue();
+        $html = (string) $this->takeShowValue();
 
         if ($this->escape) {
             $html = htmlspecialchars($html, ENT_QUOTES, 'UTF-8');
         }
 
         return HtmlFacade::tag('p', $html, [
-            'id' => $this->elementId(),
+            'id'    => $this->elementId(),
             'class' => 'form-control-static',
         ]);
     }
 
     public function takeReadonlyValue()
     {
-        $html = (string)$this->takeShowValue();
+        $html = (string) $this->takeShowValue();
 
         if ($this->escape) {
             $html = htmlspecialchars($html, ENT_QUOTES, 'UTF-8');

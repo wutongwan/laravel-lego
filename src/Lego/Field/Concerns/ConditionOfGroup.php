@@ -1,7 +1,9 @@
-<?php namespace Lego\Field\Concerns;
+<?php
 
-use Lego\Field\Field;
+namespace Lego\Field\Concerns;
+
 use Lego\Field\Condition;
+use Lego\Field\Field;
 use Lego\Foundation\Facades\LegoAssets;
 
 trait ConditionOfGroup

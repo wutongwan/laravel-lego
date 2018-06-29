@@ -1,4 +1,6 @@
-<?php namespace Lego\Foundation\Exceptions;
+<?php
+
+namespace Lego\Foundation\Exceptions;
 
 class LegoSaveFail extends LegoException
 {

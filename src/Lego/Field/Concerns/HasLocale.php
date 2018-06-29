@@ -1,9 +1,11 @@
-<?php namespace Lego\Field\Concerns;
+<?php
+
+namespace Lego\Field\Concerns;
 
 use Illuminate\Support\Facades\App;
 
 /**
- * i18n
+ * i18n.
  */
 trait HasLocale
 {

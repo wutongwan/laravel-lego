@@ -1,4 +1,6 @@
-<?php namespace Lego\Tests\Operator\Outgoing;
+<?php
+
+namespace Lego\Tests\Operator\Outgoing;
 
 use Lego\Lego;
 use Lego\Operator\Outgoing\OutgoingInterface;
@@ -45,75 +47,75 @@ class OutgoingQueryTest extends TestCase
         $q->limit(67);
 
         $expected = [
-            "wheres" => [
+            'wheres' => [
                 [
-                    "attribute" => "equals_field",
-                    "operator" => "=",
-                    "value" => "equals value",
+                    'attribute' => 'equals_field',
+                    'operator'  => '=',
+                    'value'     => 'equals value',
                 ],
                 [
-                    "attribute" => "gt_field",
-                    "operator" => ">",
-                    "value" => "gt_value",
+                    'attribute' => 'gt_field',
+                    'operator'  => '>',
+                    'value'     => 'gt_value',
                 ],
                 [
-                    "attribute" => "gte_field",
-                    "operator" => ">=",
-                    "value" => "gte_value",
+                    'attribute' => 'gte_field',
+                    'operator'  => '>=',
+                    'value'     => 'gte_value',
                 ],
                 [
-                    "attribute" => "lte_field",
-                    "operator" => "<",
-                    "value" => "lte_value",
+                    'attribute' => 'lte_field',
+                    'operator'  => '<',
+                    'value'     => 'lte_value',
                 ],
                 [
-                    "attribute" => "lte_field",
-                    "operator" => "<=",
-                    "value" => "lte_value",
+                    'attribute' => 'lte_field',
+                    'operator'  => '<=',
+                    'value'     => 'lte_value',
                 ],
                 [
-                    "attribute" => "in_field",
-                    "operator" => "in",
-                    "value" => [
-                        "in_value1",
-                        "in_value2",
+                    'attribute' => 'in_field',
+                    'operator'  => 'in',
+                    'value'     => [
+                        'in_value1',
+                        'in_value2',
                     ],
                 ],
                 [
-                    "attribute" => "btw_field",
-                    "operator" => "between",
-                    "value" => [
-                        "btw_min_value",
-                        "btw_max_value",
-                    ]
+                    'attribute' => 'btw_field',
+                    'operator'  => 'between',
+                    'value'     => [
+                        'btw_min_value',
+                        'btw_max_value',
+                    ],
                 ],
                 [
-                    "attribute" => "scope_field",
-                    "operator" => "scope",
-                    "value" => "scope_value",
+                    'attribute' => 'scope_field',
+                    'operator'  => 'scope',
+                    'value'     => 'scope_value',
                 ],
                 [
-                    "attribute" => "contains_field",
-                    "operator" => "contains",
-                    "value" => "contains_value",
+                    'attribute' => 'contains_field',
+                    'operator'  => 'contains',
+                    'value'     => 'contains_value',
                 ],
                 [
-                    "attribute" => "starts_with_field",
-                    "operator" => "contains:starts_with",
-                    "value" => "starts_with_value",
+                    'attribute' => 'starts_with_field',
+                    'operator'  => 'contains:starts_with',
+                    'value'     => 'starts_with_value',
                 ],
                 [
-                    "attribute" => "ends_with_field",
-                    "operator" => "contains:ends_with",
-                    "value" => "ends_with_value",
+                    'attribute' => 'ends_with_field',
+                    'operator'  => 'contains:ends_with',
+                    'value'     => 'ends_with_value',
                 ],
             ],
-            "orders" => [
+            'orders' => [
                 ['order_asc', 'asc'],
                 ['order_desc', 'desc'],
             ],
-            "limit" => 67,
-            "pagination" => [],
+            'limit'      => 67,
+            'pagination' => [],
         ];
         self::assertEquals($expected, $q->getConditions());
         self::assertEquals($expected, $q->toArray());
@@ -126,20 +128,20 @@ class OutgoingQueryTest extends TestCase
 
         $f->paginate(666);
         self::assertEquals([
-            "perPage" => 666,
-            "pageName" => "page",
-            "page" => 1,
-            "lengthAware" => true,
+            'perPage'     => 666,
+            'pageName'    => 'page',
+            'page'        => 1,
+            'lengthAware' => true,
         ], $f->getResult()['pagination']);
         self::assertTrue($f->isPaginatorEnabled());
 
         $f = Lego::outgoingFilter();
         $f->simplePaginate(777);
         self::assertEquals([
-            "perPage" => 777,
-            "pageName" => "page",
-            "page" => 1,
-            "lengthAware" => false,
+            'perPage'     => 777,
+            'pageName'    => 'page',
+            'page'        => 1,
+            'lengthAware' => false,
         ], $f->getResult()['pagination']);
     }
 }

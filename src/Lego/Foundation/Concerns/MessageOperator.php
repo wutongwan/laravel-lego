@@ -1,17 +1,21 @@
-<?php namespace Lego\Foundation\Concerns;
+<?php
+
+namespace Lego\Foundation\Concerns;
 
 use Illuminate\Support\MessageBag;
 
 trait MessageOperator
 {
     /**
-     * 所有提示信息
+     * 所有提示信息.
+     *
      * @var MessageBag
      */
     protected $messages;
 
     /**
-     * 所有错误信息
+     * 所有错误信息.
+     *
      * @var MessageBag
      */
     protected $errors;

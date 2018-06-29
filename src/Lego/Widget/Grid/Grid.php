@@ -1,4 +1,6 @@
-<?php namespace Lego\Widget\Grid;
+<?php
+
+namespace Lego\Widget\Grid;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
@@ -12,9 +14,9 @@ use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Writers\LaravelExcelWriter;
 
 /**
- * Class Grid
+ * Class Grid.
+ *
  * @lego-ide-helper
- * @package Lego\Widget\Grid
  */
 class Grid extends Widget
 {
@@ -29,7 +31,8 @@ class Grid extends Widget
     protected $filter;
 
     /**
-     * 移动端列表页是否使用移动版
+     * 移动端列表页是否使用移动版.
+     *
      * @var bool
      */
     protected $responsive = false;
@@ -39,6 +42,7 @@ class Grid extends Widget
         if ($data instanceof Filter) {
             $this->filter = $data;
             $this->filter->processOnce();
+
             return $this->filter->getQuery();
         }
 
@@ -56,18 +60,22 @@ class Grid extends Widget
     }
 
     /**
-     * 移动端列表页是否使用移动版
+     * 移动端列表页是否使用移动版.
+     *
      * @param bool $condition
+     *
      * @return $this
      */
     public function responsive($condition = true)
     {
         $this->responsive = boolval($condition);
+
         return $this;
     }
 
     /**
-     * 导出功能
+     * 导出功能.
+     *
      * @var array
      */
     private $exports = [];
@@ -123,7 +131,7 @@ class Grid extends Widget
     }
 
     /**
-     * Widget 的所有数据处理都放在此函数中, 渲染 view 前调用
+     * Widget 的所有数据处理都放在此函数中, 渲染 view 前调用.
      */
     public function process()
     {
@@ -141,6 +149,7 @@ class Grid extends Widget
 
     /**
      * 渲染当前对象
+     *
      * @return string
      */
     public function render()
@@ -148,6 +157,7 @@ class Grid extends Widget
         $view = $this->responsive && app(\Mobile_Detect::class)->isMobile()
             ? view('lego::default.grid.list-group')
             : view('lego::default.grid.table');
+
         return $view->with('grid', $this)->render();
     }
 
@@ -169,7 +179,7 @@ class Grid extends Widget
             $line = [];
             foreach ($this->cells() as $cell) {
                 /** @var Cell $cell */
-                $value = $plain ? $cell->fill($row)->getPlainValue() : (string)$cell->fill($row)->value();
+                $value = $plain ? $cell->fill($row)->getPlainValue() : (string) $cell->fill($row)->value();
                 $line[$cell->description()] = $value;
             }
             $result->push($line);

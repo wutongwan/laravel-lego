@@ -1,4 +1,6 @@
-<?php namespace Lego\Register;
+<?php
+
+namespace Lego\Register;
 
 use Lego\Foundation\Exceptions\InvalidRegisterData;
 use Lego\LegoRegister;
@@ -6,7 +8,8 @@ use Lego\LegoRegister;
 class UserDefinedField extends Data
 {
     /**
-     * 校验注册的数据是否合法, 不合法时抛出异常
+     * 校验注册的数据是否合法, 不合法时抛出异常.
+     *
      * @param $data
      */
     protected function validate($data)
@@ -25,7 +28,7 @@ class UserDefinedField extends Data
     }
 
     /**
-     * list user defined fields
+     * list user defined fields.
      *
      * @return array
      */
@@ -33,6 +36,7 @@ class UserDefinedField extends Data
     {
         $fields = LegoRegister::getAll(self::class, []);
         unset($fields[LegoRegister::DEFAULT_TAG]);
+
         return $fields;
     }
 

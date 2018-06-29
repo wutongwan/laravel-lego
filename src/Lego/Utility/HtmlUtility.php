@@ -1,4 +1,6 @@
-<?php namespace Lego\Utility;
+<?php
+
+namespace Lego\Utility;
 
 use Illuminate\Support\HtmlString;
 

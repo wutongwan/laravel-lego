@@ -1,4 +1,6 @@
-<?php namespace Lego\Field\Concerns;
+<?php
+
+namespace Lego\Field\Concerns;
 
 use Illuminate\Support\Facades\Config;
 

@@ -1,4 +1,6 @@
-<?php namespace Field;
+<?php
+
+namespace Field;
 
 use Lego\Foundation\Facades\LegoFields;
 use Lego\Register\UserDefinedField;

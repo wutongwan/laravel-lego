@@ -1,4 +1,6 @@
-<?php namespace Lego\Field\Provider;
+<?php
+
+namespace Lego\Field\Provider;
 
 use Lego\Field\Concerns\DisabledInFilter;
 
@@ -26,6 +28,7 @@ class JSON extends Text
     {
         if (is_string($json)) {
             $data = json_decode($json, JSON_OBJECT_AS_ARRAY);
+
             return is_null($data) ? $json : $data;
         }
 

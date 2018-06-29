@@ -1,4 +1,6 @@
-<?php namespace Lego\Foundation\Concerns;
+<?php
+
+namespace Lego\Foundation\Concerns;
 
 use Lego\Foundation\Event;
 

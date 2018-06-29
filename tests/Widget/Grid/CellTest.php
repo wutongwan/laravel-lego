@@ -1,4 +1,6 @@
-<?php namespace Lego\Tests\Widget\Grid;
+<?php
+
+namespace Lego\Tests\Widget\Grid;
 
 use Illuminate\Support\HtmlString;
 use Lego\Widget\Grid\Cell;
@@ -31,5 +33,4 @@ class CellTest extends \Lego\Tests\TestCase
         $cell = (new Cell('name', 'Name'))->default('default')->fill([]);
         $this->assertEquals('default', $cell->value());
     }
-
 }

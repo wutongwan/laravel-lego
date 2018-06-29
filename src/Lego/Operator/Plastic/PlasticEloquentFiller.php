@@ -1,4 +1,6 @@
-<?php namespace Lego\Operator\Plastic;
+<?php
+
+namespace Lego\Operator\Plastic;
 
 use Illuminate\Database\Eloquent\Model;
 use Sleimanx2\Plastic\Fillers\FillerInterface;
@@ -12,12 +14,14 @@ class PlasticEloquentFiller implements FillerInterface
     public function select(array $columns)
     {
         $this->columns = $columns;
+
         return $this;
     }
 
     public function with(array $relations)
     {
         $this->with = $relations;
+
         return $this;
     }
 

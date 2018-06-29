@@ -1,4 +1,6 @@
-<?php namespace Lego\Tests\Field\Provider;
+<?php
+
+namespace Lego\Tests\Field\Provider;
 
 use Lego\Field\Provider\Checkboxes;
 use Lego\Tests\TestCase;

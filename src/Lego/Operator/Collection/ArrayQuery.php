@@ -1,4 +1,6 @@
-<?php namespace Lego\Operator\Collection;
+<?php
+
+namespace Lego\Operator\Collection;
 
 use Carbon\Carbon;
 use Illuminate\Contracts\Support\Arrayable;
@@ -9,11 +11,11 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Lego\Operator\Finder;
 use Lego\Operator\Query;
-use Lego\Operator\SuggestResult;
 use Lego\Operator\Store;
+use Lego\Operator\SuggestResult;
 
 /**
- * ArrayAble
+ * ArrayAble.
  */
 class ArrayQuery extends Query
 {
@@ -47,8 +49,10 @@ class ArrayQuery extends Query
 
     /**
      * 当前属性是否等于某值
+     *
      * @param $attribute
      * @param null $value
+     *
      * @return static
      */
     public function whereEquals($attribute, $value)
@@ -67,9 +71,11 @@ class ArrayQuery extends Query
 
     /**
      * 当前属性大于某值
+     *
      * @param $attribute
      * @param null $value
      * @param bool $equals 是否包含等于的情况, 默认不包含
+     *
      * @return static
      */
     public function whereGt($attribute, $value, bool $equals = false)
@@ -77,6 +83,7 @@ class ArrayQuery extends Query
         return $this->addFilter(
             function (Store $store) use ($attribute, $value, $equals) {
                 $current = $store->get($attribute);
+
                 return $current > $value || ($equals && $current == $value);
             }
         );
@@ -84,9 +91,11 @@ class ArrayQuery extends Query
 
     /**
      * 当前属性小于某值
+     *
      * @param $attribute
      * @param null $value
      * @param bool $equals 是否包含等于的情况, 默认不包含
+     *
      * @return static
      */
     public function whereLt($attribute, $value, bool $equals = false)
@@ -94,15 +103,18 @@ class ArrayQuery extends Query
         return $this->addFilter(
             function (Store $store) use ($attribute, $value, $equals) {
                 $current = $store->get($attribute);
+
                 return $current < $value || ($equals && $current == $value);
             }
         );
     }
 
     /**
-     * 当前属性包含特定字符串
+     * 当前属性包含特定字符串.
+     *
      * @param $attribute
      * @param string|null $value
+     *
      * @return static
      */
     public function whereContains($attribute, string $value)
@@ -113,9 +125,11 @@ class ArrayQuery extends Query
     }
 
     /**
-     * 当前属性以特定字符串开头
+     * 当前属性以特定字符串开头.
+     *
      * @param $attribute
      * @param string|null $value
+     *
      * @return static
      */
     public function whereStartsWith($attribute, string $value)
@@ -126,9 +140,11 @@ class ArrayQuery extends Query
     }
 
     /**
-     * 当前属性以特定字符串结尾
+     * 当前属性以特定字符串结尾.
+     *
      * @param $attribute
      * @param string|null $value
+     *
      * @return static
      */
     public function whereEndsWith($attribute, string $value)
@@ -139,10 +155,12 @@ class ArrayQuery extends Query
     }
 
     /**
-     * between, 两端开区间
+     * between, 两端开区间.
+     *
      * @param $attribute
      * @param null $min
      * @param null $max
+     *
      * @return static
      */
     public function whereBetween($attribute, $min, $max)
@@ -165,8 +183,10 @@ class ArrayQuery extends Query
     }
 
     /**
-     * 限制条数
+     * 限制条数.
+     *
      * @param $limit
+     *
      * @return static
      */
     public function limit($limit)
@@ -177,9 +197,11 @@ class ArrayQuery extends Query
     }
 
     /**
-     * order by
+     * order by.
+     *
      * @param $attribute
      * @param bool $desc 默认升序(false), 如需降序, 传入 true
+     *
      * @return static
      */
     public function orderBy($attribute, bool $desc = false)

@@ -21,7 +21,7 @@ class HtmlUtilityTest extends PHPUnit_Framework_TestCase
             [
                 [['a' => 'b'], ['a' => 'c']],
                 ['a' => 'b c'],
-                'a="b c"'
+                'a="b c"',
             ],
             [
                 [['a' => 'b'], ['c' => 'd']],
@@ -32,7 +32,7 @@ class HtmlUtilityTest extends PHPUnit_Framework_TestCase
                 [['a' => 'b'], []],
                 ['a' => 'b'],
                 'a="b"',
-            ]
+            ],
         ];
     }
 

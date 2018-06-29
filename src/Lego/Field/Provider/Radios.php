@@ -1,4 +1,6 @@
-<?php namespace Lego\Field\Provider;
+<?php
+
+namespace Lego\Field\Provider;
 
 use Lego\Field\Concerns\FilterWhereEquals;
 use Lego\Field\Concerns\HasOptions;
@@ -22,6 +24,7 @@ class Radios extends Text
     protected function renderReadonly()
     {
         $key = $this->takeShowValue();
+
         return isset($this->options[$key]) ? $this->options[$key] : $key;
     }
 

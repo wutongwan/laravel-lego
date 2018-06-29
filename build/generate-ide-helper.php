@@ -48,21 +48,20 @@ function insertDocsToClass($class, $docs)
     file_put_contents($filename, str_replace(' * @lego-ide-helper', $docs, file_get_contents($filename)));
 }
 
-
 class Method
 {
     public $name;
     public $return;
     public $arguments;
 
-    function __construct($name, $return, $arguments = null)
+    public function __construct($name, $return, $arguments = null)
     {
         $this->name = $name;
         $this->return = $return;
         $this->arguments = $arguments;
     }
 
-    function __toString()
+    public function __toString()
     {
         return " * @method \\{$this->return} {$this->name}({$this->arguments})";
     }

@@ -1,9 +1,12 @@
-<?php namespace Lego\Register;
+<?php
+
+namespace Lego\Register;
 
 class FieldData extends Data
 {
     /**
-     * 校验注册的数据是否合法, 不合法时抛出异常
+     * 校验注册的数据是否合法, 不合法时抛出异常.
+     *
      * @param $data
      */
     protected function validate($data)

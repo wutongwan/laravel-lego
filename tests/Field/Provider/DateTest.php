@@ -1,4 +1,6 @@
-<?php namespace Lego\Tests\Field\Provider;
+<?php
+
+namespace Lego\Tests\Field\Provider;
 
 use Illuminate\Support\Facades\Config;
 use Lego\Field\Provider\Datetime;

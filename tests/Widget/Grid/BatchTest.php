@@ -1,4 +1,6 @@
-<?php namespace Lego\Tests\Widget\Grid;
+<?php
+
+namespace Lego\Tests\Widget\Grid;
 
 use Lego\Tests\Models\ExampleModel;
 use Lego\Tests\TestCase;

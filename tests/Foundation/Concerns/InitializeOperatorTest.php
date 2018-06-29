@@ -1,4 +1,6 @@
-<?php namespace Lego\Tests\Foundation\Concerns;
+<?php
+
+namespace Lego\Tests\Foundation\Concerns;
 
 use Lego\Foundation\Concerns\InitializeOperator;
 use Lego\Tests\TestCase;
@@ -26,7 +28,7 @@ class ClassUsedInitializeOperator
 
     protected $timer = 0;
 
-    function __construct()
+    public function __construct()
     {
         $this->triggerInitialize();
     }

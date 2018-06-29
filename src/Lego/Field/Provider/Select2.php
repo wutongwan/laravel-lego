@@ -1,9 +1,11 @@
-<?php namespace Lego\Field\Provider;
+<?php
+
+namespace Lego\Field\Provider;
 
 use Lego\Field\Concerns\HasSelect2Assets;
 
 /**
- * Select2 - The jQuery replacement for select boxes
+ * Select2 - The jQuery replacement for select boxes.
  */
 class Select2 extends Select
 {

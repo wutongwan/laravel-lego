@@ -1,9 +1,11 @@
-<?php namespace Lego\Field\Concerns;
+<?php
+
+namespace Lego\Field\Concerns;
 
 use Lego\Field\FieldContainer;
 
 /**
- * Field 的上一层元素，Bootstrap form 中的 .form-group
+ * Field 的上一层元素，Bootstrap form 中的 .form-group.
  */
 trait HasFieldContainer
 {

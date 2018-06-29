@@ -1,4 +1,6 @@
-<?php namespace Lego\Widget;
+<?php
+
+namespace Lego\Widget;
 
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Traits\Macroable;
@@ -7,7 +9,7 @@ use Lego\Register\HighPriorityResponse;
 use Lego\Widget\Concerns\ButtonLocations;
 
 /**
- * Lego中所有大型控件的基类
+ * Lego中所有大型控件的基类.
  */
 abstract class Widget implements ButtonLocations, \JsonSerializable
 {
@@ -21,7 +23,8 @@ abstract class Widget implements ButtonLocations, \JsonSerializable
         Concerns\Operable;
 
     /**
-     * 控件 unique id ，注意：此 id 无法跨请求使用，每次请求都会重新生成
+     * 控件 unique id ，注意：此 id 无法跨请求使用，每次请求都会重新生成.
+     *
      * @var string
      */
     protected $uniqueId;
@@ -41,7 +44,7 @@ abstract class Widget implements ButtonLocations, \JsonSerializable
     }
 
     /**
-     * 初始化 Operator 之前，对 $data 进行修正的工具函数
+     * 初始化 Operator 之前，对 $data 进行修正的工具函数.
      */
     protected function transformer($data)
     {
@@ -59,7 +62,7 @@ abstract class Widget implements ButtonLocations, \JsonSerializable
     }
 
     /**
-     * 默认四个方位可以插入按钮，特殊需求请重写此函数
+     * 默认四个方位可以插入按钮，特殊需求请重写此函数.
      *
      * @return array
      */
@@ -74,11 +77,12 @@ abstract class Widget implements ButtonLocations, \JsonSerializable
     }
 
     /**
-     * 对 view() 的封装
+     * 对 view() 的封装.
      *
      * @param $view
      * @param array $data
      * @param array $mergeData
+     *
      * @return mixed
      */
     public function view($view, $data = [], $mergeData = [])
@@ -87,14 +91,15 @@ abstract class Widget implements ButtonLocations, \JsonSerializable
     }
 
     /**
-     * 响应内容
+     * 响应内容.
      */
     private $response;
 
     /**
-     * 重写此次请求的 Response
+     * 重写此次请求的 Response.
      *
      * @param \Closure|string $response
+     *
      * @return $this
      */
     protected function rewriteResponse($response)
@@ -105,9 +110,10 @@ abstract class Widget implements ButtonLocations, \JsonSerializable
     }
 
     /**
-     * Response 的封装
+     * Response 的封装.
      *
      * @param mixed $response
+     *
      * @return mixed
      */
     final public function response($response)
@@ -122,7 +128,7 @@ abstract class Widget implements ButtonLocations, \JsonSerializable
 
         $this->processOnce();
 
-        /**
+        /*
          * if rewriteResponse() called
          */
         if (!is_null($this->response)) {
@@ -144,7 +150,7 @@ abstract class Widget implements ButtonLocations, \JsonSerializable
     }
 
     /**
-     * Widget 的所有数据处理都放在此函数中, 渲染 view 前调用
+     * Widget 的所有数据处理都放在此函数中, 渲染 view 前调用.
      */
     abstract public function process();
 
@@ -152,10 +158,10 @@ abstract class Widget implements ButtonLocations, \JsonSerializable
     {
         return [
             'element_id' => $this->uniqueId(),
-            'buttons' => $this->buttons,
-            'messages' => $this->messages,
-            'errors' => $this->errors,
-            'extra' => $this->extra,
+            'buttons'    => $this->buttons,
+            'messages'   => $this->messages,
+            'errors'     => $this->errors,
+            'extra'      => $this->extra,
         ];
     }
 }

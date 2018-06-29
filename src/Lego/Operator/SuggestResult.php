@@ -1,4 +1,6 @@
-<?php namespace Lego\Operator;
+<?php
+
+namespace Lego\Operator;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr;
@@ -10,6 +12,7 @@ class SuggestResult implements Arrayable, \JsonSerializable
 
     /**
      * SuggestResult constructor.
+     *
      * @param array $items eg: [  ]
      * @param $totalCount
      */
@@ -45,7 +48,7 @@ class SuggestResult implements Arrayable, \JsonSerializable
     {
         return [
             'total_count' => $this->totalCount,
-            'items' => $this->items,
+            'items'       => $this->items,
         ];
     }
 

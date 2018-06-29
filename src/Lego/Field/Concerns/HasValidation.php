@@ -1,4 +1,6 @@
-<?php namespace Lego\Field\Concerns;
+<?php
+
+namespace Lego\Field\Concerns;
 
 use Illuminate\Support\Facades\Validator;
 use Lego\Field\Field;
@@ -10,7 +12,7 @@ trait HasValidation
 {
     /**
      * 改 Field 所有 Validation
-     * eg: ['required', 'email']
+     * eg: ['required', 'email'].
      */
     protected $rules = [];
     protected $discardedRules = [];
@@ -30,11 +32,12 @@ trait HasValidation
             foreach (explode('|', $rule) as $item) {
                 $this->rule($item);
             }
+
             return $this;
         }
 
         if (!in_array($rule, $this->rules) && !in_array($rule, $this->discardedRules)) {
-            $this->rules [] = $rule;
+            $this->rules[] = $rule;
         }
 
         return $this;
@@ -51,9 +54,10 @@ trait HasValidation
     }
 
     /**
-     * 设置此字段为必填
+     * 设置此字段为必填.
      *
      * @param bool $condition
+     *
      * @return static
      */
     public function required($condition = true)
@@ -67,15 +71,18 @@ trait HasValidation
     }
 
     /**
-     * 自定义的 validator closure
+     * 自定义的 validator closure.
+     *
      * @var \Closure[]
      */
     protected $validators = [];
 
     /**
      * 对 input 值的自定义校验，支持调用多次
+     *
      * @param string|\Closure $validator
-     * @param bool $condition
+     * @param bool            $condition
+     *
      * @return $this
      */
     public function validator($validator, $condition = true)
@@ -94,7 +101,7 @@ trait HasValidation
     }
 
     /**
-     * 验证当前值是否符合 rules
+     * 验证当前值是否符合 rules.
      *
      * 验证失败时, 报错信息会写到 $this->errors
      *
@@ -115,11 +122,11 @@ trait HasValidation
 
         /**
          * Run Laravel Validation
-         * ide-helper comment
-         * @var Field $this
+         * ide-helper comment.
+         *
+         * @var Field
          * @var \Illuminate\Validation\Validator $validator
          */
-
         $validator = Validator::make(
             $data ?: [$this->elementName() => $value],
             [$this->elementName() => $this->rules()],
@@ -127,9 +134,9 @@ trait HasValidation
             [$this->elementName() => $this->description()]
         );
 
-
         if ($validator->fails()) {
             $this->errors()->merge($validator->messages());
+
             return false;
         }
 
@@ -138,6 +145,7 @@ trait HasValidation
             $error = call_user_func($closure, $value);
             if (is_string($error)) {
                 $this->errors()->add('error', $error);
+
                 return false;
             }
         }
@@ -146,7 +154,7 @@ trait HasValidation
     }
 
     /**
-     * Laravel Validation unique
+     * Laravel Validation unique.
      *
      * Auto except current model
      *
@@ -162,8 +170,8 @@ trait HasValidation
         }
 
         /**
-         * @var \Illuminate\Database\Eloquent\Model $model
-         * @var Field $this
+         * @var \Illuminate\Database\Eloquent\Model
+         * @var Field                               $this
          */
         $model = $this->data;
 
@@ -174,11 +182,11 @@ trait HasValidation
             "unique:{$model->getConnectionName()}.{$model->getTable()}",
             $this->column(),
             $id,
-            $idColumn
+            $idColumn,
         ];
 
         if ($extra) {
-            $parts [] = trim($extra, ',');
+            $parts[] = trim($extra, ',');
         }
 
         $this->rule(join(',', $parts));

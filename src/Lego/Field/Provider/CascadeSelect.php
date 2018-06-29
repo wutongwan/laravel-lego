@@ -1,4 +1,6 @@
-<?php namespace Lego\Field\Provider;
+<?php
+
+namespace Lego\Field\Provider;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Request;
@@ -26,6 +28,7 @@ class CascadeSelect extends Select
             HighPriorityResponse::class,
             function () {
                 $depend = Request::query(CascadeSelect::DEPEND_QUERY_KEY);
+
                 return $this->getOptionsFromMatch($depend);
             },
             md5($this->name())
@@ -38,6 +41,7 @@ class CascadeSelect extends Select
     private function getOptionsFromMatch($depend)
     {
         $options = call_user_func_array($this->match, [$depend]);
+
         return (new Collection($options))->toArray();
     }
 
@@ -58,11 +62,11 @@ class CascadeSelect extends Select
         }
 
         return [
-            'id' => $this->elementId(),
+            'id'       => $this->elementId(),
             'selected' => $this->takeInputValue(),
-            'options' => $this->getOptions(),
-            'depend' => $this->getDependField()->elementId(),
-            'remote' => $this->getRemote(),
+            'options'  => $this->getOptions(),
+            'depend'   => $this->getDependField()->elementId(),
+            'remote'   => $this->getRemote(),
         ];
     }
 
