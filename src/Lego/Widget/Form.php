@@ -1,4 +1,6 @@
-<?php namespace Lego\Widget;
+<?php
+
+namespace Lego\Widget;
 
 use Illuminate\Support\Facades\Request;
 use Lego\Field\Field;
@@ -7,9 +9,9 @@ use Lego\Foundation\Concerns\ModeOperator;
 use Lego\Register\HighPriorityResponse;
 
 /**
- * Class Form
+ * Class Form.
+ *
  * @lego-ide-helper
- * @package Lego\Widget
  */
 class Form extends Widget implements HasMode
 {
@@ -22,18 +24,20 @@ class Form extends Widget implements HasMode
     protected $action;
 
     /**
-     * 此属性设置后将不再调用默认的数据处理逻辑
+     * 此属性设置后将不再调用默认的数据处理逻辑.
+     *
      * @var \Closure
      */
     protected $submit;
 
     /**
-     * 成功后的回调、跳转链接、任意 Response 内容
+     * 成功后的回调、跳转链接、任意 Response 内容.
      */
     protected $success;
 
     /**
-     * 请求方式
+     * 请求方式.
+     *
      * @var string
      */
     protected $method = 'POST';
@@ -65,8 +69,10 @@ class Form extends Widget implements HasMode
     }
 
     /**
-     * 保存成功后的 Response
+     * 保存成功后的 Response.
+     *
      * @param \Closure|string $success 回调 or 跳转链接
+     *
      * @return static
      */
     public function success($success)
@@ -95,14 +101,16 @@ class Form extends Widget implements HasMode
     }
 
     /**
-     * 通过此函数传入数据处理逻辑，使用此函数后，将不再调用默认的数据处理逻辑（保存到 Model）
+     * 通过此函数传入数据处理逻辑，使用此函数后，将不再调用默认的数据处理逻辑（保存到 Model）.
      *
      * @param \Closure $closure
+     *
      * @return $this
      */
     public function onSubmit(\Closure $closure)
     {
         $this->submit = $closure;
+
         return $this;
     }
 
@@ -122,7 +130,7 @@ class Form extends Widget implements HasMode
             }
         });
 
-        /**
+        /*
          * 下面处理 POST 请求
          */
         if ($this->isPost() && $this->isEditable() && $this->shouldAction()) {
@@ -140,6 +148,7 @@ class Form extends Widget implements HasMode
             if ($this->submit && $response = call_user_func($this->submit, $this)) {
                 $this->success($response);
                 $this->returnSuccessResponse();
+
                 return;
             }
 
@@ -170,6 +179,7 @@ class Form extends Widget implements HasMode
         if ($this->getStore()->save()) {
             $this->syncFieldsValueFromStore();
             $this->events->fire('saved', [$this->data, $this]);
+
             return true;
         }
 
@@ -182,7 +192,7 @@ class Form extends Widget implements HasMode
     }
 
     /**
-     * Sync field's original from createStore
+     * Sync field's original from createStore.
      */
     protected function syncFieldsValueFromStore()
     {
@@ -192,7 +202,7 @@ class Form extends Widget implements HasMode
     }
 
     /**
-     * 数据处理成功后的回调
+     * 数据处理成功后的回调.
      */
     protected function returnSuccessResponse()
     {
@@ -213,8 +223,10 @@ class Form extends Widget implements HasMode
 
     /**
      * 渲染当前对象
-     * @return string
+     *
      * @throws \Throwable
+     *
+     * @return string
      */
     public function render()
     {

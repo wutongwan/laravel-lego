@@ -1,12 +1,14 @@
-<?php namespace Lego;
+<?php
+
+namespace Lego;
 
 use Illuminate\Support\ServiceProvider;
 use Lego\Commands\GenerateIDEHelper;
-use Lego\Foundation\Assets;
 use Lego\Field\FieldLoader;
+use Lego\Foundation\Assets;
 
 /**
- * Lego Service Provider for Laravel
+ * Lego Service Provider for Laravel.
  */
 class LegoServiceProvider extends ServiceProvider
 {

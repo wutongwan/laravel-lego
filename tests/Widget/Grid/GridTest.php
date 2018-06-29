@@ -1,4 +1,6 @@
-<?php namespace Lego\Tests\Widget\Grid;
+<?php
+
+namespace Lego\Tests\Widget\Grid;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
@@ -52,6 +54,7 @@ class GridTest extends TestCase
         $grid->add('user', 'User Name');
         $grid->add('city', 'City');
         $grid->add('address', 'Address');
+
         return $grid;
     }
 
@@ -61,11 +64,12 @@ class GridTest extends TestCase
         $faker = $this->faker();
         for ($i = 0; $i < $length; $i++) {
             $array[] = [
-                'user' => $faker->userName,
-                'city' => $faker->city,
+                'user'    => $faker->userName,
+                'city'    => $faker->city,
                 'address' => $faker->address,
             ];
         }
+
         return $array;
     }
 
@@ -120,6 +124,7 @@ class GridTest extends TestCase
         ]);
         $grid->add('a', 'A');
         $grid->add('id', 'ID');
+
         return $grid;
     }
 

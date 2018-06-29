@@ -1,4 +1,6 @@
-<?php namespace Lego\Widget\Concerns;
+<?php
+
+namespace Lego\Widget\Concerns;
 
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Support\Facades\Request;
@@ -6,31 +8,36 @@ use Illuminate\Support\Facades\Request;
 trait HasPagination
 {
     /**
-     * 是否有启用分页器
+     * 是否有启用分页器.
+     *
      * @var bool
      */
     protected $paginatorEnabled = false;
 
     /**
-     * 分页器实例
+     * 分页器实例.
+     *
      * @var AbstractPaginator
      */
     protected $paginator;
 
     /**
-     * how many rows per page
+     * how many rows per page.
+     *
      * @var int
      */
     protected $paginatorPerPage = 100;
 
     /**
-     * 分页器 GET 参数，eg：page
+     * 分页器 GET 参数，eg：page.
+     *
      * @var string
      */
     protected $paginatorPageName = 'page';
 
     /**
-     * 分页器是否需要查询总条数
+     * 分页器是否需要查询总条数.
+     *
      * @var bool
      */
     protected $paginatorLengthAware = true;
@@ -72,7 +79,7 @@ trait HasPagination
     }
 
     /**
-     * 是否启用分页器
+     * 是否启用分页器.
      */
     public function isPaginatorEnabled()
     {
@@ -90,7 +97,8 @@ trait HasPagination
     }
 
     /**
-     * 每页条数
+     * 每页条数.
+     *
      * @return int
      */
     public function getPaginatorPerPage()

@@ -1,4 +1,6 @@
-<?php namespace Lego\Field\Provider;
+<?php
+
+namespace Lego\Field\Provider;
 
 class Time extends Datetime
 {

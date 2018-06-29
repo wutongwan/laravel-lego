@@ -1,15 +1,19 @@
-<?php namespace Lego\Register;
+<?php
+
+namespace Lego\Register;
 
 abstract class Data
 {
     /**
-     * 注册数据的分类、标记等等
+     * 注册数据的分类、标记等等.
+     *
      * @var string|null
      */
     protected $tag;
 
     /**
-     * 注册的数据
+     * 注册的数据.
+     *
      * @var array
      */
     protected $data;
@@ -28,13 +32,14 @@ abstract class Data
     }
 
     /**
-     * 校验注册的数据是否合法, 不合法时抛出异常
+     * 校验注册的数据是否合法, 不合法时抛出异常.
+     *
      * @param $data
      */
     abstract protected function validate($data);
 
     /**
-     * 注册完成后的回调
+     * 注册完成后的回调.
      */
     public function afterRegistered()
     {

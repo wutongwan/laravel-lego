@@ -1,4 +1,6 @@
-<?php namespace Lego\Operator;
+<?php
+
+namespace Lego\Operator;
 
 use Illuminate\Support\Facades\Config;
 use Lego\Foundation\Exceptions\LegoException;
@@ -68,18 +70,20 @@ class Finder
     public static function instance()
     {
         if (!self::$instance) {
-            self::$instance = new static;
+            self::$instance = new static();
         }
 
         return self::$instance;
     }
 
     /**
-     * OutgoingQuery Operator finder
+     * OutgoingQuery Operator finder.
      *
      * @param $data
-     * @return \Lego\Operator\Query
+     *
      * @throws LegoException
+     *
+     * @return \Lego\Operator\Query
      */
     public static function createQuery($data)
     {
@@ -87,11 +91,13 @@ class Finder
     }
 
     /**
-     * Store Operator finder
+     * Store Operator finder.
      *
      * @param $data
-     * @return \Lego\Operator\Store
+     *
      * @throws LegoException
+     *
+     * @return \Lego\Operator\Store
      */
     public static function createStore($data)
     {

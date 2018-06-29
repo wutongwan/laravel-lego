@@ -1,4 +1,6 @@
-<?php namespace Lego\Tests\Operator;
+<?php
+
+namespace Lego\Tests\Operator;
 
 use Lego\Operator\Eloquent\EloquentQuery;
 use Lego\Tests\Models\ExampleModel;

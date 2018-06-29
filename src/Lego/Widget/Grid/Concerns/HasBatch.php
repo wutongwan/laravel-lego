@@ -1,4 +1,6 @@
-<?php namespace Lego\Widget\Grid\Concerns;
+<?php
+
+namespace Lego\Widget\Grid\Concerns;
 
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
@@ -27,11 +29,13 @@ trait HasBatch
         if ($this->batchModeEnabled()) {
             $this->addButton(self::BTN_LEFT_TOP, '退出批处理', function () {
                 $this->disableBatchMode();
+
                 return Redirect::back();
             });
         } else {
             $this->addButton(self::BTN_LEFT_TOP, '批处理模式', function () {
                 $this->enableBatchMode();
+
                 return Redirect::back();
             });
         }
@@ -50,6 +54,7 @@ trait HasBatch
         foreach ($this->batches as $batch) {
             $array[$batch->name()] = $batch->toArray();
         }
+
         return $array;
     }
 
@@ -78,19 +83,22 @@ trait HasBatch
     }
 
     /**
-     * 设置每条数据的标记字段名
+     * 设置每条数据的标记字段名.
      *
      * @param string $keyName
+     *
      * @return $this
      */
     public function setBatchIdName(string $keyName)
     {
         $this->batchIdName = $keyName;
+
         return $this;
     }
 
     /**
-     * 每条数据的标记字段名
+     * 每条数据的标记字段名.
+     *
      * @return string
      */
     public function getBatchIdName()
@@ -99,7 +107,7 @@ trait HasBatch
     }
 
     /**
-     * 获取批处理 id 列表
+     * 获取批处理 id 列表.
      *
      * @return array
      */
@@ -109,10 +117,9 @@ trait HasBatch
 
         /** @var Store $store */
         foreach ($this->paginator() as $store) {
-            $ids[]= $store->get($this->batchIdName);
+            $ids[] = $store->get($this->batchIdName);
         }
 
         return $ids;
     }
-
 }

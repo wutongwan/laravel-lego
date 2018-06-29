@@ -1,4 +1,6 @@
-<?php namespace Lego\Foundation;
+<?php
+
+namespace Lego\Foundation;
 
 use Collective\Html\HtmlFacade;
 use Illuminate\Support\Facades\View;
@@ -10,24 +12,25 @@ use Lego\Register\HighPriorityResponse;
 class Button implements \JsonSerializable
 {
     /**
-     * button link
+     * button link.
      */
     protected $url;
 
     /**
-     * button text
+     * button text.
      */
     protected $text;
 
     /**
-     * button id
+     * button id.
      */
     protected $id;
 
     protected $attributes = [];
 
     /**
-     * 防止重复点击
+     * 防止重复点击.
+     *
      * @var bool
      */
     protected $preventRepeatClick = false;
@@ -47,6 +50,7 @@ class Button implements \JsonSerializable
     public function text($text)
     {
         $this->text = $text;
+
         return $this;
     }
 
@@ -58,6 +62,7 @@ class Button implements \JsonSerializable
     public function url($url)
     {
         $this->url = $url;
+
         return $this;
     }
 
@@ -77,17 +82,19 @@ class Button implements \JsonSerializable
     }
 
     /**
-     * set html attribute
+     * set html attribute.
      *
      * @param $name
      * @param $value
      * @param bool $merge if true, new `value` will be merge to current `value`
+     *
      * @return $this
      */
     public function attribute($name, $value, $merge = true)
     {
         if (!$merge) {
             $this->attributes[$name] = $value;
+
             return $this;
         }
 
@@ -100,6 +107,7 @@ class Button implements \JsonSerializable
             $current = $value;
         }
         $this->attributes[$name] = $current;
+
         return $this;
     }
 
@@ -129,11 +137,11 @@ class Button implements \JsonSerializable
     public function action(\Closure $action)
     {
         $resp = lego_register(HighPriorityResponse::class, $action, md5('button ' . $this->text));
+
         return $this->url($resp->url());
     }
 
     /** BootStrap Helpers */
-
     public function bootstrapStyle($style)
     {
         $styles = ['default', 'primary', 'info', 'warning', 'danger'];
@@ -146,6 +154,7 @@ class Button implements \JsonSerializable
 
     /**
      * @param null|string $size if null, clear btn-*size* styles
+     *
      * @return Button
      */
     public function bootstrapSize($size = null)
@@ -159,14 +168,16 @@ class Button implements \JsonSerializable
     }
 
     /**
-     * 防止重复点击
+     * 防止重复点击.
      *
      * @param bool $condition
+     *
      * @return $this
      */
     public function preventRepeatClick(bool $condition = true)
     {
         $this->preventRepeatClick = $condition;
+
         return $this;
     }
 
@@ -183,6 +194,7 @@ class Button implements \JsonSerializable
 
         /** @var \Illuminate\Contracts\View\View $view */
         $view = View::make('lego::default.button', ['button' => $this, 'attributes' => $attributes]);
+
         return $view->render();
     }
 
@@ -199,9 +211,9 @@ class Button implements \JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'id' => $this->id,
-            'url' => $this->url,
-            'text' => $this->text,
+            'id'         => $this->id,
+            'url'        => $this->url,
+            'text'       => $this->text,
             'attributes' => $this->getFlattenAttributes(),
         ];
     }

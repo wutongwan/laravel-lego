@@ -1,4 +1,6 @@
-<?php namespace Lego\Tests\Widget\Grid;
+<?php
+
+namespace Lego\Tests\Widget\Grid;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
@@ -47,6 +49,7 @@ class PipeTest extends TestCase
     public function builtInPipesDataProvider()
     {
         Carbon::setTestNow('2017-03-08 01:02:03');
+
         return [
             ['trim', ' 123 ', '123'],
             ['trim', ' 123', '123'],
@@ -84,10 +87,12 @@ class PipeTest extends TestCase
             ->pipe('trim')
             ->pipe(function ($value) {
                 $this->assertEquals('1', $value);
+
                 return $value * 2;
             })
             ->pipe(function ($value) {
                 $this->assertEquals(2, $value);
+
                 return $value + 19;
             });
 

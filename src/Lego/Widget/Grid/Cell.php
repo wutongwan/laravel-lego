@@ -1,4 +1,6 @@
-<?php namespace Lego\Widget\Grid;
+<?php
+
+namespace Lego\Widget\Grid;
 
 use Illuminate\Support\HtmlString;
 use Lego\Foundation\Exceptions\LegoException;
@@ -46,19 +48,22 @@ class Cell
     public function default($value)
     {
         $this->default = $value;
+
         return $this;
     }
 
     /**
-     * 修正函数，对现有值进行一定的修正
+     * 修正函数，对现有值进行一定的修正.
      *
      * $callable 可以接受两个参数
      *  - 当前值
      *  - 当前值所属的对象（ Model ）
      *
      * @param callable|string $pipe
-     * @return $this
+     *
      * @throws LegoException
+     *
+     * @return $this
      */
     public function pipe($pipe)
     {
@@ -96,7 +101,7 @@ class Cell
     }
 
     /**
-     * cell original value before pipes is called
+     * cell original value before pipes is called.
      *
      * @return string
      */
@@ -111,7 +116,7 @@ class Cell
     }
 
     /**
-     * cell value after pipes processed
+     * cell value after pipes processed.
      *
      * @return HtmlString
      */
@@ -121,11 +126,12 @@ class Cell
         foreach ($this->pipes as $pipe) {
             $value = $pipe->handle($value, $this->data, $this);
         }
-        return new HtmlString((string)$value);
+
+        return new HtmlString((string) $value);
     }
 
     /**
-     * cell plain value after pipes processed
+     * cell plain value after pipes processed.
      *
      * @return string
      */

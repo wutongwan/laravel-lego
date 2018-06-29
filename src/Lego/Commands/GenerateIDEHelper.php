@@ -1,15 +1,16 @@
-<?php namespace Lego\Commands;
+<?php
+
+namespace Lego\Commands;
 
 use Illuminate\Console\Command;
 use Lego\Register\UserDefinedField;
 
 /**
- * 生成 Lego 的 IDE Helper 文件
+ * 生成 Lego 的 IDE Helper 文件.
  *
  * inspired by https://github.com/barryvdh/laravel-ide-helper
  *
  * Class GenerateIDEHelper
- * @package Lego\Command
  */
 class GenerateIDEHelper extends Command
 {
@@ -27,6 +28,7 @@ class GenerateIDEHelper extends Command
             if (is_file($path)) {
                 unlink($path);
             }
+
             return;
         }
 

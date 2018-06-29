@@ -1,7 +1,9 @@
-<?php namespace Lego\Widget\Concerns;
+<?php
+
+namespace Lego\Widget\Concerns;
 
 /**
- * 常用的 Button Location
+ * 常用的 Button Location.
  */
 interface ButtonLocations
 {

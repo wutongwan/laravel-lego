@@ -1,4 +1,6 @@
-<?php namespace Lego\Foundation;
+<?php
+
+namespace Lego\Foundation;
 
 use Illuminate\Support\Collection;
 use Lego\Field\Field;

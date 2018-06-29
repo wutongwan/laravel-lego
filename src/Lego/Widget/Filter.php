@@ -1,12 +1,14 @@
-<?php namespace Lego\Widget;
+<?php
+
+namespace Lego\Widget;
 
 use Lego\Field\Field;
 use Lego\Widget\Grid\Grid;
 
 /**
- * Class Filter
+ * Class Filter.
+ *
  * @lego-ide-helper
- * @package Lego\Widget
  */
 class Filter extends Widget
 {
@@ -24,6 +26,7 @@ class Filter extends Widget
 
     /**
      * 渲染当前对象
+     *
      * @return string
      */
     public function render()
@@ -37,7 +40,7 @@ class Filter extends Widget
     }
 
     /**
-     * Widget 的所有数据处理都放在此函数中, 渲染 view 前调用
+     * Widget 的所有数据处理都放在此函数中, 渲染 view 前调用.
      */
     public function process()
     {

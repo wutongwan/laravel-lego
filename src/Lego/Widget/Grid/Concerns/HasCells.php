@@ -1,4 +1,6 @@
-<?php namespace Lego\Widget\Grid\Concerns;
+<?php
+
+namespace Lego\Widget\Grid\Concerns;
 
 use Lego\Foundation\Exceptions\LegoException;
 use Lego\Widget\Grid\Cell;
@@ -22,6 +24,7 @@ trait HasCells
         } else {
             $this->cells[$name] = $cell;
         }
+
         return $cell;
     }
 
@@ -46,7 +49,7 @@ trait HasCells
     }
 
     /**
-     * remove cell from grid
+     * remove cell from grid.
      */
     public function remove($names)
     {

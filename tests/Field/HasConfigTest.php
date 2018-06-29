@@ -1,4 +1,6 @@
-<?php namespace Lego\Tests\Field;
+<?php
+
+namespace Lego\Tests\Field;
 
 use Illuminate\Support\Facades\Config;
 use Lego\Field\Provider\Text;

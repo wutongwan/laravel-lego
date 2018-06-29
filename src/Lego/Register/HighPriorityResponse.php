@@ -1,4 +1,6 @@
-<?php namespace Lego\Register;
+<?php
+
+namespace Lego\Register;
 
 use Illuminate\Support\Facades\Request;
 use Lego\Foundation\Exceptions\InvalidRegisterData;
@@ -44,6 +46,7 @@ class HighPriorityResponse extends Data
         }
 
         self::$current = self::$current ? (self::$current . '.' . $step) : $step;
+
         return call_user_func($data);
     }
 

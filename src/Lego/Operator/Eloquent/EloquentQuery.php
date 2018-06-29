@@ -1,4 +1,6 @@
-<?php namespace Lego\Operator\Eloquent;
+<?php
+
+namespace Lego\Operator\Eloquent;
 
 use Illuminate\Database\Eloquent\Builder as EloquentQueryBuilder;
 use Illuminate\Database\Eloquent\Model;
@@ -9,7 +11,7 @@ use Lego\Operator\Query;
 use Lego\Operator\SuggestResult;
 
 /**
- * Laravel ORM : Eloquent
+ * Laravel ORM : Eloquent.
  *
  * @property QueryBuilder|EloquentQueryBuilder $data
  */
@@ -23,7 +25,8 @@ class EloquentQuery extends Query
             // eg: School::class
             case is_string($data) && is_subclass_of($data, Model::class):
                 /** @var Model $model */
-                $model = new $data;
+                $model = new $data();
+
                 return new self($model->newQuery());
 
             case $data instanceof Model:
@@ -43,21 +46,25 @@ class EloquentQuery extends Query
     }
 
     /**
-     * Query with eager loading
+     * Query with eager loading.
      *
      * @param array $relations
+     *
      * @return static
      */
     public function with(array $relations)
     {
         $this->data->with($relations);
+
         return $this;
     }
 
     /**
      * 当前属性是否等于某值
+     *
      * @param $attribute
      * @param $value
+     *
      * @return static
      */
     public function whereEquals($attribute, $value)
@@ -73,12 +80,13 @@ class EloquentQuery extends Query
         // simple where
         if (!$relation) {
             $this->addWhere($this->data, $queryColumn, $operator, $value);
+
             return $this;
         }
 
         // whereHas
         $this->data->whereHas(join('.', $relation), function ($query) use ($queryColumn, $operator, $value) {
-            /** @var QueryBuilder $query */
+            /* @var QueryBuilder $query */
             return $this->addWhere($query, $queryColumn, $operator, $value);
         });
 
@@ -90,6 +98,7 @@ class EloquentQuery extends Query
      * @param $column
      * @param $operator
      * @param $value
+     *
      * @return QueryBuilder
      */
     protected function addWhere($query, $column, $operator, $value)
@@ -108,9 +117,11 @@ class EloquentQuery extends Query
 
     /**
      * 当前属性大于某值
+     *
      * @param $attribute
      * @param $value
      * @param bool $equals 是否包含等于的情况, 默认不包含
+     *
      * @return static
      */
     public function whereGt($attribute, $value, bool $equals = false)
@@ -120,9 +131,11 @@ class EloquentQuery extends Query
 
     /**
      * 当前属性小于某值
+     *
      * @param $attribute
      * @param null $value
      * @param bool $equals 是否包含等于的情况, 默认不包含
+     *
      * @return static
      */
     public function whereLt($attribute, $value, bool $equals = false)
@@ -131,9 +144,11 @@ class EloquentQuery extends Query
     }
 
     /**
-     * 当前属性包含特定字符串
+     * 当前属性包含特定字符串.
+     *
      * @param $attribute
      * @param string $value
+     *
      * @return static
      */
     public function whereContains($attribute, string $value)
@@ -142,9 +157,11 @@ class EloquentQuery extends Query
     }
 
     /**
-     * 当前属性以特定字符串开头
+     * 当前属性以特定字符串开头.
+     *
      * @param $attribute
      * @param string|null $value
+     *
      * @return static
      */
     public function whereStartsWith($attribute, string $value)
@@ -153,9 +170,11 @@ class EloquentQuery extends Query
     }
 
     /**
-     * 当前属性以特定字符串结尾
+     * 当前属性以特定字符串结尾.
+     *
      * @param $attribute
      * @param string|null $value
+     *
      * @return static
      */
     public function whereEndsWith($attribute, string $value)
@@ -173,10 +192,12 @@ class EloquentQuery extends Query
     }
 
     /**
-     * between, 两端开区间
+     * between, 两端开区间.
+     *
      * @param $attribute
      * @param null $min
      * @param null $max
+     *
      * @return static
      */
     public function whereBetween($attribute, $min, $max)
@@ -226,9 +247,11 @@ class EloquentQuery extends Query
     }
 
     /**
-     * order by
+     * order by.
+     *
      * @param $attribute
      * @param bool $desc 默认升序(false), 如需降序, 传入 true
+     *
      * @return static
      */
     public function orderBy($attribute, bool $desc = false)

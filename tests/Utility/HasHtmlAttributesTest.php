@@ -1,8 +1,9 @@
-<?php namespace Lego\Tests\Utility;
+<?php
+
+namespace Lego\Tests\Utility;
 
 use Illuminate\Support\HtmlString;
 use Lego\Tests\TestCase;
-use Lego\Foundation\Concerns\HasHtmlAttributes;
 
 class HasHtmlAttributesTest extends TestCase
 {
@@ -37,7 +38,6 @@ class HasHtmlAttributesTest extends TestCase
         self::assertSame('0', $eg->getAttributeString('zero'));
     }
 }
-
 
 class ExampleUsedHasHtmlAttributes
 {

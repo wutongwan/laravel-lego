@@ -1,4 +1,6 @@
-<?php namespace Lego\Operator\Outgoing;
+<?php
+
+namespace Lego\Operator\Outgoing;
 
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
@@ -23,8 +25,8 @@ class OutgoingQuery extends \Lego\Operator\Query
     {
         $this->wheres[] = [
             'attribute' => $attribute,
-            'operator' => $operator,
-            'value' => $value,
+            'operator'  => $operator,
+            'value'     => $value,
         ];
 
         return $this;
@@ -82,18 +84,22 @@ class OutgoingQuery extends \Lego\Operator\Query
     public function limit($limit)
     {
         $this->limit = $limit;
+
         return $this;
     }
 
     /**
-     * order by
+     * order by.
+     *
      * @param $attribute
      * @param bool $desc 默认升序(false), 如需降序, 传入 true
+     *
      * @return static
      */
     public function orderBy($attribute, bool $desc = false)
     {
         $this->orders[] = [$attribute, $desc ? 'desc' : 'asc'];
+
         return $this;
     }
 
@@ -102,9 +108,9 @@ class OutgoingQuery extends \Lego\Operator\Query
         $paginator = new LengthAwarePaginator([], 0, $perPage, $page);
 
         $this->pagination = [
-            'perPage' => $paginator->perPage(),
-            'pageName' => $pageName,
-            'page' => $paginator->currentPage(),
+            'perPage'     => $paginator->perPage(),
+            'pageName'    => $pageName,
+            'page'        => $paginator->currentPage(),
             'lengthAware' => true,
         ];
 
@@ -116,9 +122,9 @@ class OutgoingQuery extends \Lego\Operator\Query
         $paginator = new Paginator([], $perPage, $page);
 
         $this->pagination = [
-            'perPage' => $paginator->perPage(),
-            'pageName' => $pageName,
-            'page' => $paginator->currentPage(),
+            'perPage'     => $paginator->perPage(),
+            'pageName'    => $pageName,
+            'page'        => $paginator->currentPage(),
             'lengthAware' => false,
         ];
 
@@ -133,9 +139,9 @@ class OutgoingQuery extends \Lego\Operator\Query
     public function getConditions()
     {
         return [
-            'wheres' => $this->wheres,
-            'orders' => $this->orders,
-            'limit' => $this->limit,
+            'wheres'     => $this->wheres,
+            'orders'     => $this->orders,
+            'limit'      => $this->limit,
             'pagination' => $this->pagination,
         ];
     }

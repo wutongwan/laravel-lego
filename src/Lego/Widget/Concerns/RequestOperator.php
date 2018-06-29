@@ -1,4 +1,6 @@
-<?php namespace Lego\Widget\Concerns;
+<?php
+
+namespace Lego\Widget\Concerns;
 
 use Illuminate\Support\Facades\Request;
 

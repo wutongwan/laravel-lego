@@ -1,7 +1,9 @@
-<?php namespace Foundation;
+<?php
 
-use Lego\Field\Provider\Text;
+namespace Foundation;
+
 use Lego\Field\Condition;
+use Lego\Field\Provider\Text;
 
 class ConditionTest extends \Lego\Tests\TestCase
 {

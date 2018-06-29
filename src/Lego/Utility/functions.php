@@ -1,13 +1,15 @@
 <?php
 
 use Lego\Foundation\Exceptions\LegoException;
-use Lego\Register\HighPriorityResponse;
 use Lego\LegoRegister;
+use Lego\Register\HighPriorityResponse;
 
 /**
- * Lego Assert
+ * Lego Assert.
+ *
  * @param $condition
  * @param $description
+ *
  * @throws LegoException
  */
 function lego_assert($condition, $description)
@@ -16,7 +18,7 @@ function lego_assert($condition, $description)
 }
 
 /**
- * Alias to LegoRegister::register
+ * Alias to LegoRegister::register.
  */
 function lego_register($name, $data, $tag = LegoRegister::DEFAULT_TAG)
 {
@@ -34,7 +36,7 @@ function is_empty_string($string)
 function lego_response()
 {
     /**
-     * Check registered global response
+     * Check registered global response.
      */
     $registeredResponse = HighPriorityResponse::getResponse();
     if (!is_null($registeredResponse)) {
@@ -58,5 +60,6 @@ function lego_default()
             return $val;
         }
     }
+
     return null;
 }

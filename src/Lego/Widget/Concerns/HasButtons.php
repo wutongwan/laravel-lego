@@ -1,4 +1,6 @@
-<?php namespace Lego\Widget\Concerns;
+<?php
+
+namespace Lego\Widget\Concerns;
 
 use Lego\Foundation\Button;
 
@@ -7,7 +9,8 @@ trait HasButtons
     protected $buttons = [];
 
     /**
-     * 按钮位置列表，eg：[left-bottom, right-bottom, left-top, ...]
+     * 按钮位置列表，eg：[left-bottom, right-bottom, left-top, ...].
+     *
      * @return array
      */
     abstract public function buttonLocations(): array;
@@ -22,6 +25,7 @@ trait HasButtons
                 function () use ($location) {
                     $args = func_get_args();
                     array_unshift($args, $location);
+
                     return $this->addButton(...$args);
                 }
             );
@@ -34,7 +38,7 @@ trait HasButtons
     }
 
     /**
-     * 根据位置和按钮文本获取按钮实例
+     * 根据位置和按钮文本获取按钮实例.
      *
      * 注意：此处 text 是添加按钮时提供的 text ，
      *      如果 addButton 之后通过 ->text() 重新修改了按钮文本，
@@ -42,6 +46,7 @@ trait HasButtons
      *
      * @param $location
      * @param $text
+     *
      * @return Button
      */
     public function getButton($location, $text)
@@ -54,6 +59,7 @@ trait HasButtons
         $button = new Button($text, $url, $id);
         $this->buttons[$location][$text] = $button;
         $button->bootstrapStyle('default');
+
         return $button;
     }
 

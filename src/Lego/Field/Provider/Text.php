@@ -1,4 +1,6 @@
-<?php namespace Lego\Field\Provider;
+<?php
+
+namespace Lego\Field\Provider;
 
 use Collective\Html\FormFacade;
 use Lego\Field\Concerns\FilterWhereContains;
@@ -24,14 +26,14 @@ class Text extends Field
     }
 
     /**
-     * 数据处理逻辑
+     * 数据处理逻辑.
      */
     public function process()
     {
         parent::process();
 
         $this->setAttribute([
-            'type' => $this->getInputType(),
+            'type'  => $this->getInputType(),
             'value' => $this->takeInputValue(),
         ]);
 

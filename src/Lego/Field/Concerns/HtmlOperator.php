@@ -1,10 +1,11 @@
-<?php namespace Lego\Field\Concerns;
+<?php
+
+namespace Lego\Field\Concerns;
 
 use Lego\Field\Field;
 
 /**
- * Class HtmlOperator
- * @package Lego\Field\Plugin
+ * Class HtmlOperator.
  */
 trait HtmlOperator
 {
@@ -46,7 +47,7 @@ trait HtmlOperator
     }
 
     /**
-     * 设置 Field 的 html 属性
+     * 设置 Field 的 html 属性.
      */
     public function attr($attributeOrAttributes, $value = null)
     {
@@ -70,7 +71,7 @@ trait HtmlOperator
 
     public function hint($message)
     {
-        /** @var Field $this */
+        /* @var Field $this */
         $this->messages()->add('note', $message);
 
         return $this;

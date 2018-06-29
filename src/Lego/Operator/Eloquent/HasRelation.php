@@ -1,14 +1,16 @@
-<?php namespace Lego\Operator\Eloquent;
+<?php
 
+namespace Lego\Operator\Eloquent;
+
+use Illuminate\Database\Eloquent\Builder as EloquentQueryBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
-use Illuminate\Database\Eloquent\Builder as EloquentQueryBuilder;
-
 
 trait HasRelation
 {
     /**
      * @param $relationArray
+     *
      * @return
      */
     protected function getNestedRelation(Model $model, $relationArray)
@@ -21,6 +23,7 @@ trait HasRelation
                 $model = $relation->getRelated();
             }
         }
+
         return $relation;
     }
 

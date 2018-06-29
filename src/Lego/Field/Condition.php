@@ -1,4 +1,6 @@
-<?php namespace Lego\Field;
+<?php
+
+namespace Lego\Field;
 
 use Lego\Foundation\Exceptions\LegoException;
 

@@ -1,4 +1,6 @@
-<?php namespace Lego\Widget\Grid;
+<?php
+
+namespace Lego\Widget\Grid;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Facades\Cache;
@@ -14,7 +16,7 @@ use Lego\Register\HighPriorityResponse;
 use Lego\Widget\Confirm;
 
 /**
- * Grid 批处理的逻辑
+ * Grid 批处理的逻辑.
  */
 class Batch implements Arrayable
 {
@@ -35,7 +37,7 @@ class Batch implements Arrayable
     private $primaryKey;
 
     /**
-     * 确认信息，没有 form 操作时可以通过 message($message) 传入
+     * 确认信息，没有 form 操作时可以通过 message($message) 传入.
      *
      * @var string|\Closure
      */
@@ -73,6 +75,7 @@ class Batch implements Arrayable
     public function message($message)
     {
         $this->message = $message;
+
         return $this;
     }
 
@@ -84,6 +87,7 @@ class Batch implements Arrayable
     public function primaryKey($key)
     {
         $this->primaryKey = $key;
+
         return $this;
     }
 
@@ -97,6 +101,7 @@ class Batch implements Arrayable
         if ($condition) {
             $this->openTarget = '_blank';
         }
+
         return $this;
     }
 
@@ -105,18 +110,21 @@ class Batch implements Arrayable
         if ($condition) {
             $this->openTarget = compact('height', 'width');
         }
+
         return $this;
     }
 
     public function resetOpenTarget()
     {
         $this->openTarget = static::OPEN_TARGET_DEFAULT;
+
         return $this;
     }
 
     public function form(\Closure $builder)
     {
         $this->form = $builder;
+
         return $this;
     }
 
@@ -124,6 +132,7 @@ class Batch implements Arrayable
     {
         $this->each = $closure;
         $this->register();
+
         return $this;
     }
 
@@ -131,6 +140,7 @@ class Batch implements Arrayable
     {
         $this->handle = $closure;
         $this->register();
+
         return $this;
     }
 
@@ -167,6 +177,7 @@ class Batch implements Arrayable
             $message = $this->message instanceof \Closure
                 ? call_user_func($this->message, $this->getDataCollection())
                 : $this->message;
+
             return Lego::confirm($message, function ($sure) {
                 return $sure ? $this->callHandleClosure() : redirect($this->exit());
             });
@@ -184,6 +195,7 @@ class Batch implements Arrayable
         $ids = array_unique(is_array($ids) ? $ids : explode(',', $ids));
         $hash = md5(Session::getId() . microtime());
         Cache::put(self::IDS_QUERY_NAME . $hash, $ids, 10);
+
         return Redirect::to(Request::fullUrlWithQuery([self::IDS_QUERY_NAME => $hash]));
     }
 
@@ -194,6 +206,7 @@ class Batch implements Arrayable
         $form->onSubmit(function ($form) {
             return $this->callHandleClosure($form);
         });
+
         return $form->view('lego::grid.action.form', ['form' => $form, 'action' => $this]);
     }
 
@@ -207,12 +220,14 @@ class Batch implements Arrayable
                 $params[0] = $store->getOriginalData();
                 call_user_func_array($this->each, $params);
             });
+
             return redirect($this->exit());
         } elseif ($this->handle) {
             $collection = $collection->map(function (Store $store) {
                 return $store->getOriginalData();
             });
             $response = call_user_func($this->handle, $collection, ...$params);
+
             return $response ?: redirect($this->exit());
         } else {
             throw new LegoException(__CLASS__ . ' does not set `handle` or `each`.');
@@ -230,6 +245,7 @@ class Batch implements Arrayable
             return [];
         }
         $ids = Cache::get(self::IDS_QUERY_NAME . $key);
+
         return is_array($ids) ? $ids : [];
     }
 
@@ -237,10 +253,10 @@ class Batch implements Arrayable
     {
         return Request::fullUrlWithQuery(
             array_merge(Request::query(), [
-                self::IDS_QUERY_NAME => null,
+                self::IDS_QUERY_NAME                => null,
                 HighPriorityResponse::REQUEST_PARAM => null,
-                Confirm::CONFIRM_QUERY_NAME => null,
-                Confirm::FROM_QUERY_NAME => null,
+                Confirm::CONFIRM_QUERY_NAME         => null,
+                Confirm::FROM_QUERY_NAME            => null,
             ])
         );
     }
@@ -248,8 +264,8 @@ class Batch implements Arrayable
     public function toArray()
     {
         return [
-            'name' => $this->name(),
-            'url' => $this->url(),
+            'name'        => $this->name(),
+            'url'         => $this->url(),
             'open_target' => $this->openTarget,
         ];
     }

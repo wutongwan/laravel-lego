@@ -1,4 +1,6 @@
-<?php namespace Lego\Tests\Foundation;
+<?php
+
+namespace Lego\Tests\Foundation;
 
 use Lego\Foundation\Event;
 use PHPUnit\Framework\TestCase;
@@ -13,11 +15,11 @@ class EventTest extends TestCase
         $event = new Event();
 
         $event->register(__CLASS__, 'every', function () use (&$counter) {
-            $counter ++;
+            $counter++;
         });
 
         $event->once(__CLASS__, 'once', function () use (&$onceCounter) {
-            $onceCounter ++;
+            $onceCounter++;
         });
 
         $event->fire(__CLASS__);

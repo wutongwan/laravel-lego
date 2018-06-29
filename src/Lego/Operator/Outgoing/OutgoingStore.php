@@ -1,4 +1,6 @@
-<?php namespace Lego\Operator\Outgoing;
+<?php
+
+namespace Lego\Operator\Outgoing;
 
 use Illuminate\Support\Collection;
 use Lego\Foundation\Exceptions\NotSupportedException;

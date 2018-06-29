@@ -1,4 +1,6 @@
-<?php namespace Lego\Operator\Collection;
+<?php
+
+namespace Lego\Operator\Collection;
 
 use Illuminate\Support\Collection;
 use Lego\Operator\Store;
@@ -32,7 +34,7 @@ class ArrayStore extends Store
      */
     public function toArray()
     {
-        return (array)$this->data;
+        return (array) $this->data;
     }
 
     public function getAssociated($attribute)

@@ -1,9 +1,10 @@
-<?php namespace Lego\Foundation\Concerns;
+<?php
+
+namespace Lego\Foundation\Concerns;
 
 /**
  * ModeOperator 的接口类
- * Interface HasMode
- * @package Lego\Helper
+ * Interface HasMode.
  */
 interface HasMode
 {

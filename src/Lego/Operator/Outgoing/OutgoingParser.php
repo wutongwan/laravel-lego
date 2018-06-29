@@ -1,9 +1,12 @@
-<?php namespace Lego\Operator\Outgoing;
+<?php
+
+namespace Lego\Operator\Outgoing;
 
 trait OutgoingParser
 {
     /**
      * @param $data
+     *
      * @return static|bool
      */
     public static function parse($data)

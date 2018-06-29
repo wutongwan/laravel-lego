@@ -1,9 +1,11 @@
-<?php namespace Lego\Field;
+<?php
+
+namespace Lego\Field;
 
 use Lego\Foundation\Concerns\HasHtmlAttributes;
 
 /**
- * Field 的上层 HTML 容器，eg: div.form-group in BootStrap
+ * Field 的上层 HTML 容器，eg: div.form-group in BootStrap.
  */
 class FieldContainer
 {

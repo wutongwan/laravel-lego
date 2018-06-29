@@ -1,10 +1,12 @@
-<?php namespace Lego\Operator;
+<?php
+
+namespace Lego\Operator;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Collection;
 
 /**
- * Store 为 Lego 提供统一的读写 API
+ * Store 为 Lego 提供统一的读写 API.
  */
 abstract class Store extends Operator implements Arrayable, \ArrayAccess
 {
@@ -23,8 +25,10 @@ abstract class Store extends Operator implements Arrayable, \ArrayAccess
     abstract public function set($attribute, $value);
 
     /**
-     * 当前关联数据
+     * 当前关联数据.
+     *
      * @param $attribute
+     *
      * @return Store|null
      */
     abstract public function getAssociated($attribute);
@@ -36,8 +40,10 @@ abstract class Store extends Operator implements Arrayable, \ArrayAccess
     abstract public function dissociate($attribute);
 
     /**
-     * 当前关联数据
+     * 当前关联数据.
+     *
      * @param $attribute
+     *
      * @return Collection|Store[]
      */
     abstract public function getAttached($attribute): Collection;
@@ -49,14 +55,15 @@ abstract class Store extends Operator implements Arrayable, \ArrayAccess
     abstract public function detach($attribute, array $ids);
 
     /**
-     * 存储操作, 针对 Eloquent 等场景
+     * 存储操作, 针对 Eloquent 等场景.
+     *
      * @param array $options
+     *
      * @return bool
      */
     abstract public function save($options = []);
 
     /** 方便渲染模板、使用原数据的函数 */
-
     public function __get($name)
     {
         return $this->get($name);

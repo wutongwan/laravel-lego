@@ -1,4 +1,6 @@
-<?php namespace Lego\Tests\Operator;
+<?php
+
+namespace Lego\Tests\Operator;
 
 use Carbon\Carbon;
 use Lego\Operator\Collection\ArrayQuery;
@@ -41,10 +43,10 @@ class ArrayQueryTest extends TestCase
 
         self::assertSame($result->toArray(), [
             'total_count' => 3,
-            'items' => [
-                ["value" => "a", "label" => "a"],
-                ["value" => "abc", "label" => "abc"],
-                ["value" => "end_a", "label" => "end_a"],
+            'items'       => [
+                ['value' => 'a', 'label' => 'a'],
+                ['value' => 'abc', 'label' => 'abc'],
+                ['value' => 'end_a', 'label' => 'end_a'],
             ],
         ]);
     }

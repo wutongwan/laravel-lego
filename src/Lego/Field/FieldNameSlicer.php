@@ -1,9 +1,10 @@
-<?php namespace Lego\Field;
+<?php
+
+namespace Lego\Field;
 
 /**
  * 将 field name 分割成需要的格式
- * Class FieldNameSlicer
- * @package Lego\Field
+ * Class FieldNameSlicer.
  */
 class FieldNameSlicer
 {
@@ -13,10 +14,11 @@ class FieldNameSlicer
     const PIPE_ARG_DELIMITER = ',';
 
     /**
-     * split name to relation, column and json path
+     * split name to relation, column and json path.
      *
      * @param string $name field name,  eg: school.city.column:json_key:sub_json_key
-     * @return array       eg: [ ['school', 'city'], 'column', ['json_key', 'sub_json_key'] ]
+     *
+     * @return array eg: [ ['school', 'city'], 'column', ['json_key', 'sub_json_key'] ]
      */
     public static function split(string $name): array
     {

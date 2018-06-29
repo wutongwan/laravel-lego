@@ -1,4 +1,6 @@
-<?php namespace Lego\Field;
+<?php
+
+namespace Lego\Field;
 
 use Lego\Field\Concerns\ConditionOfGroup;
 use Lego\Foundation\Fields;
@@ -52,6 +54,7 @@ class Group
         } else {
             $this->fieldNames[$field] = $field;
         }
+
         return $this;
     }
 
@@ -60,6 +63,7 @@ class Group
         foreach ($fields as $field) {
             $this->add($field);
         }
+
         return $this;
     }
 
@@ -78,6 +82,7 @@ class Group
         $this->fields()->each(function (Field $field) use ($method, $params) {
             call_user_func_array([$field, $method], $params);
         });
+
         return $this;
     }
 

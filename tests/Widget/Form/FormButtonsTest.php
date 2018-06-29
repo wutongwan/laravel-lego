@@ -1,4 +1,6 @@
-<?php namespace Lego\Tests\Widget\Form;
+<?php
+
+namespace Lego\Tests\Widget\Form;
 
 use Lego\Tests\TestCase;
 use Lego\Widget\Form;

@@ -1,7 +1,9 @@
-<?php namespace Lego\Operator\Collection;
+<?php
+
+namespace Lego\Operator\Collection;
 
 /**
- * 这个的兼容性比较暴力，推荐放到 STORE_LIST 的最底部
+ * 这个的兼容性比较暴力，推荐放到 STORE_LIST 的最底部.
  */
 class ObjectStore extends ArrayStore
 {

@@ -1,4 +1,6 @@
-<?php namespace Lego\Foundation;
+<?php
+
+namespace Lego\Foundation;
 
 class Assets
 {
@@ -11,7 +13,7 @@ class Assets
             'bootstrap' => 'components/bootstrap/dist/css/bootstrap.min.css',
         ],
         'script' => [
-            'jQuery' => 'components/jquery/dist/jquery.min.js',
+            'jQuery'    => 'components/jquery/dist/jquery.min.js',
             'bootstrap' => 'components/bootstrap/dist/js/bootstrap.min.js',
         ],
     ];
@@ -56,6 +58,7 @@ class Assets
             foreach (array_keys($this->globals) as $type) {
                 $this->reset($type);
             }
+
             return;
         }
 
@@ -75,6 +78,7 @@ class Assets
             foreach ($path as $line) {
                 $this->add($type, $line, $prefix);
             }
+
             return;
         }
 

@@ -1,10 +1,12 @@
-<?php namespace Lego\Widget\Concerns;
+<?php
+
+namespace Lego\Widget\Concerns;
 
 use Illuminate\Support\Facades\URL;
 use Lego\Foundation\Button;
 
 /**
- * 底部按钮区
+ * 底部按钮区.
  */
 trait HasBottomButtons
 {
@@ -18,6 +20,7 @@ trait HasBottomButtons
     {
         $locations = parent::buttonLocations();
         $locations[] = $this->bottomLocation;
+
         return $locations;
     }
 
@@ -29,8 +32,9 @@ trait HasBottomButtons
     protected function initializeHasBottomButtons()
     {
         /**
-         * Add submit button
-         * @var Button $btn
+         * Add submit button.
+         *
+         * @var Button
          */
         $btn = $this->addButton($this->bottomLocation, $this->submitButtonKey);
         $btn->bootstrapStyle('primary')
@@ -40,7 +44,7 @@ trait HasBottomButtons
     }
 
     /**
-     * Add reset Button
+     * Add reset Button.
      */
     protected function addBottomResetButton()
     {
@@ -50,9 +54,10 @@ trait HasBottomButtons
     }
 
     /**
-     * Set submit button text
+     * Set submit button text.
      *
      * @param string $submitText
+     *
      * @return $this
      */
     public function submitText(string $submitText)
@@ -60,13 +65,15 @@ trait HasBottomButtons
         /** @var Button $btn */
         $btn = $this->getButton($this->bottomLocation, $this->submitButtonKey);
         $btn->text($submitText);
+
         return $this;
     }
 
     /**
-     * Set reset button text
+     * Set reset button text.
      *
      * @param string $resetText
+     *
      * @return $this
      */
     public function resetText(string $resetText)
@@ -74,6 +81,7 @@ trait HasBottomButtons
         /** @var Button $btn */
         $btn = $this->getButton($this->bottomLocation, $this->resetButtonKey);
         $btn->text($resetText);
+
         return $this;
     }
 }

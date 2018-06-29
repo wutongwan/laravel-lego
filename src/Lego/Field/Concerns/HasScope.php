@@ -1,17 +1,18 @@
-<?php namespace Lego\Field\Concerns;
+<?php
+
+namespace Lego\Field\Concerns;
 
 use Lego\Operator\Query;
 
 /**
- * Class HasScope
- * @package Lego\Field\Operators
+ * Class HasScope.
  */
 trait HasScope
 {
     protected $scope;
 
     /**
-     * 自定义的过滤逻辑
+     * 自定义的过滤逻辑.
      *
      * $scope 可以为 string 或 Closure
      *  - string ：见 Eloquent Query Scopes
@@ -40,8 +41,10 @@ trait HasScope
      *  });
      *
      * @param string|\Closure $scope
-     * @return $this
+     *
      * @throws \Lego\Foundation\Exceptions\LegoException
+     *
+     * @return $this
      */
     public function scope($scope = null)
     {

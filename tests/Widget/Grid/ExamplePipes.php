@@ -1,4 +1,6 @@
-<?php namespace Lego\Tests\Widget\Grid;
+<?php
+
+namespace Lego\Tests\Widget\Grid;
 
 use Lego\Widget\Grid\Pipes;
 

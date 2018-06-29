@@ -1,4 +1,6 @@
-<?php namespace Lego\Field\Provider;
+<?php
+
+namespace Lego\Field\Provider;
 
 use Collective\Html\HtmlFacade;
 use Lego\Field\Concerns\FilterWhereContains;
@@ -15,7 +17,8 @@ class Checkboxes extends Radios
     }
 
     /**
-     * 存储到数据库时的分隔符
+     * 存储到数据库时的分隔符.
+     *
      * @var string
      */
     protected $separator = '|';
@@ -23,6 +26,7 @@ class Checkboxes extends Radios
     public function separator($glue)
     {
         $this->separator = $glue;
+
         return $this;
     }
 

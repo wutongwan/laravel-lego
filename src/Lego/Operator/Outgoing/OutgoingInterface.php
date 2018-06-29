@@ -1,6 +1,7 @@
-<?php namespace Lego\Operator\Outgoing;
+<?php
+
+namespace Lego\Operator\Outgoing;
 
 interface OutgoingInterface
 {
-
 }

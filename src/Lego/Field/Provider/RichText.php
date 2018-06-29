@@ -1,4 +1,6 @@
-<?php namespace Lego\Field\Provider;
+<?php
+
+namespace Lego\Field\Provider;
 
 use Illuminate\Support\HtmlString;
 use Lego\Foundation\Facades\LegoAssets;

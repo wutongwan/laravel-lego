@@ -1,28 +1,30 @@
-<?php namespace Lego\Foundation\Concerns;
+<?php
+
+namespace Lego\Foundation\Concerns;
 
 use Illuminate\Support\HtmlString;
 
 /**
- * 对象转换为字符串时的工具函数, 需要宿主类实现 `public function render() : string` 函数
+ * 对象转换为字符串时的工具函数, 需要宿主类实现 `public function render() : string` 函数.
  *
  * Class RenderStringOperator
- * @package Lego\Helper
  */
 trait RenderStringOperator
 {
     /**
      * 渲染当前对象
+     *
      * @return string
      */
     abstract public function render();
 
     final public function __toString()
     {
-        return (string)$this->render();
+        return (string) $this->render();
     }
 
     /**
-     * 渲染为 HtmlString 对象, 在 view 中显示时可以直接打印, 无需关闭转义
+     * 渲染为 HtmlString 对象, 在 view 中显示时可以直接打印, 无需关闭转义.
      *
      * @return HtmlString
      */

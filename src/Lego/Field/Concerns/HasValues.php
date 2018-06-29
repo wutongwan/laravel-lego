@@ -1,10 +1,12 @@
-<?php namespace Lego\Field\Concerns;
+<?php
+
+namespace Lego\Field\Concerns;
 
 use Illuminate\Support\Facades\Config;
 use Mews\Purifier\Facades\Purifier;
 
 /**
- * Field 中数据承载部分
+ * Field 中数据承载部分.
  *
  * - set ：填充原始属性值，不推荐重写
  *
@@ -18,12 +20,11 @@ use Mews\Purifier\Facades\Purifier;
  *
  * - mutate ：对值的改正逻辑，接受参数，不依赖属性
  *      - 例如：mutateSavingValue($value) ：数据入库前将通过此函数进行必要修正
- *
  */
 trait HasValues
 {
     /**
-     * 原始值，一般读取自数据库等数据源
+     * 原始值，一般读取自数据库等数据源.
      */
     protected $originalValue;
 
@@ -33,7 +34,7 @@ trait HasValues
     protected $newValue;
 
     /**
-     * 展示值，仅用于展示
+     * 展示值，仅用于展示.
      */
     protected $displayValue;
 
@@ -45,13 +46,14 @@ trait HasValues
     protected $doesntStore = false;
 
     /**
-     * 禁用 HTML Purifier
+     * 禁用 HTML Purifier.
+     *
      * @var bool
      */
     protected $disablePurifier = false;
 
     /**
-     * HTML purifier config
+     * HTML purifier config.
      */
     protected $purifierConfig = null;
 
@@ -91,23 +93,26 @@ trait HasValues
     public function disablePurifier($condition = true)
     {
         $this->disablePurifier = $condition;
+
         return $this;
     }
 
     /**
-     * 自定义 purifier config
+     * 自定义 purifier config.
      *
      * @param array|string|null $config
+     *
      * @return $this
      */
     public function withPurifierConfig($config)
     {
         $this->purifierConfig = is_array($config) ? array_merge($this->purifierConfig, $config) : $config;
+
         return $this;
     }
 
     /**
-     * 当前表单中提交的值，不推荐在 Lego 外部调用，也就是不推荐在 Lego 外部修改
+     * 当前表单中提交的值，不推荐在 Lego 外部调用，也就是不推荐在 Lego 外部修改.
      */
     public function setNewValue($value)
     {
@@ -182,7 +187,7 @@ trait HasValues
     }
 
     /**
-     * 数据读取时，将通过此函数进行必要变形
+     * 数据读取时，将通过此函数进行必要变形.
      *
      * 例如：
      *  - Date 提交的数据一般为 Carbon 对象，展示时需要将其转换为特定 format
@@ -196,7 +201,7 @@ trait HasValues
     }
 
     /**
-     * Request 中提交的数据在存储前，将通过此函数进行必要的变形
+     * Request 中提交的数据在存储前，将通过此函数进行必要的变形.
      *
      * 例如：
      *  checkbox group 选择多个值时，Request 中拿到的结果为 array，
@@ -210,14 +215,16 @@ trait HasValues
     }
 
     /**
-     * 标记此字段不用存储到 Store ，即 Model
+     * 标记此字段不用存储到 Store ，即 Model.
      *
      * @param bool $condition
+     *
      * @return $this
      */
     public function doesntStore($condition = true)
     {
         $this->doesntStore = $condition;
+
         return $this;
     }
 
@@ -226,9 +233,9 @@ trait HasValues
         return $this->doesntStore;
     }
 
-
     /**
-     * 若输入值为空，存储时转换为 null
+     * 若输入值为空，存储时转换为 null.
+     *
      * @var bool
      */
     protected $emptyToNull = false;
@@ -236,11 +243,12 @@ trait HasValues
     public function emptyToNull()
     {
         $this->emptyToNull = true;
+
         return $this;
     }
 
     /**
-     * 同步原始数据到 original value
+     * 同步原始数据到 original value.
      */
     public function syncValueFromStore()
     {
@@ -250,7 +258,7 @@ trait HasValues
     }
 
     /**
-     * 将新的数据存储到 Store
+     * 将新的数据存储到 Store.
      */
     public function syncValueToStore()
     {

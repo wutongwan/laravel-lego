@@ -1,4 +1,6 @@
-<?php namespace Lego\Tests\Widget\Filter;
+<?php
+
+namespace Lego\Tests\Widget\Filter;
 
 use Lego\Tests\TestCase;
 use Lego\Widget\Filter;

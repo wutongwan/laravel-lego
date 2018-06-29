@@ -1,4 +1,6 @@
-<?php namespace Lego\Widget\Grid;
+<?php
+
+namespace Lego\Widget\Grid;
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
@@ -17,6 +19,7 @@ class PipeHandler
     {
         if ($pipe instanceof \Closure) {
             $this->pipe = $pipe;
+
             return;
         }
 
@@ -60,7 +63,6 @@ class PipeHandler
 
     public function handle(...$arguments)
     {
-
         if ($this->pipe) {
             // if pipe is build in global function , pass single param only.
             if (is_callable($this->pipe) && !$this->pipe instanceof \Closure) {
@@ -72,6 +74,7 @@ class PipeHandler
 
         $class = $this->pipeClass;
         $instance = new $class(...$arguments);
+
         return call_user_func_array([$instance, $this->pipeClassMethod], $this->arguments);
     }
 }

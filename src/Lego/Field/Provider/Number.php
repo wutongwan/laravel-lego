@@ -1,4 +1,6 @@
-<?php namespace Lego\Field\Provider;
+<?php
+
+namespace Lego\Field\Provider;
 
 use Lego\Field\Concerns\FilterWhereEquals;
 
@@ -18,31 +20,34 @@ class Number extends Text
     }
 
     /**
-     * Html Attributes
+     * Html Attributes.
      *
      * @see http://www.w3schools.com/html/html_form_input_types.asp
      */
-
     public function min($value)
     {
         $this->attr('min', $value);
+
         return $this->rule('min:' . $value);
     }
 
     public function max($value)
     {
         $this->attr('max', $value);
+
         return $this->rule('max:' . $value);
     }
 
     public function step($value)
     {
         $this->attr('step', $value);
+
         return $this;
     }
 
     /**
      * 渲染当前对象
+     *
      * @return string
      */
     public function render()
