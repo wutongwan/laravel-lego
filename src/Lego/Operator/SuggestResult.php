@@ -4,6 +4,7 @@ namespace Lego\Operator;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 
 class SuggestResult implements Arrayable, \JsonSerializable
 {
@@ -12,12 +13,15 @@ class SuggestResult implements Arrayable, \JsonSerializable
 
     /**
      * SuggestResult constructor.
-     *
-     * @param array $items eg: [  ]
+     * @param array|\Illuminate\Support\Collection $items eg: [  ]
      * @param $totalCount
      */
-    public function __construct(array $items, $totalCount = false)
+    public function __construct($items, $totalCount = false)
     {
+        if ($items instanceof Collection) {
+            $items = $items->all();
+        }
+
         $this->totalCount = $totalCount ?: count($items);
 
         if (0 === count($items)) {
