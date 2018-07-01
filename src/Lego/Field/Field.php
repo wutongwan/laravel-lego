@@ -10,7 +10,10 @@ use Lego\Widget\Concerns\Operable;
 /**
  * 输入输出控件的基类.
  */
-abstract class Field implements FoundationConcerns\HasMode, \JsonSerializable
+abstract class Field implements
+    FoundationConcerns\HasMode,
+    FoundationConcerns\QueryOperators,
+    \JsonSerializable
 {
     use FoundationConcerns\MessageOperator,
         FoundationConcerns\InitializeOperator,
@@ -26,7 +29,7 @@ abstract class Field implements FoundationConcerns\HasMode, \JsonSerializable
         Concerns\HasScope,
         Concerns\HasLocale,
         Concerns\HasConfig,
-        Concerns\FilterWhereEquals;
+        Concerns\HasQueryOperator;
 
     /**
      * 字段的唯一标记.

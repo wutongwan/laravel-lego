@@ -2,13 +2,10 @@
 
 namespace Lego\Field\Provider;
 
-use Lego\Field\Concerns\FilterWhereEquals;
-
 class Number extends Text
 {
-    use FilterWhereEquals;
-
     protected $emptyStringToNull = true;
+    protected $queryOperator = self::QUERY_EQ;
 
     /**
      * 初始化对象

@@ -3,12 +3,11 @@
 namespace Lego\Field\Provider;
 
 use Collective\Html\FormFacade;
-use Lego\Field\Concerns\FilterWhereContains;
 use Lego\Field\Field;
 
 class Text extends Field
 {
-    use FilterWhereContains;
+    protected $queryOperator = self::QUERY_CONTAINS;
 
     public function render()
     {

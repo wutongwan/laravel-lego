@@ -127,4 +127,9 @@ abstract class RangeField extends Field
 
         return $this;
     }
+
+    public function hasValidNewValue()
+    {
+        return count($this->getNewValue()) > 0;
+    }
 }

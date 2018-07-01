@@ -270,4 +270,20 @@ trait HasValues
 
         $this->store->set($this->name(), $this->mutateSavingValue($value));
     }
+
+    /**
+     * 当前 Field 是否拥有有效输入值
+     *
+     * @return bool
+     */
+    public function hasValidNewValue()
+    {
+        $value = $this->getNewValue();
+
+        if (is_string($value)) {
+            return !is_empty_string($value);
+        }
+
+        return true;
+    }
 }

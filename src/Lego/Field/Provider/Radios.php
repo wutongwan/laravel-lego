@@ -2,16 +2,15 @@
 
 namespace Lego\Field\Provider;
 
-use Lego\Field\Concerns\FilterWhereEquals;
 use Lego\Field\Concerns\HasOptions;
 use Lego\Foundation\Facades\LegoAssets;
 
 class Radios extends Text
 {
-    use FilterWhereEquals;
     use HasOptions;
 
     protected $inputType = 'radio';
+    protected $queryOperator = self::QUERY_EQ;
 
     protected function renderEditable()
     {

@@ -2,12 +2,8 @@
 
 namespace Lego\Field\Provider;
 
-use Lego\Field\Concerns\DisabledInFilter;
-
 class JSON extends Text
 {
-    use DisabledInFilter;
-
     protected $jsonKey;
 
     /**

@@ -3,15 +3,14 @@
 namespace Lego\Field\Provider;
 
 use Illuminate\Support\Facades\Request;
-use Lego\Field\Concerns\FilterWhereEquals;
 use Lego\Field\Concerns\HasSelect2Assets;
+use Lego\Operator\Query;
 use Lego\Operator\SuggestResult;
 use Lego\Register\AutoCompleteMatchHandler;
 
 class AutoComplete extends Text
 {
     use HasSelect2Assets;
-    use FilterWhereEquals;
 
     protected function initialize()
     {
@@ -120,15 +119,36 @@ class AutoComplete extends Text
 
     public function syncValueFromStore()
     {
-        $associated = $this->store->getAssociated($this->name());
-        if ($associated) {
-            $column = $this->valueColumn ?: $associated->getKeyName();
-            $this->setOriginalValue($associated->get($column));
+        if ($this->relationPath) {
+            $associated = $this->store->getAssociated($this->name());
+            if ($associated) {
+                $column = $this->valueColumn ?: $associated->getKeyName();
+                $this->setOriginalValue($associated->get($column));
+            }
+        } else {
+            $this->setOriginalValue(
+                $this->store->get($this->name())
+            );
         }
     }
 
     public function syncValueToStore()
     {
-        $this->store->associate($this->name(), $this->getNewValue());
+        if ($this->relationPath) {
+            $this->store->associate($this->name(), $this->getNewValue());
+        } else {
+            $this->store->set($this->name(), $this->getNewValue());
+        }
+    }
+
+    public function filter(Query $query)
+    {
+        if (!$this->relationPath) {
+            $column = $this->valueColumn ?: $this->column();
+
+            return $query->whereEquals($column, $this->getNewValue());
+        }
+
+        return $query->whereEquals($this->name(), $this->getNewValue());
     }
 }
