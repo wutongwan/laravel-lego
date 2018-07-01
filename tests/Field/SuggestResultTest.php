@@ -1,4 +1,6 @@
-<?php namespace Lego\Tests\Field;
+<?php
+
+namespace Lego\Tests\Field;
 
 use Illuminate\Support\Collection;
 use Lego\Operator\SuggestResult;
@@ -14,17 +16,17 @@ class SuggestResultTest extends TestCase
         ];
 
         $expect = [
-            "total_count" => 2,
-            "items" => [
+            'total_count' => 2,
+            'items'       => [
                 [
-                    "value" => 1,
-                    "label" => "code 1",
+                    'value' => 1,
+                    'label' => 'code 1',
                 ],
                 [
-                    "value" => 2,
-                    "label" => "code 2",
-                ]
-            ]
+                    'value' => 2,
+                    'label' => 'code 2',
+                ],
+            ],
         ];
 
         $result = new SuggestResult($items);

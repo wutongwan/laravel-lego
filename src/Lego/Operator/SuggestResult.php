@@ -13,6 +13,7 @@ class SuggestResult implements Arrayable, \JsonSerializable
 
     /**
      * SuggestResult constructor.
+     *
      * @param array|\Illuminate\Support\Collection $items eg: [  ]
      * @param $totalCount
      */
