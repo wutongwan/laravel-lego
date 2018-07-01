@@ -31,7 +31,8 @@ class EloquentQueryTest extends TestCase
         self::assertSame(
             'select * from `example_models` '
             . 'where `equals` = ? and `in_column` in (?, ?) and `gt` > ? and `gte` >= ? '
-            . 'and `lt` < ? and `lte` <= ? and `between` between ? '
+            . 'and `lt` < ? and `lte` <= ? '
+            . 'and `between` between ? and ? '
             . 'and `contains` like ? and `starts_with` like ? and `ends_with` like ? '
             . 'and `json`->\'$."key1"."key2"\' = ? '
             . 'and exists (select * from `belongs_to_examples` '
