@@ -105,6 +105,8 @@ class EloquentQuery extends Query
     {
         if ('in' === $operator) {
             return $query->whereIn($column, $value);
+        } elseif ('between' === $operator) {
+            return $query->whereBetween($column, $value);
         } else {
             return $query->where($column, $operator, $value);
         }
