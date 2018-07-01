@@ -56,7 +56,9 @@ class Filter extends Widget
             }
         });
 
-        $this->paginator();
+        if ($this->paginatorEnabled) {
+            $this->paginator();
+        }
     }
 
     /** @var Grid $grid */
