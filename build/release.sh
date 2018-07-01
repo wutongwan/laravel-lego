@@ -58,6 +58,10 @@ yarn prod
 # create release commit
 git add .
 git commit -a -m 'build release' -q
-git push git@github.com:wutongwan/laravel-lego.git release --force
+
+echo "Input new tag name:"
+read tag
+git tag -a $tag
+git push git@github.com:wutongwan/laravel-lego.git $tag
 
 echo '-> Draft new release https://github.com/wutongwan/laravel-lego/releases/new'
