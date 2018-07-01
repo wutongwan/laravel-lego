@@ -280,6 +280,10 @@ trait HasValues
     {
         $value = $this->getNewValue();
 
+        if (is_null($value) || false === $value) {
+            return false;
+        }
+
         if (is_string($value)) {
             return !is_empty_string($value);
         }
