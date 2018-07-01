@@ -76,6 +76,7 @@ trait HasHtmlAttributes
             $flat = is_array($values) ? implode(' ', $values) : $values;
             $attributes[$name] = $flat;
         }
+
         return $attributes;
     }
 
