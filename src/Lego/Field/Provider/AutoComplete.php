@@ -145,6 +145,7 @@ class AutoComplete extends Text
     {
         if (!$this->relationPath) {
             $column = $this->valueColumn ?: $this->column();
+
             return $query->whereEquals($column, $this->getNewValue());
         }
 

@@ -11,14 +11,14 @@ use Lego\Widget\Filter;
 class HasQueryOperatorTest extends TestCase
 {
     protected $operators = [
-        Field::QUERY_EQ => ['whereEquals', ' = ?', 'world'],
-        Field::QUERY_GT => ['whereGt', ' > ?', 'world'],
-        Field::QUERY_GTE => ['whereGte', ' >= ?', 'world'],
-        Field::QUERY_LT => ['whereLt', ' < ?', 'world'],
-        Field::QUERY_LTE => ['whereLte', ' <= ?', 'world'],
+        Field::QUERY_EQ          => ['whereEquals', ' = ?', 'world'],
+        Field::QUERY_GT          => ['whereGt', ' > ?', 'world'],
+        Field::QUERY_GTE         => ['whereGte', ' >= ?', 'world'],
+        Field::QUERY_LT          => ['whereLt', ' < ?', 'world'],
+        Field::QUERY_LTE         => ['whereLte', ' <= ?', 'world'],
         Field::QUERY_STARTS_WITH => ['whereStartsWith', ' like ?', 'world%'],
-        Field::QUERY_ENDS_WITH => ['whereEndsWith', ' like ?', '%world'],
-        Field::QUERY_CONTAINS => ['whereContains', ' like ?', '%world%'],
+        Field::QUERY_ENDS_WITH   => ['whereEndsWith', ' like ?', '%world'],
+        Field::QUERY_CONTAINS    => ['whereContains', ' like ?', '%world%'],
     ];
 
     public function testMain()

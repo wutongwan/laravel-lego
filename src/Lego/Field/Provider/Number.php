@@ -2,7 +2,6 @@
 
 namespace Lego\Field\Provider;
 
-
 class Number extends Text
 {
     protected $emptyStringToNull = true;

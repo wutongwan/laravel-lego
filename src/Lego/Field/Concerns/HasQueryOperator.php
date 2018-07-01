@@ -1,4 +1,6 @@
-<?php namespace Lego\Field\Concerns;
+<?php
+
+namespace Lego\Field\Concerns;
 
 use Lego\Foundation\Exceptions\LegoException;
 use Lego\Operator\Query;
@@ -14,14 +16,14 @@ trait HasQueryOperator
         }
 
         $mapping = [
-            self::QUERY_EQ => 'whereEquals',
-            self::QUERY_GT => 'whereGt',
-            self::QUERY_GTE => 'whereGte',
-            self::QUERY_LT => 'whereLt',
-            self::QUERY_LTE => 'whereLte',
+            self::QUERY_EQ          => 'whereEquals',
+            self::QUERY_GT          => 'whereGt',
+            self::QUERY_GTE         => 'whereGte',
+            self::QUERY_LT          => 'whereLt',
+            self::QUERY_LTE         => 'whereLte',
             self::QUERY_STARTS_WITH => 'whereStartsWith',
-            self::QUERY_ENDS_WITH => 'whereEndsWith',
-            self::QUERY_CONTAINS => 'whereContains',
+            self::QUERY_ENDS_WITH   => 'whereEndsWith',
+            self::QUERY_CONTAINS    => 'whereContains',
         ];
 
         $method = $mapping[$this->queryOperator] ?? null;
@@ -85,5 +87,4 @@ trait HasQueryOperator
     {
         return $this->setQueryOperator(self::QUERY_ENDS_WITH);
     }
-
 }
