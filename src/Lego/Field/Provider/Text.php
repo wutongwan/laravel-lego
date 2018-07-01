@@ -21,7 +21,7 @@ class Text extends Field
             $this->getInputType(),
             $this->elementName(),
             $this->takeInputValue(),
-            $this->getAttributes()
+            $this->getFlattenAttributes()
         );
     }
 

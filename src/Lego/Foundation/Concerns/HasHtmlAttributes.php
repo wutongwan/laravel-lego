@@ -69,6 +69,16 @@ trait HasHtmlAttributes
         return $this->attributes;
     }
 
+    public function getFlattenAttributes()
+    {
+        $attributes = [];
+        foreach ($this->attributes as $name => $values) {
+            $flat = is_array($values) ? implode(' ', $values) : $values;
+            $attributes[$name] = $flat;
+        }
+        return $attributes;
+    }
+
     public function getAttributesString()
     {
         return HtmlUtility::renderAttributes($this->attributes);
