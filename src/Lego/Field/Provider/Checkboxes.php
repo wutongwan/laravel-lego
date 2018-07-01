@@ -3,13 +3,11 @@
 namespace Lego\Field\Provider;
 
 use Collective\Html\HtmlFacade;
-use Lego\Field\Concerns\FilterWhereContains;
 
 class Checkboxes extends Radios
 {
-    use FilterWhereContains;
-
     protected $inputType = 'checkbox';
+    protected $queryOperator = self::QUERY_CONTAINS;
 
     public function getInputName()
     {

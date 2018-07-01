@@ -4,15 +4,14 @@ namespace Lego\Field\Provider;
 
 use Collective\Html\FormFacade;
 use Collective\Html\HtmlFacade;
-use Lego\Field\Concerns\FilterWhereEquals;
 use Lego\Field\Concerns\HasOptions;
 
 class Select extends Text
 {
-    use FilterWhereEquals;
     use HasOptions;
 
     protected $validateOption = true;
+    protected $queryOperator = self::QUERY_EQ;
 
     protected function initialize()
     {

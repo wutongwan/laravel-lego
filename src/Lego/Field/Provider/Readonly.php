@@ -2,13 +2,10 @@
 
 namespace Lego\Field\Provider;
 
-use Lego\Field\Concerns\DisabledInFilter;
-
 class Readonly extends Text
 {
-    use DisabledInFilter;
-
     protected $escape = false;
+    protected $queryOperator = false;
 
     protected $readonlyValue;
 
