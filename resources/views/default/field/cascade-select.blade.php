@@ -3,7 +3,7 @@
 <select name="{{ $field->elementName() }}"
         id="{{ $field->elementId() }}"
         v-model="selected"
-        {!! \Collective\Html\HtmlFacade::attributes($field->getAttributes()) !!}>
+        {!! \Collective\Html\HtmlFacade::attributes($field->getFlattenAttributes()) !!}>
     <option v-for="(label, value) in options" v-bind:value="value">
         @{{ label }}
     </option>

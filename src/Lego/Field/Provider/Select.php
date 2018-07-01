@@ -60,7 +60,7 @@ class Select extends Text
             $this->placeholder($this->description());
         }
 
-        $attributes = $this->getAttributes();
+        $attributes = $this->getFlattenAttributes();
         if ($this->getPlaceholder() === false) {
             unset($attributes['placeholder']);
         }

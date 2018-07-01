@@ -39,7 +39,7 @@ class Textarea extends Text
         return FormFacade::textarea(
             $this->elementName(),
             $this->takeInputValue(),
-            $this->getAttributes()
+            $this->getFlattenAttributes()
         );
     }
 }
