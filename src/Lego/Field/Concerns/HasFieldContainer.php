@@ -29,7 +29,7 @@ trait HasFieldContainer
 
     public function containerAttributes()
     {
-        return $this->getContainer()->getAttributes();
+        return $this->getContainer()->getFlattenAttributes();
     }
 
     public function getContainer()

@@ -157,7 +157,7 @@ abstract class Field implements
             'element_id'   => $this->elementId(),
             'name'         => $this->name(),
             'description'  => $this->description(),
-            'attributes'   => $this->getAttributes(),
+            'attributes'   => $this->getFlattenAttributes(),
             'mode'         => $this->getMode(),
             'init_value'   => $this->takeInputValue(),
             'locale'       => $this->getLocale(),
