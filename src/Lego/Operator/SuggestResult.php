@@ -42,6 +42,10 @@ class SuggestResult implements Arrayable, \JsonSerializable
         } else {
             // 数组数组
             $this->items = array_map(function ($item) {
+                if (isset($item['id']) && isset($item['text'])) {
+                    return ['value' => $item['id'], 'label' => $item['text']];
+                }
+
                 return ['value' => $item['value'], 'label' => $item['label']];
             }, $items);
         }
