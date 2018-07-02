@@ -41,12 +41,12 @@ class SuggestResultTest extends TestCase
         $items = [
             'a',
             'b',
-            'c'
+            'c',
         ];
 
         $expect = [
             'total_count' => 3,
-            'items' => [
+            'items'       => [
                 [
                     'value' => 'a',
                     'label' => 'a',
@@ -75,7 +75,7 @@ class SuggestResultTest extends TestCase
 
         $expect = [
             'total_count' => 2,
-            'items' => [
+            'items'       => [
                 [
                     'value' => 'a',
                     'label' => 'AA',
@@ -101,7 +101,7 @@ class SuggestResultTest extends TestCase
 
         $expect = [
             'total_count' => 3,
-            'items' => [
+            'items'       => [
                 [
                     'value' => 'a',
                     'label' => 'AA',
@@ -131,7 +131,7 @@ class SuggestResultTest extends TestCase
 
         $expect = [
             'total_count' => 3,
-            'items' => [
+            'items'       => [
                 [
                     'value' => 'a',
                     'label' => 'AA',
@@ -150,5 +150,4 @@ class SuggestResultTest extends TestCase
         $result = new SuggestResult($items);
         self::assertSame($expect, $result->toArray());
     }
-
 }
