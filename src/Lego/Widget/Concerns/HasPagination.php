@@ -42,7 +42,7 @@ trait HasPagination
      */
     protected $paginatorLengthAware = true;
 
-    public function paginate(int $perPage, $pageName = null)
+    public function paginate(int $perPage, $pageName = 'page')
     {
         $this->paginatorEnabled = true;
         $this->paginatorPerPage = $perPage;
@@ -52,7 +52,7 @@ trait HasPagination
         return $this;
     }
 
-    public function simplePaginate(int $perPage, $pageName = null)
+    public function simplePaginate(int $perPage, $pageName = 'page')
     {
         $this->paginatorEnabled = true;
         $this->paginatorPerPage = $perPage;
