@@ -104,9 +104,9 @@ class AutoComplete extends Text
     public function getDisplayValue()
     {
         return lego_default(
+            $this->displayValue,
             Request::input($this->elementName() . '-text'),
-            $this->store->get($this->name()),
-            $this->displayValue
+            $this->getOriginalValue()
         );
     }
 
