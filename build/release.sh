@@ -1,10 +1,19 @@
 #!/usr/bin/env bash
 
+# need tag number
+if [[ $# -ne 1 ]]; then
+    echo "请传入 tag 参数，以下是最新五个 tag"
+    git tag | sort -V | tail -n 5
+    exit
+fi;
+tag=$1
+
 # fetch latest version
 git checkout master
 git branch -D release
 git checkout -b release
 git pull git@github.com:wutongwan/laravel-lego.git master
+
 
 # run bower
 echo "# clear bower components"
@@ -59,8 +68,6 @@ yarn prod
 git add .
 git commit -a -m 'build release' -q
 
-echo "Input new tag name:"
-read tag
 git tag -a $tag
 git push git@github.com:wutongwan/laravel-lego.git $tag
 
