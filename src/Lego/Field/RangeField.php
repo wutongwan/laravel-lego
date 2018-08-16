@@ -94,6 +94,7 @@ abstract class RangeField extends Field
         }
 
         $query->whereBetween($this->name(), $min, $max);
+
         return $query;
     }
 
