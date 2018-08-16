@@ -204,7 +204,19 @@ class EloquentQuery extends Query
      */
     public function whereBetween($attribute, $min, $max)
     {
-        return $this->parseWhere($attribute, 'between', [$min, $max]);
+        switch (true) {
+            case !is_empty_string($min) && !is_empty_string($max):
+                return $this->parseWhere($attribute, 'between', [$min, $max]);
+
+            case !is_empty_string($min):
+                return $this->whereGte($attribute, $min);
+
+            case !is_empty_string($max):
+                return $this->whereLte($attribute, $min);
+
+            default:
+                return $this;
+        }
     }
 
     public function whereScope($scope, $value)
