@@ -89,19 +89,13 @@ abstract class RangeField extends Field
         $min = $this->lower->getNewValue();
         $max = $this->upper->getNewValue();
 
-        switch (true) {
-            case !is_empty_string($min) && !is_empty_string($max):
-                return $query->whereBetween($this->name(), $min, $max);
-
-            case !is_empty_string($min):
-                return $query->whereGte($this->name(), $min);
-
-            case !is_empty_string($max):
-                return $query->whereLte($this->name(), $max);
-
-            default:
-                return $query;
+        if (is_empty_string($min) && is_empty_string($max)) {
+            return $query;
         }
+
+        $query->whereBetween($this->name(), $min, $max);
+
+        return $query;
     }
 
     public function render()
