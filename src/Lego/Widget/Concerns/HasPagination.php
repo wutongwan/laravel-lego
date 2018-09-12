@@ -3,6 +3,7 @@
 namespace Lego\Widget\Concerns;
 
 use Illuminate\Pagination\AbstractPaginator;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Request;
 
 trait HasPagination
@@ -73,6 +74,7 @@ trait HasPagination
                 $this->paginatorLengthAware
             );
             $this->paginator->appends(Request::input());
+            $this->paginator->setPath(Paginator::resolveCurrentPath());
         }
 
         return $this->paginator;
