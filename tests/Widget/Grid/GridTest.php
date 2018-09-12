@@ -45,7 +45,7 @@ class GridTest extends TestCase
         // change pager name
         $grid = $this->fakeGrid();
         $grid->paginate(7, 'lego-test-pager');
-        $this->assertContains('/?lego-test-pager=2', $this->render2html($grid));
+        $this->assertContains('?lego-test-pager=2', $this->render2html($grid));
     }
 
     private function fakeGrid($length = 24)
