@@ -93,7 +93,13 @@ abstract class RangeField extends Field
             return $query;
         }
 
-        $query->whereBetween($this->name(), $min, $max);
+        if ($min && $max) {
+            $query->whereBetween($this->name(), $min, $max);
+        } elseif ($min) {
+            $query->whereGte($this->name(), $min);
+        } elseif ($max) {
+            $query->whereLte($this->name(), $max);
+        }
 
         return $query;
     }
