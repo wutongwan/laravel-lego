@@ -16,8 +16,8 @@
     ],
     "require": {
         "php": ">=7.0.0",
-        "illuminate/support": "5.2.* || 5.3.* || 5.4.* || 5.5.*",
-        "laravel/framework": "5.2.* || 5.3.* || 5.4.* || 5.5.*",
+        "illuminate/support": "5.2.* || 5.3.* || 5.4.* || 5.5.* || 5.6.* || 5.7.*",
+        "laravel/framework": "5.2.* || 5.3.* || 5.4.* || 5.5.* || 5.6.* || 5.7.*",
         "laravelcollective/html": "~5.2",
         "mobiledetect/mobiledetectlib": "^2.8",
         "maatwebsite/excel": "~2.1.0",
