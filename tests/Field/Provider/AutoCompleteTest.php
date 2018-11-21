@@ -34,11 +34,11 @@ class AutoCompleteTest extends TestCase
     {
         $model = (new ExampleModel())->forceFill([
             'test_belongs_to_id' => 7,
-            'test_belongs_to' => (new BelongsToExample())->forceFill([
-                'id' => 7,
+            'test_belongs_to'    => (new BelongsToExample())->forceFill([
+                'id'          => 7,
                 'other_value' => 'nice day',
-                'name' => 'zhwei',
-            ])
+                'name'        => 'zhwei',
+            ]),
         ]);
 
         $field = new AutoComplete('test_belongs_to.name', 'Just a Name', $model);

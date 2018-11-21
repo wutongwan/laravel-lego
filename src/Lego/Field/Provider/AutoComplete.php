@@ -33,6 +33,7 @@ class AutoComplete extends Text
     public function setLabelElementSuffix($name)
     {
         $this->labelElementSuffix = $name;
+
         return $this;
     }
 
