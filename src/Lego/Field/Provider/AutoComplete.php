@@ -12,6 +12,8 @@ class AutoComplete extends Text
 {
     use HasSelect2Assets;
 
+    protected $labelElementSuffix = '-text';
+
     protected function initialize()
     {
         $this->match(function ($keyword) {
@@ -21,6 +23,17 @@ class AutoComplete extends Text
 
             return $this->query->suggest($this->name(), strval($keyword), $this->valueColumn, $this->limit);
         });
+    }
+
+    public function getLabelElementSuffix()
+    {
+        return $this->labelElementSuffix;
+    }
+
+    public function setLabelElementSuffix($name)
+    {
+        $this->labelElementSuffix = $name;
+        return $this;
     }
 
     /**
@@ -101,12 +114,16 @@ class AutoComplete extends Text
         return $this;
     }
 
-    public function getDisplayValue()
+    public function takeShowValue()
     {
-        return lego_default(
-            $this->displayValue,
-            Request::input($this->elementName() . '-text'),
-            $this->getOriginalValue()
+        return $this->mutateTakingValue(
+            lego_default(
+                $this->getDisplayValue(),
+                // 区别只有下面这一行，用于从 Filter 筛选提交后提取对应的文本
+                Request::input($this->elementName() . $this->getLabelElementSuffix()),
+                $this->getDefaultValue(),
+                $this->getOriginalValue()
+            )
         );
     }
 
@@ -124,6 +141,11 @@ class AutoComplete extends Text
             if ($associated) {
                 $column = $this->valueColumn ?: $associated->getKeyName();
                 $this->setOriginalValue($associated->get($column));
+
+                // set default display value
+                if (!$this->getDisplayValue()) {
+                    $this->setDisplayValue($associated->get($this->column()));
+                }
             }
         } else {
             $this->setOriginalValue(
