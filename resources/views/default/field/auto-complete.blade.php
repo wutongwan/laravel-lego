@@ -6,7 +6,11 @@
         <option value="{{ $value }}">{{ $field->takeShowValue() }}</option>
     @endif
 </select>
-<input type="hidden" id="{{ $field->elementId() }}-text" name="{{ $field->elementName() }}-text" value="{{ $field->takeShowValue() }}">
+<input type="hidden"
+       id="{{ $field->elementId() }}{{ $field->getLabelElementSuffix() }}"
+       name="{{ $field->elementName() }}{{ $field->getLabelElementSuffix() }}"
+       value="{{ $field->takeShowValue() }}"
+>
 
 @push('lego-scripts')
 <script>
