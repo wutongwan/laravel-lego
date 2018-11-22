@@ -1,18 +1,38 @@
 language: php
 
+sudo: false
+
+cache:
+    directories:
+        - $HOME/.composer/cache
+
 php:
-  - '7.0'
-  - '7.1'
+    - 7.0
+    - 7.1
+    - 7.2
 
-before_install:
-  - travis_retry composer self-update
-
-install:
-  - travis_retry composer install
-
-script: vendor/bin/phpunit
+env:
+    - LARAVEL_VERSION=5.2.*
+    - LARAVEL_VERSION=5.3.*
+    - LARAVEL_VERSION=5.4.*
+    - LARAVEL_VERSION=5.5.*
+    - LARAVEL_VERSION=5.6.*
 
 matrix:
-  allow_failures:
-    - php: 7.1
-  fast_finish: true
+    fast_finish: true
+    exclude:
+        - php: 7.0
+          env: LARAVEL_VERSION=5.6.*
+
+        - php: 7.0
+          env: LARAVEL_VERSION=5.7.*
+
+
+before_install:
+  - travis_retry composer self-update --stable --no-interaction
+  - travis_retry composer require --dev "laravel/laravel:${LARAVEL_VERSION}" --no-update --no-interaction
+
+install:
+  - travis_retry composer install --no-suggest --no-interaction
+
+script: vendor/bin/phpunit
