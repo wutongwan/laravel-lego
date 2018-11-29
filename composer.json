@@ -20,15 +20,14 @@
         "illuminate/support": "5.2.* || 5.3.* || 5.4.* || 5.5.* || 5.6.* || 5.7.*",
         "laravelcollective/html": "~5.2",
         "mobiledetect/mobiledetectlib": "^2.8",
-        "maatwebsite/excel": "~2.1.0",
-        "symfony/class-loader": "~3.2",
-        "mews/purifier": "^2.0"
+        "mews/purifier": "^2.0",
+        "phpoffice/phpspreadsheet": "^1.5"
     },
     "require-dev": {
         "phpunit/phpunit": "~5.2",
         "laravel/laravel": "~5.2",
         "fzaninotto/faker": "^1.6",
-        "sleimanx2/plastic": "~0.5.0"
+        "ongr/elasticsearch-dsl": "^6.0"
     },
     "autoload": {
         "files": [
@@ -44,7 +43,7 @@
         }
     },
     "suggest": {
-        "sleimanx2/plastic": "Required to use the Elasticsearch Query (~0.3.0)."
+        "ongr/elasticsearch-dsl": "Required to use the ElasticSearch Query."
     },
     "extra": {
         "laravel": {
