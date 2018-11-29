@@ -17,7 +17,7 @@ class TextFieldTest extends TestCase
             (string) $field->render()
         );
 
-        $readonlyString = '<p id="lego-abc" class="form-control-static">' . "\n\n" . '</p>' . "\n";
+        $readonlyString = '<p id="lego-abc" class="form-control-static"></p>';
 
         $field->readonly();
         self::assertEquals($readonlyString, (string) $field->render());
