@@ -1,4 +1,6 @@
-<?php // zhangwei@dankegongyu.com 
+<?php
+
+// zhangwei@dankegongyu.com
 
 namespace Lego\Tests\Utility;
 
@@ -22,8 +24,7 @@ class ExcelTest extends TestCase
 
     public function testDownloadByPhpSpreadsheet()
     {
-        $class = new class extends Excel
-        {
+        $class = new class() extends Excel {
             public static function testDownload($rows)
             {
                 return self::downloadByPhpSpreadsheet($rows);
@@ -40,12 +41,12 @@ class ExcelTest extends TestCase
 
     public function testDownloadBySpoutXlsx()
     {
-        $class = new class extends Excel
-        {
+        $class = new class() extends Excel {
             protected static function createSpoutXlsxWriter()
             {
                 $writer = parent::createSpoutXlsxWriter();
                 $writer->setGlobalFunctionsHelper(ExcelSpoutGlobalFunctionsHelper::instance());
+
                 return $writer;
             }
 
@@ -77,7 +78,7 @@ class ExcelTest extends TestCase
         $actual = [];
         foreach ($reader->getSheetIterator() as $sheet) {
             foreach ($sheet->getRowIterator() as $row) {
-                $actual []= $row;
+                $actual[] = $row;
             }
         }
         $reader->close();

@@ -1,4 +1,6 @@
-<?php // zhangwei@dankegongyu.com 
+<?php
+
+// zhangwei@dankegongyu.com
 
 namespace Lego\Tests\Utility;
 
@@ -10,7 +12,7 @@ class ExcelSpoutGlobalFunctionsHelper extends GlobalFunctionsHelper
 
     public static function instance()
     {
-        if (! self::$ins) {
+        if (!self::$ins) {
             self::$ins = new self();
         }
 

@@ -32,13 +32,13 @@ class HtmlUtility
         $attributeStringList = [];
         foreach ($attributes as $key => $value) {
             if (is_numeric($key)) {
-                $attributeStringList [] = $value;
+                $attributeStringList[] = $value;
                 continue;
             }
 
             // Treat boolean attributes as HTML properties
             if (is_bool($value) && $key !== 'value') {
-                $attributeStringList [] = $value ? $key : '';
+                $attributeStringList[] = $value ? $key : '';
                 continue;
             }
 

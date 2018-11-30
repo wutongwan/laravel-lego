@@ -1,4 +1,6 @@
-<?php // zhangwei@dankegongyu.com 
+<?php
+
+// zhangwei@dankegongyu.com
 
 namespace Lego\Tests\Field\Provider;
 
@@ -10,8 +12,8 @@ class SelectTest extends TestCase
     protected $values = ['Tom', 'Jerry', 'Nibbles'];
 
     protected $options = [
-        'cat' => 'Tom',
-        'mouse' => 'Jerry',
+        'cat'         => 'Tom',
+        'mouse'       => 'Jerry',
         'small mouse' => 'Nibbles',
     ];
 
@@ -68,7 +70,7 @@ class SelectTest extends TestCase
         $field = new Select('test', 'Test');
         $field->options([
             'Large sizes' => [
-                'L' => 'Large',
+                'L'  => 'Large',
                 'XL' => 'Extra Large',
             ],
             'S' => 'Small',

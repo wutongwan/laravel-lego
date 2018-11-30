@@ -158,7 +158,7 @@ class Grid extends Widget
             $line = [];
             foreach ($this->cells() as $cell) {
                 /** @var Cell $cell */
-                $value = $plain ? $cell->fill($row)->getPlainValue() : (string)$cell->fill($row)->value();
+                $value = $plain ? $cell->fill($row)->getPlainValue() : (string) $cell->fill($row)->value();
                 $line[$cell->description()] = $value;
             }
             $result->push($line);

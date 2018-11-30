@@ -1,18 +1,20 @@
-<?php // zhangwei@dankegongyu.com 
+<?php
+
+// zhangwei@dankegongyu.com
 
 namespace Lego\Utility;
 
+use Box\Spout\Common\Type as SpoutType;
+use Box\Spout\Writer\WriterFactory as SpoutWriter;
 use Lego\Foundation\Exceptions\LegoExportException;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\IWriter;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-use Box\Spout\Writer\WriterFactory as SpoutWriter;
-use Box\Spout\Common\Type as SpoutType;
 
 class Excel
 {
     /**
-     * create excel from key-value array
+     * create excel from key-value array.
      *
      * array example:
      *
@@ -23,7 +25,8 @@ class Excel
      * ]
      *
      * @param string $filename
-     * @param array $rows
+     * @param array  $rows
+     *
      * @throws LegoExportException
      */
     public static function downloadFromArray(string $filename, array $rows)
@@ -34,11 +37,13 @@ class Excel
 
         if (class_exists(\Box\Spout\Writer\WriterFactory::class)) {
             self::downloadBySpoutXlsx($filename, $rows);
+
             return;
         }
 
         if (class_exists(\PhpOffice\PhpSpreadsheet\Spreadsheet::class)) {
             self::downloadByPhpSpreadsheet($rows);
+
             return;
         }
 
@@ -49,7 +54,7 @@ class Excel
 
     protected static function downloadByPhpSpreadsheet(array $rows)
     {
-        $spreadSheet = new Spreadsheet;
+        $spreadSheet = new Spreadsheet();
         $worksheet = $spreadSheet->getActiveSheet();
 
         // write header
@@ -73,6 +78,7 @@ class Excel
     {
         /** @var \Box\Spout\Writer\XLSX\Writer $writer */
         $writer = SpoutWriter::create(SpoutType::XLSX);
+
         return $writer;
     }
 
@@ -84,7 +90,6 @@ class Excel
         $writer->setShouldUseInlineStrings(false);
 
         $writer->openToBrowser($filename);
-
 
         $header = false;
         foreach ($rows as $row) {
@@ -100,9 +105,10 @@ class Excel
     }
 
     /**
-     * output to php://output
+     * output to php://output.
      *
      * @param $excel
+     *
      * @throws LegoExportException
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
@@ -110,6 +116,7 @@ class Excel
     {
         if ($excel instanceof IWriter) {
             $excel->save('php://output');
+
             return;
         }
 

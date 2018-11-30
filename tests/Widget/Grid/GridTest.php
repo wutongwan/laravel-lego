@@ -4,7 +4,6 @@ namespace Lego\Tests\Widget\Grid;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
-use Lego\Register\HighPriorityResponse;
 use Lego\Tests\TestCase;
 use Lego\Tests\Tools\FakeMobileDetect;
 use Lego\Widget\Filter;

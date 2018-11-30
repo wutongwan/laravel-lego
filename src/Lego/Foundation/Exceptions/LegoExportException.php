@@ -1,4 +1,6 @@
-<?php // zhangwei@dankegongyu.com 
+<?php
+
+// zhangwei@dankegongyu.com
 
 namespace Lego\Foundation\Exceptions;
 
