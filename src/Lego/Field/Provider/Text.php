@@ -2,8 +2,8 @@
 
 namespace Lego\Field\Provider;
 
-use Collective\Html\FormFacade;
 use Lego\Field\Field;
+use Lego\Utility\HtmlUtility;
 
 class Text extends Field
 {
@@ -16,7 +16,7 @@ class Text extends Field
 
     protected function renderEditable()
     {
-        return FormFacade::input(
+        return HtmlUtility::input(
             $this->getInputType(),
             $this->elementName(),
             $this->takeInputValue(),

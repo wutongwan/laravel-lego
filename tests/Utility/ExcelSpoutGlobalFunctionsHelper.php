@@ -1,6 +1,6 @@
 <?php // zhangwei@dankegongyu.com 
 
-namespace Lego\Utility;
+namespace Lego\Tests\Utility;
 
 use Box\Spout\Common\Helper\GlobalFunctionsHelper;
 

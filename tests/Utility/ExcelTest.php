@@ -6,7 +6,6 @@ use Box\Spout\Common\Type;
 use Box\Spout\Reader\ReaderFactory;
 use Lego\Tests\TestCase;
 use Lego\Utility\Excel;
-use Lego\Utility\ExcelSpoutGlobalFunctionsHelper;
 
 class ExcelTest extends TestCase
 {

@@ -27,7 +27,8 @@
         "phpunit/phpunit": "~5.2",
         "laravel/laravel": "~5.2",
         "fzaninotto/faker": "^1.6",
-        "ongr/elasticsearch-dsl": "^6.0"
+        "ongr/elasticsearch-dsl": "^6.0",
+        "phpoffice/phpspreadsheet": "^1.5"
     },
     "autoload": {
         "files": [

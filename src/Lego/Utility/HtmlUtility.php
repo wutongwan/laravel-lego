@@ -29,11 +29,46 @@ class HtmlUtility
     {
         $attributes = self::mergeAttributes($attributes);
 
-        $html = '';
+        $attributeStringList = [];
         foreach ($attributes as $key => $value) {
-            $html .= " {$key}=\"{$value}\"";
+            if (is_numeric($key)) {
+                $attributeStringList [] = $value;
+                continue;
+            }
+
+            // Treat boolean attributes as HTML properties
+            if (is_bool($value) && $key !== 'value') {
+                $attributeStringList [] = $value ? $key : '';
+                continue;
+            }
+
+            if (!is_null($value)) {
+                $attributeStringList[] = $key . '="' . e($value) . '"';
+                continue;
+            }
         }
 
-        return new HtmlString(trim($html));
+        return new HtmlString(
+            join(' ', $attributeStringList)
+        );
+    }
+
+    public static function input($type, $name, $value = null, array $attributes = [])
+    {
+        if (isset($attributes['type'])) {
+            $attributes['type'] = $type;
+        }
+
+        if (isset($attributes['name'])) {
+            $attributes['name'] = $name;
+        }
+
+        if (isset($attributes['value'])) {
+            $attributes['value'] = $value;
+        }
+
+        return new HtmlString(
+            '<input ' . self::renderAttributes($attributes) . '>'
+        );
     }
 }
