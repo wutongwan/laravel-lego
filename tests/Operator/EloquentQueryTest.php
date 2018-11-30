@@ -30,7 +30,7 @@ class EloquentQueryTest extends TestCase
             ->whereContains('test_belongs_to.tbt_json:key3', 'tbt_json_value');
 
         // json key 生成格式有变化
-        if (version_compare(Application::VERSION, '5.4', '<')) {
+        if (version_compare(Application::VERSION, '5.3', '<')) {
             $sql = 'select * from `example_models` '
                 . 'where `equals` = ? and `in_column` in (?, ?) and `gt` > ? and `gte` >= ? '
                 . 'and `lt` < ? and `lte` <= ? '
