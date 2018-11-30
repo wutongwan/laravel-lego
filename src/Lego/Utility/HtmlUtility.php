@@ -71,4 +71,11 @@ class HtmlUtility
             '<input ' . self::renderAttributes($attributes) . '>'
         );
     }
+
+    public static function tag($tag, $content, array $attributes = [])
+    {
+        return new HtmlString(
+            "<{$tag} " . self::renderAttributes($attributes) . ">{$content}</{$tag}>"
+        );
+    }
 }
