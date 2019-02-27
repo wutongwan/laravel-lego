@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+./vendor/bin/phpunit
+
 # need tag number
 if [[ $# -ne 1 ]]; then
     echo "请传入 tag 参数，以下是最新五个 tag"
