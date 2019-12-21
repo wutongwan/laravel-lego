@@ -1,6 +1,6 @@
 {
     "name": "wutongwan/lego",
-    "description": "Yet another CRUD widgets for laravel 5.2+",
+    "description": "Yet another CRUD widgets for Laravel",
     "homepage": "https://github.com/wutongwan/laravel-lego",
     "license": "MIT",
     "keywords": [
