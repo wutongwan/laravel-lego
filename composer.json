@@ -17,7 +17,7 @@
     "require": {
         "php": ">=7.0.0",
         "ext-json": "*",
-        "illuminate/support": "5.2.* || 5.3.* || 5.4.* || 5.5.* || 5.6.* || 5.7.*",
+        "illuminate/support": "5.4.* || 5.5.* || 6.*",
         "laravelcollective/html": "~5.2",
         "mobiledetect/mobiledetectlib": "^2.8",
         "mews/purifier": "^2.0",
