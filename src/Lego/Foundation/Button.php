@@ -3,6 +3,7 @@
 namespace Lego\Foundation;
 
 use Collective\Html\HtmlFacade;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\View;
 use Lego\Register\HighPriorityResponse;
 
@@ -98,7 +99,7 @@ class Button implements \JsonSerializable
             return $this;
         }
 
-        $current = array_get($this->attributes, $name);
+        $current = Arr::get($this->attributes, $name);
         if (is_array($current) && is_array($value)) {
             $current = array_unique(array_merge($current, $value));
         } elseif (is_string($current) && is_string($value)) {
@@ -118,7 +119,7 @@ class Button implements \JsonSerializable
 
     public function removeClass($class)
     {
-        $all = array_get($this->attributes, 'class', []);
+        $all = Arr::get($this->attributes, 'class', []);
         if (!$all) {
             return;
         }

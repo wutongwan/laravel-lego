@@ -56,7 +56,7 @@ trait HasFields
      */
     public function fields()
     {
-        return $this->fields->fields();
+        return $this->fields;
     }
 
     public function values($fields = [])
@@ -106,12 +106,12 @@ trait HasFields
      */
     public function field($fieldName)
     {
-        return $this->fields->field($fieldName);
+        return $this->fields->get($fieldName);
     }
 
     public function addField(Field $field): Field
     {
-        $this->fields->add($field);
+        $this->fields->put($field->name(), $field);
 
         $this->events->fire('after-add-field', [$field]);
 

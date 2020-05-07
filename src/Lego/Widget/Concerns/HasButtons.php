@@ -2,6 +2,7 @@
 
 namespace Lego\Widget\Concerns;
 
+use Illuminate\Support\Str;
 use Lego\Foundation\Button;
 
 trait HasButtons
@@ -21,7 +22,7 @@ trait HasButtons
             $this->buttons[$location] = [];
 
             self::macro(
-                'add' . ucfirst(camel_case($location)) . 'Button',
+                'add' . ucfirst(Str::camel($location)) . 'Button',
                 function () use ($location) {
                     $args = func_get_args();
                     array_unshift($args, $location);

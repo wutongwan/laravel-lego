@@ -2,6 +2,7 @@
 
 namespace Lego\Operator\Collection;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Lego\Operator\Store;
 
@@ -14,12 +15,12 @@ class ArrayStore extends Store
 
     public function get($attribute, $default = null)
     {
-        return array_get($this->data, $attribute, $default);
+        return Arr::get($this->data, $attribute, $default);
     }
 
     public function set($attribute, $value)
     {
-        array_set($this->data, $attribute, $value);
+        Arr::set($this->data, $attribute, $value);
     }
 
     public function save($options = [])

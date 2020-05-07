@@ -40,7 +40,7 @@ class LegoRegister
      */
     public static function get($dataClass, $tag, $default = null)
     {
-        return array_get(self::$registered, "{$dataClass}.{$tag}", $default);
+        return Arr::get(self::$registered, "{$dataClass}.{$tag}", $default);
     }
 
     public static function getDefault($dataClass)
@@ -50,6 +50,6 @@ class LegoRegister
 
     public static function getAll($dataClass, $default = null)
     {
-        return array_get(self::$registered, $dataClass, $default);
+        return Arr::get(self::$registered, $dataClass, $default);
     }
 }

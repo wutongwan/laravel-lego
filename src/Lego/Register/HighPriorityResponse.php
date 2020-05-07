@@ -2,6 +2,7 @@
 
 namespace Lego\Register;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Request;
 use Lego\Foundation\Exceptions\InvalidRegisterData;
 use Lego\LegoRegister;
@@ -39,8 +40,8 @@ class HighPriorityResponse extends Data
         }
 
         $path = str_replace('+', '.', $path);
-        array_set(self::$tree, $path, []);
-        $step = array_first(array_keys(array_get(self::$tree, self::$current)));
+        Arr::set(self::$tree, $path, []);
+        $step = Arr::first(array_keys(array_get(self::$tree, self::$current)));
         if (!$data = LegoRegister::get(self::class, $step)) {
             return null;
         }

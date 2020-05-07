@@ -5,6 +5,7 @@ namespace Lego\Operator\Elastic;
 use DateTime;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Lego\Foundation\Exceptions\NotSupportedException;
 use Lego\Operator\Query;
 use Lego\Operator\SuggestResult;
@@ -168,7 +169,7 @@ class ElasticQuery extends Query
 
     public function whereWildcard($field, $value)
     {
-        $value = str_limit($value, static::WILDCARD_LIMIT);
+        $value = Str::limit($value, static::WILDCARD_LIMIT);
         $query = new WildcardQuery($field, $value);
         $this->addBoolQuery()->add($query);
         return $this;

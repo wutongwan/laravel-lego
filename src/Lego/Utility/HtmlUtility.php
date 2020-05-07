@@ -2,6 +2,7 @@
 
 namespace Lego\Utility;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\HtmlString;
 
 class HtmlUtility
@@ -17,7 +18,7 @@ class HtmlUtility
 
         foreach ($attributes as $attribute => &$value) {
             if (is_array($value)) {
-                $value = join(' ', array_flatten($value));
+                $value = join(' ', Arr::flatten($value));
             }
         }
 
