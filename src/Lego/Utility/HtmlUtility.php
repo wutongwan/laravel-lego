@@ -56,15 +56,15 @@ class HtmlUtility
 
     public static function input($type, $name, $value = null, array $attributes = [])
     {
-        if (isset($attributes['type'])) {
+        if (!isset($attributes['type'])) {
             $attributes['type'] = $type;
         }
 
-        if (isset($attributes['name'])) {
+        if (!isset($attributes['name'])) {
             $attributes['name'] = $name;
         }
 
-        if (isset($attributes['value'])) {
+        if (!isset($attributes['value'])) {
             $attributes['value'] = $value;
         }
 

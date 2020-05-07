@@ -9,6 +9,19 @@ $filter->addDaterange('created_at', 'Created At');
 ```
 
 
+## ElasticSearch
+
+```php
+use Lego\Lego;
+use Lego\Operator\Elastic\ElasticClient;
+
+$filter = Lego::filter(new ElasticClient(['elasticsearch:9200'], 'index_name'));
+$filter->addText('city', 'City Name');
+$filter->addText('address', 'Suite Address');
+
+return $filter->grid(true);
+```
+
 ## OutgoingQuery Scope
 
 ```php

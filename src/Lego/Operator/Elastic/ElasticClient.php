@@ -47,7 +47,7 @@ class ElasticClient
     /**
      * @return string|null
      */
-    public function getType(): string
+    public function getType()
     {
         return $this->type;
     }
@@ -65,7 +65,9 @@ class ElasticClient
     public function connection()
     {
         if (!$this->connection) {
-            $this->connection = ClientBuilder::fromConfig($this->hosts);
+            $this->connection = ClientBuilder::fromConfig([
+                'hosts' => $this->hosts
+            ]);
         }
         return $this->connection;
     }

@@ -3,7 +3,6 @@
 namespace Lego\Operator\Elastic;
 
 use DateTime;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Lego\Foundation\Exceptions\NotSupportedException;
@@ -36,6 +35,18 @@ class ElasticQuery extends Query
         }
 
         return false;
+    }
+
+    /**
+     * 翻页接口数据量限额, 即：index.max_result_window
+     */
+    protected $maxResultWindow = 10000;
+
+    protected function initialize()
+    {
+        if ($mrw = config('lego.operators.' . static::class . '.max_result_window')) {
+            $this->maxResultWindow = $mrw;
+        }
     }
 
     /**
@@ -240,10 +251,25 @@ class ElasticQuery extends Query
     {
         $this->limit($perPage);
         $this->data->setFrom($perPage * ($page - 1));
-        $results = $this->data->setStoredFields($columns);
+        $this->setRealColumns($columns);
+
+        $results = $this->search();
         $collection = $this->convertHitsToCollection($results['hits']['hits'] ?? []);
         $total = $results['hits']['total'] ?? 0;
-        return new LengthAwarePaginator($collection, $total, $perPage, $page, ['pageName' => $pageName]);
+        $paginator = new ElasticLengthAwarePaginator($collection, $total, $perPage, $page, ['pageName' => $pageName]);
+
+        // 避免翻页过多，超过 max_result_window 导致报错
+        $lastPage = ceil(min($total, $this->maxResultWindow) / $perPage);
+        $paginator->setLastPage($lastPage);
+
+        return $paginator;
+    }
+
+    protected function setRealColumns($columns)
+    {
+        if ($columns && $columns !== self::SELECT_ALL) {
+            $this->data->setStoredFields($columns);
+        }
     }
 
     protected function createLengthNotAwarePaginator($perPage, $columns, $pageName, $page)
@@ -264,7 +290,9 @@ class ElasticQuery extends Query
 
     protected function select(array $columns)
     {
-        $results = $this->data->setStoredFields($columns);
+        $this->setRealColumns($columns);
+
+        $results = $this->search();
         $hits = $results['hits']['hits'] ?? [];
         return $this->convertHitsToCollection($hits);
     }

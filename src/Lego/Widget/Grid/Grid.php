@@ -15,7 +15,12 @@ use Lego\Widget\Widget;
 /**
  * Class Grid.
  *
- * @lego-ide-helper
+ * --- ide helpers begin ---
+ * @method \Lego\Foundation\Button addRightTopButton($text, $url = null, $id = null)
+ * @method \Lego\Foundation\Button addRightBottomButton($text, $url = null, $id = null)
+ * @method \Lego\Foundation\Button addLeftTopButton($text, $url = null, $id = null)
+ * @method \Lego\Foundation\Button addLeftBottomButton($text, $url = null, $id = null)
+ * --- ide helpers end ---
  */
 class Grid extends Widget
 {

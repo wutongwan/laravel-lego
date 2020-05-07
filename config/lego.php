@@ -114,8 +114,14 @@ return [
         \Lego\Operator\Query::class => [
 
         ],
+
         \Lego\Operator\Store::class => [
 
+        ],
+
+        \Lego\Operator\Elastic\ElasticQuery::class => [
+            // 翻页接口数据量限额, 即：index.max_result_window
+            'max_result_window' => 10000,
         ],
     ],
 ];
