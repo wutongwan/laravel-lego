@@ -2,13 +2,13 @@
 
 namespace Lego\Widget\Concerns;
 
-use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Request;
 
 trait HasInput
 {
     private function getDefaultInput()
     {
-        return Input::all();
+        return Request::all();
     }
 
     protected $userCustomInput = [];

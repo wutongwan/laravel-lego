@@ -2,9 +2,9 @@
 
 namespace Lego\Foundation\Concerns;
 
-use Collective\Html\HtmlFacade;
 use Illuminate\Support\HtmlString;
 use Lego\Foundation\Exceptions\LegoException;
+use Lego\Utility\HtmlUtility;
 
 /**
  * 推荐宿主类实现接口 HasMode.
@@ -114,7 +114,7 @@ trait ModeOperator
             $html = htmlspecialchars($html, ENT_QUOTES, 'UTF-8');
         }
 
-        return HtmlFacade::tag('p', $html, [
+        return HtmlUtility::tag('p', $html, [
             'id'    => $this->elementId(),
             'class' => 'form-control-static',
         ]);

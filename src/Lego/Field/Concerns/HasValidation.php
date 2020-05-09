@@ -3,6 +3,7 @@
 namespace Lego\Field\Concerns;
 
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Lego\Field\Field;
 use Lego\Foundation\Exceptions\LegoException;
 use Lego\LegoRegister;
@@ -28,7 +29,7 @@ trait HasValidation
             return $this;
         }
 
-        if (!str_contains($rule, 'regex') && str_contains($rule, '|')) {
+        if (!Str::contains($rule, 'regex') && Str::contains($rule, '|')) {
             foreach (explode('|', $rule) as $item) {
                 $this->rule($item);
             }
@@ -81,7 +82,7 @@ trait HasValidation
      * 对 input 值的自定义校验，支持调用多次
      *
      * @param string|\Closure $validator
-     * @param bool            $condition
+     * @param bool $condition
      *
      * @return $this
      */
@@ -171,7 +172,7 @@ trait HasValidation
 
         /**
          * @var \Illuminate\Database\Eloquent\Model
-         * @var Field                               $this
+         * @var Field $this
          */
         $model = $this->data;
 

@@ -4,7 +4,6 @@ namespace Lego\Tests\Widget\Grid;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
-use Lego\Register\HighPriorityResponse;
 use Lego\Tests\TestCase;
 use Lego\Tests\Tools\FakeMobileDetect;
 use Lego\Widget\Filter;
@@ -146,29 +145,6 @@ class GridTest extends TestCase
         foreach ($data as $datum) {
             $this->assertContains($datum['user'], $html);
         }
-    }
-
-    public function testExport()
-    {
-        $grid = $this->fakeGrid();
-        $grid->export('Test Export', function (Grid $grid) {
-            $grid->remove('address');
-        });
-        $this->assertContains('Test Export', $this->render2html($grid));
-
-        $data = $grid->data();
-        /** @var \Maatwebsite\Excel\Classes\PHPExcel $e */
-        $e = $grid->exportAsExcel('example')->getExcel();
-        foreach ($e->getSheet()->toArray() as $idx => $cell) {
-            if ($idx === 0) {
-                $this->assertEquals(['User Name', 'City', 'Address'], $cell);
-            } else {
-                $this->assertEquals(array_values($data[$idx - 1]), $cell);
-            }
-        }
-
-        $this->assertStringStartsWith('http://', $grid->exports()['Test Export']);
-        $this->assertContains(HighPriorityResponse::REQUEST_PARAM, $grid->exports()['Test Export']);
     }
 
     public function testGetResult()

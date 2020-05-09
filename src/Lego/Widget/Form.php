@@ -3,6 +3,7 @@
 namespace Lego\Widget;
 
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Str;
 use Lego\Field\Field;
 use Lego\Foundation\Concerns\HasMode;
 use Lego\Foundation\Concerns\ModeOperator;
@@ -11,7 +12,13 @@ use Lego\Register\HighPriorityResponse;
 /**
  * Class Form.
  *
- * @lego-ide-helper
+ * --- ide helpers begin ---
+ * @method \Lego\Foundation\Button addRightTopButton($text, $url = null, $id = null)
+ * @method \Lego\Foundation\Button addRightBottomButton($text, $url = null, $id = null)
+ * @method \Lego\Foundation\Button addLeftTopButton($text, $url = null, $id = null)
+ * @method \Lego\Foundation\Button addLeftBottomButton($text, $url = null, $id = null)
+ * @method \Lego\Foundation\Button addBottomButton($text, $url = null, $id = null)
+ * --- ide helpers end ---
  */
 class Form extends Widget implements HasMode
 {
@@ -213,7 +220,7 @@ class Form extends Widget implements HasMode
         $this->rewriteResponse(function () {
             if (is_callable($this->success)) {
                 return call_user_func($this->success, $this->data);
-            } elseif (is_string($this->success) && starts_with($this->success, ['http://', 'https://', '/'])) {
+            } elseif (is_string($this->success) && Str::startsWith($this->success, ['http://', 'https://', '/'])) {
                 return redirect($this->success);
             } else {
                 return $this->success;

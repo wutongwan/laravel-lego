@@ -3,14 +3,36 @@
 namespace Lego\Field;
 
 use Lego\Register\UserDefinedField;
-use Symfony\Component\ClassLoader\ClassMapGenerator;
 
 /**
  * call through app('lego-fields').
  */
 class FieldLoader
 {
-    private $fields = [];
+    protected $fields = [];
+
+    private $buildInFields = [
+        Provider\AutoComplete::class,
+        Provider\CascadeSelect::class,
+        Provider\Checkboxes::class,
+        Provider\Date::class,
+        Provider\DateRange::class,
+        Provider\Datetime::class,
+        Provider\DatetimeRange::class,
+        Provider\Hidden::class,
+        Provider\JSON::class,
+        Provider\Number::class,
+        Provider\NumberRange::class,
+        Provider\Radios::class,
+        Provider\Readonly::class,
+        Provider\RichText::class,
+        Provider\Select::class,
+        Provider\Select2::class,
+        Provider\Text::class,
+        Provider\Textarea::class,
+        Provider\Time::class,
+        Provider\TimeRange::class,
+    ];
 
     public function __construct()
     {
@@ -24,8 +46,7 @@ class FieldLoader
 
     private function addBuildInFields()
     {
-        $fields = ClassMapGenerator::createMap(__DIR__ . '/../Field/Provider');
-        foreach ($fields as $field => $path) {
+        foreach ($this->buildInFields as $field) {
             $this->fields[class_basename($field)] = $field;
         }
     }

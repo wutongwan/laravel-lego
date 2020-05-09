@@ -2,6 +2,7 @@
 
 namespace Lego\Tests\Operator;
 
+use Illuminate\Foundation\Application;
 use Lego\Operator\Eloquent\EloquentQuery;
 use Lego\Tests\Models\ExampleModel;
 use Lego\Tests\TestCase;
@@ -28,21 +29,36 @@ class EloquentQueryTest extends TestCase
             ->whereEquals('test_belongs_to.name', 'tbt_name_value')
             ->whereContains('test_belongs_to.tbt_json:key3', 'tbt_json_value');
 
-        self::assertSame(
-            'select * from `example_models` '
-            . 'where `equals` = ? and `in_column` in (?, ?) and `gt` > ? and `gte` >= ? '
-            . 'and `lt` < ? and `lte` <= ? '
-            . 'and `between` between ? and ? '
-            . 'and `contains` like ? and `starts_with` like ? and `ends_with` like ? '
-            . 'and `json`->\'$."key1"."key2"\' = ? '
-            . 'and exists (select * from `belongs_to_examples` '
-            . 'where `example_models`.`test_belongs_to_id` = `belongs_to_examples`.`id` '
-            . 'and `name` = ?) '
-            . 'and exists (select * from `belongs_to_examples` '
-            . 'where `example_models`.`test_belongs_to_id` = `belongs_to_examples`.`id` '
-            . 'and `tbt_json`->\'$."key3"\' like ?)',
-            $query->toSql()
-        );
+        // json key 生成格式有变化
+        if (version_compare(Application::VERSION, '5.3', '<')) {
+            $sql = 'select * from `example_models` '
+                . 'where `equals` = ? and `in_column` in (?, ?) and `gt` > ? and `gte` >= ? '
+                . 'and `lt` < ? and `lte` <= ? '
+                . 'and `between` between ? and ? '
+                . 'and `contains` like ? and `starts_with` like ? and `ends_with` like ? '
+                . 'and `json`->"$.key1.key2" = ? '  // here
+                . 'and exists (select * from `belongs_to_examples` '
+                . 'where `example_models`.`test_belongs_to_id` = `belongs_to_examples`.`id` '
+                . 'and `name` = ?) '
+                . 'and exists (select * from `belongs_to_examples` '
+                . 'where `example_models`.`test_belongs_to_id` = `belongs_to_examples`.`id` '
+                . 'and `tbt_json`->"$.key3" like ?)'; // here
+        } else {
+            $sql = 'select * from `example_models` '
+                . 'where `equals` = ? and `in_column` in (?, ?) and `gt` > ? and `gte` >= ? '
+                . 'and `lt` < ? and `lte` <= ? '
+                . 'and `between` between ? and ? '
+                . 'and `contains` like ? and `starts_with` like ? and `ends_with` like ? '
+                . 'and `json`->\'$."key1"."key2"\' = ? '
+                . 'and exists (select * from `belongs_to_examples` '
+                . 'where `example_models`.`test_belongs_to_id` = `belongs_to_examples`.`id` '
+                . 'and `name` = ?) '
+                . 'and exists (select * from `belongs_to_examples` '
+                . 'where `example_models`.`test_belongs_to_id` = `belongs_to_examples`.`id` '
+                . 'and `tbt_json`->\'$."key3"\' like ?)';
+        }
+
+        self::assertSame($sql, $query->toSql());
 
         self::assertSame([
             'equals_value',

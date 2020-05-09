@@ -200,6 +200,8 @@ abstract class Query extends Operator implements
      */
     abstract protected function createLengthNotAwarePaginator($perPage, $columns, $pageName, $page);
 
+    const SELECT_ALL = ['*'];
+
     /**
      * Paginator API.
      *
@@ -220,7 +222,7 @@ abstract class Query extends Operator implements
     ) {
         $perPage = is_null($perPage) ? config('lego.paginator.per-page') : $perPage;
         $pageName = is_null($pageName) ? config('lego.paginator.page-name') : $pageName;
-        $columns = is_null($columns) ? ['*'] : $columns;
+        $columns = is_null($columns) ? self::SELECT_ALL : $columns;
         $page = $page ?: Request::query($pageName, 1);
 
         if ($lengthAware) {
@@ -261,7 +263,7 @@ abstract class Query extends Operator implements
      *
      * @return Collection
      */
-    public function get($columns = ['*'])
+    public function get($columns = self::SELECT_ALL)
     {
         return $this->select($columns)->map(function ($row) {
             return Finder::createStore($row);

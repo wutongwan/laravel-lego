@@ -2,6 +2,7 @@
 
 namespace Lego\Widget\Concerns;
 
+use Illuminate\Support\Arr;
 use Lego\Field\Field;
 use Lego\Field\Group;
 use Lego\Foundation\Exceptions\LegoException;
@@ -131,7 +132,7 @@ trait HasGroups
      */
     protected function currentGroup()
     {
-        if ($group = array_last($this->activeGroups)) {
+        if ($group = Arr::last($this->activeGroups)) {
             return $this->getGroup($group);
         }
 

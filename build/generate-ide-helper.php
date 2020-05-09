@@ -44,8 +44,22 @@ echo "IDE helpers generated.\n";
 function insertDocsToClass($class, $docs)
 {
     $filename = (new \ReflectionClass($class))->getFileName();
+    $originalContent = file_get_contents($filename);
+
+    $beginMark = ' * --- ide helpers begin ---';
+    $begin = strpos($originalContent, $beginMark) + strlen($beginMark);
+    $end = strpos($originalContent, ' * --- ide helpers end ---');
+
+    if (!$begin || !$end) {
+        dump("{$class}($filename) not found ide helper mark");
+    }
+
+    $prefix = substr($originalContent, 0, $begin);
+    $suffix = substr($originalContent, $end);
     $docs = is_array($docs) ? join("\n", $docs) : $docs;
-    file_put_contents($filename, str_replace(' * @lego-ide-helper', $docs, file_get_contents($filename)));
+
+    $modified = $prefix . "\n" . $docs . "\n" . $suffix;
+    file_put_contents($filename, $modified);
 }
 
 class Method

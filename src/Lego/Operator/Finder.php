@@ -25,8 +25,8 @@ class Finder
     public function __construct()
     {
         // test plastic is installed
-        if (class_exists(\Sleimanx2\Plastic\Facades\Plastic::class)) {
-            $this->operators[Query::class][110] = Plastic\PlasticQuery::class;
+        if (class_exists(\ONGR\ElasticsearchDSL\Search::class)) {
+            $this->operators[Query::class][110] = Elastic\ElasticQuery::class;
         }
 
         $configs = Config::get('lego.operators', []);

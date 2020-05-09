@@ -2,6 +2,7 @@
 
 namespace Lego\Foundation\Concerns;
 
+use Illuminate\Support\Arr;
 use Lego\Utility\HtmlUtility;
 
 trait HasHtmlAttributes
@@ -45,7 +46,7 @@ trait HasHtmlAttributes
 
     public function getAttribute($attribute, $default = null)
     {
-        return array_get($this->attributes, $attribute, $default);
+        return Arr::get($this->attributes, $attribute, $default);
     }
 
     public function getAttributeString($attribute, $default = '')

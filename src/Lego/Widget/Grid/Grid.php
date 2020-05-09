@@ -7,16 +7,20 @@ use Illuminate\Support\Facades\Config;
 use Lego\Foundation\Facades\LegoAssets;
 use Lego\Operator\Store;
 use Lego\Register\HighPriorityResponse;
+use Lego\Utility\Excel;
 use Lego\Widget\Concerns as WidgetConcerns;
 use Lego\Widget\Filter;
 use Lego\Widget\Widget;
-use Maatwebsite\Excel\Facades\Excel;
-use Maatwebsite\Excel\Writers\LaravelExcelWriter;
 
 /**
  * Class Grid.
  *
- * @lego-ide-helper
+ * --- ide helpers begin ---
+ * @method \Lego\Foundation\Button addRightTopButton($text, $url = null, $id = null)
+ * @method \Lego\Foundation\Button addRightBottomButton($text, $url = null, $id = null)
+ * @method \Lego\Foundation\Button addLeftTopButton($text, $url = null, $id = null)
+ * @method \Lego\Foundation\Button addLeftBottomButton($text, $url = null, $id = null)
+ * --- ide helpers end ---
  */
 class Grid extends Widget
 {
@@ -94,7 +98,8 @@ class Grid extends Widget
                 if ($exporting) {
                     call_user_func($exporting, $this);
                 }
-                $this->exportAsExcel($name)->download();
+                $excel = $this->exportAsExcel($name);
+                Excel::download($excel);
             },
             md5('grid export' . $name)
         );
@@ -103,31 +108,10 @@ class Grid extends Widget
         return $this;
     }
 
-    /**
-     * @return \Maatwebsite\Excel\Writers\LaravelExcelWriter
-     */
     public function exportAsExcel($filename)
     {
-        $data = [];
-        foreach ($this->paginator() as $store) {
-            $row = [];
-            foreach ($this->cells() as $cell) {
-                $row[$cell->description()] = $cell->fill($store)->getPlainValue();
-            }
-            $data[] = $row;
-        }
-
-        return Excel::create(
-            $filename,
-            function (LaravelExcelWriter $excel) use ($data) {
-                $excel->sheet(
-                    'SheetName',
-                    function (\PHPExcel_Worksheet $sheet) use ($data) {
-                        $sheet->fromArray($data);
-                    }
-                );
-            }
-        );
+        $data = $this->getPlainResult()->all();
+        Excel::downloadFromArray($filename . '.xlsx', $data);
     }
 
     /**

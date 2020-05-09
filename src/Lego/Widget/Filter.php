@@ -8,7 +8,13 @@ use Lego\Widget\Grid\Grid;
 /**
  * Class Filter.
  *
- * @lego-ide-helper
+ * --- ide helpers begin ---
+ * @method \Lego\Foundation\Button addRightTopButton($text, $url = null, $id = null)
+ * @method \Lego\Foundation\Button addRightBottomButton($text, $url = null, $id = null)
+ * @method \Lego\Foundation\Button addLeftTopButton($text, $url = null, $id = null)
+ * @method \Lego\Foundation\Button addLeftBottomButton($text, $url = null, $id = null)
+ * @method \Lego\Foundation\Button addBottomButton($text, $url = null, $id = null)
+ * --- ide helpers end ---
  */
 class Filter extends Widget
 {

@@ -10,7 +10,29 @@ use Lego\Foundation\Fields;
 /**
  * Field 相关逻辑.
  *
- * @lego-ide-helper
+ * --- ide helpers begin ---
+ * @method \Lego\Field\Provider\AutoComplete addAutoComplete(string $fieldName, $fieldDescription = null)
+ * @method \Lego\Field\Provider\CascadeSelect addCascadeSelect(string $fieldName, $fieldDescription = null)
+ * @method \Lego\Field\Provider\Checkboxes addCheckboxes(string $fieldName, $fieldDescription = null)
+ * @method \Lego\Field\Provider\Date addDate(string $fieldName, $fieldDescription = null)
+ * @method \Lego\Field\Provider\DateRange addDateRange(string $fieldName, $fieldDescription = null)
+ * @method \Lego\Field\Provider\Datetime addDatetime(string $fieldName, $fieldDescription = null)
+ * @method \Lego\Field\Provider\DatetimeRange addDatetimeRange(string $fieldName, $fieldDescription = null)
+ * @method \Lego\Field\Provider\Hidden addHidden(string $fieldName, $fieldDescription = null)
+ * @method \Lego\Field\Provider\JSON addJSON(string $fieldName, $fieldDescription = null)
+ * @method \Lego\Field\Provider\Number addNumber(string $fieldName, $fieldDescription = null)
+ * @method \Lego\Field\Provider\NumberRange addNumberRange(string $fieldName, $fieldDescription = null)
+ * @method \Lego\Field\Provider\Radios addRadios(string $fieldName, $fieldDescription = null)
+ * @method \Lego\Field\Provider\Readonly addReadonly(string $fieldName, $fieldDescription = null)
+ * @method \Lego\Field\Provider\RichText addRichText(string $fieldName, $fieldDescription = null)
+ * @method \Lego\Field\Provider\Select addSelect(string $fieldName, $fieldDescription = null)
+ * @method \Lego\Field\Provider\Select2 addSelect2(string $fieldName, $fieldDescription = null)
+ * @method \Lego\Field\Provider\Text addText(string $fieldName, $fieldDescription = null)
+ * @method \Lego\Field\Provider\Textarea addTextarea(string $fieldName, $fieldDescription = null)
+ * @method \Lego\Field\Provider\Time addTime(string $fieldName, $fieldDescription = null)
+ * @method \Lego\Field\Provider\TimeRange addTimeRange(string $fieldName, $fieldDescription = null)
+ * --- ide helpers end ---
+ *
  * @mixin HasGroups
  * @mixin \Lego\Foundation\Concerns\HasEvents
  */
@@ -56,7 +78,7 @@ trait HasFields
      */
     public function fields()
     {
-        return $this->fields->fields();
+        return $this->fields;
     }
 
     public function values($fields = [])
@@ -106,12 +128,12 @@ trait HasFields
      */
     public function field($fieldName)
     {
-        return $this->fields->field($fieldName);
+        return $this->fields->get($fieldName);
     }
 
     public function addField(Field $field): Field
     {
-        $this->fields->add($field);
+        $this->fields->put($field->name(), $field);
 
         $this->events->fire('after-add-field', [$field]);
 
