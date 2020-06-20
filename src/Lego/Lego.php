@@ -34,9 +34,9 @@ class Lego
         return new Form($source);
     }
 
-    public static function confirm($message, callable $action, $delay = null)
+    public static function confirm($message, callable $action, $delay = null, string $view = null)
     {
-        return (new Confirm($message, $action, $delay))->response();
+        return (new Confirm($message, $action, $delay, $view))->response();
     }
 
     public static function message($message, $level = 'default')

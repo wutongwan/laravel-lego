@@ -32,10 +32,16 @@ class Confirm
      */
     protected $delay = 0;
 
+    /**
+     * Template name
+     * @var string
+     */
+    protected $view = 'lego::confirm';
+
     private $confirmQueryName;
     private $fromQueryName;
 
-    public function __construct($message, callable $action, int $delay = null)
+    public function __construct($message, callable $action, int $delay = null, string $view = null)
     {
         $this->message = $message;
         $this->action = $action;
@@ -46,6 +52,9 @@ class Confirm
 
         if ($delay) {
             $this->delay = $delay;
+        }
+        if ($view) {
+            $this->view = $view;
         }
     }
 
@@ -70,16 +79,16 @@ class Confirm
 
         return view('lego::confirm', [
             'message' => $this->message,
-            'delay'   => $this->delay,
+            'delay' => $this->delay,
 
             'confirm' => Request::fullUrlWithQuery([
                 $this->confirmQueryName => $this->expectedConfirmValue,
-                $this->fromQueryName    => $from,
+                $this->fromQueryName => $from,
             ]),
 
             'cancel' => Request::fullUrlWithQuery([
                 $this->confirmQueryName => 'no',
-                $this->fromQueryName    => $from,
+                $this->fromQueryName => $from,
             ]),
         ]);
     }
