@@ -77,7 +77,7 @@ class Confirm
             return isset($response) ? $response : redirect($from);
         }
 
-        return view('lego::confirm', [
+        return view($this->view, [
             'message' => $this->message,
             'delay' => $this->delay,
 
