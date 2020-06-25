@@ -24,6 +24,11 @@ class Cell
     private $store;
     private $default;
 
+    /**
+     * @var string
+     */
+    private $format;
+
     public function __construct($name, $description)
     {
         $pipes = explode('|', $name);
@@ -61,9 +66,9 @@ class Cell
      *
      * @param callable|string $pipe
      *
+     * @return $this
      * @throws LegoException
      *
-     * @return $this
      */
     public function pipe($pipe)
     {
@@ -75,6 +80,34 @@ class Cell
     public function cell($callable)
     {
         return $this->pipe($callable);
+    }
+
+    public function format(string $format)
+    {
+        $this->format = $format;
+        return $this;
+    }
+
+    /**
+     * @var string
+     */
+    private $link;
+    /**
+     * @var bool
+     */
+    private $linkOpenInNewTab;
+
+    /**
+     * Set link(<a>) to cell
+     * @param string $url
+     * @param bool $openInNewTab
+     * @return $this
+     */
+    public function link(string $url, bool $openInNewTab = true)
+    {
+        $this->link = $url;
+        $this->linkOpenInNewTab = $openInNewTab;
+        return $this;
     }
 
     public function copy()
@@ -127,7 +160,21 @@ class Cell
             $value = $pipe->handle($value, $this->data, $this);
         }
 
-        return new HtmlString((string) $value);
+        // format
+        if ($this->format) {
+            $value = FormatTool::format($value, $this->format, $this->store);
+        }
+
+        if ($this->link) {
+            $value = sprintf(
+                '<a href="%s" target="%s">%s</a>',
+                FormatTool::format($value, $this->link, $this->store),
+                $this->linkOpenInNewTab ? '_blank' : '_self',
+                $value
+            );
+        }
+
+        return new HtmlString((string)$value);
     }
 
     /**

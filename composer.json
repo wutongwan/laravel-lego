@@ -20,7 +20,7 @@
         "illuminate/support": "5.4.* || 5.5.* || ^6.0 || ^7.0",
         "laravelcollective/html": "^5.2 || ^6.0",
         "mobiledetect/mobiledetectlib": "^2.8",
-        "mews/purifier": "^3.2",
+        "mews/purifier": "^2.0 || ^3.2",
         "box/spout": "^2.7"
     },
     "require-dev": {

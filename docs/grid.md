@@ -166,6 +166,34 @@ class Pipes extends \Lego\Widget\Grid\Pipes
 $grid->add('name|trans2en', 'Name');
 ```
 
+## Format & Link
+
+```php
+$grid->add('id', 'Edit')
+    ->format('Edit {}:{address}')
+    ->link('https://example.com/edit/{}');
+```
+
+same as
+
+```php
+$grid->add('id', 'Edit')
+    ->pipe(function ($id, $model) {
+        return sprintf(
+            '<a href="%s" target="_blank">Edit %s:%s</a>',
+            'https://example.com/edit/' . $id,
+            $id,
+            $model->address
+        ); 
+    });
+```
+
+Format 和 Link 中占位符示例：
+
+- `{}` => cell value
+- `{id}` => $model->id
+- `{related.name}` => $model->related->name
+
 ## Export as Excel (.xls)
 
 ### Simple

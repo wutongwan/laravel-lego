@@ -1,5 +1,12 @@
 # Release Notes
 
+## 1.0
+
+- 支持 Laravel 6/7
+- Cell 新增特性 [format 和 link](docs/grid.md)
+- 完善测试
+
+
 ## 0.2.18 (2018-03-09)
 
 ### Fixed

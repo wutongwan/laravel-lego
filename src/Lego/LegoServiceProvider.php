@@ -14,9 +14,7 @@ class LegoServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        /** @var \Illuminate\Foundation\Application $app */
-        $app = $this->app;
-        if ($app->runningInConsole()) {
+        if ($this->app->runningInConsole()) {
             $this->commands([GenerateIDEHelper::class]);
         }
     }
