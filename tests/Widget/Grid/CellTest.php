@@ -33,4 +33,21 @@ class CellTest extends \Lego\Tests\TestCase
         $cell = (new Cell('name', 'Name'))->default('default')->fill([]);
         $this->assertEquals('default', $cell->value());
     }
+
+    public function testFormatAndLink()
+    {
+        $cell = (new Cell('name', 'Your Name'));
+        $cell->format('Edit {id}');
+        $cell->link('https://t.cn/{id}/{name}');
+
+        $cell->fill([
+            'id' => 1,
+            'name' => 'world'
+        ]);
+
+        self::assertSame(
+            '<a href="https://t.cn/1/world" target="_blank">Edit 1</a>',
+            $cell->value()->toHtml()
+        );
+    }
 }
