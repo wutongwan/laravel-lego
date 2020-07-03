@@ -41,7 +41,7 @@ class HighPriorityResponse extends Data
 
         $path = str_replace('+', '.', $path);
         Arr::set(self::$tree, $path, []);
-        $step = Arr::first(array_keys(array_get(self::$tree, self::$current)));
+        $step = Arr::first(array_keys(Arr::get(self::$tree, self::$current)));
         if (!$data = LegoRegister::get(self::class, $step)) {
             return null;
         }

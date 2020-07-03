@@ -57,6 +57,9 @@ trait ModeOperator
         return $this->modeIsModified;
     }
 
+    /**
+     * @return static
+     */
     public function mode($mode, $condition = true)
     {
         lego_assert(
@@ -72,16 +75,25 @@ trait ModeOperator
         return $this;
     }
 
+    /**
+     * @return static
+     */
     public function readonly($condition = true)
     {
         return $this->mode(self::MODE_READONLY, $condition);
     }
 
+    /**
+     * @return static
+     */
     public function editable($condition = true)
     {
         return $this->mode(self::MODE_EDITABLE, $condition);
     }
 
+    /**
+     * @return static
+     */
     public function disabled($condition = true)
     {
         return $this->mode(self::MODE_DISABLED, $condition);
@@ -99,6 +111,9 @@ trait ModeOperator
 
     protected $escape = true;
 
+    /**
+     * @return static
+     */
     public function disableEscape()
     {
         $this->escape = false;
