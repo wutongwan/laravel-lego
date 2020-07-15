@@ -1,7 +1,8 @@
 # Grid
 
 
-* TOC {:toc}
+* TOC
+{:toc}
 
 
 ## Basic
