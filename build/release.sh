@@ -74,5 +74,6 @@ git commit -a -m 'build release' -q
 
 git tag -a $tag
 git push git@github.com:wutongwan/laravel-lego.git $tag
+git checkout master
 
 echo '-> Draft new release https://github.com/wutongwan/laravel-lego/releases/new'
