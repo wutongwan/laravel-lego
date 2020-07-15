@@ -3,6 +3,7 @@
 namespace Lego\Widget\Grid;
 
 use Illuminate\Support\HtmlString;
+use Illuminate\Support\Str;
 use Lego\Foundation\Exceptions\LegoException;
 use Lego\Operator\Finder;
 use Lego\Operator\Store;
@@ -28,6 +29,11 @@ class Cell
      * @var string
      */
     private $format;
+
+    /**
+     * @var array<string, string>
+     */
+    private $tagMapping = [];
 
     public function __construct($name, $description)
     {
@@ -110,6 +116,17 @@ class Cell
         return $this;
     }
 
+    /**
+     * 设置标签映射关系
+     * @param array $mappings
+     * @return static
+     */
+    public function tag(array $mappings)
+    {
+        $this->tagMapping = $mappings;
+        return $this;
+    }
+
     public function copy()
     {
         return clone $this;
@@ -165,6 +182,21 @@ class Cell
             $value = FormatTool::format($value, $this->format, $this->store);
         }
 
+        // tag
+        if ($this->tagMapping) {
+            $selected = null;
+            foreach ($this->tagMapping as $pattern => $style) {
+                if (Str::is($pattern, $value)) {
+                    $selected = $style;
+                    break;
+                }
+            }
+            if ($selected) {
+                $value = sprintf('<span class="label label-%s">%s</span>', $selected, $value);
+            }
+        }
+
+        // link
         if ($this->link) {
             $value = sprintf(
                 '<a href="%s" target="%s">%s</a>',

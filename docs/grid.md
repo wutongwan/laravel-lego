@@ -118,6 +118,13 @@ $grid->add('name|trim', 'Name')
     $grid->add('name|strip', 'Name');
     ```
 
+- limit, truncates value at the specified length:
+
+    ```php
+    $grid->add('longText|limit:100');
+    ```
+
+
 - date, convert to date string
 
     ```php
@@ -165,6 +172,22 @@ class Pipes extends \Lego\Widget\Grid\Pipes
 ```php
 $grid->add('name|trans2en', 'Name');
 ```
+
+## Tag
+
+给特定列按内容添加标签，例如用在状态列，方便根据颜色快速定位数据行。
+
+```php
+$grid->add('status', 'Status')
+    ->tag([
+        'enable' => TagStyles::SUCCESS,
+        'disable' => TagStyles::DANGER,
+        '*' => TagStyles::DEFAULT,
+    ])
+```
+
+效果如图:
+![tag](./images/tag.png)
 
 ## Format & Link
 
