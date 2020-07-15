@@ -4,6 +4,62 @@
 
 - <http://lego.zhw.in>
 
+
+## Usage
+
+
+- UserController.php
+
+```php
+$form = Lego::form(new User());
+
+$form->addText('number', '编号')->required()->rule('numeric')->unique();
+$form->addText('email', '邮箱')->required()->rule('email')->unique();
+
+return $form->view('layout', ['form' => $form]);
+```
+
+- layout.blade.php
+
+```html
+<!doctype html>
+<html lang="en">
+<head>
+    @include('lego::styles')
+</head>
+<body>
+
+    {!! $form !!}
+
+    @include('lego::scripts')
+</body>
+</html>
+```
+
+- Just works!
+
+![image](http://ww1.sinaimg.cn/bmiddle/801b780agw1f8pjbovte0j20n80h4jrz.jpg)
+
+
+## Install
+
+### 1、Dependency
+
+```bash
+composer require "wutongwan/lego"
+```
+
+### 2、Publish lego assets
+
+```bash
+php artisan vendor:publish --tag=lego-assets --force
+```
+
+> **Tips:**
+> 
+> Add this command to `post-update-cmd`, In order to update lego static files Automatically.
+
+
 ## Documents
 
 - [Form 表单](./form.md)

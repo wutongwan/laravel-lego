@@ -1,8 +1,12 @@
 # Grid
 
+Grid 用于生成列表页面，在保证简单接口的前提下，一如既往的强大。
 
 * TOC
 {:toc}
+
+![grid-example](media/grid-example.png)
+
 
 
 ## Basic
@@ -71,42 +75,21 @@ $grid->responsive();
 
 ## Pipe
 
-### Basic
+管道，可以通过管道单元格的原始值进行二次处理，lego 内置了一些常用管道，例如字符串截断、日期格式等，同时也支持传入自定义的 Closure ，可用于进行更复杂的处理。
 
-```php
-$grid->add('name|trim|strip', 'Name');
-```
+pipe 有两种调用方式
 
-```php
-$grid = Lego::grid(City::class);
+1、使用管道符号 `|`
 
-$grid->add('name|trim', 'Name')
+  ```php
+  $grid->add('name|trim|strip', 'Name');  
+  ```
 
-    ->pipe('strip')
+2、调用 `pipe()` 方法
 
-    ->pipe(function ($name) {
-        return do_some_thing($name);
-    })
-
-    ->pipe(function ($name, City $city) {
-        /**
-        * $city is the model of current row
-        */
-        return $name . '(' . $city->name .')';
-    })
-
-    ->pipe(function ($name, City $city, Cell $cell) {
-        /**
-        * $cell is instanceof \Lego\Widget\Grid\Cell
-        * 
-        * $cell->name() === 'name'; // Important: NO pipe name
-        * $cell->description() === 'Name';
-        * $cell->getOriginalValue();
-        */
-        
-        return $name;
-    });
-```
+  ```php
+  $grid->add('name')->pipe('trim')
+  ```
 
 ### Available pipes
 
@@ -142,6 +125,41 @@ $grid->add('name|trim', 'Name')
     $grid->add('updated_at|time', 'Last Moidify Time');
     // eg: 2017-01-01 12:00:01 => 12:00:01
     ```
+
+### Closure Pipe
+
+传入 pipe() 的 Closure 最多支持接收三个参数：
+
+- $value 当前值
+- \$model 当前行对应的 \$model  
+- $cell Lego 内部的单元格对象
+
+```php
+$grid->add('name', 'Name')
+
+    ->pipe(function ($name) {
+        return strtoupper($name);
+    })
+
+    ->pipe(function ($name, City $city) {
+        /**
+        * $city is the model of current row
+        */
+        return $name . '(' . $city->name .')';
+    })
+
+    ->pipe(function ($name, City $city, Cell $cell) {
+        /**
+        * $cell is instanceof \Lego\Widget\Grid\Cell
+        * 
+        * $cell->name() === 'name'; // Important: NO pipe name
+        * $cell->description() === 'Name';
+        * $cell->getOriginalValue();
+        */
+        return $name;
+    });
+
+```
 
 ### Self-Defined Pipe
 
@@ -191,14 +209,42 @@ $grid->add('status', 'Status')
 ```
 
 效果如图:
-![tag](./images/tag.png)
+![tag](media/tag.png)
 
-## Format & Link
+
+## format()
+
+对当前单元格的值进行简单的拼接或包装。有些时候我们需要在一列中显示由多个属性组成的内容，在此之前我们可以使用 Pipe + Closure 实现，现在可以使用更简单的 format 实现。
+
+
+```php
+$grid->add('name', 'Name')
+    ->format('{name} ({gender})'); // 示例显示: 张三 (男)
+```
+
+相当于:
+
+```php
+$grid->add('name', 'Name')
+    ->pipe(function ($_, $model) {
+        return sprintf('%s (%s)', $model->name, $model->gender);
+    });
+```
+
+format 中也支持读取 Relation 的值
+
+```php
+->foramt('{name} {country.name}')
+```
+
+
+## link()
+
+给当前单元格内容添加链接。link() 的第一个参数会使用 format() 同样方式进行解析，即可以在链接中使用属性占位符。
 
 ```php
 $grid->add('id', 'Edit')
-    ->format('Edit {}:{address}')
-    ->link('https://example.com/edit/{}');
+    ->link('https://example.com/edit/{id}');
 ```
 
 same as
@@ -207,19 +253,13 @@ same as
 $grid->add('id', 'Edit')
     ->pipe(function ($id, $model) {
         return sprintf(
-            '<a href="%s" target="_blank">Edit %s:%s</a>',
+            '<a href="%s" target="_blank">%s</a>',
             'https://example.com/edit/' . $id,
-            $id,
-            $model->address
-        ); 
+            $id
+        );
     });
 ```
 
-Format 和 Link 中占位符示例：
-
-- `{}` => cell value
-- `{id}` => $model->id
-- `{related.name}` => $model->related->name
 
 ## Export as Excel (.xls)
 
@@ -229,11 +269,9 @@ Format 和 Link 中占位符示例：
 $grid->export('filename');
 ```
 
-> **Notice：** Lego 导出功能依赖 [Laravel-Excel](https://github.com/Maatwebsite/Laravel-Excel)，所以需要将下面类注册到 `config/app.php` 的 `providers` 中：
-> 
-> ```php
-> Maatwebsite\Excel\ExcelServiceProvider::class
-> ```
+如上调用后，会在表格左上角添加一个导出按钮:
+![grid-export](media/grid-export.png)
+
 
 ### Exporting callback
 
@@ -242,6 +280,7 @@ $grid->export('filename', function (Grid $grid) {
     $grid->paginate(1000); // export more
 })
 ```
+
 
 ## 批处理操作
 
