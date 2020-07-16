@@ -38,7 +38,7 @@ return $form->view('layout', ['form' => $form]);
 
 - Just works!
 
-![image](http://ww1.sinaimg.cn/bmiddle/801b780agw1f8pjbovte0j20n80h4jrz.jpg)
+![form](media/form.jpg)
 
 
 ## Install
