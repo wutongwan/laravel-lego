@@ -3,7 +3,6 @@
 namespace Lego\Widget\Grid;
 
 use Illuminate\Support\HtmlString;
-use Illuminate\Support\Str;
 use Lego\Foundation\Exceptions\LegoException;
 use Lego\Operator\Finder;
 use Lego\Operator\Store;
@@ -24,16 +23,6 @@ class Cell
      */
     private $store;
     private $default;
-
-    /**
-     * @var string
-     */
-    private $format;
-
-    /**
-     * @var array<string, string>
-     */
-    private $tagMapping = [];
 
     public function __construct($name, $description)
     {
@@ -90,18 +79,8 @@ class Cell
 
     public function format(string $format)
     {
-        $this->format = $format;
-        return $this;
+        return $this->pipe('format', $format);
     }
-
-    /**
-     * @var string
-     */
-    private $link;
-    /**
-     * @var bool
-     */
-    private $linkOpenInNewTab;
 
     /**
      * Set link(<a>) to cell
@@ -109,11 +88,9 @@ class Cell
      * @param bool $openInNewTab
      * @return $this
      */
-    public function link(string $url, bool $openInNewTab = true)
+    public function link(string $url, bool $openInNewTab = false)
     {
-        $this->link = $url;
-        $this->linkOpenInNewTab = $openInNewTab;
-        return $this;
+        return $this->pipe('link', $url, $openInNewTab);
     }
 
     /**
@@ -123,8 +100,7 @@ class Cell
      */
     public function tag(array $mappings)
     {
-        $this->tagMapping = $mappings;
-        return $this;
+        return $this->pipe('tag', $mappings);
     }
 
     public function copy()
@@ -175,35 +151,6 @@ class Cell
         $value = lego_default($this->getOriginalValue(), $this->default);
         foreach ($this->pipes as $pipe) {
             $value = $pipe->handle($value, $this->data, $this);
-        }
-
-        // format
-        if ($this->format) {
-            $value = FormatTool::format($value, $this->format, $this->store);
-        }
-
-        // tag
-        if ($this->tagMapping) {
-            $selected = null;
-            foreach ($this->tagMapping as $pattern => $style) {
-                if (Str::is($pattern, $value)) {
-                    $selected = $style;
-                    break;
-                }
-            }
-            if ($selected) {
-                $value = sprintf('<span class="label label-%s">%s</span>', $selected, $value);
-            }
-        }
-
-        // link
-        if ($this->link) {
-            $value = sprintf(
-                '<a href="%s" target="%s">%s</a>',
-                FormatTool::format($value, $this->link, $this->store),
-                $this->linkOpenInNewTab ? '_blank' : '_self',
-                $value
-            );
         }
 
         return new HtmlString((string)$value);

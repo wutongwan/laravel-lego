@@ -8,6 +8,12 @@ use Lego\Foundation\Exceptions\LegoException;
 
 class PipeHandler
 {
+    private $defaultPipes = [
+        Pipes4String::class,
+        Pipes4Datetime::class,
+        Pipes4Features::class,
+    ];
+
     private $pipe;
     private $pipeClass;
     private $pipeClassMethod;
@@ -42,7 +48,11 @@ class PipeHandler
     protected function getPipeClassAndMethod($pipe)
     {
         if (empty(static::$registered)) {
-            foreach (Config::get('lego.widgets.grid.pipes', []) as $pipesClass) {
+            $pipesClassList = array_unique(array_merge(
+                $this->defaultPipes,
+                Config::get('lego.widgets.grid.pipes', [])
+            ));
+            foreach ($pipesClassList as $pipesClass) {
                 $rft = new \ReflectionClass($pipesClass);
                 foreach ($rft->getMethods() as $method) {
                     if (Str::startsWith($method->name, 'handle')) {
