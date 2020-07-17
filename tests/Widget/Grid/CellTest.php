@@ -46,7 +46,7 @@ class CellTest extends \Lego\Tests\TestCase
         ]);
 
         self::assertSame(
-            '<a href="https://t.cn/1/world" target="_blank">Edit 1</a>',
+            '<a href="https://t.cn/1/world" target="_self">Edit 1</a>',
             $cell->value()->toHtml()
         );
     }
