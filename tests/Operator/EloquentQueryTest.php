@@ -43,7 +43,7 @@ class EloquentQueryTest extends TestCase
                 . 'and exists (select * from `belongs_to_examples` '
                 . 'where `example_models`.`test_belongs_to_id` = `belongs_to_examples`.`id` '
                 . 'and `tbt_json`->"$.key3" like ?)'; // here
-        } elseif (version_compare(Application::VERSION, '7', '<')) {
+        } elseif (version_compare(Application::VERSION, '6', '<')) {
             $sql = 'select * from `example_models` '
                 . 'where `equals` = ? and `in_column` in (?, ?) and `gt` > ? and `gte` >= ? '
                 . 'and `lt` < ? and `lte` <= ? '
