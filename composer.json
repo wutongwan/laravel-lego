@@ -27,7 +27,7 @@
         "phpunit/phpunit": "^7.5.15 || ^8.4 || ^9.0",
         "laravel/laravel": "^6.0 || ^7.0",
         "fzaninotto/faker": "^1.6",
-        "ongr/elasticsearch-dsl": "^6.0",
+        "ongr/elasticsearch-dsl": "^7.2",
         "phpoffice/phpspreadsheet": "^1.5"
     },
     "autoload": {
