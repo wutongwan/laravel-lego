@@ -150,7 +150,12 @@ class Cell
     {
         $value = lego_default($this->getOriginalValue(), $this->default);
         foreach ($this->pipes as $pipe) {
-            $value = $pipe->handle($value, $this->data, $this);
+            try {
+                $value = $pipe->handle($value, $this->data, $this);
+            } catch (PipeBreakException $exception) {
+                $value = $exception->getValue();
+                break;
+            }
         }
 
         return new HtmlString((string)$value);

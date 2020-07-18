@@ -36,4 +36,20 @@ class Pipes4Features extends Pipes
         }
         return $value;
     }
+
+    public function handleIf($attribute)
+    {
+        if ($this->cell()->store()->get($attribute)) {
+            return $this->value();
+        }
+        $this->break();
+    }
+
+    public function ifNot($attribute)
+    {
+        if (!$this->cell()->store()->get($attribute)) {
+            return $this->value();
+        }
+        $this->break();
+    }
 }

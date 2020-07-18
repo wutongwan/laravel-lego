@@ -32,4 +32,12 @@ abstract class Pipes
     {
         return $this->cell;
     }
+
+    /**
+     * @throws PipeBreakException
+     */
+    protected function break($value = null)
+    {
+        throw new PipeBreakException(is_null($value) ? $this->value() : $value);
+    }
 }

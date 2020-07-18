@@ -71,6 +71,11 @@ class PipeHandler
         static::$registered = [];
     }
 
+    /**
+     * @param mixed ...$arguments
+     * @return mixed
+     * @throws PipeBreakException
+     */
     public function handle(...$arguments)
     {
         if ($this->pipe) {
