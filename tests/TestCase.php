@@ -41,7 +41,7 @@ abstract class TestCase extends \Illuminate\Foundation\Testing\TestCase
         return \Faker\Factory::create($this->app->getLocale());
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 
