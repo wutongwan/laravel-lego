@@ -16,13 +16,13 @@ class DateTest extends TestCase
 
         $form = new Form([]);
         $field = $form->addDate('test');
-        $this->assertContains($js, $this->render2html($form));
+        $this->assertStringContainsString($js, $this->render2html($form));
         $this->assertEquals('text', $field->getInputType());
 
         // 禁用一次
         $form = new Form([]);
         $field = $form->addDate('test')->disableNativePicker();
-        $this->assertContains($js, $this->render2html($form));
+        $this->assertStringContainsString($js, $this->render2html($form));
         $this->assertEquals('text', $field->getInputType());
 
         // 配置文件全局禁用
@@ -30,7 +30,7 @@ class DateTest extends TestCase
         Config::set($key, true);
         $form = new Form([]);
         $field = $form->addDate('test');
-        $this->assertContains($js, $this->render2html($form));
+        $this->assertStringContainsString($js, $this->render2html($form));
         $this->assertEquals('text', $field->getInputType());
         Config::set('lego.field.provider.' . Datetime::class . '.disable-native-picker', false);
 
@@ -38,7 +38,7 @@ class DateTest extends TestCase
         FakeMobileDetect::mockIsMobile();
         $form = new Form([]);
         $field = $form->addDate('test');
-        $this->assertNotContains($js, $this->render2html($form));
+        $this->assertStringNotContainsString($js, $this->render2html($form));
         $this->assertEquals('date', $field->getInputType());
     }
 }

@@ -17,7 +17,7 @@ class ButtonTest extends TestCase
         $btn = new Button('home', function () {
             return Redirect::to('/');
         });
-        $this->assertContains(HighPriorityResponse::REQUEST_PARAM, $this->getButtonUrl($btn));
+        $this->assertStringContainsString(HighPriorityResponse::REQUEST_PARAM, $this->getButtonUrl($btn));
     }
 
     private function getButtonUrl($btn)

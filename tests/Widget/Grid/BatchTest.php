@@ -19,14 +19,14 @@ class BatchTest extends TestCase
         $grid->addBatch('Batch Test');
 
         $html = $this->render2html($grid);
-        $this->assertContains('批处理模式', $html);
-        $this->assertNotContains('Batch Test', $html);
+        $this->assertStringContainsString('批处理模式', $html);
+        $this->assertStringNotContainsString('Batch Test', $html);
 
         $grid->enableBatchMode();
         $grid->addBatch('Batch Test');
         $html = $this->render2html($grid);
-        $this->assertContains('退出批处理', $html);
-        $this->assertContains('Batch Test', $html);
+        $this->assertStringContainsString('退出批处理', $html);
+        $this->assertStringContainsString('Batch Test', $html);
     }
 
     public function testBatchIdName()

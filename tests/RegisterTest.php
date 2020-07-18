@@ -1,8 +1,8 @@
-<?php
+<?php namespace Lego\Tests;
 
 use Lego\Register\FieldData;
 
-class RegisterTest extends PHPUnit_Framework_TestCase
+class RegisterTest extends \PHPUnit\Framework\TestCase
 {
     public function testSetterAndGetter()
     {

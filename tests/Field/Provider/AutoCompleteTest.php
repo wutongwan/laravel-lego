@@ -20,7 +20,7 @@ class AutoCompleteTest extends TestCase
         });
 
         $path = '9680fe19fb55afaf41aa85be80f59bf3';
-        self::assertContains($path, $field->remote());
+        self::assertStringContainsString($path, $field->remote());
 
         $data = HighPriorityResponse::getResponse($path);
 
@@ -60,10 +60,10 @@ class AutoCompleteTest extends TestCase
     public function testLabelElementSuffix()
     {
         $field = new AutoComplete('hello');
-        self::assertContains('id="lego-hello-text"', strval($field->render()));
+        self::assertStringContainsString('id="lego-hello-text"', strval($field->render()));
 
         $field = new AutoComplete('world');
         $field->setLabelElementSuffix('-zhwei');
-        self::assertContains('id="lego-world-zhwei"', strval($field->render()));
+        self::assertStringContainsString('id="lego-world-zhwei"', strval($field->render()));
     }
 }

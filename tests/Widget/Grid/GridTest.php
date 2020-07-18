@@ -16,12 +16,12 @@ class GridTest extends TestCase
     {
         $text = 'zhwei\'s lego test';
         $grid = new Grid([['a' => $text]]);
-        $this->assertNotContains($text, $this->render2html($grid));
+        $this->assertStringNotContainsString($text, $this->render2html($grid));
 
         $grid->add('a', 'A Text');
         $html = $this->render2html($grid);
-        $this->assertContains($text, $html);
-        $this->assertContains($text, $html);
+        $this->assertStringContainsString($text, $html);
+        $this->assertStringContainsString($text, $html);
     }
 
     public function testPagination()
@@ -30,21 +30,21 @@ class GridTest extends TestCase
         $grid = $this->fakeGrid();
         $grid->paginate(100);
         $html = $this->render2html($grid);
-        $this->assertNotContains('pagination', $html);
-        $this->assertNotContains('?page=2', $html);
+        $this->assertStringNotContainsString('pagination', $html);
+        $this->assertStringNotContainsString('?page=2', $html);
 
         // paginator
         $grid = $this->fakeGrid();
         $grid->paginate(7);
         $html = $this->render2html($grid);
-        $this->assertContains('pagination', $html);
-        $this->assertContains('page=4', $html);
-        $this->assertNotContains('page=5', $html);
+        $this->assertStringContainsString('pagination', $html);
+        $this->assertStringContainsString('page=4', $html);
+        $this->assertStringNotContainsString('page=5', $html);
 
         // change pager name
         $grid = $this->fakeGrid();
         $grid->paginate(7, 'lego-test-pager');
-        $this->assertContains('?lego-test-pager=2', $this->render2html($grid));
+        $this->assertStringContainsString('?lego-test-pager=2', $this->render2html($grid));
     }
 
     private function fakeGrid($length = 24)
@@ -75,7 +75,7 @@ class GridTest extends TestCase
     public function testResponsive()
     {
         $grid = $this->fakeGrid(1);
-        $this->assertContains($this->pcGridHeader($grid), $this->render2html($grid));
+        $this->assertStringContainsString($this->pcGridHeader($grid), $this->render2html($grid));
 
         // set to mobile mode
         FakeMobileDetect::mockIsMobile();
@@ -83,12 +83,12 @@ class GridTest extends TestCase
         // test disable responsive globally
         Config::set('lego.widgets.grid.responsive', false);
         $grid = $this->fakeGrid(1);
-        $this->assertContains($this->pcGridHeader($grid), $this->render2html($grid));
+        $this->assertStringContainsString($this->pcGridHeader($grid), $this->render2html($grid));
 
         $grid->responsive();
-        $this->assertNotContains($this->pcGridHeader($grid), $this->render2html($grid));
-        $this->assertContains('<div id="' . $grid->uniqueId() . '">', $this->render2html($grid));
-        $this->assertContains('<ul class="list-group">', $this->render2html($grid));
+        $this->assertStringNotContainsString($this->pcGridHeader($grid), $this->render2html($grid));
+        $this->assertStringContainsString('<div id="' . $grid->uniqueId() . '">', $this->render2html($grid));
+        $this->assertStringContainsString('<ul class="list-group">', $this->render2html($grid));
     }
 
     private function pcGridHeader(Grid $grid)
@@ -129,8 +129,8 @@ class GridTest extends TestCase
 
     private function assertAfter($subject, $before, $after)
     {
-        $this->assertContains($before, $subject);
-        $this->assertContains($after, $subject);
+        $this->assertStringContainsString($before, $subject);
+        $this->assertStringContainsString($after, $subject);
 
         $this->assertTrue(strpos($subject, $before) < strpos($subject, $after), 'location wrong');
     }
@@ -143,7 +143,7 @@ class GridTest extends TestCase
         $grid->add('user', 'User Name');
         $html = $this->render2html($grid);
         foreach ($data as $datum) {
-            $this->assertContains($datum['user'], $html);
+            $this->assertStringContainsString($datum['user'], $html);
         }
     }
 

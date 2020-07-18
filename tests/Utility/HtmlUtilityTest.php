@@ -1,6 +1,8 @@
-<?php
+<?php namespace Lego\Tests\Utility;
 
-class HtmlUtilityTest extends PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class HtmlUtilityTest extends TestCase
 {
     /**
      * @dataProvider mergeAttributesProvider

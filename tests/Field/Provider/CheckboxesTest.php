@@ -14,6 +14,6 @@ class CheckboxesTest extends TestCase
         $field->setNewValue([1]);
         $field->process();
 
-        $this->assertContains('checked', $field->render()->render());
+        $this->assertStringContainsString('checked', $field->render()->render());
     }
 }
