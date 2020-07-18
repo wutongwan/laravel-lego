@@ -10,13 +10,8 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php: [7.3, 7.4]
+        php: [7.1, 7.2, 7.3, 7.4]
         laravel: [^6.0, ^7.0]
-        include:
-          - php: 7.0
-            laravel: 5.4.*
-          - php: 7.3
-            laravel: 5.5.*
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }}
 
