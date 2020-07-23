@@ -31,7 +31,7 @@ foreach ([Filter::class, Form::class, Grid::class] as $widget) {
     $instance = new $widget([]);
     foreach ($instance->buttonLocations() as $location) {
         $methods[] = new Method(
-            'add' . ucfirst(camel_case($location)) . 'Button',
+            'add' . ucfirst(\Illuminate\Support\Str::camel($location)) . 'Button',
             Button::class,
             '$text, $url = null, $id = null'
         );
