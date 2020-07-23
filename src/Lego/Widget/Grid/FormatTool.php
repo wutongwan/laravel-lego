@@ -17,8 +17,8 @@ class FormatTool
         $result = array_reduce(
             mb_str_split($format),
             function ($carry, $char) use ($value, $store, $format) {
-                switch ($char) {
-                    case '{':
+                switch (true) {
+                    case $char === '{':
                         if ($carry['open'] === true) {
                             throw new LegoException("Not support nested format: $format");
                         }
