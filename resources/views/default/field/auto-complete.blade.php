@@ -2,7 +2,7 @@
 
 <select name="{{ $field->elementName() }}"
         id="{{ $field->elementId() }}"
-        class="form-control"
+        class="form-control lego-field-autocomplete"
         style="width: 100%; min-width: 100%;"
         data-placeholder="{{ $field->getPlaceholder() }}"
         data-language="{{ $field->getLocale() }}"

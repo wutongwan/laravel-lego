@@ -195,13 +195,16 @@ class Button implements \JsonSerializable
         $this->attributes['id'] = $this->id;
         $attributes = $this->getFlattenAttributes();
         $attributes = HtmlFacade::attributes($attributes);
-
-        return sprintf(
-            '<a href="%s" %s>%s</a>',
-            $this->getUrl() ?: 'javascript:;',
-            $attributes,
-            $this->getText()
-        );
+        if ($url = $this->getUrl()) {
+            return sprintf(
+                '<a href="%s" %s>%s</a>',
+                $this->getUrl(),
+                $attributes,
+                $this->getText()
+            );
+        } else {
+            return sprintf('<button %s>%s</button>', $attributes, $this->getText());
+        }
     }
 
     protected function getFlattenAttributes()

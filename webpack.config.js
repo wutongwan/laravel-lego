@@ -4,7 +4,7 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 const ManifestPlugin = require('webpack-manifest-plugin');
 
 module.exports = {
-    mode: 'production',
+    mode: 'development',
     entry: {
         index: './resources/assets/index.js',
     },
@@ -12,6 +12,7 @@ module.exports = {
         path: path.resolve(__dirname, 'public/build'),
         filename: 'lego-[hash].js',
         chunkFilename: '[name].bundle.[hash].js',
+        libraryTarget: 'window'
     },
     optimization: {
         splitChunks: {
@@ -42,9 +43,13 @@ module.exports = {
             }
         ]
     },
-    externals: [
-        'jquery',
-        'bootstrap',
-        'vue',
-    ]
+    externals: {
+        jquery: 'jQuery',
+        bootstrap: true,
+        vue: 'Vue',
+    }
+    //     'jquery',
+    //     'bootstrap',
+    //     'vue',
+    // ]
 };

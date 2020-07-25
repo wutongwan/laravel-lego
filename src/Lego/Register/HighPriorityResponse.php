@@ -19,7 +19,7 @@ class HighPriorityResponse extends Data
     public function url(array $query = [])
     {
         if ($path = trim(Request::query(self::REQUEST_PARAM))) {
-            if (!str_contains($path, $this->tag)) {
+            if (strpos($path, $this->tag) === false) {
                 $query[self::REQUEST_PARAM] = "{$path}+{$this->tag}";
             }
         } else {

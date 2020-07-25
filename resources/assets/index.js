@@ -2,25 +2,29 @@ import {createGridBatch} from './grid-batch.coffee'
 import {LegoConditionGroup} from './condition-group'
 
 import 'bootstrap-datetime-picker'
+import 'bootstrap-datetime-picker/css/bootstrap-datetimepicker.min.css'
+
 import 'select2'
+import 'select2/dist/css/select2.css'
 import 'select2-bootstrap-theme/dist/select2-bootstrap.min.css'
 
 
 class LegoAPI {
     constructor() {
-        this.data = {}
+        this.data = new Map()
     }
 
     setData(type, id, value) {
-        if (!type in this.data) {
-            this.data[type] = {};
+        if (!this.data.has(type)) {
+            this.data.set(type, new Map());
         }
-        this.data[type][id] = value;
+
+        this.data.get(type).set(id, value)
     }
 
     getData(type, id, defaultValue = null) {
-        if (type in this.data && id in this.data[type]) {
-            return this.data[type][id];
+        if (this.data.has(type) && this.data.get(type).has(id)) {
+            return this.data.get(type).get(id)
         }
         return defaultValue;
     }
@@ -30,8 +34,6 @@ class LegoAPI {
     }
 
     registerJqueryListeners() {
-        const that = this;
-
         // 防止按钮重复点击
         jQuery('.lego-button-prevent-repeat').on('click', function () {
             const btn = this;
@@ -43,7 +45,7 @@ class LegoAPI {
         // grid 批处理功能
         jQuery('.lego-grid-batch-enabled').on('click', function () {
             const id = jQuery(this).attr('id');
-            const data = that.getData('grid-batch', id)
+            const data = lego.getData('grid-batch', id)
             createGridBatch(id, data['ids'], data['batches'])
         })
 
@@ -62,7 +64,7 @@ class LegoAPI {
 
         // field: auto complete
         jQuery('.lego-field-autocomplete').each(function () {
-            that.__prepareFieldAutocomplete(jQuery(this))
+            lego.__prepareFieldAutocomplete(jQuery(this))
         })
 
         // field: datetime
@@ -114,7 +116,7 @@ class LegoAPI {
             allowClear: field.data('allow-clear'),
             minimumInputLength: field.data('min-input-length'),
             ajax: {
-                url: decodeURI(field.data('url')),
+                url: decodeURIComponent(field.data('url')),
                 dataType: 'json',
                 delay: 700,
                 cache: true,
@@ -143,6 +145,12 @@ class LegoAPI {
     }
 }
 
-window.lego = new LegoAPI();
-window.LegoConditionGroup = LegoConditionGroup;
-window.module.exports = window.lego;
+const lego = new LegoAPI();
+
+window.lego = lego
+window.LegoConditionGroup = LegoConditionGroup
+
+export {
+    lego,
+    LegoConditionGroup,
+}
