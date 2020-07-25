@@ -1,5 +1,5 @@
 <?php /* @var \Lego\Field\Provider\Radios $field */ ?>
-<div id="{{ $field->elementId() }}" class="checkbox">
+<div id="{{ $field->elementId() }}" class="checkbox lego-field-checkbox">
     <ul class="list-group">
 
         @forelse($field->getOptions() as $value => $label)
@@ -17,20 +17,3 @@
         @endforelse
     </ul>
 </div>
-
-@push('lego-scripts')
-<script>
-    (function () {
-        $('#{{ $field->elementId() }} input').each(function (idx, box) {
-            var $box = $(box);
-            $box.iCheck({
-                checkboxClass: 'icheckbox_square-blue',
-                radioClass: 'iradio_square-blue'
-            });
-            $box.closest('.list-group-item').on('click', function () {
-                $box.iCheck('toggle')
-            });
-        });
-    })();
-</script>
-@endpush

@@ -125,7 +125,6 @@ class Grid extends Widget
 
         if (count($this->batches())) {
             LegoAssets::js('components/vue/dist/vue.min.js');
-            LegoAssets::js('js/batch.js');
         }
 
         $this->paginator();

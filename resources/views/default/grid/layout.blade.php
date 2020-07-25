@@ -5,16 +5,16 @@ $hasBatch = $grid->batchModeEnabled();
 ?>
 
 @if($grid->filter())
-    @section('grid-filter')
-        {!! $grid->filter() !!}
-        <h5>共找到 {{ $grid->paginator()->total() }} 条符合条件的记录</h5>
-        <hr>
-    @show
+@section('grid-filter')
+    {!! $grid->filter() !!}
+    <h5>共找到 {{ $grid->paginator()->total() }} 条符合条件的记录</h5>
+    <hr>
+@show
 @endif
 
 @include('lego::default.snippets.top-buttons', ['widget' => $grid])
 
-<div id="{{ $grid->uniqueId() }}-container">
+<div id="{{ $grid->uniqueId() }}-container" class="{{ $hasBatch ? 'lego-grid-batch-enabled' : '' }}">
     @if($hasBatch)
         <div class="panel panel-default">
             <div class="panel-body" style="padding: 5px; line-height: 2.67em;">
@@ -64,15 +64,12 @@ $hasBatch = $grid->batchModeEnabled();
 
 @if($hasBatch)
     @push('lego-scripts')
-    <script>
-        $(document).ready(function () {
-            lego.createGridBatch(
-                '{{ $grid->uniqueId() }}-container',
-                {!! json_encode($grid->pluckBatchIds()) !!},
-                {!! json_encode($grid->batchesAsArray()) !!}
-            )
-        });
-    </script>
+        <script>
+            lego.setData('grid-batch', '{{ $grid->uniqueId() }}-container', {
+                ids: {!! json_encode($grid->pluckBatchIds()) !!},
+                batches: {!! json_encode($grid->batchesAsArray()) !!},
+            })
+        </script>
     @endpush
 @endif
 

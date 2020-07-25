@@ -2,8 +2,7 @@
 
 "use strict";
 
-lego = require('../lego.coffee')
-lego.createGridBatch = (gridContainerId, ids, batches) ->
+createGridBatch = (gridContainerId, ids, batches) ->
     new Vue
         el: "##{gridContainerId}",
 
@@ -43,7 +42,7 @@ lego.createGridBatch = (gridContainerId, ids, batches) ->
             submitBatch: (batch) ->
                 that = this;
                 @currentBatchAction = batch.url
-                if typeof(batch.open_target) == "object"
+                if typeof (batch.open_target) == "object"
                     @currentBatchFormTarget = "Lego_Popup_Window_Batch_#{batch.name}"
                     win = window.open(
                         'about:blank',
@@ -56,3 +55,5 @@ lego.createGridBatch = (gridContainerId, ids, batches) ->
                     that.currentBatchFormTarget = batch.open_target
                     Vue.nextTick ->
                         that.$refs.form.submit()
+
+module.exports = {createGridBatch}

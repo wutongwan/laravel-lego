@@ -3,15 +3,12 @@
 namespace Lego\Field\Provider;
 
 use Illuminate\Support\Facades\Request;
-use Lego\Field\Concerns\HasSelect2Assets;
 use Lego\Operator\Query;
 use Lego\Operator\SuggestResult;
 use Lego\Register\AutoCompleteMatchHandler;
 
 class AutoComplete extends Text
 {
-    use HasSelect2Assets;
-
     protected $labelElementSuffix = '-text';
 
     protected function initialize()
@@ -130,8 +127,6 @@ class AutoComplete extends Text
 
     protected function renderEditable()
     {
-        $this->includeSelect2Assets();
-
         return $this->view('lego::default.field.auto-complete');
     }
 

@@ -14,9 +14,6 @@ class Radios extends Text
 
     protected function renderEditable()
     {
-        LegoAssets::js('components/icheck/icheck.min.js');
-        LegoAssets::css('components/icheck/skins/square/blue.css');
-
         return $this->view('lego::default.field.checkboxes');
     }
 
