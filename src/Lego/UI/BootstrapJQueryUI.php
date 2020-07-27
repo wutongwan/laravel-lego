@@ -8,9 +8,9 @@ class BootstrapJQueryUI
     {
         $manifest = json_decode(file_get_contents(__DIR__ . '/../../../public/build/manifest.json'), true);
 
-        return [
-            'build/' . $manifest['vendors~index.js'],
-            'build/' . $manifest['index.js'],
-        ];
+        return array_filter([
+            $manifest['vendors~index.js'] ?? null,
+            $manifest['index.js'],
+        ]);
     }
 }

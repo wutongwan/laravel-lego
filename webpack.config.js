@@ -2,19 +2,23 @@ const path = require('path');
 const webpack = require('webpack');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 const ManifestPlugin = require('webpack-manifest-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
     mode: 'development',
     entry: {
         index: './resources/assets/index.js',
     },
+    devtool: 'inline-source-map',
     output: {
         path: path.resolve(__dirname, 'public/build'),
         filename: 'lego-[hash].js',
-        chunkFilename: '[name].bundle.[hash].js',
-        libraryTarget: 'window'
+        chunkFilename: '[name].[chunkhash].js',
+        libraryTarget: 'window',
+        publicPath: '/packages/wutongwan/lego/build/'
     },
     optimization: {
+        moduleIds: 'hashed',
         splitChunks: {
             chunks: 'all',
         },
@@ -25,7 +29,13 @@ module.exports = {
             $: "jquery",
             jQuery: "jquery"
         }),
-        new ManifestPlugin(),
+        new CopyWebpackPlugin([{
+            from: 'node_modules/tinymce/skins',
+            to: 'skins',
+        }]),
+        new ManifestPlugin({
+            filter: (fd) => fd.isInitial,
+        }),
     ],
     module: {
         rules: [
@@ -48,8 +58,4 @@ module.exports = {
         bootstrap: true,
         vue: 'Vue',
     }
-    //     'jquery',
-    //     'bootstrap',
-    //     'vue',
-    // ]
 };
