@@ -71,6 +71,24 @@ function __lazyLoadDatetimePickerLocale(locale, callback) {
     }
 }
 
+function btnCountdown(btn, seconds) {
+    const countdown = function (second, first = true) {
+        if (second <= 0) {
+            btn.innerText = '确认'
+            btn.classList.remove('disabled')
+        } else {
+            if (first) {
+                btn.classList.add('disabled')
+            }
+            btn.innerText = (second--) + ' 秒后可确认'
+            setTimeout(function () {
+                countdown(second, false);
+            }, 1000)
+        }
+    }
+    countdown(seconds)
+}
+
 
 export default function registerJqueryListeners(lego) {
     // 防止按钮重复点击
@@ -81,12 +99,13 @@ export default function registerJqueryListeners(lego) {
         }, 0)
     })
 
-    // grid 批处理功能
-    jQuery('.lego-grid-batch-enabled').on('click', function () {
-        const id = jQuery(this).attr('id');
-        const data = lego.getData('grid-batch', id)
-        createGridBatch(id, data['ids'], data['batches'])
-    })
+    document.querySelectorAll('[data-lego-button-delay]')
+        .forEach(btn => {
+            const seconds = btn.getAttribute('data-lego-button-delay')
+            if (seconds) {
+                btnCountdown(btn, seconds)
+            }
+        })
 
     // filter inline style
     jQuery('.lego-filter-style-inline').each(function () {
