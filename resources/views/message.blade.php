@@ -4,22 +4,21 @@
     {{ $message }}
 @endsection
 
-@push('lego-styles')
-<style>
-    h2 {
-        margin-bottom: 2em;
-    }
-    #lego-message {
-        font-size: 2.2em;
-        margin-top: 1.5em;
-        margin-bottom: 1.5em;
-    }
-</style>
-@endpush
-
 <?php $level = isset($level) ? $level : 'info' ?>
 
 @section('__lego-simple-body')
+    <style>
+        h2 {
+            margin-bottom: 2em;
+        }
+
+        #lego-message {
+            font-size: 2.2em;
+            margin-top: 1.5em;
+            margin-bottom: 1.5em;
+        }
+    </style>
+
     <div class="text-center">
         <p id="lego-message" class="text-{{ $level }}">
             {{ $message }}

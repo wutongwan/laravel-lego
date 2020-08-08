@@ -29,7 +29,6 @@ return $form->view('layout', ['form' => $form]);
 <!doctype html>
 <html lang="en">
 <head>
-    @include('lego::styles')
 </head>
 <body>
 

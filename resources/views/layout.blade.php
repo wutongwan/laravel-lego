@@ -8,7 +8,6 @@
     <title>@yield('__lego-simple-title')</title>
 </head>
 <body>
-@include('lego::styles')
 
 <div class="col-md-6" style="margin: 7% auto 0 auto; float: none;">
     <div class="panel panel-default">
