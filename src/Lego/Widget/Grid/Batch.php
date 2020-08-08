@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
 use Lego\Foundation\Exceptions\LegoException;
-use Lego\Foundation\Facades\LegoAssets;
 use Lego\Lego;
 use Lego\Operator\Query;
 use Lego\Operator\Store;
@@ -152,10 +151,6 @@ class Batch implements Arrayable
 
     private function response()
     {
-        LegoAssets::reset();
-        LegoAssets::css('components/bootstrap/dist/css/bootstrap.min.css');
-        LegoAssets::js('components/jquery/dist/jquery.min.js');
-
         if (!$this->getIds()) {
             return $this->saveIdsResponse();
         }

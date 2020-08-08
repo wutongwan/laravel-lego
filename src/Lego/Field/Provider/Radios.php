@@ -3,7 +3,6 @@
 namespace Lego\Field\Provider;
 
 use Lego\Field\Concerns\HasOptions;
-use Lego\Foundation\Facades\LegoAssets;
 
 class Radios extends Text
 {

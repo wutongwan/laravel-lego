@@ -1,5 +1,6 @@
-import createGridBatch from "./grid-batch-v2"
+import initGridBatch from "./grid-batch-v2"
 import ConditionGroup from "./condition-group";
+import initCascadeSelect from "./field-cascade-select";
 
 import './style.css'
 
@@ -164,7 +165,7 @@ export default function registerJqueryListeners(lego) {
     // grid-batch
     const batchGrids = document.getElementsByClassName('lego-grid-batch');
     for (const batchGrid of batchGrids) {
-        createGridBatch(batchGrid)
+        initGridBatch(batchGrid)
     }
 
     // condition group
@@ -177,4 +178,8 @@ export default function registerJqueryListeners(lego) {
             cg.getAttribute('data-target'),
         )).watch()
     }
+
+    // cascade select
+    document.querySelectorAll('[data-lego-cascade-select]')
+        .forEach(select => initCascadeSelect(select))
 }
