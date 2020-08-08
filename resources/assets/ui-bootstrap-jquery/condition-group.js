@@ -2,64 +2,69 @@
  * Group with Condition
  */
 
-function LegoConditionGroup(form, field, operator, expected, targetField) {
-    var that = this;
+class ConditionGroup {
+    constructor(formId, field, operator, expected, targetField) {
+        this.formId = formId
+        this.field = field
+        this.operator = operator
+        this.expected = expected
 
-    var $form = $(form);
-    var $hideZone = $('#lego-hide');
-    var fieldSelector = '[name=' + field + ']';
-    var targetFieldSelector = '[name=' + targetField + ']';
-    var placeholderId = 'lego-condition-group-field-placeholder-' + targetField;
-    var containerSelector = '.lego-field-container';
+        this.$form = jQuery(`#${formId}`);
+        this.$hideZone = jQuery('#lego-hide');
+        this.fieldSelector = '[name=' + field + ']';
+        this.targetFieldSelector = '[name=' + targetField + ']';
+        this.placeholderId = 'lego-condition-group-field-placeholder-' + targetField;
+        this.containerSelector = '.lego-field-container';
+    }
 
-    this.watch = function () {
+    watch() {
         this.__check();
-        $form.find(fieldSelector).on('change', function () {
-            that.__check();
-        })
+        this.$form.find(this.fieldSelector).on('change', () => this.__check())
+        console.log('running')
     };
 
-    this.__check = function () {
-        var $field = $form.find(fieldSelector);
+    __check() {
+        const that = this
+        var $field = this.$form.find(this.fieldSelector);
         if (that.__compare($field.val())) {
-            var $container = $hideZone.find(targetFieldSelector).closest(containerSelector);
+            var $container = that.$hideZone.find(that.targetFieldSelector).closest(that.containerSelector);
             if ($container.length === 0) {
                 return;
             }
-            var $placeholder = $('#' + placeholderId);
+            var $placeholder = jQuery('#' + that.placeholderId);
             $placeholder.after($container);
             $placeholder.remove();
         } else {
-            var $target = $form.find(targetFieldSelector).closest(containerSelector);
-            $target.after($('<span/>', {id: placeholderId, class: 'hide'}));
-            $target.appendTo($hideZone);
+            var $target = that.$form.find(that.targetFieldSelector).closest(that.containerSelector);
+            $target.after(jQuery('<span/>', {id: that.placeholderId, class: 'hide'}));
+            $target.appendTo(that.$hideZone);
         }
     };
 
-    this.__compare = function (actual) {
-        switch (operator) {
+    __compare(actual) {
+        switch (this.operator) {
             case '=':
             case '==':
             case '===':
-                return actual === expected;
+                return actual === this.expected;
             case '!=':
             case '!==':
-                return actual !== expected;
+                return actual !== this.expected;
             case '>':
-                return actual > expected;
+                return actual > this.expected;
             case '>=':
-                return actual >= expected;
+                return actual >= this.expected;
             case '<':
-                return actual < expected;
+                return actual < this.expected;
             case '<=':
-                return actual <= expected;
+                return actual <= this.expected;
             case 'in':
-                return expected.indexOf(actual) !== -1;
+                return this.expected.indexOf(actual) !== -1;
             default:
                 return false;
         }
     }
 }
 
-module.exports = {LegoConditionGroup}
+export default ConditionGroup
 

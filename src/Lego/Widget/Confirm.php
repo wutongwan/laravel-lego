@@ -36,7 +36,7 @@ class Confirm
      * Template name
      * @var string
      */
-    protected $view = 'lego::confirm';
+    protected $view = 'lego::default.confirm';
 
     private $confirmQueryName;
     private $fromQueryName;

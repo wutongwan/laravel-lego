@@ -1,4 +1,4 @@
-@extends('lego::layout')
+@extends('lego::default.layout')
 
 @section('__lego-simple-title')
     {{ $message }}

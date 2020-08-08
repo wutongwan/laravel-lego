@@ -25,4 +25,5 @@ class LegoAPI {
 }
 
 window.lego = new LegoAPI();
+document.addEventListener("DOMContentLoaded", () => window.lego.register());
 export default window.lego

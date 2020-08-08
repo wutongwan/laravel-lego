@@ -41,6 +41,6 @@ class Lego
 
     public static function message($message, $level = 'default')
     {
-        return view('lego::message', compact('message', 'level'));
+        return view('lego::default.message', compact('message', 'level'));
     }
 }

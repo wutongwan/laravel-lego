@@ -180,7 +180,7 @@ class Batch implements Arrayable
     private function saveIdsResponse()
     {
         if (!$ids = Request::input('ids')) {
-            return view('lego::message', ['message' => '尚未选中任何记录！', 'level' => 'warning']);
+            return view('lego::default.message', ['message' => '尚未选中任何记录！', 'level' => 'warning']);
         }
 
         $ids = array_unique(is_array($ids) ? $ids : explode(',', $ids));
@@ -198,7 +198,7 @@ class Batch implements Arrayable
             return $this->callHandleClosure($form);
         });
 
-        return $form->view('lego::grid.action.form', ['form' => $form, 'action' => $this]);
+        return $form->view('lego::default.grid.batch-action-form', ['form' => $form, 'action' => $this]);
     }
 
     private function callHandleClosure()

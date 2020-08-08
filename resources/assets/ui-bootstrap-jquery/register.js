@@ -1,5 +1,5 @@
-import {LegoConditionGroup} from './condition-group'
 import createGridBatch from "./grid-batch-v2"
+import ConditionGroup from "./condition-group";
 
 import './style.css'
 
@@ -9,8 +9,6 @@ import 'bootstrap-datetime-picker/css/bootstrap-datetimepicker.min.css'
 import 'select2'
 import 'select2/dist/css/select2.css'
 import 'select2-bootstrap-theme/dist/select2-bootstrap.min.css'
-
-window.LegoConditionGroup = LegoConditionGroup;
 
 
 function __prepareFieldAutocomplete(field) {
@@ -167,5 +165,16 @@ export default function registerJqueryListeners(lego) {
     const batchGrids = document.getElementsByClassName('lego-grid-batch');
     for (const batchGrid of batchGrids) {
         createGridBatch(batchGrid)
+    }
+
+    // condition group
+    for (const cg of document.getElementsByClassName('lego-condition-group')) {
+        (new ConditionGroup(
+            cg.getAttribute('data-form'),
+            cg.getAttribute('data-field'),
+            cg.getAttribute('data-operator'),
+            JSON.parse(decodeURIComponent(cg.getAttribute('data-expected'))),
+            cg.getAttribute('data-target'),
+        )).watch()
     }
 }
