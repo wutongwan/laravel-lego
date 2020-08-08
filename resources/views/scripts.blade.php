@@ -1,12 +1,4 @@
-{{--@foreach(\Lego\Foundation\Facades\LegoAssets::scripts() as $script)--}}
-{{--    {!! \Collective\Html\HtmlFacade::script($script) !!}--}}
-{{--@endforeach--}}
+{{-- Generated: 此文件基于同目录 `scripts.template.blade.php` 生成得来，请勿手动修改 --}}
+<script src="/packages/wutongwan/lego/build/lego-965aba1062a33a8b4b8e.js"></script>
 
-@foreach(\Lego\UI\BootstrapJQueryUI::scripts() as $script)
-    <script src="{{ $script }}"></script>
-@endforeach
-
-<script>
-    lego.register();
-</script>
 @stack('lego-scripts')

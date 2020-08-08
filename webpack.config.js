@@ -4,12 +4,10 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 const ManifestPlugin = require('webpack-manifest-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
-module.exports = {
-    mode: 'development',
+let config = {
     entry: {
         index: './resources/assets/index.js',
     },
-    devtool: 'inline-source-map',
     output: {
         path: path.resolve(__dirname, 'public/build'),
         filename: 'lego-[hash].js',
@@ -37,6 +35,21 @@ module.exports = {
         }),
         new ManifestPlugin({
             filter: (fd) => fd.isInitial,
+        }),
+        new ManifestPlugin({
+            fileName: path.resolve(__dirname, 'resources/views/scripts.blade.php'),
+            filter: (fd) => fd.isInitial,
+            serialize: function (manifest) {
+                const fs = require('fs')
+                const templateFilepath = path.resolve(__dirname, 'resources/views/scripts.template.blade.php')
+                const scripts = Object.values(manifest).map(p => `<script src="${p}"></script>`).join('\n')
+                return fs.readFileSync(templateFilepath).toString()
+                    .replace(
+                        '{{-- webpack scripts --}}',
+                        '{{-- Generated: 此文件基于同目录 `scripts.template.blade.php` 生成得来，请勿手动修改 --}}\n'
+                        + scripts
+                    )
+            }
         }),
     ],
     module: {
@@ -70,4 +83,14 @@ module.exports = {
         bootstrap: true,
         vue: 'Vue',
     }
+};
+
+
+module.exports = (env, argv) => {
+    if (argv.mode === 'development') {
+        config.devtool = 'inline-source-map';
+    }
+    if (argv.mode === 'production') {
+    }
+    return config;
 };
