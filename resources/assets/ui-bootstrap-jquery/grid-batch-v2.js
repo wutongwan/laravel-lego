@@ -99,7 +99,7 @@ class GridBatch {
         if (!currentIds.includes(id)) {
             return true
         }
-        const index = currentIds.indexOf(5);
+        const index = currentIds.indexOf(id);
         if (index > -1) {
             currentIds.splice(index, 1);
         }
