@@ -14,7 +14,7 @@ $hasBatch = $grid->batchModeEnabled();
 
 @include('lego::default.snippets.top-buttons', ['widget' => $grid])
 
-<div id="{{ $grid->uniqueId() }}-container" class="{{ $hasBatch ? 'lego-grid-batch' : '' }}">
+<div id="{{ $grid->uniqueId() }}" class="{{ $hasBatch ? 'lego-grid-batch' : '' }}">
     @if($hasBatch)
         <div class="panel panel-default lego-grid-batch-tools">
             <div class="panel-body">

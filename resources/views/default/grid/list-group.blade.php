@@ -7,7 +7,7 @@
 
 @section('grid-body')
 
-    <div id="{{ $grid->uniqueId() }}">
+    <div>
         <ul class="list-group lego-grid lego-grid-list-group">
             @foreach($grid->paginator() as $row)
                 <li class="list-group-item" data-lego-batch-id="{{ $row->get($grid->getBatchIdName()) }}">
