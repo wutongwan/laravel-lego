@@ -13,7 +13,7 @@
 phpunit.xml export-ignore
 bower.json export-ignore
 package.json export-ignore
-webpack.mix.js export-ignore
+webpack.config.js export-ignore
 sami.php export-ignore
 CHANGELOG.md export-ignore
 node_modules export-ignore

@@ -8,21 +8,17 @@
 @section('grid-body')
 
     <div id="{{ $grid->uniqueId() }}">
-        <ul class="list-group">
+        <ul class="list-group lego-grid lego-grid-list-group">
             @foreach($grid->paginator() as $row)
-                <li class="list-group-item"
-                    @if($grid->batchModeEnabled())
-                    v-on:click="trigger({{ $row->get($grid->getBatchIdName()) }})"
-                    @endif
-                >
+                <li class="list-group-item" data-lego-batch-id="{{ $row->get($grid->getBatchIdName()) }}">
                     @if($grid->batchModeEnabled())
                         <span class="pull-right">
-                            <input type="checkbox" v-model="selectedIds" value="{{ $row->get($grid->getBatchIdName()) }}">
+                            <input type="checkbox" class="lego-batch-checkbox"
+                                   value="{{ $row->get($grid->getBatchIdName()) }}">
                         </span>
                     @endif
-
                     @foreach($grid->cells() as $cell)
-                        <p v-pre>
+                        <p>
                             @if($description = $cell->description())
                                 <small>{{ $description }}：</small>
                             @endif

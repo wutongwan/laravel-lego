@@ -14,40 +14,33 @@ $hasBatch = $grid->batchModeEnabled();
 
 @include('lego::default.snippets.top-buttons', ['widget' => $grid])
 
-<div id="{{ $grid->uniqueId() }}-container" class="{{ $hasBatch ? 'lego-grid-batch-enabled' : '' }}">
+<div id="{{ $grid->uniqueId() }}-container" class="{{ $hasBatch ? 'lego-grid-batch' : '' }}">
     @if($hasBatch)
-        <div class="panel panel-default">
-            <div class="panel-body" style="padding: 5px; line-height: 2.67em;">
+        <div class="panel panel-default lego-grid-batch-tools">
+            <div class="panel-body">
                 <div class="btn-group btn-group-sm">
                     <button class="btn btn-default lego-select-all" v-on:click="selectAll">
                         <span class="glyphicon glyphicon-check"></span> 全选
                     </button>
-                    <button class="btn btn-default lego-select-toggle" v-on:click="selectReverse">
+                    <button class="btn btn-default lego-select-reverse" v-on:click="selectReverse">
                         <span class="glyphicon glyphicon-unchecked"></span> 反选
                     </button>
-                    <button class="btn btn-default" id="lego-selected-num">已选 @{{ selected }} 项</button>
-                </div>
-
-                &middot;
-
-                <form
-                    method="post"
-                    style="display: inline;"
-                    :action="currentBatchAction"
-                    :target="currentBatchFormTarget"
-                    ref="form"
-                >
-                    <input type="hidden" name="ids" id="lego-grid-batch-input-ids" :value="selectedIdsValue">
-                    {{ csrf_field() }}
-
-                    <button
-                        v-for="(batch, name) in batches"
-                        v-on:click="submitBatch(batch)"
-                        class="btn btn-default btn-sm"
-                        style="margin-left: 2px;"
-                    >
-                        <span class="glyphicon glyphicon-send"></span> @{{ name }}
+                    <button class="btn btn-default">
+                        已选 <span class="lego-selected-count">0</span> 项
                     </button>
+                </div>
+                &middot;
+                <form method="post" class="lego-batch-form">
+                    <input type="hidden" name="ids" value="">
+                    {{ csrf_field() }}
+                    @foreach($grid->batches() as $batch)
+                        <button data-action="{{ rawurlencode($batch->url()) }}"
+                                data-open-target="{{ $batch->getOpenTarget() }}"
+                                data-name="{{ $batch->name() }}"
+                                class="btn btn-default btn-sm lego-batch-submit">
+                            <span class="glyphicon glyphicon-send"></span> {{ $batch->name() }}
+                        </button>
+                    @endforeach
                 </form>
             </div>
         </div>
@@ -61,16 +54,5 @@ $hasBatch = $grid->batchModeEnabled();
         </div>
     @show
 </div>
-
-@if($hasBatch)
-    @push('lego-scripts')
-        <script>
-            lego.setData('grid-batch', '{{ $grid->uniqueId() }}-container', {
-                ids: {!! json_encode($grid->pluckBatchIds()) !!},
-                batches: {!! json_encode($grid->batchesAsArray()) !!},
-            })
-        </script>
-    @endpush
-@endif
 
 @include('lego::default.snippets.bottom-buttons', ['widget' => $grid])

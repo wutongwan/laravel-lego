@@ -29,16 +29,28 @@ module.exports = {
             $: "jquery",
             jQuery: "jquery"
         }),
-        new CopyWebpackPlugin([{
-            from: 'node_modules/tinymce/skins',
-            to: 'skins',
-        }]),
+        new CopyWebpackPlugin({
+            patterns: [{
+                from: 'node_modules/tinymce/skins',
+                to: 'skins',
+            }],
+        }),
         new ManifestPlugin({
             filter: (fd) => fd.isInitial,
         }),
     ],
     module: {
         rules: [
+            {
+                test: /\.m?js$/,
+                exclude: /(node_modules|bower_components)/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['@babel/preset-env']
+                    }
+                }
+            },
             {
                 test: /\.coffee$/,
                 loader: 'coffee-loader'

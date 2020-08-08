@@ -105,15 +105,6 @@ class Batch implements Arrayable
         return $this;
     }
 
-    public function openInPopup($width = 500, $height = 500, $condition = true)
-    {
-        if ($condition) {
-            $this->openTarget = compact('height', 'width');
-        }
-
-        return $this;
-    }
-
     public function resetOpenTarget()
     {
         $this->openTarget = static::OPEN_TARGET_DEFAULT;
@@ -253,10 +244,10 @@ class Batch implements Arrayable
     {
         return Request::fullUrlWithQuery(
             array_merge(Request::query(), [
-                self::IDS_QUERY_NAME                => null,
+                self::IDS_QUERY_NAME => null,
                 HighPriorityResponse::REQUEST_PARAM => null,
-                Confirm::CONFIRM_QUERY_NAME         => null,
-                Confirm::FROM_QUERY_NAME            => null,
+                Confirm::CONFIRM_QUERY_NAME => null,
+                Confirm::FROM_QUERY_NAME => null,
             ])
         );
     }
@@ -264,9 +255,17 @@ class Batch implements Arrayable
     public function toArray()
     {
         return [
-            'name'        => $this->name(),
-            'url'         => $this->url(),
+            'name' => $this->name(),
+            'url' => $this->url(),
             'open_target' => $this->openTarget,
         ];
+    }
+
+    /**
+     * @return string
+     */
+    public function getOpenTarget(): string
+    {
+        return $this->openTarget;
     }
 }

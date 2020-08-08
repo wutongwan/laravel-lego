@@ -1,5 +1,7 @@
-import {createGridBatch} from "./grid-batch.coffee";
 import {LegoConditionGroup} from './condition-group'
+import createGridBatch from "./grid-batch-v2"
+
+import './style.css'
 
 import 'bootstrap-datetime-picker'
 import 'bootstrap-datetime-picker/css/bootstrap-datetimepicker.min.css'
@@ -138,7 +140,13 @@ export default function registerJqueryListeners(lego) {
 
     // field: tinymce
     if (document.getElementsByClassName('lego-field-tinymce').length > 0) {
-        import(/* webpackChunkName: "ui-bj-tinymce" */ './init-tinymce')
+        import(/* webpackChunkName: "ui-bootstrap-jquery-tinymce" */ './init-tinymce')
             .then(({default: initTinyMce}) => initTinyMce('.lego-field-tinymce'))
+    }
+
+    // grid-batch
+    const batchGrids = document.getElementsByClassName('lego-grid-batch');
+    for (const batchGrid of batchGrids) {
+        createGridBatch(batchGrid)
     }
 }

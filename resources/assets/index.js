@@ -19,7 +19,7 @@ class LegoAPI {
     }
 
     register() {
-        import(/* webpackChunkName: "ui-bj" */ './ui-bootstrap-jquery/register')
+        import(/* webpackChunkName: "ui-bootstrap-jquery" */ './ui-bootstrap-jquery/register')
             .then(({default: registerJqueryListeners}) => registerJqueryListeners(lego))
     }
 }
