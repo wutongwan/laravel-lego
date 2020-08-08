@@ -5,7 +5,6 @@ namespace Lego;
 use Illuminate\Support\ServiceProvider;
 use Lego\Commands\GenerateIDEHelper;
 use Lego\Field\FieldLoader;
-use Lego\Foundation\Assets;
 
 /**
  * Lego Service Provider for Laravel.
@@ -34,15 +33,12 @@ class LegoServiceProvider extends ServiceProvider
 
         // alias
         $this->app->singleton('lego-fields', FieldLoader::class);
-        $this->app->singleton('lego-assets', Assets::class);
     }
 
     private function publishAssets()
     {
         $this->publishes(
-            [
-                $this->path('public/') => public_path(Assets::PATH_PREFIX),
-            ],
+            [$this->path('public/') => public_path('packages/wutongwan/lego')],
             'lego-assets'
         );
     }
