@@ -49,6 +49,10 @@ class Finder
             return $data;
         }
 
+        if (is_scalar($data) && !class_exists($data)) {
+            return null;
+        }
+
         $operators = array_filter($this->operators[$operatorType]);
         ksort($operators);
 

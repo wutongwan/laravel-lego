@@ -2,11 +2,12 @@
 
 <select name="{{ $field->elementName() }}"
         id="{{ $field->elementId() }}"
-        v-model="selected"
         data-lego-cascade-select
-        data-seleted="{{ $field->takeInputValue() }}"
+        data-selected="{{ $field->takeInputValue() }}"
         data-depend="{{ $field->getDependField()->elementId() }}"
         data-remote="{{ rawurlencode($field->getRemote()) }}"
+        data-required="{{ $field->isRequired() ? 'true' : 'false' }}"
+        data-placeholder="{{ $field->getPlaceholder() ?: $field->name() }}"
     {!! $field->getAttributesString() !!}>
     @foreach($field->getOptions() as $value => $label)
         <option value="{{ $value }}">{{ $label }}</option>
