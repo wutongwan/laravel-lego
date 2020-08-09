@@ -7,10 +7,6 @@ import 'tinymce/icons/default';
 // A theme is also required
 import 'tinymce/themes/silver';
 
-// Any plugins you want to use has to be imported
-import 'tinymce/plugins/paste';
-import 'tinymce/plugins/link';
-
 import 'tinymce/skins/ui/oxide/content.min.css'
 import 'tinymce/skins/ui/oxide/skin.min.css'
 
@@ -19,6 +15,6 @@ export default function initTinymce(selector) {
     tinymce.init({
         selector,
         menubar: false,
-        plugins: ['paste', 'link']
+        plugins: []
     });
 }

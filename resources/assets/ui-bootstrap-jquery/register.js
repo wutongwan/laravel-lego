@@ -1,114 +1,17 @@
-import initGridBatch from "./grid-batch-v2"
-import ConditionGroup from "./condition-group";
+import initGridBatch from "./grid-batch"
 import initCascadeSelect from "./field-cascade-select";
+import initConditionGroup from "./form-condition-group";
+import initDatetimePicker from "./field-datatimepicker";
+import {initSelect2, initSelect2Autocomplete} from './field-select2'
+import {initButtonCountdown, initButtonPreventRepeat} from './button'
 
 import './style.css'
 
-import 'bootstrap-datetime-picker'
-import 'bootstrap-datetime-picker/css/bootstrap-datetimepicker.min.css'
-
-import 'select2'
-import 'select2/dist/css/select2.css'
-import 'select2-bootstrap-theme/dist/select2-bootstrap.min.css'
-
-
-function __prepareFieldAutocomplete(field) {
-    // 构建 select2 组件
-    field.select2({
-        placeholder: field.data('placeholder'),
-        theme: "bootstrap",
-        width: "100%",
-        language: field.data('language'),
-        allowClear: field.data('allow-clear'),
-        minimumInputLength: field.data('min-input-length'),
-        ajax: {
-            url: decodeURIComponent(field.data('url')),
-            dataType: 'json',
-            delay: 700,
-            cache: true,
-            data: function (params) {
-                return {
-                    '__lego_auto_complete': params.term,
-                    "page": params.page
-                };
-            },
-            processResults: function (data, params) {
-                params.page = params.page || 1;
-                return {
-                    results: data.items.map(function (item) {
-                        return {
-                            id: item.value,
-                            text: item.label,
-                        }
-                    }),
-                    pagination: {
-                        more: (params.page * 30) < data.total_count
-                    }
-                };
-            }
-        }
-    })
-}
-
-function __lazyLoadSelect2Locale(locale, callback) {
-    if (locale !== 'en') {
-        import(/* webpackChunkName: "i18n/select2/" */`select2/dist/js/i18n/${locale}.js`)
-            .then(callback)
-    } else {
-        callback()
-    }
-}
-
-function __lazyLoadDatetimePickerLocale(locale, callback) {
-    if (locale !== 'en') {
-        import(
-            /* webpackChunkName: "i18n/datetimepicker/" */
-            `bootstrap-datetime-picker/js/locales/bootstrap-datetimepicker.${locale}.js`
-            ).then(callback)
-    } else {
-        callback()
-    }
-}
-
-function btnCountdown(btn, seconds) {
-    const countdown = function (second, first = true) {
-        if (second <= 0) {
-            btn.innerText = '确认'
-            btn.classList.remove('disabled')
-        } else {
-            if (first) {
-                btn.classList.add('disabled')
-            }
-            btn.innerText = (second--) + ' 秒后可确认'
-            setTimeout(function () {
-                countdown(second, false);
-            }, 1000)
-        }
-    }
-    countdown(seconds)
-}
-
 
 export default function registerJqueryListeners(lego) {
-    // 防止按钮重复点击
-    jQuery('.lego-button-prevent-repeat').on('click', function () {
-        const btn = this;
-        setTimeout(function () {
-            jQuery(btn).attr('disabled', true).attr('href', 'javascript:;');
-        }, 0)
-    })
-
-    document.querySelectorAll('[data-lego-button-delay]')
-        .forEach(btn => {
-            const seconds = btn.getAttribute('data-lego-button-delay')
-            if (seconds) {
-                btnCountdown(btn, seconds)
-            }
-        })
-
     // filter inline style
-    jQuery('.lego-filter-style-inline').each(function () {
-        const filter = jQuery(this);
+    document.querySelectorAll('.lego-filter-style-inline').forEach(el => {
+        const filter = jQuery(el);
         filter.removeClass('form-inline').addClass('form row');
         filter.find('.form-group').each(function () {
             const group = jQuery(this);
@@ -119,67 +22,33 @@ export default function registerJqueryListeners(lego) {
         });
     })
 
-    // field: auto complete
-    jQuery('.lego-field-autocomplete').each(function () {
-        const field = jQuery(this)
-        // 监听事件，修改文本输入框
-        const textInput = jQuery('#' + field.data('text-input-id'))
-        field.on('select2:select', (event) => textInput.val(event.params.data.text))
-        field.on('select2:unselect', () => textInput.val(null))
-
-        __lazyLoadSelect2Locale(field.data('language'), () => __prepareFieldAutocomplete(field))
-    })
-
-    // field: datetime
-    jQuery('.lego-field-datetime').each(function () {
-        const field = jQuery(this);
-        const options = JSON.parse(decodeURIComponent(field.data('datetimepicker-options')))
-        __lazyLoadDatetimePickerLocale(options['language'], () => {
-            field.attr('readonly', true)
-                .css('background-color', 'white')
-                .css('cursor', 'pointer')
-                .datetimepicker(options)
-        })
-    })
-
-    // field: select2
-    jQuery('.lego-field-select2').each(function () {
-        const field = jQuery(this);
-        __lazyLoadSelect2Locale(field.data('language'), () => {
-            field.select2({
-                placeholder: field.data('placeholder'),
-                theme: "bootstrap",
-                width: "100%",
-                language: field.data('language'),
-                allowClear: field.data('allow-clear'),
-            })
-        })
-    })
-
     // field: tinymce
     if (document.getElementsByClassName('lego-field-tinymce').length > 0) {
-        import(/* webpackChunkName: "ui-bootstrap-jquery-tinymce" */ './init-tinymce')
-            .then(({default: initTinyMce}) => initTinyMce('.lego-field-tinymce'))
+        import(/* webpackChunkName: "ui-bootstrap-jquery-tinymce" */ './field-richtext-tinymce')
+            .then(({default: initTinymce}) => initTinymce('.lego-field-tinymce'))
     }
 
     // grid-batch
-    const batchGrids = document.getElementsByClassName('lego-grid-batch');
-    for (const batchGrid of batchGrids) {
-        initGridBatch(batchGrid)
-    }
+    document.querySelectorAll('.lego-grid-batch').forEach(el => initGridBatch(el))
 
     // condition group
-    for (const cg of document.getElementsByClassName('lego-condition-group')) {
-        (new ConditionGroup(
-            cg.getAttribute('data-form'),
-            cg.getAttribute('data-field'),
-            cg.getAttribute('data-operator'),
-            JSON.parse(decodeURIComponent(cg.getAttribute('data-expected'))),
-            cg.getAttribute('data-target'),
-        )).watch()
-    }
+    document.querySelectorAll('.lego-condition-group').forEach(el => initConditionGroup(el))
 
     // cascade select
-    document.querySelectorAll('[data-lego-cascade-select]')
-        .forEach(select => initCascadeSelect(select))
+    document.querySelectorAll('[data-lego-cascade-select]').forEach(el => initCascadeSelect(el))
+
+    // field: datetime
+    document.querySelectorAll('.lego-field-datetime').forEach(el => initDatetimePicker(el))
+
+    // field: select2
+    document.querySelectorAll('.lego-field-select2').forEach(el => initSelect2(el))
+
+    // field: auto complete
+    document.querySelectorAll('.lego-field-autocomplete').forEach(el => initSelect2Autocomplete(el))
+
+    // 防止按钮重复点击
+    document.querySelectorAll('.lego-button-prevent-repeat').forEach(btn => initButtonPreventRepeat(btn))
+
+    // 按钮倒计时后才可以点击
+    document.querySelectorAll('[data-lego-button-delay]').forEach(btn => initButtonCountdown(btn))
 }
