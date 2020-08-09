@@ -3,7 +3,7 @@
     "scripts": {
         "dev": "webpack --progress --mode=development",
         "watch": "webpack --progress --mode=development --watch --hide-modules",
-        "prod": "webpack --progress --mode=production"
+        "prod": "webpack --mode=production"
     },
     "dependencies": {},
     "devDependencies": {
