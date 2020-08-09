@@ -9,11 +9,11 @@ let config = {
         index: './resources/assets/index.js',
     },
     output: {
-        path: path.resolve(__dirname, 'public/build'),
+        path: path.resolve(__dirname, 'public'),
         filename: 'lego-[hash].js',
         chunkFilename: '[name].[chunkhash].js',
         libraryTarget: 'window',
-        publicPath: '/packages/wutongwan/lego/build/'
+        publicPath: '/packages/wutongwan/lego/'
     },
     optimization: {
         moduleIds: 'hashed',
