@@ -14,13 +14,7 @@ import 'tinymce/plugins/link';
 import 'tinymce/skins/ui/oxide/content.min.css'
 import 'tinymce/skins/ui/oxide/skin.min.css'
 
-require.context(
-    'file-loader?name=[path][name].[ext]&context=node_modules/tinymce!tinymce/skins',
-    true,
-    /.*/
-);
-
-const initTinyMce = function (selector) {
+export default function initTinymce(selector) {
     // Initialize the app
     tinymce.init({
         selector,
@@ -28,5 +22,3 @@ const initTinyMce = function (selector) {
         plugins: ['paste', 'link']
     });
 }
-
-export default initTinyMce

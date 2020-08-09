@@ -10,16 +10,28 @@ let config = {
     },
     output: {
         path: path.resolve(__dirname, 'public'),
-        filename: 'lego-[hash].js',
+        filename: '[name]-[contenthash].js',
         chunkFilename: '[name].[chunkhash].js',
         libraryTarget: 'window',
         publicPath: '/packages/wutongwan/lego/'
     },
     optimization: {
-        moduleIds: 'hashed',
+        // moduleIds: 'hashed',
+        // chunkIds: 'named',
         splitChunks: {
-            chunks: 'all',
-        },
+            chunks: "async", // 共有三个值可选：initial(初始模块)、async(按需加载模块)和all(全部模块)
+            cacheGroups: { // 缓存组，会继承和覆盖splitChunks的配置
+                default: { // 模块缓存规则，设置为false，默认缓存组将禁用
+                    minChunks: 2, // 模块被引用>=2次，拆分至vendors公共模块
+                    priority: -20, // 优先级
+                    reuseExistingChunk: true, // 默认使用已有的模块
+                },
+                vendors: {
+                    test: /[\\/]node_modules[\\/]/, // 表示默认拆分node_modules中的模块
+                    priority: -10
+                }
+            }
+        }
     },
     plugins: [
         new CleanWebpackPlugin(),
@@ -65,10 +77,6 @@ let config = {
                 }
             },
             {
-                test: /\.coffee$/,
-                loader: 'coffee-loader'
-            },
-            {
                 test: /\.css$/i,
                 use: ['style-loader', 'css-loader'],
             },
@@ -89,7 +97,11 @@ let config = {
 module.exports = (env, argv) => {
     if (argv.mode === 'development') {
         config.devtool = 'inline-source-map';
+        // 测试环境生成到 ignore 的目录，避免影响 prod 的版本管理
+        config.output.path += '/dev'
+        config.output.publicPath += 'dev/'
     }
+
     if (argv.mode === 'production') {
     }
     return config;

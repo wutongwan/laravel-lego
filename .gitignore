@@ -1,8 +1,8 @@
 vendor
 node_modules
+public/dev
 public
 composer.lock
-yarn.lock
 .idea/
 .phpstorm.meta.php
 

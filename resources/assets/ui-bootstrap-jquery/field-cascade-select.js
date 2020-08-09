@@ -61,8 +61,6 @@ class CascadeSelect {
     }
 }
 
-function initCascadeSelect(select) {
+export default function initCascadeSelect(select) {
     (new CascadeSelect(select)).register()
 }
-
-export default initCascadeSelect;

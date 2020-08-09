@@ -2,7 +2,7 @@
  * Group with Condition
  */
 
-class ConditionGroup {
+class FormConditionGroup {
     constructor(formId, field, operator, expected, targetField) {
         this.formId = formId
         this.field = field
@@ -66,5 +66,12 @@ class ConditionGroup {
     }
 }
 
-export default ConditionGroup
-
+export default function initConditionGroup(cg) {
+    (new FormConditionGroup(
+        cg.getAttribute('data-form'),
+        cg.getAttribute('data-field'),
+        cg.getAttribute('data-operator'),
+        JSON.parse(decodeURIComponent(cg.getAttribute('data-expected'))),
+        cg.getAttribute('data-target'),
+    )).watch()
+}

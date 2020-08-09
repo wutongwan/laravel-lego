@@ -107,8 +107,6 @@ class GridBatch {
     }
 }
 
-function initGridBatch(element) {
+export default function initGridBatch(element) {
     (new GridBatch(element)).listen()
 }
-
-export default initGridBatch
