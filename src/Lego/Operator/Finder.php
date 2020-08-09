@@ -10,13 +10,11 @@ class Finder
     protected $operators = [
         Query::class => [
             100 => Eloquent\EloquentQuery::class,
-            200 => Outgoing\OutgoingQuery::class,
             300 => Collection\ArrayQuery::class,
         ],
 
         Store::class => [
             100 => Eloquent\EloquentStore::class,
-            200 => Outgoing\OutgoingStore::class,
             300 => Collection\ArrayStore::class,
             400 => Collection\ObjectStore::class,
         ],
