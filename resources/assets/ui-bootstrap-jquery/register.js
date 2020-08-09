@@ -4,29 +4,20 @@ import initConditionGroup from "./form-condition-group";
 import initDatetimePicker from "./field-datatimepicker";
 import {initSelect2, initSelect2Autocomplete} from './field-select2'
 import {initButtonCountdown, initButtonPreventRepeat} from './button'
+import {initFilterInlineStyle} from './filter'
 
 import './style.css'
 
 
 export default function registerJqueryListeners(lego) {
-    // filter inline style
-    document.querySelectorAll('.lego-filter-style-inline').forEach(el => {
-        const filter = jQuery(el);
-        filter.removeClass('form-inline').addClass('form row');
-        filter.find('.form-group').each(function () {
-            const group = jQuery(this);
-            var times = Math.max(group.find('.form-control').length, 1);
-            group.addClass('col-sm-' + (4 * times))
-                .addClass('col-md-' + (3 * times))
-                .addClass('col-lg-' + (2 * times));
-        });
-    })
-
     // field: tinymce
     if (document.getElementsByClassName('lego-field-tinymce').length > 0) {
         import(/* webpackChunkName: "ui-bootstrap-jquery-tinymce" */ './field-richtext-tinymce')
             .then(({default: initTinymce}) => initTinymce('.lego-field-tinymce'))
     }
+
+    // filter inline style
+    document.querySelectorAll('.lego-filter-style-inline').forEach(el => initFilterInlineStyle(el));
 
     // grid-batch
     document.querySelectorAll('.lego-grid-batch').forEach(el => initGridBatch(el))
