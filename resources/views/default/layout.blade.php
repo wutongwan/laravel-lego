@@ -7,9 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>@yield('__lego-simple-title')</title>
 
-    <link href="/packages/wutongwan/lego/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <script src="/packages/wutongwan/lego/jquery/jquery.min.js"></script>
-    <script src="/packages/wutongwan/lego/bootstrap/js/bootstrap.min.js"></script>
+    @include('lego::styles', ['legoInternalView' => true])
 </head>
 <body>
 
@@ -21,6 +19,6 @@
     </div>
 </div>
 
-@include('lego::scripts')
+@include('lego::scripts', ['legoInternalView' => true])
 </body>
 </html>
