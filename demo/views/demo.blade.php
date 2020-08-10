@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <meta name="renderer" content="webkit">
-    <title>@yield('title') &middot; Laravel Lego Demo</title>
-    <link rel="stylesheet" href="/packages/wutongwan/lego/externals/bootstrap/css/bootstrap.min.css">
+    <title>{{ $title }} &middot; Laravel Lego Demo</title>
+    @include('lego::styles')
     <link href="//cdn.bootcss.com/highlight.js/9.9.0/styles/github.min.css" rel="stylesheet">
     <style>
         #body {
@@ -23,8 +23,6 @@
             word-wrap: normal;
         }
     </style>
-    @include('lego::styles')
-    @stack('meta')
 </head>
 <body>
 
@@ -42,17 +40,6 @@
             <a class="navbar-brand" href="#">Lego Demo</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                       aria-expanded="false">Demos <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        @foreach($demos as $item => $name)
-                            <li><a href="{{ route('demo', $item) }}">{{ $name }}</a></li>
-                        @endforeach
-                    </ul>
-                </li>
-            </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="https://github.com/wutongwan/laravel-lego">GitHub</a></li>
                 <li><a href="https://github.com/zhwei/lego-demo">Demo Repo</a></li>
@@ -63,11 +50,17 @@
 </nav>
 
 <div id="body" class="col-md-12">
-    <ul>
-        @foreach($demos as $item => $name)
-            <li><a href="{{ route('demo', $item) }}">{{ $name }}</a></li>
+    <div class="row">
+        @foreach(array_chunk($demos, 5, true) as $items)
+            <div class="col-md-3 col-lg-2 col-sm-4">
+                <ul>
+                    @foreach($items as $item => $name)
+                        <li><a href="{{ route('demo', $item) }}">{{ $name }}</a></li>
+                    @endforeach
+                </ul>
+            </div>
         @endforeach
-    </ul>
+    </div>
     <hr>
 
     <div class="col-md-6">
@@ -113,10 +106,17 @@
 </script>
 
 <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
     ga('create', 'UA-92608474-1', 'auto');
     ga('send', 'pageview');
 </script>
