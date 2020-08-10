@@ -11,13 +11,6 @@ use Lego\Field\FieldLoader;
  */
 class LegoServiceProvider extends ServiceProvider
 {
-    public function boot()
-    {
-        if ($this->app->runningInConsole()) {
-            $this->commands([GenerateIDEHelper::class]);
-        }
-    }
-
     /**
      * Register the service provider.
      *
@@ -25,14 +18,22 @@ class LegoServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        // alias
+        $this->app->singleton('lego-fields', FieldLoader::class);
+    }
+
+    public function boot()
+    {
+        if ($this->app->runningInConsole()) {
+            $this->commands([GenerateIDEHelper::class]);
+        }
+
         $this->publishConfigs();
         $this->publishAssets();
 
         // views
         $this->loadViewsFrom($this->path('resources/views'), 'lego');
 
-        // alias
-        $this->app->singleton('lego-fields', FieldLoader::class);
     }
 
     private function publishAssets()

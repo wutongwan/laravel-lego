@@ -5,7 +5,7 @@ import 'bootstrap-datetime-picker/css/bootstrap-datetimepicker.min.css'
 function loadLocale(locale, callback) {
     if (locale !== 'en') {
         import(
-            /* webpackChunkName: "i18n/datetimepicker/" */
+            /* webpackChunkName: "i18n/datetimepicker/[request]" */
             `bootstrap-datetime-picker/js/locales/bootstrap-datetimepicker.${locale}.js`
             ).then(callback)
     } else {

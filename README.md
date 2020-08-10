@@ -6,7 +6,7 @@
 
 * * *
 
-*注意：lego 尚处于开发阶段，1.0版本发布之前主要接口仍有调整的可能性，请注意查看 release note ！*
+*注意：lego 尚处于开发阶段，1.0版本发布之前主要接口仍有调整的可能性，请注意查看 release note ！*
 
 * * *
 
@@ -113,6 +113,12 @@ php artisan vendor:publish --tag=lego-assets --force
 - 当前版本在以下环境中开发并维护
   - Mac
   - Ubuntu
+
+- Run Development Demo
+
+  ```bash
+  php demo/run.php
+  ```
 
 * * *
 

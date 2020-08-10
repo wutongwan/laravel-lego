@@ -4,8 +4,10 @@ import 'select2-bootstrap-theme/dist/select2-bootstrap.min.css'
 
 function loadSelect2Locale(locale, callback) {
     if (locale !== 'en') {
-        import(/* webpackChunkName: "i18n/select2/" */`select2/dist/js/i18n/${locale}.js`)
-            .then(callback)
+        import(
+            /* webpackChunkName: "i18n/select2/[request]" */
+            `select2/dist/js/i18n/${locale}.js`
+            ).then(callback)
     } else {
         callback()
     }

@@ -40,7 +40,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Lego\\Tests\\": "tests/"
+            "Lego\\Tests\\": "tests/",
+            "Lego\\Demo\\": "demo/app"
         }
     },
     "suggest": {

@@ -48,12 +48,10 @@ let config = {
                 const fs = require('fs')
                 const templateFilepath = path.resolve(__dirname, 'resources/views/scripts.template.blade.php')
                 const scripts = Object.values(manifest).map(p => `<script src="${p}"></script>`).join('\n')
-                return fs.readFileSync(templateFilepath).toString()
-                    .replace(
-                        '{{-- webpack scripts --}}',
-                        '{{-- Generated: 此文件基于同目录 `scripts.template.blade.php` 生成得来，请勿手动修改 --}}\n'
-                        + scripts
-                    )
+
+                return '{{-- Generated: 此文件基于同目录 `scripts.template.blade.php` 生成得来，请勿手动修改 --}}\n'
+                    + fs.readFileSync(templateFilepath).toString()
+                        .replace('{{-- webpack scripts --}}', scripts)
             }
         }),
     ],
