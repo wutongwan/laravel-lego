@@ -5,7 +5,6 @@ namespace Lego\Field\Provider;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
 use Lego\Field\Field;
-use Lego\Foundation\Facades\LegoAssets;
 
 class Datetime extends Field
 {
@@ -97,16 +96,16 @@ class Datetime extends Field
     public function getPickerOptions()
     {
         return [
-            'format'               => $this->getJavaScriptFormat(),
-            'language'             => $this->getLocale(),
-            'startView'            => $this->startView,
-            'minView'              => $this->minView,
-            'maxView'              => $this->maxView,
-            'todayBtn'             => 'linked',
-            'todayHighlight'       => true,
-            'autoclose'            => true,
+            'format' => $this->getJavaScriptFormat(),
+            'language' => $this->getLocale(),
+            'startView' => $this->startView,
+            'minView' => $this->minView,
+            'maxView' => $this->maxView,
+            'todayBtn' => 'linked',
+            'todayHighlight' => true,
+            'autoclose' => true,
             'disableTouchKeyboard' => true,
-            'ignoreReadonly'       => true,
+            'ignoreReadonly' => true,
         ];
     }
 
@@ -152,7 +151,7 @@ class Datetime extends Field
      */
     public function disableNativePicker($condition = true)
     {
-        $this->disableNativePicker = (bool) $condition;
+        $this->disableNativePicker = (bool)$condition;
 
         return $this;
     }
@@ -179,14 +178,6 @@ class Datetime extends Field
          */
         if ($this->isEditable() && !$this->nativePickerIsEnabled()) {
             $this->inputType = 'text';
-
-            $prefix = 'components/smalot-bootstrap-datetimepicker';
-            LegoAssets::css($prefix . '/css/bootstrap-datetimepicker.min.css');
-            LegoAssets::js($prefix . '/js/bootstrap-datetimepicker.min.js');
-
-            if ($this->localeIsNotEn()) {
-                LegoAssets::js($prefix . "/js/locales/bootstrap-datetimepicker.{$this->getLocale()}.js");
-            }
         }
     }
 
@@ -202,7 +193,20 @@ class Datetime extends Field
 
     protected function renderEditable()
     {
-        return $this->view('lego::default.field.date');
+        // 非移动端启用日期控件，移动端使用原生的输入控件
+        $nativePickerEnabled = $this->nativePickerIsEnabled();
+
+        return sprintf(
+            '<input type="%s" name="%s" id="%s" class="form-control %s" value="%s" '
+            . ' placeholder="%s" data-datetimepicker-options="%s">',
+            $this->getInputType(),
+            $this->elementName(),
+            $this->elementId(),
+            $nativePickerEnabled ? '' : 'lego-field-datetime',
+            $this->takeInputValue(),
+            $this->getPlaceholder($this->description()),
+            urlencode(json_encode($this->getPickerOptions()))
+        );
     }
 
     /**

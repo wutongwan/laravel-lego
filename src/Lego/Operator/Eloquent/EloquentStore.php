@@ -3,6 +3,7 @@
 namespace Lego\Operator\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Collection;
 use Lego\Field\FieldNameSlicer;
 use Lego\Foundation\Exceptions\LegoSaveFail;
@@ -93,9 +94,9 @@ class EloquentStore extends Store
      *
      * @param array $options
      *
+     * @return bool
      * @throws LegoSaveFail
      *
-     * @return bool
      */
     public function save($options = [])
     {
@@ -134,12 +135,16 @@ class EloquentStore extends Store
 
     public function associate($attribute, $id)
     {
-        $this->getRelationOfAttribute($attribute)->associate($id);
+        /** @var BelongsTo $relation */
+        $relation = $this->getRelationOfAttribute($attribute);
+        $this->data->setAttribute($relation->getForeignKeyName(), $id);
     }
 
     public function dissociate($attribute)
     {
-        $this->getRelationOfAttribute($attribute)->dissociate();
+        /** @var BelongsTo $relation */
+        $relation = $this->getRelationOfAttribute($attribute);
+        $this->data->setAttribute($relation->getForeignKeyName(), null);
     }
 
     public function attach($attribute, array $ids, array $attributes = [])

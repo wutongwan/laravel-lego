@@ -19,11 +19,6 @@ class Lego
         return new Filter($source);
     }
 
-    public static function outgoingFilter()
-    {
-        return new Filter(\Lego\Operator\Outgoing\OutgoingInterface::class);
-    }
-
     public static function grid($source = [])
     {
         return new Grid($source);
@@ -41,6 +36,6 @@ class Lego
 
     public static function message($message, $level = 'default')
     {
-        return view('lego::message', compact('message', 'level'));
+        return view('lego::default.message', compact('message', 'level'));
     }
 }

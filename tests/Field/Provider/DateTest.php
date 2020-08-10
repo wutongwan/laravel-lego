@@ -12,7 +12,7 @@ class DateTest extends TestCase
 {
     public function testDisableNativePicker()
     {
-        $js = '.datetimepicker({"';
+        $js = 'data-datetimepicker-options=';
 
         $form = new Form([]);
         $field = $form->addDate('test');
@@ -38,7 +38,6 @@ class DateTest extends TestCase
         FakeMobileDetect::mockIsMobile();
         $form = new Form([]);
         $field = $form->addDate('test');
-        $this->assertStringNotContainsString($js, $this->render2html($form));
         $this->assertEquals('date', $field->getInputType());
     }
 }

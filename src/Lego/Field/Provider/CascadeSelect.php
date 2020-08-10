@@ -5,7 +5,6 @@ namespace Lego\Field\Provider;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Request;
 use Lego\Field\Field;
-use Lego\Foundation\Facades\LegoAssets;
 use Lego\Register\HighPriorityResponse;
 
 class CascadeSelect extends Select
@@ -72,10 +71,6 @@ class CascadeSelect extends Select
 
     protected function renderEditable()
     {
-        LegoAssets::js('components/vue/dist/vue.min.js');
-        LegoAssets::js('components/vue-resource/dist/vue-resource.min.js');
-        LegoAssets::js('field/cascade-select.js');
-
         return view('lego::default.field.cascade-select', ['field' => $this]);
     }
 }

@@ -3,7 +3,6 @@
 namespace Lego\Field\Provider;
 
 use Lego\Field\Concerns\HasOptions;
-use Lego\Foundation\Facades\LegoAssets;
 
 class Radios extends Text
 {
@@ -14,9 +13,6 @@ class Radios extends Text
 
     protected function renderEditable()
     {
-        LegoAssets::js('components/icheck/icheck.min.js');
-        LegoAssets::css('components/icheck/skins/square/blue.css');
-
         return $this->view('lego::default.field.checkboxes');
     }
 

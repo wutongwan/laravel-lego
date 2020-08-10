@@ -2,20 +2,20 @@
 
 namespace Lego\Field\Provider;
 
-use Lego\Field\Concerns\HasSelect2Assets;
-
 /**
  * Select2 - The jQuery replacement for select boxes.
  */
 class Select2 extends Select
 {
-    use HasSelect2Assets;
-
     public function renderEditable()
     {
-        $this->includeSelect2Assets();
+        $this->setAttribute([
+            'class' => 'lego-field-select2',
+            'data-placeholder' => $this->getPlaceholder(),
+            'data-language' => $this->getLocale(),
+            'data-allow-clear' => $this->isRequired() ? 'false' : 'true',
+        ]);
 
-        return $this->view('lego::default.field.select2')
-            ->with('select', parent::renderEditable());
+        return parent::renderEditable();
     }
 }

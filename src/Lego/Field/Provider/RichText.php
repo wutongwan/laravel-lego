@@ -3,7 +3,7 @@
 namespace Lego\Field\Provider;
 
 use Illuminate\Support\HtmlString;
-use Lego\Foundation\Facades\LegoAssets;
+use Lego\Utility\HtmlUtility;
 
 class RichText extends Textarea
 {
@@ -14,8 +14,7 @@ class RichText extends Textarea
 
     protected function renderEditable()
     {
-        LegoAssets::js('components/tinymce/tinymce.min.js');
-
-        return $this->view('lego::default.field.tinymce');
+        $this->setAttribute(['class' => 'lego-field-tinymce']);
+        return HtmlUtility::tag('textarea', $this->takeInputValue(), $this->getAttributes());
     }
 }

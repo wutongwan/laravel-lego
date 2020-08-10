@@ -4,7 +4,6 @@ namespace Lego\Widget\Grid;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
-use Lego\Foundation\Facades\LegoAssets;
 use Lego\Operator\Store;
 use Lego\Register\HighPriorityResponse;
 use Lego\Utility\Excel;
@@ -121,11 +120,6 @@ class Grid extends Widget
     {
         foreach ($this->exports as $name => $url) {
             $this->addButton(self::BTN_RIGHT_TOP, $name, $url, 'lego-export-' . $name);
-        }
-
-        if (count($this->batches())) {
-            LegoAssets::js('components/vue/dist/vue.min.js');
-            LegoAssets::js('js/batch.js');
         }
 
         $this->paginator();

@@ -4,7 +4,6 @@ namespace Lego\Foundation;
 
 use Collective\Html\HtmlFacade;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\View;
 use Lego\Register\HighPriorityResponse;
 
 /**
@@ -189,14 +188,23 @@ class Button implements \JsonSerializable
 
     public function __toString()
     {
+        if ($this->preventRepeatClick) {
+            $this->class('lego-button-prevent-repeat');
+        }
+
         $this->attributes['id'] = $this->id;
         $attributes = $this->getFlattenAttributes();
         $attributes = HtmlFacade::attributes($attributes);
-
-        /** @var \Illuminate\Contracts\View\View $view */
-        $view = View::make('lego::default.button', ['button' => $this, 'attributes' => $attributes]);
-
-        return $view->render();
+        if ($url = $this->getUrl()) {
+            return sprintf(
+                '<a href="%s" %s>%s</a>',
+                $this->getUrl(),
+                $attributes,
+                $this->getText()
+            );
+        } else {
+            return sprintf('<button %s>%s</button>', $attributes, $this->getText());
+        }
     }
 
     protected function getFlattenAttributes()
@@ -212,9 +220,9 @@ class Button implements \JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'id'         => $this->id,
-            'url'        => $this->url,
-            'text'       => $this->text,
+            'id' => $this->id,
+            'url' => $this->url,
+            'text' => $this->text,
             'attributes' => $this->getFlattenAttributes(),
         ];
     }

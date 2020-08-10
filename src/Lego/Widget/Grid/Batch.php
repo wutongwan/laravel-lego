@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
 use Lego\Foundation\Exceptions\LegoException;
-use Lego\Foundation\Facades\LegoAssets;
 use Lego\Lego;
 use Lego\Operator\Query;
 use Lego\Operator\Store;
@@ -105,15 +104,6 @@ class Batch implements Arrayable
         return $this;
     }
 
-    public function openInPopup($width = 500, $height = 500, $condition = true)
-    {
-        if ($condition) {
-            $this->openTarget = compact('height', 'width');
-        }
-
-        return $this;
-    }
-
     public function resetOpenTarget()
     {
         $this->openTarget = static::OPEN_TARGET_DEFAULT;
@@ -161,10 +151,6 @@ class Batch implements Arrayable
 
     private function response()
     {
-        LegoAssets::reset();
-        LegoAssets::css('components/bootstrap/dist/css/bootstrap.min.css');
-        LegoAssets::js('components/jquery/dist/jquery.min.js');
-
         if (!$this->getIds()) {
             return $this->saveIdsResponse();
         }
@@ -189,7 +175,7 @@ class Batch implements Arrayable
     private function saveIdsResponse()
     {
         if (!$ids = Request::input('ids')) {
-            return view('lego::message', ['message' => '尚未选中任何记录！', 'level' => 'warning']);
+            return view('lego::default.message', ['message' => '尚未选中任何记录！', 'level' => 'warning']);
         }
 
         $ids = array_unique(is_array($ids) ? $ids : explode(',', $ids));
@@ -207,7 +193,7 @@ class Batch implements Arrayable
             return $this->callHandleClosure($form);
         });
 
-        return $form->view('lego::grid.action.form', ['form' => $form, 'action' => $this]);
+        return $form->view('lego::default.grid.batch-action-form', ['form' => $form, 'action' => $this]);
     }
 
     private function callHandleClosure()
@@ -253,10 +239,10 @@ class Batch implements Arrayable
     {
         return Request::fullUrlWithQuery(
             array_merge(Request::query(), [
-                self::IDS_QUERY_NAME                => null,
+                self::IDS_QUERY_NAME => null,
                 HighPriorityResponse::REQUEST_PARAM => null,
-                Confirm::CONFIRM_QUERY_NAME         => null,
-                Confirm::FROM_QUERY_NAME            => null,
+                Confirm::CONFIRM_QUERY_NAME => null,
+                Confirm::FROM_QUERY_NAME => null,
             ])
         );
     }
@@ -264,9 +250,17 @@ class Batch implements Arrayable
     public function toArray()
     {
         return [
-            'name'        => $this->name(),
-            'url'         => $this->url(),
+            'name' => $this->name(),
+            'url' => $this->url(),
             'open_target' => $this->openTarget,
         ];
+    }
+
+    /**
+     * @return string
+     */
+    public function getOpenTarget(): string
+    {
+        return $this->openTarget;
     }
 }

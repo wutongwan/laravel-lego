@@ -87,13 +87,13 @@ class GridTest extends TestCase
 
         $grid->responsive();
         $this->assertStringNotContainsString($this->pcGridHeader($grid), $this->render2html($grid));
-        $this->assertStringContainsString('<div id="' . $grid->uniqueId() . '">', $this->render2html($grid));
-        $this->assertStringContainsString('<ul class="list-group">', $this->render2html($grid));
+        $this->assertStringContainsString('id="' . $grid->uniqueId() . '"', $this->render2html($grid));
+        $this->assertStringContainsString('<ul class="list-group lego-grid lego-grid-list-group">', $this->render2html($grid));
     }
 
     private function pcGridHeader(Grid $grid)
     {
-        return '<table class="table" id="' . $grid->uniqueId() . '">';
+        return '<table class="table lego-grid lego-grid-table"';
     }
 
     public function testOrderBy()
