@@ -38,7 +38,7 @@ class ChinaRegions
             throw new \InvalidArgumentException('invalid type');
         }
 
-        $path = storage_path('data/' . $type . '.json');
+        $path = storage_path($type . '.json');
         if (file_exists($path)) {
             return \json_decode(file_get_contents($path), true);
         }

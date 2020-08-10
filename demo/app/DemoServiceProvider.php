@@ -34,7 +34,8 @@ class DemoServiceProvider extends ServiceProvider
             // run migrations
             require __DIR__ . '/../databases/migrations.php';
 
-            // todo: init test data
+            // init test data
+            require __DIR__ . '/../databases/seeders.php';
         })->name('init-database');
 
         // demo entry
