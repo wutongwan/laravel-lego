@@ -1,7 +1,6 @@
 vendor
 node_modules
 public/dev
-public
 composer.lock
 .idea/
 .phpstorm.meta.php
