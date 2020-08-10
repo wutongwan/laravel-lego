@@ -1,3 +1,5 @@
+import register from './ui-bootstrap-jquery/register'
+
 class LegoAPI {
     constructor() {
         this.data = new Map()
@@ -19,8 +21,7 @@ class LegoAPI {
     }
 
     register() {
-        import(/* webpackChunkName: "ui-bootstrap-jquery" */ './ui-bootstrap-jquery/register')
-            .then(({default: registerJqueryListeners}) => registerJqueryListeners(lego))
+        register()
     }
 }
 

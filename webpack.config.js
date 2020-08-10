@@ -29,10 +29,14 @@ let config = {
             jQuery: "jquery"
         }),
         new CopyWebpackPlugin({
-            patterns: [{
-                from: 'node_modules/tinymce/skins',
-                to: 'skins',
-            }],
+            patterns: [
+                {from: 'node_modules/tinymce/skins', to: 'skins'}, // tinymce skin
+                // externals
+                {from: 'node_modules/bootstrap/dist/css/bootstrap.min.css', to: 'externals/bootstrap/css/bootstrap.min.css'},
+                {from: 'node_modules/bootstrap/dist/js/bootstrap.min.js', to: 'externals/bootstrap/js/bootstrap.min.js'},
+                {from: 'node_modules/bootstrap/dist/fonts', to: 'externals/bootstrap/fonts'},
+                {from: 'node_modules/jquery/dist/jquery.min.js', to: 'externals/jquery/jquery.min.js'},
+            ],
         }),
         new ManifestPlugin({
             filter: (fd) => fd.isInitial,

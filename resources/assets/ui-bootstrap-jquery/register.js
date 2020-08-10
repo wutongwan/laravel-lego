@@ -9,7 +9,7 @@ import {initFilterInlineStyle} from './filter'
 import './style.css'
 
 
-export default function registerJqueryListeners(lego) {
+export default function register() {
     // field: tinymce
     if (document.getElementsByClassName('lego-field-tinymce').length > 0) {
         import(/* webpackChunkName: "ui-bootstrap-jquery-tinymce" */ './field-richtext-tinymce')
