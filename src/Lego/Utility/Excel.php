@@ -4,8 +4,6 @@
 
 namespace Lego\Utility;
 
-use Box\Spout\Common\Type as SpoutType;
-use Box\Spout\Writer\WriterFactory as SpoutWriter;
 use Lego\Foundation\Exceptions\LegoExportException;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\IWriter;
@@ -35,25 +33,6 @@ class Excel
             throw new LegoExportException('$rows can not be key-value array.');
         }
 
-        if (class_exists(\Box\Spout\Writer\WriterFactory::class)) {
-            self::downloadBySpoutXlsx($filename, $rows);
-
-            return;
-        }
-
-        if (class_exists(\PhpOffice\PhpSpreadsheet\Spreadsheet::class)) {
-            self::downloadByPhpSpreadsheet($rows);
-
-            return;
-        }
-
-        throw new LegoExportException(
-            'lego excel export required `box/spout` or `phpoffice/phpspreadsheet`'
-        );
-    }
-
-    protected static function downloadByPhpSpreadsheet(array $rows)
-    {
         $spreadSheet = new Spreadsheet();
         $worksheet = $spreadSheet->getActiveSheet();
 
@@ -72,36 +51,6 @@ class Excel
 
         $xlsx = new Xlsx($spreadSheet);
         $xlsx->save('php://output');
-    }
-
-    protected static function createSpoutXlsxWriter()
-    {
-        /** @var \Box\Spout\Writer\XLSX\Writer $writer */
-        $writer = SpoutWriter::create(SpoutType::XLSX);
-
-        return $writer;
-    }
-
-    protected static function downloadBySpoutXlsx($filename, array $rows)
-    {
-        $writer = static::createSpoutXlsxWriter();
-
-        // Apple Numbers and iOS 不支持 InlineString，所以换用 SharedString
-        $writer->setShouldUseInlineStrings(false);
-
-        $writer->openToBrowser($filename);
-
-        $header = false;
-        foreach ($rows as $row) {
-            if (!$header) {
-                $writer->addRow(array_keys($row));
-                $header = true;
-            }
-
-            $writer->addRow($row);
-        }
-
-        $writer->close();
     }
 
     /**
