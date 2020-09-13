@@ -19,16 +19,16 @@
         "ext-json": "*",
         "illuminate/support": "^6.0 || ^7.0",
         "laravelcollective/html": "^6.0",
-        "mobiledetect/mobiledetectlib": "^2.8",
         "mews/purifier": "^2.0 || ^3.2",
-        "box/spout": "^2.7"
+        "mobiledetect/mobiledetectlib": "^2.8",
+        "phpoffice/phpspreadsheet": "^1.14"
     },
     "require-dev": {
-        "phpunit/phpunit": "^7.5.15 || ^8.4 || ^9.0",
-        "laravel/laravel": "^6.0 || ^7.0",
+        "box/spout": "^2.7",
         "fzaninotto/faker": "^1.6",
+        "laravel/laravel": "^6.0 || ^7.0",
         "ongr/elasticsearch-dsl": "^6.0",
-        "phpoffice/phpspreadsheet": "^1.5"
+        "phpunit/phpunit": "^7.5.15 || ^8.4 || ^9.0"
     },
     "autoload": {
         "files": [
@@ -53,6 +53,9 @@
                 "Lego\\LegoServiceProvider"
             ]
         }
+    },
+    "config": {
+        "sort-packages": true
     },
     "prefer-stable": true,
     "minimum-stability": "stable"

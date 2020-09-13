@@ -24,45 +24,10 @@ class ExcelTest extends TestCase
 
     public function testDownloadByPhpSpreadsheet()
     {
-        $class = new class() extends Excel {
-            public static function testDownload($rows)
-            {
-                return self::downloadByPhpSpreadsheet($rows);
-            }
-        };
-
         ob_start();
-        $class::testDownload($this->rows);
+        Excel::downloadFromArray('filename.xlsx', $this->rows);
         $excelContent = ob_get_contents();
         ob_end_clean();
-
-        $this->assertXlsxContentCorrect($excelContent);
-    }
-
-    public function testDownloadBySpoutXlsx()
-    {
-        $class = new class() extends Excel {
-            protected static function createSpoutXlsxWriter()
-            {
-                $writer = parent::createSpoutXlsxWriter();
-                $writer->setGlobalFunctionsHelper(ExcelSpoutGlobalFunctionsHelper::instance());
-
-                return $writer;
-            }
-
-            public static function testDownload($filename, $rows)
-            {
-                return self::downloadBySpoutXlsx($filename, $rows);
-            }
-        };
-
-        ob_start();
-        $class::testDownload('test_name', $this->rows);
-        $excelContent = ob_get_contents();
-        ob_end_clean();
-
-        $httpHeaders = ExcelSpoutGlobalFunctionsHelper::instance()->data['header'];
-        self::assertContains('Content-Disposition: attachment; filename="test_name"', $httpHeaders);
 
         $this->assertXlsxContentCorrect($excelContent);
     }
