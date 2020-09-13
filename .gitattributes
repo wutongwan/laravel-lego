@@ -1,6 +1,6 @@
 * text=auto
 
-/public linguist-vendored
+/public/**/* linguist-vendored
 
 /build export-ignore
 /demo export-ignore
