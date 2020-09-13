@@ -6,24 +6,20 @@
 ?>
 
 @section('grid-body')
-    <?php $batchModeEnabled = $grid->batchModeEnabled(); ?>
-
     <div class="table-responsive">
         <table class="table lego-grid lego-grid-table" id="{{ $grid->uniqueId() }}">
             <tr>
-                @if($batchModeEnabled)
-                    <th>#</th>
-                @endif
+                <th class="lego-batch-item hide">#</th>
                 @foreach($grid->cells() as $cell)
                     <th>{{ $cell->description() }}</th>
                 @endforeach
             </tr>
             @foreach($grid->paginator() as $row)
                 <tr>
-                    @if($batchModeEnabled)
-                        <td><input type="checkbox" class="lego-batch-checkbox"
-                                   value="{{ $row->get($grid->getBatchIdName()) }}"></td>
-                    @endif
+                    <td class="lego-batch-item hide">
+                        <input type="checkbox" class="lego-batch-checkbox"
+                               value="{{ $row->get($grid->getBatchIdName()) }}">
+                    </td>
                     @foreach($grid->cells() as $cell)
                         <td>{{ $cell->fill($row)->value() }}</td>
                     @endforeach

@@ -7,6 +7,13 @@ class GridBatch {
     listen() {
         const that = this
 
+        // 切换批处理模式显示与否的按钮
+        this._toggleBatchMode('auto') // 根据上一次状态自动开启
+        this.element.getElementsByClassName('lego-enable-batch')[0]
+            .addEventListener('click', () => this._toggleBatchMode(true))
+        this.element.getElementsByClassName('lego-disable-batch')[0]
+            .addEventListener('click', () => this._toggleBatchMode(false))
+
         // 全选
         this.element.getElementsByClassName('lego-select-all')[0]
             .addEventListener('click', () => that.setInputIds(that.getAllIds()))
@@ -43,6 +50,29 @@ class GridBatch {
                     this.getAttribute('data-name'),
                 )
             })
+        }
+    }
+
+    _toggleBatchMode(yes) {
+        const storageKey = 'Lego:Grid:BatchSwitcher:' + window.location.pathname
+
+        // 根据 localStorage 值自动开启
+        if (yes === 'auto') {
+            return this._toggleBatchMode(window.localStorage.getItem(storageKey) !== null)
+        }
+
+        if (yes) {
+            this.element.getElementsByClassName('lego-enable-batch')[0].classList.add('hide')
+            this.element.getElementsByClassName('lego-disable-batch')[0].classList.remove('hide')
+            this.element.getElementsByClassName('lego-grid-batch-tools')[0].classList.remove('hide')
+            this.element.querySelectorAll('.lego-batch-item').forEach(el => el.classList.remove('hide'))
+            window.localStorage.setItem(storageKey, Date.now())
+        } else {
+            this.element.getElementsByClassName('lego-enable-batch')[0].classList.remove('hide')
+            this.element.getElementsByClassName('lego-disable-batch')[0].classList.add('hide')
+            this.element.getElementsByClassName('lego-grid-batch-tools')[0].classList.add('hide')
+            this.element.querySelectorAll('.lego-batch-item').forEach(el => el.classList.add('hide'))
+            window.localStorage.removeItem(storageKey)
         }
     }
 

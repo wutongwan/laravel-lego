@@ -1,7 +1,7 @@
 <?php
 /** @var \Lego\Widget\Grid\Grid $grid */
 $paginator = $grid->paginator();
-$hasBatch = $grid->batchModeEnabled();
+$hasBatch = count($grid->batches()) > 0
 ?>
 
 @if($grid->filter())
@@ -12,25 +12,44 @@ $hasBatch = $grid->batchModeEnabled();
 @show
 @endif
 
-@include('lego::default.snippets.top-buttons', ['widget' => $grid])
+<div id="{{ $grid->uniqueId() }}" class="lego-grid-container{{ $hasBatch ? ' lego-grid-batch' : '' }}">
+    <div class="clearfix" style="margin-bottom: 5px;">
+        <div class="lego-left-top-buttons pull-left">
+            @if($hasBatch)
+                <button class="btn btn-default lego-enable-batch hide" title="多选">
+                    <span class="glyphicon glyphicon-expand"></span> 多选
+                </button>
+                <button class="btn btn-default lego-disable-batch hide" title="关闭多选">
+                    <span class="glyphicon glyphicon-collapse-down"></span> 多选
+                </button>
+            @endif
+            @foreach($grid->getButtons('left-top') as $button)
+                {!! $button !!}
+            @endforeach
+        </div>
+        <div class="lego-right-top-buttons pull-right">
+            @foreach($grid->getButtons('right-top') as $button)
+                {!! $button !!}
+            @endforeach
+        </div>
+    </div>
 
-<div id="{{ $grid->uniqueId() }}" class="{{ $hasBatch ? 'lego-grid-batch' : '' }}">
     @if($hasBatch)
-        <div class="panel panel-default lego-grid-batch-tools">
+        <div class="panel panel-default lego-grid-batch-tools hide">
             <div class="panel-body">
                 <div class="btn-group btn-group-sm">
-                    <button class="btn btn-default lego-select-all" v-on:click="selectAll">
+                    <button class="btn btn-default lego-select-all">
                         <span class="glyphicon glyphicon-check"></span> 全选
                     </button>
-                    <button class="btn btn-default lego-select-reverse" v-on:click="selectReverse">
+                    <button class="btn btn-default lego-select-reverse">
                         <span class="glyphicon glyphicon-unchecked"></span> 反选
                     </button>
-                    <button class="btn btn-default">
+                    <button class="btn btn-default" disabled>
                         已选 <span class="lego-selected-count">0</span> 项
                     </button>
                 </div>
                 &middot;
-                <form method="post" class="lego-batch-form">
+                <form method="post" class="lego-batch-form" style="display: inline">
                     <input type="hidden" name="ids" value="">
                     {{ csrf_field() }}
                     @foreach($grid->batches() as $batch)
@@ -49,9 +68,7 @@ $hasBatch = $grid->batchModeEnabled();
     @yield('grid-body')
 
     @section('grid-paginator')
-        <div class="text-center">
-            {!! $paginator->links() !!}
-        </div>
+        <div class="text-center">{!! $paginator->links() !!}</div>
     @show
 </div>
 
