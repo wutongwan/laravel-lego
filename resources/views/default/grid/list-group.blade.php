@@ -10,13 +10,11 @@
     <div>
         <ul class="list-group lego-grid lego-grid-list-group">
             @foreach($grid->paginator() as $row)
-                <li class="list-group-item" data-lego-batch-id="{{ $row->get($grid->getBatchIdName()) }}">
-                    @if($grid->batchModeEnabled())
-                        <span class="pull-right">
-                            <input type="checkbox" class="lego-batch-checkbox"
-                                   value="{{ $row->get($grid->getBatchIdName()) }}">
-                        </span>
-                    @endif
+                <li class="list-group-item">
+                    <span class="pull-right lego-batch-item hide">
+                        <input type="checkbox" class="lego-batch-checkbox"
+                               value="{{ $row->get($grid->getBatchIdName()) }}">
+                    </span>
                     @foreach($grid->cells() as $cell)
                         <p>
                             @if($description = $cell->description())

@@ -4,6 +4,7 @@ public/dev
 composer.lock
 .idea/
 .phpstorm.meta.php
+.phpunit.result.cache
 
 docs/api
 
