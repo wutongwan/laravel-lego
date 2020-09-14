@@ -5,6 +5,6 @@
 @if(config('lego.assets.global.bootstrap') || isset($legoInternalView))
     <script src="/packages/wutongwan/lego/externals/bootstrap/js/bootstrap.min.js"></script>
 @endif
-<script src="/packages/wutongwan/lego/index-b9acc858805a130fee0f.js"></script>
+<script src="/packages/wutongwan/lego/index-9bf0f80de4563562fbe8.js"></script>
 
 @stack('lego-scripts')

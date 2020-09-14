@@ -34,7 +34,7 @@ class GridBatch {
         // 每行的 checkbox
         for (const cb of this.element.getElementsByClassName('lego-batch-checkbox')) {
             // 浏览器返回时 checkbox 状态不会丢失，所以在这里先刷一遍
-            cb.checked ? that.addInputId(cb.value) : that.delInputId(cb.value)
+            setTimeout(() => cb.checked ? that.addInputId(cb.value) : that.delInputId(cb.value))
             cb.addEventListener('change', function () {
                 this.checked ? that.addInputId(this.value) : that.delInputId(this.value)
             })
