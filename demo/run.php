@@ -1,5 +1,6 @@
 <?php
 
+use Lego\Demo\DemoServiceProvider;
 use Symfony\Component\Console\Input\ArgvInput;
 
 /**
@@ -18,18 +19,15 @@ use Symfony\Component\Console\Input\ArgvInput;
     // update configs
     file_put_contents($laravel . '/.env', file_get_contents(__DIR__ . '/.env'));
 
-    // fix `public/index.php` autoload path
-    file_put_contents(
-        $path = "{$laravel}/public/index.php",
-        str_replace('/../vendor/autoload.php', '/../../../autoload.php', file_get_contents($path))
-    );
+    // create autoload file
+    file_exists("{$laravel}/vendor") || mkdir("{$laravel}/vendor");
+    file_put_contents("{$laravel}/vendor/autoload.php", "<?php require __DIR__ . '/../../../autoload.php';\n");
 
-    // register DemoServiceProvider
-    file_put_contents($path, str_replace(
-        $original = '$kernel = ',
-        '$app->register(\Lego\Demo\DemoServiceProvider::class);' . "\n\n{$original}",
-        file_get_contents($path)
-    ));
+    // register DemoServiceProvider (put into packages cache)
+    file_put_contents(
+        "{$laravel}/bootstrap/cache/packages.php",
+        sprintf("<?php return %s;", var_export(['wutongwan/lego-demo' => ['providers' => [DemoServiceProvider::class]]], true))
+    );
 
     // create static files link
     $link = ($folder = $laravel . '/public/packages/wutongwan') . '/lego';
