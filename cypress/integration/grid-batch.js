@@ -54,4 +54,14 @@ describe('Grid Batch Test', () => {
         cy.get('button[disabled]').should('contain.text', '已选 0 项')
     })
 
+    it('测试选中+处理+浏览器后退选中状态不丢失', () => {
+        localStorage.setItem('Lego:Grid:BatchSwitcher:/grid-batch', Date.now())
+        cy.visit('/grid-batch')
+        cy.get('button').contains('全选').click()
+        cy.get('button[disabled]').should('contain.text', '已选 100 项')
+        cy.get('button').contains('房型汇总').click()
+        cy.get('a').contains('返回上一页面').click()
+        cy.get('button[disabled]').should('contain.text', '已选 100 项') // 返回后选中状态不能丢失
+    })
+
 })
