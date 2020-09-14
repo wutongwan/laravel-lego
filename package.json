@@ -16,7 +16,7 @@
         "copy-webpack-plugin": "^6.1.0",
         "css-loader": "^4.2.2",
         "cypress": "^5.1.0",
-        "file-loader": "^6.0.0",
+        "file-loader": "^6.1.0",
         "fs": "^0.0.1-security",
         "jquery": "^3.5.1",
         "select2": "^4.0.3",
