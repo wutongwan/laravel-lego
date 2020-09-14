@@ -3,6 +3,7 @@
 namespace Lego\Demo;
 
 use Collective\Html\HtmlServiceProvider;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 use Lego\LegoServiceProvider;
@@ -25,7 +26,7 @@ class DemoServiceProvider extends ServiceProvider
     private function registerRoutes(Router $router)
     {
         // 初始化数据库
-        $router->get('/init-database', function () {
+        $router->get('/init-database', function (Request $request) {
             // recreate db file
             $path = config('database.connections.sqlite.database');
             file_exists($path) && unlink($path);
@@ -36,11 +37,21 @@ class DemoServiceProvider extends ServiceProvider
 
             // init test data
             require __DIR__ . '/../databases/seeders.php';
+
+            if ($back = $request->query('back')) {
+                return redirect(urldecode($back));
+            } else {
+                return "Database Initialized";
+            }
         })->name('init-database');
 
         // demo entry
         $router->any('/{item?}', function ($item = 'city') {
             abort_unless(isset($this->demos[$item]), 404);
+
+            if (!file_exists(config('database.connections.sqlite.database'))) {
+                return redirect('/init-database?back=' . urlencode(\Illuminate\Support\Facades\Request::fullUrl()));
+            }
 
             $path = __DIR__ . "/../demos/{$item}.php";
             $data = [

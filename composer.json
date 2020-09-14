@@ -24,9 +24,8 @@
         "phpoffice/phpspreadsheet": "^1.14"
     },
     "require-dev": {
-        "box/spout": "^2.7",
-        "fzaninotto/faker": "^1.6",
-        "laravel/laravel": "^6.0 || ^7.0",
+        "fzaninotto/faker": "^1.9",
+        "laravel/laravel": "@stable",
         "ongr/elasticsearch-dsl": "^6.0",
         "phpunit/phpunit": "^7.5.15 || ^8.4 || ^9.0"
     },

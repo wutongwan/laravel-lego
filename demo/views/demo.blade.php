@@ -41,9 +41,9 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="https://github.com/wutongwan/laravel-lego">GitHub</a></li>
-                <li><a href="https://github.com/zhwei/lego-demo">Demo Repo</a></li>
-                <li><a href="https://github.com/zhwei">Author：@zhwei</a></li>
+                <li><a href="/init-database?back={{ urlencode(request()->fullUrl()) }}" style="color: red;">Reset Database</a></li>
+                <li><a href="https://github.com/wutongwan/laravel-lego" target="_blank">GitHub</a></li>
+                <li><a href="https://github.com/zhwei" target="_blank">Author：@zhwei</a></li>
             </ul>
         </div><!--/.nav-collapse -->
     </div>
@@ -87,7 +87,6 @@
     <p>
         GitHub：
         <a href="https://github.com/wutongwan/laravel-lego" target="_blank">Lego</a> |
-        <a href="https://github.com/zhwei/lego-demo" target="_blank">Lego Demo</a>
     </p>
     <p>
         Author：<a href="https://github.com/zhwei" target="_blank">@zhwei</a>
