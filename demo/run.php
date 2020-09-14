@@ -16,8 +16,9 @@ use Symfony\Component\Console\Input\ArgvInput;
     // laravel folder full path
     $laravel = realpath(__DIR__ . '/../vendor/laravel/laravel');
 
-    // update configs
-    file_put_contents($laravel . '/.env', file_get_contents(__DIR__ . '/.env'));
+    // create enf symlink
+    file_exists($link = $laravel . '/.env.lego') && unlink($link);
+    symlink(__DIR__ . '/.env', $link);
 
     // create autoload file
     file_exists("{$laravel}/vendor") || mkdir("{$laravel}/vendor");
@@ -42,5 +43,5 @@ use Symfony\Component\Console\Input\ArgvInput;
 
     // start dev server
     chdir($laravel . '/public');
-    passthru("php -S {$host}:{$port} " . $laravel . '/server.php');
+    passthru("APP_ENV=lego php -S {$host}:{$port} " . $laravel . '/server.php');
 })();

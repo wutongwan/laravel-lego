@@ -36,6 +36,6 @@ $form->addCascadeSelect('Town')
 //}
 
 $form->onSubmit(function () {
-    return view('request-data');
+    return view('lego-demo::request-data');
 });
 return $form;

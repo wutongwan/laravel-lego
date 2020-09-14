@@ -10,5 +10,5 @@ $province = $form->addRichText('html')
     ->required();
 
 return $form->onSubmit(function () {
-    return view('request-data');
+    return view('lego-demo::request-data');
 });

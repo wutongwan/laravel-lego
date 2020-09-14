@@ -25,6 +25,9 @@ class DemoServiceProvider extends ServiceProvider
 
     private function registerRoutes(Router $router)
     {
+        asort($this->demos);
+        view()->share('demos', $this->demos);
+
         // 初始化数据库
         $router->get('/init-database', function (Request $request) {
             // recreate db file
@@ -58,7 +61,6 @@ class DemoServiceProvider extends ServiceProvider
                 'title' => $this->demos[$item],
                 'widget' => $widget = require $path,
                 'code' => trim(implode("\n", array_slice(explode("\n", file_get_contents($path)), 1))),
-                'demos' => $this->demos,
             ];
             return $widget instanceof Widget
                 ? $widget->view('lego-demo::demo', $data)

@@ -14,18 +14,20 @@ use Lego\Demo\Tools\ChinaRegions;
     $faker->addProvider(new Text($faker));
 
     // create cities
-    $regions = new ChinaRegions();
-    $regionsCities = Arr::flatten($regions->getCities(), 1);
+    echo 'Cities: ';
     $cities = [];
+    $regionsCities = Arr::flatten(($regions = new ChinaRegions())->getCities(), 1);
     for ($i = 0; $i < 99; $i++) {
         $city = new City();
         $city->name = array_shift($regionsCities)['name'];
         $city->save();
         $cities[] = $city;
-        echo "City[$city->name] created <br>";
+        echo $city->name . "&nbsp;";
     }
+    echo "<br><br><br>";
 
     // create streets
+    echo 'Streets: ';
     $streets = [];
     for ($i = 0; $i < 20; $i++) {
         $street = new Street();
@@ -33,10 +35,12 @@ use Lego\Demo\Tools\ChinaRegions;
         $street->name = $faker->name . $faker->randomElement(['路', '胡同']);
         $street->save();
         $streets[] = $street;
-        echo "Street[$street->name] created <br>";
+        echo $street->name . "&nbsp;";
     }
+    echo "<br><br><br>";
 
     // create suites
+    echo 'Suites: ';
     for ($i = 0; $i < 200; $i++) {
         $suite = new Suite();
         $suite->street()->associate($street = Arr::random($streets));
@@ -45,6 +49,6 @@ use Lego\Demo\Tools\ChinaRegions;
         $suite->status = $faker->randomElement(Suite::listStatus());
         $suite->note = $faker->realText(250);
         $suite->save();
-        echo "Suite[$suite->address] created <br>";
+        echo $suite->address . "&nbsp;";
     }
 })();
