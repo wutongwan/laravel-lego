@@ -8,6 +8,7 @@
 /tests export-ignore
 /resources/assets export-ignore
 /node_modules export-ignore
+/cypress export-ignore
 .travis.yml export-ignore
 .gitattributes export-ignore
 .github export-ignore
@@ -21,4 +22,5 @@ sami.php export-ignore
 CHANGELOG.md export-ignore
 composer.lock export-ignore
 yarn.lock
+cypress.json export-ignore
 

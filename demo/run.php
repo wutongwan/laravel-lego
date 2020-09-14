@@ -16,13 +16,13 @@ use Symfony\Component\Console\Input\ArgvInput;
     // laravel folder full path
     $laravel = realpath(__DIR__ . '/../vendor/laravel/laravel');
 
-    // create enf symlink
+    // create env file link
     file_exists($link = $laravel . '/.env.lego') && unlink($link);
     symlink(__DIR__ . '/.env', $link);
 
     // create autoload file
-    file_exists("{$laravel}/vendor") || mkdir("{$laravel}/vendor");
-    file_put_contents("{$laravel}/vendor/autoload.php", "<?php require __DIR__ . '/../../../autoload.php';\n");
+    file_exists($vendor = "{$laravel}/vendor") || mkdir($vendor);
+    file_put_contents("{$vendor}/autoload.php", "<?php require __DIR__ . '/../../../autoload.php';\n");
 
     // register DemoServiceProvider (put into packages cache)
     file_put_contents(
