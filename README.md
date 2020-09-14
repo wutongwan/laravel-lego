@@ -29,11 +29,11 @@ return $form->view('layout', ['form' => $form]);
 <!doctype html>
 <html lang="en">
 <head>
+    <title>Lego Form</title>
+    @include('lego::styles')
 </head>
 <body>
-
     {!! $form !!}
-
     @include('lego::scripts')
 </body>
 </html>
@@ -43,41 +43,18 @@ return $form->view('layout', ['form' => $form]);
 
 
 ## Required
-  - php >= 7.0 (短时间很多人肯定还没用上 PHP7, But who cares? For a better tomorrow！)
-  - Laravel >= 5.2
+  - php >= 7.1
+  - Laravel >= 6.0
 
 ## Installment
 
 ### 1、Composer
 
 ```bash
-composer require "wutongwan/lego"
+composer require wutongwan/lego
 ```
 
-### 2、Service Provider (Laravel < 5.5 Only)
-
-Add these lines to `providres` array of config file `config/app.php`.
-
-```php
-// Lego require LaravelCollective/html ，So need to add it's ServiceProvider.
-Collective\Html\HtmlServiceProvider::class,
-
-// Lego require mewebstudio/Purifier ，So need to add it's ServiceProvider.
-Mews\Purifier\PurifierServiceProvider::class,
-
-Lego\LegoServiceProvider::class,
-```
-
-> Lego require `mewebstudio/Purifier` , So need to publish it's assets
-> 
-> Visit <https://github.com/mewebstudio/Purifier> for more detail.
-> 
-> ``` bash
-> php artisan vendor:publish --provider="Mews\Purifier\PurifierServiceProvider"
-> ```
-
-
-### 3、Publish lego assets
+### 2、Publish lego assets
 
 ```bash
 php artisan vendor:publish --tag=lego-assets --force
@@ -85,7 +62,18 @@ php artisan vendor:publish --tag=lego-assets --force
 
 > **Tips:**
 > 
-> Add to `post-update-cmd`, In order to update lego static files Automatically.
+> To keep the assets up-to-date and avoid issues in future updates, 
+> you may add the command to the post-update-cmd scripts in your composer.json file:
+>
+> ```
+> {
+>      "scripts": {
+>          "post-update-cmd": [
+>              "@php artisan vendor:publish --tag=lego-assets --force"
+>          ]
+>      }
+>  }
+> ```
 
 ## Documents
 
@@ -98,26 +86,17 @@ php artisan vendor:publish --tag=lego-assets --force
 
 ## Development
 
-- 静态文件
-	- 依赖静态文件需在 bower.json 中配置（暂用 bower ，后期准备换到 npm + laravel-mix）
-	- JavaScript
-		- 现在项目中并没有固定的技术栈，可以各显神通，mix 应该能满足常见技术栈的编译需求
-		- 我比较喜欢 CoffeeScript :)
-
 - 分支
-  - master
-    - 在 master 下开发及维护
-  - release
-    - 发布新版本前由脚本创建，添加了所有依赖的静态文件，方便 composer 安装
+  - master, 在 master 下开发及维护
 
 - 当前版本在以下环境中开发并维护
   - Mac
   - Ubuntu
 
-- Run Development Demo
+- Run Demo
 
   ```bash
-  php demo/run.php
+  php demo/run.php [--host=127.0.0.1] [--port=8080]
   ```
 
 * * *

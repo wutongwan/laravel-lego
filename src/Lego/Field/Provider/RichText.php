@@ -7,6 +7,8 @@ use Lego\Utility\HtmlUtility;
 
 class RichText extends Textarea
 {
+    protected $purifierConfig = [];
+
     protected function renderReadonly()
     {
         return new HtmlString($this->takeShowValue());

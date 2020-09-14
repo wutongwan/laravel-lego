@@ -29,28 +29,9 @@ return [
             'class' => 'form-control',
         ],
 
-        /*
-         * Purifier Config
-         * 默认规则：移除所有标签
-         * Doc：http://htmlpurifier.org/live/configdoc/plain.html
-         * Tips: 特定 Field 可以在下面 `provider` 中覆盖此配置项，比如：RichText
-         */
-        'purifier' => [
-            'HTML.Allowed'             => '',
-            'AutoFormat.RemoveEmpty'   => true,
-            'AutoFormat.AutoParagraph' => false,
-        ],
-
         'provider' => [
             \Lego\Field\Provider\Checkboxes::class => [
                 'separator' => '|',
-            ],
-
-            \Lego\Field\Provider\RichText::class => [
-                /*
-                 * 使用 `/config/purifier.php` 中的默认配置项
-                 */
-                'purifier' => 'default',
             ],
         ],
     ],

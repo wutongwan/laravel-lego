@@ -1,6 +1,17 @@
 <?php
 
+use Symfony\Component\Console\Input\ArgvInput;
+
+/**
+ * Usage:
+ *
+ * - php demo/run.php
+ * - php demo/run.php --host=0.0.0.0 --port=8888
+ */
+
 (function () {
+    require __DIR__ . '/../vendor/autoload.php';
+
     // laravel folder full path
     $laravel = realpath(__DIR__ . '/../vendor/laravel/laravel');
 
@@ -26,7 +37,12 @@
     file_exists($link) && unlink($link);
     symlink(__DIR__ . '/../public', $link);
 
+    // 支持传入 host 和 port 参数
+    $input = new ArgvInput();
+    $host = $input->getParameterOption('--host') ?: '127.0.0.1';
+    $port = $input->getParameterOption('--port') ?: '8080';
+
     // start dev server
     chdir($laravel . '/public');
-    passthru('php -S 127.0.0.1:8080 ' . $laravel . '/server.php');
+    passthru("php -S {$host}:{$port} " . $laravel . '/server.php');
 })();

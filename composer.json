@@ -17,9 +17,9 @@
     "require": {
         "php": "^7.1",
         "ext-json": "*",
+        "ezyang/htmlpurifier": "^4.13",
         "illuminate/support": "^6.0 || ^7.0",
         "laravelcollective/html": "^6.0",
-        "mews/purifier": "^2.0 || ^3.2",
         "mobiledetect/mobiledetectlib": "^2.8",
         "phpoffice/phpspreadsheet": "^1.14"
     },
