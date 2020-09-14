@@ -30,7 +30,7 @@ jobs:
           extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick
           coverage: none
       - name: Install dependencies
-        run: composer require "illuminate/support=^${{ matrix.laravel }}" --prefer-dist --no-interaction -vvv
+        run: composer require "illuminate/support=^${{ matrix.laravel }}" --prefer-dist --no-interaction
       - name: Execute tests
         run: vendor/bin/phpunit --verbose
 
@@ -53,7 +53,7 @@ jobs:
           extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick
           coverage: none
       - name: Install dependencies
-        run: composer install --prefer-dist --no-interaction -vvv
+        run: composer install --prefer-dist --no-interaction
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
