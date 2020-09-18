@@ -20,68 +20,7 @@ class DemoServiceProvider extends ServiceProvider
     public function boot(Router $router)
     {
         $this->loadViewsFrom(__DIR__ . '/../views', 'lego-demo');
-        $this->registerRoutes($router);
+        $router->get('/init-database', '\Lego\Demo\DemoController@initDatabase')->name('init-database');
+        $router->any('/{item?}', '\Lego\Demo\DemoController@demo')->name('demo');
     }
-
-    private function registerRoutes(Router $router)
-    {
-        asort($this->demos);
-        view()->share('demos', $this->demos);
-
-        // 初始化数据库
-        $router->get('/init-database', function (Request $request) {
-            // recreate db file
-            $path = config('database.connections.sqlite.database');
-            file_exists($path) && unlink($path);
-            touch($path);
-
-            // run migrations
-            require __DIR__ . '/../databases/migrations.php';
-
-            // init test data
-            require __DIR__ . '/../databases/seeders.php';
-
-            if ($back = $request->query('back')) {
-                return redirect(urldecode($back));
-            } else {
-                return "Database Initialized";
-            }
-        })->name('init-database');
-
-        // demo entry
-        $router->any('/{item?}', function ($item = 'city') {
-            abort_unless(isset($this->demos[$item]), 404);
-
-            if (!file_exists(config('database.connections.sqlite.database'))) {
-                return redirect('/init-database?back=' . urlencode(\Illuminate\Support\Facades\Request::fullUrl()));
-            }
-
-            $path = __DIR__ . "/../demos/{$item}.php";
-            $data = [
-                'title' => $this->demos[$item],
-                'widget' => $widget = require $path,
-                'code' => trim(implode("\n", array_slice(explode("\n", file_get_contents($path)), 1))),
-            ];
-            return $widget instanceof Widget
-                ? $widget->view('lego-demo::demo', $data)
-                : view('lego-demo::demo', $data);
-        })->name('demo');
-    }
-
-    private $demos = [
-        'city-list' => 'Filter & Grid：城市列表',
-        'city' => 'Form：新建/编辑城市',
-        'street-list' => 'Filter & Grid：街道列表',
-        'street' => 'Form：新建/编辑街道',
-        'suite-list' => 'Filter & Grid：公寓列表',
-        'suite' => 'Form：新建/编辑公寓',
-        'suite-delete' => 'Confirm：删除公寓',
-        'confirm' => 'Confirm：确认操作示例',
-        'grid-batch' => 'Grid：批处理',
-        'message' => 'Message：提示信息',
-        'condition-group' => 'Form：动态添加字段',
-        'elastic-query' => 'Filter: ES 示例',
-        'form-cascade-select' => 'Form: 级联输入',
-        'form-rich-text' => 'Form: 富文本输入',
-    ];
 }
