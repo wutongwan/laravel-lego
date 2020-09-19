@@ -17,6 +17,7 @@ function loadLocale(locale, callback) {
 function initDatetimePicker(field) {
     const $field = jQuery(field)
     const options = JSON.parse(decodeURIComponent($field.data('datetimepicker-options')))
+    options['format'] = $field.data('format')
     loadLocale(options['language'], () => {
         $field.attr('readonly', true)
             .css('background-color', 'white')

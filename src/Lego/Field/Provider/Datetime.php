@@ -96,7 +96,6 @@ class Datetime extends Field
     public function getPickerOptions()
     {
         return [
-            'format' => $this->getJavaScriptFormat(),
             'language' => $this->getLocale(),
             'startView' => $this->startView,
             'minView' => $this->minView,
@@ -198,13 +197,14 @@ class Datetime extends Field
 
         return sprintf(
             '<input type="%s" name="%s" id="%s" class="form-control %s" value="%s" '
-            . ' placeholder="%s" data-datetimepicker-options="%s">',
+            . ' placeholder="%s" data-format="%s" data-datetimepicker-options="%s">',
             $this->getInputType(),
             $this->elementName(),
             $this->elementId(),
             $nativePickerEnabled ? '' : 'lego-field-datetime',
             $this->takeInputValue(),
             $this->getPlaceholder($this->description()),
+            $this->getJavaScriptFormat(),
             urlencode(json_encode($this->getPickerOptions()))
         );
     }
