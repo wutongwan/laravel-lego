@@ -1,9 +1,8 @@
 <?php /* @var \Lego\Field\Provider\Radios $field */ ?>
-<div id="{{ $field->elementId() }}" class="checkbox lego-field-checkbox">
-    <ul class="list-group">
-
-        @forelse($field->getOptions() as $value => $label)
-            <li class="list-group-item">
+<div id="{{ $field->elementId() }}" class="lego-field-checkbox">
+    @forelse($field->getOptions() as $value => $label)
+        <div class="{{ $field->getInputType() }}">
+            <label>
                 <input
                     type="{{ $field->getInputType() }}"
                     name="{{ $field->getInputName() }}"
@@ -11,9 +10,9 @@
                     {{ $field->isChecked($value) ? 'checked' : null }}
                 >
                 <span style="margin-left: 1em;">{{ $label }}</span>
-            </li>
-        @empty
-            <i class="text-danger">无选项</i>
-        @endforelse
-    </ul>
+            </label>
+        </div>
+    @empty
+        <i class="text-danger">无选项</i>
+    @endforelse
 </div>
