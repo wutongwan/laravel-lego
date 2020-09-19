@@ -3,11 +3,9 @@
 namespace Lego\Demo;
 
 use Collective\Html\HtmlServiceProvider;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 use Lego\LegoServiceProvider;
-use Lego\Widget\Widget;
 
 class DemoServiceProvider extends ServiceProvider
 {
@@ -20,7 +18,9 @@ class DemoServiceProvider extends ServiceProvider
     public function boot(Router $router)
     {
         $this->loadViewsFrom(__DIR__ . '/../views', 'lego-demo');
-        $router->get('/init-database', '\Lego\Demo\DemoController@initDatabase')->name('init-database');
-        $router->any('/{item?}', '\Lego\Demo\DemoController@demo')->name('demo');
+        $router->middleware('web')->group(function () use ($router) {
+            $router->get('/init-database', '\Lego\Demo\DemoController@initDatabase')->name('init-database');
+            $router->any('/{item?}', '\Lego\Demo\DemoController@demo')->name('demo');
+        });
     }
 }

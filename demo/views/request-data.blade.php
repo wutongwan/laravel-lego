@@ -3,14 +3,23 @@
 @extends('lego-demo::layout')
 
 @section('content')
-    <ul class="list-group">
-        @foreach(\Illuminate\Support\Facades\Request::all() as $key => $value)
-            <li class="list-group-item">
-                <p><strong>{{ $key }}</strong></p>
-                <p>
-                    <?php dump($value); ?>
-                </p>
-            </li>
-        @endforeach
-    </ul>
+    <h2>表单数据</h2>
+    <div class="col-md-8">
+        <table class="table table-bordered table-hover">
+            <thead>
+            <tr>
+                <th style="width: 50%">Input Name</th>
+                <th>Value</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach(request()->all() as $name => $value)
+                <tr>
+                    <td>{{ $name }}</td>
+                    <td>{{ $value }}</td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+    </div>
 @endsection
