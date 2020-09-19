@@ -13,11 +13,16 @@ use Symfony\Component\Console\Input\ArgvInput;
 (function () {
     require __DIR__ . '/../vendor/autoload.php';
 
+    // 支持传入 host 和 port 参数
+    $input = new ArgvInput();
+    $host = $input->getParameterOption('--host') ?: '127.0.0.1';
+    $port = $input->getParameterOption('--port') ?: '8080';
+
     // laravel folder full path
     $laravel = realpath(__DIR__ . '/../vendor/laravel/laravel');
 
     // create env file link
-    file_exists($link = $laravel . '/.env.lego') && unlink($link);
+    @unlink($link = $laravel . '/.env.lego');
     symlink(__DIR__ . '/.env', $link);
 
     // create autoload file
@@ -33,15 +38,9 @@ use Symfony\Component\Console\Input\ArgvInput;
     // create static files link
     $link = ($folder = $laravel . '/public/packages/wutongwan') . '/lego';
     file_exists($folder) || mkdir($folder, 0777, true);
-    file_exists($link) && unlink($link);
+    @unlink($link);
     symlink(__DIR__ . '/../public', $link);
 
-    // 支持传入 host 和 port 参数
-    $input = new ArgvInput();
-    $host = $input->getParameterOption('--host') ?: '127.0.0.1';
-    $port = $input->getParameterOption('--port') ?: '8080';
-
-    // start dev server
     chdir($laravel . '/public');
-    passthru("APP_ENV=lego php -S {$host}:{$port} " . $laravel . '/server.php');
+    passthru("APP_ENV=lego php -S {$host}:{$port} {$laravel}/server.php");
 })();
