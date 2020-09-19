@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <meta name="renderer" content="webkit">
-    <title>{{ $title }} &middot; Laravel Lego Demo</title>
+    <title>{{ $title }} &middot; Laravel Lego</title>
     @include('lego::styles')
     <link href="//cdn.bootcss.com/highlight.js/9.9.0/styles/github.min.css" rel="stylesheet">
     <style>
@@ -36,7 +36,10 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">Lego Demo</a>
+            <a class="navbar-brand" href="/">
+                Laravel Lego
+                <span style="font-size: 0.8em; color: #888888;">&middot; Save you from CRUD</span>
+            </a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">

@@ -128,6 +128,7 @@ trait HasValidation
          * @var Field
          * @var \Illuminate\Validation\Validator $validator
          */
+        $this->isRequired() || $this->rule('nullable');
         $validator = Validator::make(
             $data ?: [$this->elementName() => $value],
             [$this->elementName() => $this->rules()],
