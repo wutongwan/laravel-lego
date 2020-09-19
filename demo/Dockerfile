@@ -15,7 +15,6 @@ COPY . /var/www/html
 WORKDIR /var/www/html
 
 RUN set -eux; \
-    composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/; \
-     COMPOSER_MEMORY_LIMIT=-1 composer install;
+    COMPOSER_MEMORY_LIMIT=-1 composer install;
 
 CMD ["/usr/local/bin/php", "demo/run.php", "--host=0.0.0.0", "--port=80"]

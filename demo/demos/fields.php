@@ -1,5 +1,4 @@
 <?php
-// zhangwei@danke.com
 
 use Lego\Lego;
 
