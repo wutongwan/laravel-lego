@@ -10,7 +10,7 @@ class FieldNameTest extends TestCase
     public function testFullFeatures()
     {
         $fn = new FieldName($original = 'country.city.json_column$.jsonKey.jsonSubKey|format:Y-m-d,Asia/Shanghai|limit:100');
-        self::assertSame('json_column', $fn->getColumnName());
+        self::assertSame('json_column', $fn->getColumn());
         self::assertSame('country.city', $fn->getRelation());
         self::assertSame('country.city.json_column', $fn->getQualifiedColumnName());
         self::assertSame('jsonKey.jsonSubKey', $fn->getJsonPath());
@@ -24,7 +24,7 @@ class FieldNameTest extends TestCase
     public function testDefaults()
     {
         $fn = new FieldName($original = 'hello');
-        self::assertSame($original, $fn->getColumnName());
+        self::assertSame($original, $fn->getColumn());
         self::assertSame('', $fn->getRelation());
         self::assertSame($original, $fn->getQualifiedColumnName());
         self::assertSame('', $fn->getJsonPath());

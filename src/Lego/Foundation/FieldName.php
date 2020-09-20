@@ -14,7 +14,7 @@ class FieldName
      * 最终字段名称, eg: json_column
      * @var string
      */
-    private $columnName;
+    private $column;
 
     /**
      * 关系路径, eg: country.city
@@ -66,10 +66,10 @@ class FieldName
         // 解析关系：country.city.json_column => country.city & json_column
         if (str_contains($name, '.')) {
             $relations = self::explode('.', $name);
-            $this->columnName = array_pop($relations);
+            $this->column = array_pop($relations);
             $this->relation = join('.', $relations);
         } else {
-            $this->columnName = $name;
+            $this->column = $name;
         }
     }
 
@@ -117,17 +117,42 @@ class FieldName
         return $this->relation;
     }
 
+    /**
+     * 获取关系的深度
+     *
+     * eg: country.city => 2
+     * eg: country => 1
+     *
+     * @return int
+     */
+    public function getRelationDepth(): int
+    {
+        return $this->relation ? (substr_count($this->relation, '.') + 1) : 0;
+    }
+
+    /**
+     * 获取关系（返回数组）
+     *
+     * eg: country.city => [country, city]
+     *
+     * @return string[]
+     */
+    public function getRelationList()
+    {
+        return $this->relation ? explode('.', $this->relation) : [];
+    }
+
     public function getQualifiedColumnName(): string
     {
-        return $this->relation ? "{$this->relation}.{$this->columnName}" : $this->columnName;
+        return $this->relation ? "{$this->relation}.{$this->column}" : $this->column;
     }
 
     /**
      * @return string
      */
-    public function getColumnName(): string
+    public function getColumn(): string
     {
-        return $this->columnName;
+        return $this->column;
     }
 
     /**
