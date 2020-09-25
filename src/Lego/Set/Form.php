@@ -1,6 +1,6 @@
 <?php
 
-namespace Lego\Widget;
+namespace Lego\Set;
 
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Validation\Factory;
@@ -14,12 +14,12 @@ use Lego\Lego;
 use Lego\Rendering\RenderingManager;
 
 /**
- * Class FormV2
+ * Class Form
  * @package Lego\Widget
  *
  * @method Text|FormField addText($name, $label)
  */
-class FormV2 implements WidgetV2
+class Form implements Set
 {
     /**
      * @var Container

@@ -1,5 +1,5 @@
 <?php
-/** @var \Lego\Widget\FormV2 $form */
+/** @var \Lego\Set\Form $form */
 ?>
 
 <form method="post" class="form-horizontal" action="">

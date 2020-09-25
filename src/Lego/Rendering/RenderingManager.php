@@ -6,9 +6,10 @@ use Illuminate\Contracts\Container\Container;
 use InvalidArgumentException;
 use Lego\Input\Input;
 use Lego\Input\Text;
-use Lego\Rendering\BootstrapV3\FormV2Render;
+use Lego\Rendering\BootstrapV3\FormSetRender;
 use Lego\Rendering\BootstrapV3\TextInputRender;
-use Lego\Widget\FormV2;
+use Lego\Set\Form;
+use Lego\Set\Set;
 
 class RenderingManager
 {
@@ -16,8 +17,8 @@ class RenderingManager
         Text::class => TextInputRender::class,
     ];
 
-    private const WIDGETS = [
-        FormV2::class => FormV2Render::class,
+    private const SETS = [
+        Form::class => FormSetRender::class,
     ];
 
     /**
@@ -39,13 +40,13 @@ class RenderingManager
         throw new InvalidArgumentException('Unsupported type: ' . get_class($input));
     }
 
-    protected function renderWidget($widget)
+    protected function renderSet($set)
     {
-        if ($renderClass = self::WIDGETS[get_class($widget)] ?? null) {
-            return $this->container->make($renderClass)->render($widget);
+        if ($renderClass = self::SETS[get_class($set)] ?? null) {
+            return $this->container->make($renderClass)->render($set);
         }
 
-        throw new InvalidArgumentException('Unsupported type: ' . get_class($widget));
+        throw new InvalidArgumentException('Unsupported type: ' . get_class($set));
     }
 
     public function render($target)
@@ -54,8 +55,8 @@ class RenderingManager
             return $this->renderInput($target);
         }
 
-        if ($target instanceof FormV2) {
-            return $this->renderWidget($target);
+        if ($target instanceof Set) {
+            return $this->renderSet($target);
         }
 
         throw new InvalidArgumentException('Unsupported render type');
