@@ -8,7 +8,6 @@ class FormV2Render
 {
     public function render(FormV2 $form)
     {
-        dump($form);
-        return 'rendered form';
+        return view('lego::bootstrap-v3.form', ['form' => $form]);
     }
 }

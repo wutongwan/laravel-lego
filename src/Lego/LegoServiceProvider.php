@@ -5,6 +5,7 @@ namespace Lego;
 use Illuminate\Support\ServiceProvider;
 use Lego\Commands\GenerateIDEHelper;
 use Lego\Field\FieldLoader;
+use Lego\Foundation\Response\ResponseManager;
 
 /**
  * Lego Service Provider for Laravel.
@@ -18,6 +19,9 @@ class LegoServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        // singleton
+        $this->app->singleton(ResponseManager::class, ResponseManager::class);
+
         // alias
         $this->app->singleton('lego-fields', FieldLoader::class);
     }

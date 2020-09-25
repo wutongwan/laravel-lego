@@ -4,7 +4,6 @@ namespace Lego\Demo;
 
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
-use Lego\Widget\Widget;
 
 class DemoController
 {
@@ -36,7 +35,7 @@ class DemoController
             'widget' => $widget = require $path,
             'code' => trim(implode("\n", array_slice(explode("\n", file_get_contents($path)), 1))),
         ];
-        return $widget instanceof Widget
+        return method_exists($widget, 'view')
             ? $widget->view('lego-demo::demo', $data)
             : view('lego-demo::demo', $data);
     }

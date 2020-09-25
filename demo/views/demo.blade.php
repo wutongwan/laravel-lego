@@ -19,7 +19,7 @@
         <div class="panel panel-default">
             <div class="panel-heading text-center">{{ $title }} &middot; Demo</div>
             <div class="panel-body">
-                {!! $widget !!}
+                {!! $widget->render() !!}
             </div>
         </div>
     </div>

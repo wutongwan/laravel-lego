@@ -4,16 +4,16 @@ namespace Lego\Rendering;
 
 use Illuminate\Contracts\Container\Container;
 use InvalidArgumentException;
-use League\CommonMark\Inline\Renderer\TextRenderer;
 use Lego\Input\Input;
 use Lego\Input\Text;
 use Lego\Rendering\BootstrapV3\FormV2Render;
+use Lego\Rendering\BootstrapV3\TextInputRender;
 use Lego\Widget\FormV2;
 
 class RenderingManager
 {
     private const INPUTS = [
-        Text::class => TextRenderer::class,
+        Text::class => TextInputRender::class,
     ];
 
     private const WIDGETS = [
@@ -32,10 +32,6 @@ class RenderingManager
 
     protected function renderInput(Input $input)
     {
-        if (method_exists($input, 'render')) {
-            return $input->render();
-        }
-
         if ($renderClass = self::INPUTS[get_class($input)] ?? null) {
             return $this->container->make($renderClass)->render($input);
         }
@@ -45,11 +41,7 @@ class RenderingManager
 
     protected function renderWidget($widget)
     {
-        if (method_exists($widget, 'render')) {
-            return $widget->render();
-        }
-
-        if ($renderClass = self::INPUTS[get_class($widget)] ?? null) {
+        if ($renderClass = self::WIDGETS[get_class($widget)] ?? null) {
             return $this->container->make($renderClass)->render($widget);
         }
 

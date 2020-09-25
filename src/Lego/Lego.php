@@ -2,6 +2,7 @@
 
 namespace Lego;
 
+use Lego\Foundation\Response\ResponseManager;
 use Lego\Widget\Confirm;
 use Lego\Widget\Filter;
 use Lego\Widget\Form;
@@ -32,7 +33,9 @@ class Lego
 
     public static function formV2($data)
     {
-        return new FormV2(app(), $data);
+        $form = new FormV2(app(), $data);
+        app(ResponseManager::class)->registerWidget($form);
+        return $form;
     }
 
     public static function confirm($message, callable $action, $delay = null, string $view = null)
@@ -43,5 +46,10 @@ class Lego
     public static function message($message, $level = 'default')
     {
         return view('lego::default.message', compact('message', 'level'));
+    }
+
+    public static function view($view = null, $data = [], $mergeData = [])
+    {
+        return app(ResponseManager::class)->view($view, $data, $mergeData);
     }
 }

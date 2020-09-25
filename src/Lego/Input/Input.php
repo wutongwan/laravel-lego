@@ -2,6 +2,7 @@
 
 namespace Lego\Input;
 
+use Lego\Rendering\RenderingManager;
 use PhpOption\None;
 use PhpOption\Option;
 use PhpOption\Some;
@@ -46,6 +47,11 @@ abstract class Input
     final public function isReadonly()
     {
         return $this->readonly;
+    }
+
+    final public function isInputAble()
+    {
+        return $this->isReadonly() === false && $this->isDisabled() === false;
     }
 
     /**
@@ -183,5 +189,10 @@ abstract class Input
     {
         $this->inputName = $inputName;
         return $this;
+    }
+
+    public function render()
+    {
+        return app(RenderingManager::class)->render($this);
     }
 }

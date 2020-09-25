@@ -4,38 +4,41 @@ namespace Lego\DataAdaptor;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Validation\Rule;
 use Lego\Foundation\FieldName;
 use PhpOption\None;
 use PhpOption\Option;
 use function json_decode;
 use function json_encode;
 
-class EloquentAdaptor
+class EloquentAdaptor extends DataAdaptor
 {
     /**
      * @var Model
      */
-    private $model;
+    protected $data;
 
     /**
-     * @var \SplObjectStorage
+     * 存放所有需要 save 的 model
+     *
+     * @var \SplObjectStorage<Model>|Model[]
      */
-    private $waitingSave;
+    private $staging;
 
     public function __construct(Model $model)
     {
-        $this->model = $model;
-        $this->waitingSave = new \SplObjectStorage();
+        parent::__construct($model);
+        $this->staging = new \SplObjectStorage();
     }
 
     public function getFieldValue(FieldName $fieldName): Option
     {
         if ($fieldName->getRelation()) {
             /** @var Model|null $related */
-            $related = $this->model->getRelationValue($fieldName->getRelation());
+            $related = $this->data->getRelationValue($fieldName->getRelation());
             $value = $related ? $related->getAttribute($fieldName->getColumn()) : null;
         } else {
-            $value = $this->model->getAttribute($fieldName->getColumn());
+            $value = $this->data->getAttribute($fieldName->getColumn());
         }
 
         if ($value === null) {
@@ -53,10 +56,10 @@ class EloquentAdaptor
     {
         if ($fieldName->getRelation()) {
             /** @var Model|null $relation */
-            $model = $this->model->getRelationValue($fieldName->getRelation())
+            $model = $this->data->getRelationValue($fieldName->getRelation())
                 ?: $this->tryCreateFreshRelated($fieldName);
         } else {
-            $model = $this->model;
+            $model = $this->data;
         }
 
         if ($fieldName->getJsonPath()) {
@@ -69,7 +72,7 @@ class EloquentAdaptor
         }
 
         $model->setAttribute($fieldName->getColumn(), $columnValue);
-        $this->waitingSave->contains($model) || $this->waitingSave->attach($model); // 放入待存储列表
+        $this->staging->contains($model) || $this->staging->attach($model); // 放入待存储列表
     }
 
     private function tryCreateFreshRelated(FieldName $fieldName)
@@ -79,7 +82,35 @@ class EloquentAdaptor
         }
 
         /** @var Relation $relation */
-        $relation = $this->model->{$fieldName->getRelation()}();
+        $relation = $this->data->{$fieldName->getRelation()}();
         return $relation->make();
+    }
+
+    public function save()
+    {
+        foreach ($this->staging as $model) {
+            if ($model->save()) {
+                $this->staging->detach($model);
+                continue;
+            }
+            throw new LegoSaveModelFail($model);
+        }
+        return true;
+    }
+
+    /**
+     * Laravel Validation unique.
+     *
+     * Auto except current model
+     *
+     * https://laravel.com/docs/master/validation#rule-unique
+     */
+    public function createUniqueRule()
+    {
+        $rule = Rule::unique($this->data->getTable());
+        if ($this->data->getKey()) {
+            $rule->ignore($this->data->getKey(), $this->data->getKeyName());
+        }
+        return $rule;
     }
 }
