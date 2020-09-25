@@ -72,7 +72,7 @@ class EloquentAdaptor extends DataAdaptor
         }
 
         $model->setAttribute($fieldName->getColumn(), $columnValue);
-        $this->staging->contains($model) || $this->staging->attach($model); // 放入待存储列表
+        $this->addStaging($model); // 放入待存储列表
     }
 
     private function tryCreateFreshRelated(FieldName $fieldName)
@@ -86,8 +86,18 @@ class EloquentAdaptor extends DataAdaptor
         return $relation->make();
     }
 
+    private function addStaging(Model $model)
+    {
+        $this->staging->contains($model) || $this->staging->attach($model); // 放入待存储列表
+    }
+
     public function save()
     {
+        /// 不管怎样，都要调用一次当前 model 的 save，
+        /// 因为有可能 form field 的 mutator 对 model 进行了修改
+        /// model->save() 中会进行 isDirty 判定，不会产生无意义写库
+        $this->addStaging($this->data);
+
         foreach ($this->staging as $model) {
             if ($model->save()) {
                 $this->staging->detach($model);

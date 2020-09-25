@@ -7,11 +7,12 @@ use Illuminate\Contracts\Validation\Factory;
 use Illuminate\Http\Request;
 use Lego\DataAdaptor\EloquentAdaptor;
 use Lego\Foundation\FieldName;
-use Lego\Foundation\FormField;
 use Lego\Input\Input;
 use Lego\Input\Text;
 use Lego\Lego;
 use Lego\Rendering\RenderingManager;
+use Lego\Set\Form\FormField;
+use PhpOption\Option;
 
 /**
  * Class Form
@@ -38,7 +39,7 @@ class Form implements Set
     private $adaptor;
 
     /**
-     * @var FormField[]|Input[]   Input 是为了方便自动补全，FormField Proxy 了 Input 的函数调用
+     * @var \Lego\Set\Form\FormField[]|Input[]   Input 是为了方便自动补全，FormField Proxy 了 Input 的函数调用
      */
     private $fields = [];
 
@@ -57,9 +58,8 @@ class Form implements Set
         foreach ($this->fields as $field) {
             // sync original value from model
             $originalValue = $this->adaptor->getFieldValue($field->getFieldName());
-            if ($originalValue->isDefined()) {
-                $field->setOriginalValue($originalValue->get());
-            }
+            $this->setFieldOriginalValue($field, $originalValue);
+
             // sync input value from request
             if ($isPost && $field->isInputAble()) {
                 $inputValue = $request->post($field->getInputName());
@@ -76,11 +76,33 @@ class Form implements Set
         }
     }
 
+    /**
+     * 设置数据初始值到 input
+     *
+     * @param FormField|Input $field
+     * @param Option $originalValue
+     */
+    private function setFieldOriginalValue(FormField $field, Option $originalValue)
+    {
+        if ($accessor = $field->getAccessor()) {
+            $value = $accessor($this->data, $originalValue->getOrElse(null));
+            if ($value !== null) {
+                $field->setOriginalValue($value);
+            }
+        } elseif ($originalValue->isDefined()) {
+            $field->setOriginalValue($originalValue->get());
+        }
+    }
+
     private function saveInputValuesToModel()
     {
         foreach ($this->fields as $field) {
             if ($field->isInputAble() && $field->issetInputValue()) {
-                $this->adaptor->setFieldValue($field->getFieldName(), $field->getInputValue());
+                if ($mutator = $field->getMutator()) {
+                    $mutator($this->data, $field->getInputValue());
+                } else {
+                    $this->adaptor->setFieldValue($field->getFieldName(), $field->getInputValue());
+                }
             }
         }
         $this->adaptor->save();
@@ -161,7 +183,7 @@ class Form implements Set
     }
 
     /**
-     * @return FormField[]|Input[]
+     * @return \Lego\Set\Form\FormField[]|Input[]
      */
     public function getFields()
     {

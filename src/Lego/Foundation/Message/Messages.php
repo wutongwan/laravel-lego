@@ -1,6 +1,6 @@
 <?php
 
-namespace Lego\Foundation;
+namespace Lego\Foundation\Message;
 
 use ArrayIterator;
 
