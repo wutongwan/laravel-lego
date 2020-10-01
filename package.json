@@ -13,7 +13,7 @@
         "bootstrap": "^3.4.0",
         "bootstrap-datetime-picker": "^2.4.4",
         "clean-webpack-plugin": "^3.0.0",
-        "copy-webpack-plugin": "^6.1.0",
+        "copy-webpack-plugin": "^6.1.1",
         "css-loader": "^4.2.2",
         "cypress": "^5.1.0",
         "file-loader": "^6.0.0",
