@@ -2,6 +2,7 @@
 
 namespace Lego\Input;
 
+use Lego\Foundation\FieldName;
 use Lego\Rendering\RenderingManager;
 use PhpOption\None;
 use PhpOption\Option;
@@ -137,7 +138,7 @@ abstract class Input
         return $this;
     }
 
-    final public function issetOriginalValue()
+    final public function isOriginalValueExists(): bool
     {
         return $this->originalValue instanceof Some;
     }
@@ -158,7 +159,7 @@ abstract class Input
         return $this;
     }
 
-    final public function issetInputValue()
+    final public function isInputValueExists(): bool
     {
         return $this->inputValue instanceof Some;
     }
@@ -166,9 +167,9 @@ abstract class Input
     /**
      * 获取当前值，如果设置过 inputValue 则返回 inputValue，否则返回 originalValue
      */
-    final public function getValue()
+    final public function getCurrentValue()
     {
-        return $this->issetInputValue() ? $this->getInputValue() : $this->getOriginalValue();
+        return $this->isInputValueExists() ? $this->getInputValue() : $this->getOriginalValue();
     }
 
     /**
@@ -188,6 +189,46 @@ abstract class Input
     final public function setInputName(string $inputName)
     {
         $this->inputName = $inputName;
+        return $this;
+    }
+
+    public function initializeHook()
+    {
+    }
+
+    /**
+     * 渲染前触发
+     */
+    public function beforeRenderHook(): void
+    {
+    }
+
+    /**
+     * 表单提交后触发
+     */
+    public function afterSubmitHook(): void
+    {
+    }
+
+    /**
+     * @var FieldName
+     */
+    private $fieldName;
+
+    /**
+     * @return FieldName
+     */
+    public function getFieldName(): FieldName
+    {
+        return $this->fieldName;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setFieldName(FieldName $fieldName)
+    {
+        $this->fieldName = $fieldName;
         return $this;
     }
 

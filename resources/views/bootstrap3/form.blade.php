@@ -6,7 +6,7 @@
     @foreach($form->getFields() as $field)
         <div class="form-group">
             <label for="lego-form-field-id-{{ $field->getInputName() }}" class="col-sm-2 control-label">
-                @if($field->isRequired() && $field->isEditable())
+                @if($field->isRequired() && $field->isInputAble())
                     <span class="text-danger">*</span>
                 @endif
                 {{ $field->getLabel() }}

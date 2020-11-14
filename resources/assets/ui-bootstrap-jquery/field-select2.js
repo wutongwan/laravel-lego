@@ -42,7 +42,7 @@ export function initSelect2Autocomplete(field) {
             width: "100%",
             language: $field.data('language'),
             allowClear: $field.data('allow-clear'),
-            minimumInputLength: $field.data('min-input-length'),
+            minimumInputLength: $field.data('setMinInputLength-input-length'),
             ajax: {
                 url: decodeURIComponent($field.data('url')),
                 dataType: 'json',

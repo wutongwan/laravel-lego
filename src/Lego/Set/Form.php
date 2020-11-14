@@ -7,11 +7,13 @@ use Illuminate\Contracts\Validation\Factory;
 use Illuminate\Http\Request;
 use Lego\DataAdaptor\EloquentAdaptor;
 use Lego\Foundation\FieldName;
+use Lego\Input\AutoComplete;
 use Lego\Input\Input;
 use Lego\Input\Text;
 use Lego\Lego;
 use Lego\Rendering\RenderingManager;
 use Lego\Set\Form\FormField;
+use Lego\Set\Form\FormFieldForBelongsToRelation;
 use PhpOption\Option;
 
 /**
@@ -19,6 +21,7 @@ use PhpOption\Option;
  * @package Lego\Widget
  *
  * @method Text|FormField addText($name, $label)
+ * @method AutoComplete|FormFieldForBelongsToRelation addAutoCompleteBelongsTo($name, $label)
  */
 class Form implements Set
 {
@@ -52,16 +55,18 @@ class Form implements Set
 
     public function process(Request $request)
     {
-        $isPost = $request->isMethod('POST');
+        $isSubmit = $request->isMethod('POST');
 
         // sync values from model & form input
         foreach ($this->fields as $field) {
+            $input = $field->getInput();
+
             // sync original value from model
-            $originalValue = $this->adaptor->getFieldValue($field->getFieldName());
+            $originalValue = $this->adaptor->getFieldValue($input->getFieldName());
             $this->setFieldOriginalValue($field, $originalValue);
 
             // sync input value from request
-            if ($isPost && $field->isInputAble()) {
+            if ($isSubmit && $field->isInputAble()) {
                 $inputValue = $request->post($field->getInputName());
                 if ($inputValue !== null || $originalValue->isDefined()) {
                     // 输入值不为空 or 原始值不为空，避免修改留空的字段，以便使用数据库默认值
@@ -70,7 +75,7 @@ class Form implements Set
             }
         }
 
-        if ($isPost) {
+        if ($isSubmit) {
             $this->runValidations();
             $this->saveInputValuesToModel();
         }
@@ -97,7 +102,7 @@ class Form implements Set
     private function saveInputValuesToModel()
     {
         foreach ($this->fields as $field) {
-            if ($field->isInputAble() && $field->issetInputValue()) {
+            if ($field->isInputAble() && $field->isInputValueExists()) {
                 if ($mutator = $field->getMutator()) {
                     $mutator($this->data, $field->getInputValue());
                 } else {
@@ -150,7 +155,6 @@ class Form implements Set
 
         /** @var Input $input */
         $input = $this->container->make($inputClass);
-        $input->setInputName($fieldName->getQualifiedColumnName());
 
         return $this->fields[$fieldName->getQualifiedColumnName()]
             = new FormField($input, $fieldName, $fieldLabel, $this->adaptor);

@@ -23,9 +23,9 @@ class Number extends Text
      */
     public function min($value)
     {
-        $this->attr('min', $value);
+        $this->attr('setMinInputLength', $value);
 
-        return $this->rule('min:' . $value);
+        return $this->rule('setMinInputLength:' . $value);
     }
 
     public function max($value)

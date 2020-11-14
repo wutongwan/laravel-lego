@@ -1,9 +1,17 @@
 <?php
 
-namespace Lego\Set\Form;
+namespace Lego\Set\Form\Concerns;
 
 use Closure;
 
+/**
+ * Trait FormFieldAccessorAndMutator
+ * @package  Lego\Set\Form
+ *
+ * @template A of Closure(\Illuminate\Database\Eloquent\Model|mixed, mixed):mixed
+ * @template M of Closure(\Illuminate\Database\Eloquent\Model|mixed, mixed):void
+ *
+ */
 trait FormFieldAccessorAndMutator
 {
     /**
@@ -18,6 +26,7 @@ trait FormFieldAccessorAndMutator
      * 重写后，输入框的默认值即 $model->firstName
      *
      * @var Closure|null   需要接受两个参数 ($model, $value)
+     * @psalm-var A
      */
     private $accessor;
 
@@ -37,11 +46,13 @@ trait FormFieldAccessorAndMutator
      * 重写后，输入值会存储到 $model->firstName 字段
      *
      * @var Closure|null   需要接受两个参数 ($model, $value)
+     * @psalm-var M
      */
     private $mutator;
 
     /**
      * @return Closure|null
+     * @psalm-return A
      */
     public function getAccessor(): ?Closure
     {
@@ -50,6 +61,7 @@ trait FormFieldAccessorAndMutator
 
     /**
      * @param Closure|null $accessor
+     * @psalm-param A $accessor
      * @return $this
      */
     public function accessor(Closure $accessor)
@@ -60,6 +72,7 @@ trait FormFieldAccessorAndMutator
 
     /**
      * @return Closure|null
+     * @psalm-return M
      */
     public function getMutator(): ?Closure
     {
@@ -68,6 +81,7 @@ trait FormFieldAccessorAndMutator
 
     /**
      * @param Closure|null $mutator
+     * @psalm-param M $mutator
      * @return $this
      */
     public function mutator(Closure $mutator)

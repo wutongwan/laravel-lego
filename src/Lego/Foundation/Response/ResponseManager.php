@@ -56,8 +56,11 @@ class ResponseManager
     {
         // 检查是否触发自定义 handler
         $respKey = $this->container->make(Request::class)->query(self::QUERY_NAME);
-        if ($respKey && isset($this->handlers[$respKey])) {
-            return $this->container->call($this->handlers[$respKey]);
+        if ($respKey) {
+            $respKey = urldecode($respKey);
+            if (isset($this->handlers[$respKey])) {
+                return $this->container->call($this->handlers[$respKey]);
+            }
         }
 
         // 调用组件处理逻辑
@@ -75,10 +78,14 @@ class ResponseManager
      *
      * @param string $key
      * @param Closure $handler
+     * @return string 请求链接
      */
     public function registerHandler(string $key, Closure $handler)
     {
         $this->handlers[$key] = $handler;
+        return $this->container->make(Request::class)->fullUrlWithQuery([
+            self::QUERY_NAME => urlencode($key),
+        ]);
     }
 
     /**

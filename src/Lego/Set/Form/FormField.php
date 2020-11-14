@@ -3,10 +3,11 @@
 namespace Lego\Set\Form;
 
 use Lego\DataAdaptor\DataAdaptor;
-use Lego\DataAdaptor\EloquentAdaptor;
 use Lego\Foundation\FieldName;
 use Lego\Foundation\Message\HasMessages;
 use Lego\Input\Input;
+use Lego\Set\Form\Concerns\FormFieldAccessorAndMutator;
+use Lego\Set\Form\Concerns\FormFieldValidations;
 
 /**
  * Class FormField
@@ -22,48 +23,34 @@ class FormField
     /**
      * @var Input
      */
-    private $input;
-
-    /**
-     * @var FieldName
-     */
-    private $fieldName;
-
+    protected $input;
     /**
      * @var string
      */
     private $fieldLabel;
-
     /**
-     * @var EloquentAdaptor
+     * @var DataAdaptor
      */
-    private $adaptor;
+    protected $adaptor;
 
-    public function __construct(Input $input, FieldName $fieldName, string $fieldLabel, DataAdaptor $adaptor)
+    public function __construct(Input $input, FieldName $fieldName, string $label, DataAdaptor $adaptor)
     {
-        $this->input = $input;
-        $this->input->setLabel($fieldLabel);
+        $this->initializeHasMessages();
 
-        $this->fieldName = $fieldName;
-        $this->fieldLabel = $fieldLabel;
         $this->adaptor = $adaptor;
 
-        $this->initializeHasMessages();
+        $this->input = $input;
+        $this->input->setFieldName($fieldName);
+        $this->input->setLabel($label);
+        $this->input->initializeHook();;
     }
 
-    public function getFieldName(): FieldName
+    /**
+     * @return Input
+     */
+    public function getInput(): Input
     {
-        return $this->fieldName;
-    }
-
-    public function isEditable()
-    {
-        return $this->input->isReadonly() === false && $this->input->isDisabled() === false;
-    }
-
-    public function isRequired()
-    {
-        return true;
+        return $this->input;
     }
 
     public function __call($method, $parameters)

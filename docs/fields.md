@@ -53,7 +53,7 @@ $form->addText('name', 'Your Name')
 $form->addNumber('price')
     ->step(0.01)
     ->max(10000)
-    ->min(0)
+    ->setMinInputLength(0)
 ```
 
 ### Select

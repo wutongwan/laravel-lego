@@ -6,8 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Validation\Rule;
 use Lego\Foundation\FieldName;
+use Lego\Foundation\Match\MatchQuery;
+use Lego\Foundation\Match\MatchResults;
+use Lego\Utility\EloquentUtility;
 use PhpOption\None;
 use PhpOption\Option;
+use SplObjectStorage;
 use function json_decode;
 use function json_encode;
 
@@ -21,14 +25,25 @@ class EloquentAdaptor extends DataAdaptor
     /**
      * 存放所有需要 save 的 model
      *
-     * @var \SplObjectStorage<Model>|Model[]
+     * @var SplObjectStorage<Model>|Model[]
      */
     private $staging;
 
     public function __construct(Model $model)
     {
         parent::__construct($model);
-        $this->staging = new \SplObjectStorage();
+
+        $this->staging = new SplObjectStorage();
+    }
+
+    // 获取 FieldName 对应表的主键值
+    public function getKeyName(FieldName $fieldName): string
+    {
+        if ($fieldName->getRelation()) {
+            return $this->getRelation($fieldName)->getRelated()->getKeyName();
+        } else {
+            return $this->data->getKeyName();
+        }
     }
 
     public function getFieldValue(FieldName $fieldName): Option
@@ -56,8 +71,7 @@ class EloquentAdaptor extends DataAdaptor
     {
         if ($fieldName->getRelation()) {
             /** @var Model|null $relation */
-            $model = $this->data->getRelationValue($fieldName->getRelation())
-                ?: $this->tryCreateFreshRelated($fieldName);
+            $model = $this->getRelated($fieldName) ?: $this->tryCreateFreshRelated($fieldName);
         } else {
             $model = $this->data;
         }
@@ -75,6 +89,45 @@ class EloquentAdaptor extends DataAdaptor
         $this->addStaging($model); // 放入待存储列表
     }
 
+    private function getRelated(FieldName $fieldName)
+    {
+        $related = $this->data;
+        foreach ($fieldName->getRelationList() as $name) {
+            if (!$related = $related->{$name}) {
+                return null;
+            }
+        }
+        return $related;
+    }
+
+    // 获取 Relation 对象，支持多层 Relation
+    private function getRelation(FieldName $fieldName): Relation
+    {
+        $related = $this->data;
+        $relationList = $fieldName->getRelationList();
+        while ($name = array_shift($relationList)) {
+            $relation = $related->{$name}();
+            if (!$relation instanceof Relation) {
+                throw new \LogicException(sprintf(
+                    '%s::%s must return a relationship instance.',
+                    get_class($related),
+                    $name
+                ));
+            }
+            if (count($relationList) > 0) {
+                $related = $relation->getRelated();
+                continue;
+            }
+            return $relation;
+        }
+
+        throw new \LogicException(sprintf(
+            'Relation [%s] not exists in model[%s]',
+            $fieldName->getRelation(),
+            get_class($this->data)
+        ));
+    }
+
     private function tryCreateFreshRelated(FieldName $fieldName)
     {
         if ($fieldName->getRelationDepth() > 1) {
@@ -86,9 +139,10 @@ class EloquentAdaptor extends DataAdaptor
         return $relation->make();
     }
 
+    // 暂存 model ，在 save 中一起保存
     private function addStaging(Model $model)
     {
-        $this->staging->contains($model) || $this->staging->attach($model); // 放入待存储列表
+        $this->staging->contains($model) || $this->staging->attach($model);
     }
 
     public function save()
@@ -122,5 +176,23 @@ class EloquentAdaptor extends DataAdaptor
             $rule->ignore($this->data->getKey(), $this->data->getKeyName());
         }
         return $rule;
+    }
+
+    public function queryMatch(FieldName $fieldName, MatchQuery $match): MatchResults
+    {
+        if ($fieldName->getRelation()) {
+            $model = $this->getRelation($fieldName)->getRelated();
+            $valueColumn = $model->getKeyName();
+        } else {
+            $model = $this->data;
+            $valueColumn = $fieldName->getColumn();
+        }
+
+        return EloquentUtility::match(
+            $model->newQuery(),
+            $match,
+            $fieldName->getColumn(),
+            $valueColumn
+        );
     }
 }

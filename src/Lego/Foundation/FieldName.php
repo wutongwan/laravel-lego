@@ -5,7 +5,7 @@ namespace Lego\Foundation;
 class FieldName
 {
     /**
-     * 原始名称, eg: country.city.json_column$.jsonKey.jsonSubKey
+     * 原始名称, eg: country.city.json_column$.jsonKey.jsonSubKey,.column2|pipe1|pipe2
      * @var string
      */
     private $original;
@@ -169,5 +169,18 @@ class FieldName
     public function getPipelines(): array
     {
         return $this->pipelines;
+    }
+
+    public function clone(string $column, string $jsonPath = '', array $pipelines = []): FieldName
+    {
+        $new = clone $this;
+        $new->column = $column;
+        $new->jsonPath = $jsonPath;
+        $new->pipelines = $pipelines;
+        $new->original = $new->getQualifiedColumnName()
+            . ($jsonPath ? "$.{$jsonPath}" : '')
+            . ($pipelines ? ('|' . join('|', $pipelines)) : '');
+
+        return $new;
     }
 }

@@ -6,6 +6,8 @@ use Lego\DataAdaptor\EloquentAdaptor;
 use Lego\Demo\Models\Street;
 use Lego\Demo\Models\Suite;
 use Lego\Foundation\FieldName;
+use Lego\Foundation\Match\MatchQuery;
+use Lego\Foundation\Match\MatchResults;
 use PhpOption\None;
 use PhpOption\Some;
 
@@ -41,5 +43,33 @@ class EloquentAdaptorTest extends \Lego\Tests\TestCase
         self::assertSame('second value', $ea->getFieldValue(new FieldName('street.json_casted_obj$.first.second'))->get());
         // json 字段，已经转换成 array
         self::assertSame('key2 value', $ea->getFieldValue(new FieldName('street.json_casted_array$.key1.key2'))->get());
+    }
+
+    public function testGetKeyName()
+    {
+        $adaptor = new EloquentAdaptor(new Suite());
+        self::assertSame('id', $adaptor->getKeyName(new FieldName('address')));
+        self::assertSame('id', $adaptor->getKeyName(new FieldName('street.city.name')));
+
+        $suite = new Suite();
+        $suite->setKeyName('uuid');
+        self::assertSame('uuid', (new EloquentAdaptor($suite))->getKeyName(new FieldName('address')));
+    }
+
+    public function testGetAutoCompleteOptions()
+    {
+        $args = new MatchQuery();
+        $args->keyword = '1';
+        $args->limit = 10;
+        $adaptor = new EloquentAdaptor(new Suite());
+        $options = $adaptor->queryMatch(new FieldName('address'), $args);
+        self::assertInstanceOf(MatchResults::class, $options);
+
+        $args = new MatchQuery();
+        $args->keyword = '胡同';
+        $args->limit = 100;
+        $args->setPage(1);
+        $options = $adaptor->queryMatch(new FieldName('street.name'), $args);
+        self::assertInstanceOf(MatchResults::class, $options);
     }
 }
