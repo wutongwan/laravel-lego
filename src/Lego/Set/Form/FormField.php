@@ -24,10 +24,7 @@ class FormField
      * @var Input
      */
     protected $input;
-    /**
-     * @var string
-     */
-    private $fieldLabel;
+
     /**
      * @var DataAdaptor
      */
@@ -39,10 +36,11 @@ class FormField
 
         $this->adaptor = $adaptor;
 
+        $input->setLabel($label);
+        $input->setAdaptor($adaptor);
+        $input->setFieldName($fieldName);
+        $input->initializeHook();
         $this->input = $input;
-        $this->input->setFieldName($fieldName);
-        $this->input->setLabel($label);
-        $this->input->initializeHook();;
     }
 
     /**

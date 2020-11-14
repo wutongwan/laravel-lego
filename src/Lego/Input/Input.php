@@ -2,6 +2,7 @@
 
 namespace Lego\Input;
 
+use Lego\DataAdaptor\DataAdaptor;
 use Lego\Foundation\FieldName;
 use Lego\Rendering\RenderingManager;
 use PhpOption\None;
@@ -230,6 +231,28 @@ abstract class Input
     {
         $this->fieldName = $fieldName;
         return $this;
+    }
+
+    /**
+     * @var DataAdaptor
+     */
+    private $adaptor;
+
+    /**
+     * @param DataAdaptor $adaptor
+     */
+    final public function setAdaptor(DataAdaptor $adaptor)
+    {
+        $this->adaptor = $adaptor;
+        return $this;
+    }
+
+    /**
+     * @return DataAdaptor
+     */
+    final public function getAdaptor(): DataAdaptor
+    {
+        return $this->adaptor;
     }
 
     public function render()

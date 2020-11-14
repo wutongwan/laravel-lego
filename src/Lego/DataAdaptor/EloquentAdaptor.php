@@ -20,7 +20,7 @@ class EloquentAdaptor extends DataAdaptor
     /**
      * @var Model
      */
-    protected $data;
+    protected $original;
 
     /**
      * 存放所有需要 save 的 model
@@ -42,7 +42,7 @@ class EloquentAdaptor extends DataAdaptor
         if ($fieldName->getRelation()) {
             return $this->getRelation($fieldName)->getRelated()->getKeyName();
         } else {
-            return $this->data->getKeyName();
+            return $this->original->getKeyName();
         }
     }
 
@@ -50,10 +50,10 @@ class EloquentAdaptor extends DataAdaptor
     {
         if ($fieldName->getRelation()) {
             /** @var Model|null $related */
-            $related = $this->data->getRelationValue($fieldName->getRelation());
+            $related = $this->original->getRelationValue($fieldName->getRelation());
             $value = $related ? $related->getAttribute($fieldName->getColumn()) : null;
         } else {
-            $value = $this->data->getAttribute($fieldName->getColumn());
+            $value = $this->original->getAttribute($fieldName->getColumn());
         }
 
         if ($value === null) {
@@ -73,7 +73,7 @@ class EloquentAdaptor extends DataAdaptor
             /** @var Model|null $relation */
             $model = $this->getRelated($fieldName) ?: $this->tryCreateFreshRelated($fieldName);
         } else {
-            $model = $this->data;
+            $model = $this->original;
         }
 
         if ($fieldName->getJsonPath()) {
@@ -91,7 +91,7 @@ class EloquentAdaptor extends DataAdaptor
 
     private function getRelated(FieldName $fieldName)
     {
-        $related = $this->data;
+        $related = $this->original;
         foreach ($fieldName->getRelationList() as $name) {
             if (!$related = $related->{$name}) {
                 return null;
@@ -103,7 +103,7 @@ class EloquentAdaptor extends DataAdaptor
     // 获取 Relation 对象，支持多层 Relation
     private function getRelation(FieldName $fieldName): Relation
     {
-        $related = $this->data;
+        $related = $this->original;
         $relationList = $fieldName->getRelationList();
         while ($name = array_shift($relationList)) {
             $relation = $related->{$name}();
@@ -124,7 +124,7 @@ class EloquentAdaptor extends DataAdaptor
         throw new \LogicException(sprintf(
             'Relation [%s] not exists in model[%s]',
             $fieldName->getRelation(),
-            get_class($this->data)
+            get_class($this->original)
         ));
     }
 
@@ -135,7 +135,7 @@ class EloquentAdaptor extends DataAdaptor
         }
 
         /** @var Relation $relation */
-        $relation = $this->data->{$fieldName->getRelation()}();
+        $relation = $this->original->{$fieldName->getRelation()}();
         return $relation->make();
     }
 
@@ -150,7 +150,7 @@ class EloquentAdaptor extends DataAdaptor
         /// 不管怎样，都要调用一次当前 model 的 save，
         /// 因为有可能 form field 的 mutator 对 model 进行了修改
         /// model->save() 中会进行 isDirty 判定，不会产生无意义写库
-        $this->addStaging($this->data);
+        $this->addStaging($this->original);
 
         foreach ($this->staging as $model) {
             if ($model->save()) {
@@ -171,9 +171,9 @@ class EloquentAdaptor extends DataAdaptor
      */
     public function createUniqueRule()
     {
-        $rule = Rule::unique($this->data->getTable());
-        if ($this->data->getKey()) {
-            $rule->ignore($this->data->getKey(), $this->data->getKeyName());
+        $rule = Rule::unique($this->original->getTable());
+        if ($this->original->getKey()) {
+            $rule->ignore($this->original->getKey(), $this->original->getKeyName());
         }
         return $rule;
     }
@@ -184,7 +184,7 @@ class EloquentAdaptor extends DataAdaptor
             $model = $this->getRelation($fieldName)->getRelated();
             $valueColumn = $model->getKeyName();
         } else {
-            $model = $this->data;
+            $model = $this->original;
             $valueColumn = $fieldName->getColumn();
         }
 

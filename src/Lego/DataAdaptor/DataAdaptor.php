@@ -10,16 +10,16 @@ use PhpOption\Option;
 
 abstract class DataAdaptor
 {
-    protected $data;
+    protected $original;
 
     public function __construct($data)
     {
-        $this->data = $data;
+        $this->original = $data;
     }
 
-    public function getData()
+    public function getOriginal()
     {
-        return $this->data;
+        return $this->original;
     }
 
     /**
