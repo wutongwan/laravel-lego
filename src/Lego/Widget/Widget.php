@@ -4,9 +4,9 @@ namespace Lego\Widget;
 
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Traits\Macroable;
+use Lego\Contracts\ButtonLocations;
 use Lego\Foundation\Concerns as FoundationConcerns;
 use Lego\Register\HighPriorityResponse;
-use Lego\Widget\Concerns\ButtonLocations;
 
 /**
  * Lego中所有大型控件的基类.

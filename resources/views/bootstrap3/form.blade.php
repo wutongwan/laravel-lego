@@ -2,9 +2,22 @@
 /** @var \Lego\Set\Form $form */
 ?>
 
+<div class="clearfix" style="margin-bottom: 5px;">
+    <div class="pull-left">
+        @foreach($form->buttons()->getByPosition('LeftTop') as $button)
+            {{ $button->render('lego-button btn btn-default') }}
+        @endforeach
+    </div>
+    <div class="pull-right">
+        @foreach($form->buttons()->getByPosition('RightTop') as $button)
+            {{ $button->render('lego-button btn btn-default') }}
+        @endforeach
+    </div>
+</div>
+
 <form method="post" class="form-horizontal" action="">
     @foreach($form->getFields() as $field)
-        <div class="form-group">
+        <div class="form-group" style="{{ $field->isHiddenInput() ? 'display: none;' : '' }}">
             <label for="lego-form-field-id-{{ $field->getInputName() }}" class="col-sm-2 control-label">
                 @if($field->isRequired() && $field->isInputAble())
                     <span class="text-danger">*</span>
@@ -23,8 +36,27 @@
             </div>
         </div>
     @endforeach
-
-    {{--    @if($form->isEditable())--}}
-    {{ csrf_field() }}
-    {{--    @endif--}}
+    @if($form->isEditable())
+        {{ csrf_field() }}
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                @foreach($form->buttons()->getByPosition('Bottom') as $button)
+                    {{ $button->render('lego-button btn btn-default') }}
+                @endforeach
+            </div>
+        </div>
+    @endif
 </form>
+
+<div class="clearfix">
+    <div class="pull-left">
+        @foreach($form->buttons()->getByPosition('LeftBottom') as $button)
+            {{ $button->render('lego-button btn btn-default') }}
+        @endforeach
+    </div>
+    <div class="pull-right">
+        @foreach($form->buttons()->getByPosition('RightBottom') as $button)
+            {{ $button->render('lego-button btn btn-default') }}
+        @endforeach
+    </div>
+</div>

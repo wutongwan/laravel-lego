@@ -19,6 +19,11 @@ class Values
     private $original;
 
     /**
+     * @var Option
+     */
+    private $default;
+
+    /**
      * @var array
      * @psalm-var array<string, mixed>
      */
@@ -28,6 +33,7 @@ class Values
     {
         $this->input = None::create();
         $this->original = None::create();
+        $this->default = None::create();
     }
 
     public function setInputValue($input): void
@@ -60,9 +66,41 @@ class Values
         return $this->original->isDefined();
     }
 
+    public function getDefaultValue()
+    {
+        return $this->default->get();
+    }
+
+    public function setDefaultValue($default)
+    {
+        $this->default = new Some($default);
+    }
+
+    public function isDefaultValueExists(): bool
+    {
+        return $this->default->isDefined();
+    }
+
+    /**
+     * 获取当前值，优先级：输入值、原始值、默认值
+     *
+     * @return mixed
+     */
     public function getCurrentValue()
     {
-        return $this->isInputValueExists() ? $this->getInputValue() : $this->getOriginalValue();
+        switch (true) {
+            case $this->isInputValueExists():
+                return $this->getInputValue();
+
+            case $this->isOriginalValueExists():
+                return $this->getOriginalValue();
+
+            case $this->isDefaultValueExists():
+                return $this->getDefaultValue();
+
+            default:
+                return null;
+        }
     }
 
     public function getExtra(string $key, $default = null)

@@ -2,17 +2,16 @@
 
 namespace Lego\Input;
 
-use Lego\Contracts\RenderAble;
 use Lego\Utility\HtmlUtility;
 
-class Text extends Input implements RenderAble
+class Text extends Input
 {
     protected function inputType(): string
     {
         return 'text';
     }
 
-    public function render(): string
+    public function render()
     {
         return HtmlUtility::input(
             $this->inputType(),

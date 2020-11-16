@@ -16,7 +16,7 @@ trait HasHtmlAttributes
 
     public function getHtmlAttributes()
     {
-        return $this->htmlAttributes->getAttributes();
+        return $this->htmlAttributes->all();
     }
 
     public function attribute(string $name, $value)

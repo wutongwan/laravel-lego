@@ -2,21 +2,46 @@
 
 namespace Lego\Foundation\Match;
 
-class MatchResults
+use Illuminate\Support\Arr;
+
+class MatchResults implements \JsonSerializable
 {
     /**
      * @var array
      */
     private $options;
 
-    public function __construct(array $options = [])
+    private $items = [];
+
+    private $totalCount = 0;
+
+    public function __construct(array $items = [])
     {
-        $this->options = $options;
+        if (Arr::isAssoc($items)) {
+            foreach ($items as $value => $label) {
+                $this->add($value, $label);
+            }
+        } else {
+            $this->items = $items;
+            $this->totalCount = count($items);
+        }
     }
 
-    public function add(string $value, string $label = null)
+    public function add($value, $label)
     {
-        $this->options[$value] = is_null($label) ? $value : $label;
+        $this->items[] = [
+            'label' => $label,
+            'value' => $value,
+        ];
+        $this->totalCount++;
+    }
+
+    /**
+     * @param int $totalCount
+     */
+    public function setTotalCount(int $totalCount): void
+    {
+        $this->totalCount = $totalCount;
     }
 
     public function all()
@@ -29,5 +54,13 @@ class MatchResults
             ];
         }
         return $options;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'items' => $this->items,
+            'totalCount' => $this->totalCount,
+        ];
     }
 }

@@ -11,6 +11,7 @@ $textInputName = $input->getTextInputName();
         data-min-input-length="{{ $input->getMinInputLength() }}"
         data-text-input-name="{{ $textInputName }}"
         data-url="{{ urlencode($input->getRemoteUrl()) }}"
+        data-language="{{ app()->getLocale() }}"
 >
     @if($value)
         <option value="{{ $value }}">{{ is_null($text) ? $value : $text }}</option>

@@ -147,6 +147,13 @@ class FieldName
         return $this->relation ? "{$this->relation}.{$this->column}" : $this->column;
     }
 
+    public function toInputName()
+    {
+        $list = $this->getRelationList();
+        $list[] = $this->column;
+        return join('_', $list);
+    }
+
     /**
      * @return string
      */

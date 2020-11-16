@@ -20,21 +20,21 @@ class HtmlAttributes
     /**
      * @var string[]|array<string, string>
      */
-    private $attributes = [];
+    private $items = [];
 
-    public function getAttributes(): array
+    public function all(): array
     {
-        return array_merge($this->attributes, [
+        return array_merge($this->items, [
             'class' => array_keys($this->classSet),
             'style' => $this->styleMap,
         ]);
     }
 
-    public function setAttribute(string $name, $value): void
+    public function setAttribute(string $name, $value): self
     {
         if ($name === 'class') {
             $this->classSet = array_flip((array)$value);
-            return;
+            return $this;
         }
 
         if ($name === 'style') {
@@ -43,10 +43,11 @@ class HtmlAttributes
                 throw new \InvalidArgumentException('`style` value should be a map/dict array');
             }
             $this->styleMap = $value;
-            return;
+            return $this;
         }
 
-        $this->attributes[$name] = $value;
+        $this->items[$name] = $value;
+        return $this;
     }
 
     public function getAttribute(string $name)
@@ -57,26 +58,69 @@ class HtmlAttributes
         if ('style' === $name) {
             return $this->styleMap;
         }
-        return $this->attributes[$name] ?? null;
+        return $this->items[$name] ?? null;
     }
 
-    public function addClass(string $class): void
+    public function addClass(string $class): self
     {
-        $this->classSet[$class] = true;
+        if (str_contains($class, ' ')) {
+            foreach (explode(' ', $class) as $item) {
+                $this->classSet[$item] = true;
+            }
+        } else {
+            $this->classSet[$class] = true;
+        }
+
+        return $this;
     }
 
-    public function removeClass(string $class): void
+    public function removeClass(string $class): self
     {
         unset($this->classSet[$class]);
+        return $this;
     }
 
-    public function setStyle(string $name, string $value)
+    public function setStyle(string $name, string $value): self
     {
         $this->styleMap[$name] = $value;
+        return $this;
     }
 
-    public function removeStyle(string $name)
+    public function removeStyle(string $name): self
     {
         unset($this->styleMap[$name]);
+        return $this;
+    }
+
+    public function __toString()
+    {
+        $parts = [];
+        foreach ($this->items as $key => $value) {
+            if ($value === null) {
+                $parts[] = $key;
+                continue;
+            }
+
+            // Treat boolean attributes as HTML properties
+            if (is_bool($value) && $key !== 'value') {
+                $parts[] = $value ? $key : '';
+                continue;
+            }
+
+            $parts[] = $key . '="' . e($value) . '"';
+        }
+
+        $parts[] = 'class="' . join(' ', array_keys($this->classSet)) . '"';
+
+        if ($this->styleMap) {
+            $style = 'style="';
+            foreach ($this->styleMap as $name => $value) {
+                $style .= "{$name}: {$value};";
+            }
+            $style .= '"';
+            $parts[] = $style;
+        }
+
+        return join(' ', $parts);
     }
 }

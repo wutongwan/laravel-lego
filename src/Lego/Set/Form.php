@@ -5,26 +5,27 @@ namespace Lego\Set;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Validation\Factory;
 use Illuminate\Http\Request;
-use Lego\Foundation\FieldName;
-use Lego\Input\AutoComplete;
+use Lego\Contracts\ButtonLocations;
+use Lego\Foundation\Button\Button;
+use Lego\Foundation\Button\Buttons;
 use Lego\Input\Input;
-use Lego\Input\Text;
 use Lego\Lego;
-use Lego\ModelAdaptor\EloquentAdaptor;
 use Lego\ModelAdaptor\ModelAdaptor;
+use Lego\ModelAdaptor\ModelAdaptorFactory;
 use Lego\Rendering\RenderingManager;
-use Lego\Set\Form\FormFieldForBelongsToRelation;
+use Lego\Set\Form\FormButtons;
+use Lego\Set\Form\FormFields;
 use Lego\Set\Form\FormInputWrapper;
 
 /**
  * Class Form
  * @package Lego\Widget
- *
- * @method Text|FormInputWrapper addText($name, $label)
- * @method AutoComplete|FormFieldForBelongsToRelation addAutoCompleteBelongsTo($name, $label)
  */
 class Form implements Set
 {
+    use FormButtons;
+    use FormFields;
+
     /**
      * @var Container
      */
@@ -41,10 +42,24 @@ class Form implements Set
      */
     private $fields = [];
 
-    public function __construct(Container $container, $model)
+    /**
+     * @var Buttons
+     */
+    private $buttons;
+
+    /**
+     * @var Button
+     */
+    private $buttonSubmit;
+
+    public function __construct(Container $container, ModelAdaptorFactory $factory, $model)
     {
         $this->container = $container;
-        $this->adaptor = new EloquentAdaptor($model);
+        $this->adaptor = $factory->make($model);
+
+        $this->buttons = new Buttons();
+        $this->buttonSubmit = $this->buttons->new(ButtonLocations::BOTTOM, '提交');
+        $this->buttonSubmit->attrs()->setAttribute('type', 'submit');
     }
 
     public function process(Request $request)
@@ -53,15 +68,7 @@ class Form implements Set
 
         foreach ($this->fields as $field) {
             // fill original value from adaptor
-            $originalValue = $field->hooks()->readOriginalValueFromAdaptor();
-            if ($accessor = $this->getAccessor()) {
-                $value = $accessor($this->adaptor->getModel(), $originalValue->getOrElse(null));
-                if ($value !== null) {
-                    $field->values()->setOriginalValue($value);
-                }
-            } elseif ($originalValue->isDefined()) {
-                $field->values()->setOriginalValue($originalValue->get());
-            }
+            $this->fillOriginalValueFromAdaptor($field);
 
             // trigger input hook
             $field->hooks()->beforeRender();
@@ -85,18 +92,53 @@ class Form implements Set
         }
     }
 
+    /**
+     * @param FormInputWrapper|Input $field
+     */
+    private function fillOriginalValueFromAdaptor($field)
+    {
+        $originalValue = $field->hooks()->readOriginalValueFromAdaptor();
+        if ($accessor = $field->getAccessor()) {
+            $value = $accessor($this->adaptor->getModel(), $originalValue->getOrElse(null));
+            if ($value !== null) {
+                $field->values()->setOriginalValue($value);
+            }
+        } elseif ($originalValue->isDefined()) {
+            $field->values()->setOriginalValue($originalValue->get());
+        }
+    }
+
     private function saveInputValues()
     {
+        $hasMutator = false;
         foreach ($this->fields as $field) {
-            if ($field->isInputAble() && $field->values()->isInputValueExists()) {
+            if ($field->isInputAble() && $field->values()->isInputValueExists() && $field->isFormOnly() === false) {
                 if ($mutator = $field->getMutator()) {
                     $mutator($this->adaptor->getModel(), $field->values()->getInputValue());
+                    $hasMutator = true;
                 } else {
                     $field->hooks()->writeInputValueToAdaptor($field->values()->getInputValue());
                 }
             }
         }
+
+        // 触发保存到数据库
         $this->adaptor->save();
+
+        /// mutator 会导致表单显示/提交的值和数据库中值不一致
+        /// 所以需要先从 model 同步一次数据
+        if ($hasMutator) {
+            foreach ($this->fields as $field) {
+                if ($field->isFormOnly()) {
+                    continue;
+                }
+                $this->fillOriginalValueFromAdaptor($field);
+                $values = $field->values();
+                if (($original = $values->getOriginalValue()) !== $values->getInputValue()) {
+                    $values->setInputValue($original);
+                }
+            }
+        }
     }
 
     private function runValidations()
@@ -134,33 +176,18 @@ class Form implements Set
         }
     }
 
-    private function addField(string $inputClass, string $name, string $label)
-    {
-        $fieldName = new FieldName($name);
-
-        /** @var Input $input */
-        $input = $this->container->make($inputClass);
-        $input->setLabel($label);
-        $input->setFieldName($fieldName);
-        $input->setAdaptor($this->adaptor);
-
-        $this->fields[$name] = $wrapper = new FormInputWrapper($input);
-
-        $input->hooks()->afterAdd();;
-
-        return $wrapper;
-    }
 
     public function __call($method, $parameters)
     {
-        // eg: addText(fieldName, fieldLabel)
         if (str_starts_with($method, 'add')) {
-            $inputBaseClassName = substr($method, 3);
-            if ($inputBaseClassName
-                && class_exists($inputClass = "Lego\\Input\\{$inputBaseClassName}")
-                && is_subclass_of($inputClass, Input::class)
-            ) {
-                return $this->addField($inputClass, $parameters[0], $parameters[1]);
+            // button, eg: addRightTopButton(text, url)
+            if (str_ends_with($method, 'Button') && $btn = $this->callAddButton($method, $parameters)) {
+                return $btn;
+            }
+
+            // field: eg: addText(fieldName, fieldLabel)
+            if ($field = $this->callAddField($method, $parameters)) {
+                return $field;
             }
         }
 
@@ -183,5 +210,20 @@ class Form implements Set
     public function getFields()
     {
         return $this->fields;
+    }
+
+    public function isEditable(): bool
+    {
+        foreach ($this->fields as $field) {
+            if (!$field->isInputAble()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public function buttons(): Buttons
+    {
+        return $this->buttons;
     }
 }

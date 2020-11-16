@@ -2,6 +2,7 @@
 
 namespace Lego\Input;
 
+use Illuminate\Support\HtmlString;
 use Lego\Foundation\FieldName;
 use Lego\Foundation\Values;
 use Lego\ModelAdaptor\ModelAdaptor;
@@ -22,7 +23,9 @@ abstract class Input
     public function __construct()
     {
         $this->values = new Values();
-        $this->hooks = new (self::hooksClassName())($this);
+
+        $hooksClassName = static::hooksClassName();
+        $this->hooks = new $hooksClassName($this);
     }
 
     protected static function hooksClassName(): string
@@ -204,4 +207,21 @@ abstract class Input
     {
         return $this->adaptor;
     }
+
+    /**
+     * Set default value
+     *
+     * @param mixed $default
+     * @return $this
+     */
+    public function default($default)
+    {
+        $this->values->setDefaultValue($default);
+        return $this;
+    }
+
+    /**
+     * @return string|HtmlString
+     */
+    abstract public function render();
 }

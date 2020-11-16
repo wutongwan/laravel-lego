@@ -2,10 +2,11 @@
 
 namespace Lego\Input;
 
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Lego\Contracts\RenderViewAble;
-use Lego\Foundation\FieldName;
 use Lego\Foundation\Match\MatchQuery;
 use Lego\Foundation\Match\MatchResults;
 use Lego\Foundation\Response\ResponseManager;
@@ -17,13 +18,13 @@ use Lego\Foundation\Response\ResponseManager;
  * value type:  array{label: scalar, value: scalar}
  *
  */
-class AutoComplete extends Input implements RenderViewAble
+class AutoComplete extends Input
 {
     /**
      * 自动补全暴露给前端的请求地址
      * @var string
      */
-    private $remoteUrl;
+    private $remoteUrl = '';
 
     /**
      * @var ResponseManager
@@ -35,25 +36,22 @@ class AutoComplete extends Input implements RenderViewAble
      * @var int
      */
     private $minInputLength = 1;
-
     /**
-     * @var FieldName
+     * @var View
      */
-    private $valueFieldName;
+    private $view;
 
-    public function __construct(ResponseManager $responseManager)
+    public function __construct(ResponseManager $responseManager, Factory $view)
     {
         parent::__construct();
 
         $this->responseManager = $responseManager;
-        $this->valueFieldName = $this->getFieldName()->cloneWith(
-            $this->getAdaptor()->getKeyName($this->getFieldName())
-        );
+        $this->view = $view;
     }
 
     protected static function hooksClassName(): string
     {
-        return OneToOneRelationHooks::class;
+        return AutoCompleteHooks::class;
     }
 
     /**
@@ -79,7 +77,7 @@ class AutoComplete extends Input implements RenderViewAble
                 if (!$options instanceof MatchResults) {
                     $options = new MatchResults($options);
                 }
-                return new JsonResponse($options->all());
+                return new JsonResponse($options->jsonSerialize());
             }
         );
         $this->remoteUrl = $url . '&__lego_auto_complete=';
@@ -123,8 +121,13 @@ class AutoComplete extends Input implements RenderViewAble
         return $this->getInputName() . '__text';
     }
 
-    public function getViewName(): string
+    public function render()
     {
-        return 'lego::bootstrap3.input.autocomplete';
+        return $this->view->make(
+            'lego::bootstrap3.input.autocomplete',
+            [
+                'input' => $this,
+            ]
+        );
     }
 }

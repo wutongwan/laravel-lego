@@ -3,7 +3,6 @@
 namespace Lego\Input;
 
 use Lego\Foundation\FieldName;
-use Lego\Foundation\Response\ResponseManager;
 
 class OneToOneRelation extends AutoComplete
 {
@@ -12,13 +11,9 @@ class OneToOneRelation extends AutoComplete
      */
     private $valueFieldName;
 
-    public function __construct(ResponseManager $responseManager)
+    protected static function hooksClassName(): string
     {
-        parent::__construct($responseManager);
-
-        $this->valueFieldName = $this->getFieldName()->cloneWith(
-            $this->getAdaptor()->getKeyName($this->getFieldName())
-        );
+        return OneToOneRelationHooks::class;
     }
 
     /**
@@ -39,5 +34,13 @@ class OneToOneRelation extends AutoComplete
     public function getValueFieldName(): FieldName
     {
         return $this->valueFieldName;
+    }
+
+    /**
+     * @param FieldName $valueFieldName
+     */
+    public function setValueFieldName(FieldName $valueFieldName): void
+    {
+        $this->valueFieldName = $valueFieldName;
     }
 }

@@ -3,10 +3,10 @@
 namespace Lego;
 
 use Lego\Foundation\Response\ResponseManager;
-use Lego\Widget\Form;
+use Lego\Set\Form as FormSet;
 use Lego\Widget\Confirm;
 use Lego\Widget\Filter;
-use Lego\Set\Form as FormSet;
+use Lego\Widget\Form;
 use Lego\Widget\Grid\Grid;
 
 class Lego
@@ -33,7 +33,7 @@ class Lego
 
     public static function formV2($data)
     {
-        $form = new FormSet(app(), $data);
+        $form = app(FormSet::class, ['model' => $data]);
         app(ResponseManager::class)->registerWidget($form);
         return $form;
     }

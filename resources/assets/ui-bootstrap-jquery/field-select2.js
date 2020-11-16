@@ -30,7 +30,7 @@ export function initSelect2Autocomplete(field) {
     const $field = jQuery(field)
 
     // 监听事件，修改文本输入框
-    const textInput = document.getElementsByName($field.data('text-input-name'))
+    const textInput = document.getElementsByName($field.data('text-input-name'))[0]
     $field.on('select2:select', (event) => textInput.value = event.params.data.text)
     $field.on('select2:unselect', () => textInput.value = null)
 
@@ -42,7 +42,7 @@ export function initSelect2Autocomplete(field) {
             width: "100%",
             language: $field.data('language'),
             allowClear: $field.data('allow-clear'),
-            minimumInputLength: $field.data('setMinInputLength-input-length'),
+            minimumInputLength: $field.data('min-input-length'),
             ajax: {
                 url: decodeURIComponent($field.data('url')),
                 dataType: 'json',

@@ -2,7 +2,9 @@
 
 namespace Lego\Input;
 
-class Hidden extends Text
+use Lego\Contracts\Input\HiddenInput;
+
+class Hidden extends Text implements HiddenInput
 {
     protected function inputType(): string
     {

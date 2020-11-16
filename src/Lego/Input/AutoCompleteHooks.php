@@ -32,8 +32,8 @@ class AutoCompleteHooks extends InputHooks
     {
         parent::onSubmit($request);
 
-        $this->setText(
-            $request->input($this->input->getTextInputName())
-        );
+        if ($textValue = $request->input($this->input->getTextInputName())) {
+            $this->setText($textValue);
+        }
     }
 }

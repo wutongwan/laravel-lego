@@ -6,6 +6,8 @@ use Lego\Foundation\Match\MatchQuery;
 
 class ColumnAutoCompleteHooks extends AutoCompleteHooks
 {
+    private $uniqueOptions = true;
+
     public function afterAdd()
     {
         // set default match
