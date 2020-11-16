@@ -30,7 +30,7 @@ export function initSelect2Autocomplete(field) {
     const $field = jQuery(field)
 
     // 监听事件，修改文本输入框
-    const textInput = document.getElementById($field.data('text-input-id'))
+    const textInput = document.getElementsByName($field.data('text-input-name'))
     $field.on('select2:select', (event) => textInput.value = event.params.data.text)
     $field.on('select2:unselect', () => textInput.value = null)
 

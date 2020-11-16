@@ -2,18 +2,18 @@
 
 namespace Lego\Foundation\Concerns;
 
-use Lego\Foundation\Event;
+use Lego\Foundation\Events;
 
 trait HasEvents
 {
     /**
-     * @var Event
+     * @var Events
      */
     protected $events;
 
     protected function initializeHasEvents()
     {
-        $this->events = new Event();
+        $this->events = new Events();
     }
 
     public function getEvents()

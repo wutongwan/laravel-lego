@@ -49,7 +49,7 @@ trait FormFieldValidations
 
     public function unique()
     {
-        if ($rule = $this->adaptor->createUniqueRule()) {
+        if ($rule = $this->input->getAdaptor()->createUniqueRule()) {
             $this->rule($rule);
         }
     }

@@ -5,22 +5,22 @@ namespace Lego\Set;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Validation\Factory;
 use Illuminate\Http\Request;
-use Lego\DataAdaptor\EloquentAdaptor;
 use Lego\Foundation\FieldName;
 use Lego\Input\AutoComplete;
 use Lego\Input\Input;
 use Lego\Input\Text;
 use Lego\Lego;
+use Lego\ModelAdaptor\EloquentAdaptor;
+use Lego\ModelAdaptor\ModelAdaptor;
 use Lego\Rendering\RenderingManager;
-use Lego\Set\Form\FormField;
 use Lego\Set\Form\FormFieldForBelongsToRelation;
-use PhpOption\Option;
+use Lego\Set\Form\FormInputWrapper;
 
 /**
  * Class Form
  * @package Lego\Widget
  *
- * @method Text|FormField addText($name, $label)
+ * @method Text|FormInputWrapper addText($name, $label)
  * @method AutoComplete|FormFieldForBelongsToRelation addAutoCompleteBelongsTo($name, $label)
  */
 class Form implements Set
@@ -31,82 +31,68 @@ class Form implements Set
     private $container;
 
     /**
-     * 表单原始数据来源
-     * @var mixed
-     */
-    private $data;
-
-    /**
-     * @var EloquentAdaptor
+     * @var ModelAdaptor
      */
     private $adaptor;
 
     /**
-     * @var \Lego\Set\Form\FormField[]|Input[]   Input 是为了方便自动补全，FormField Proxy 了 Input 的函数调用
+     * @var \Lego\Set\Form\FormInputWrapper[]|Input[]   Input 是为了方便自动补全，FormInputWrapper Proxy 了 Input 的函数调用
+     * @psalm-var array<string, FormInputWrapper>
      */
     private $fields = [];
 
-    public function __construct(Container $container, $data)
+    public function __construct(Container $container, $model)
     {
         $this->container = $container;
-        $this->data = $data;
-        $this->adaptor = new EloquentAdaptor($data);
+        $this->adaptor = new EloquentAdaptor($model);
     }
 
     public function process(Request $request)
     {
         $isSubmit = $request->isMethod('POST');
 
-        // sync values from model & form input
         foreach ($this->fields as $field) {
-            $input = $field->getInput();
+            // fill original value from adaptor
+            $originalValue = $field->hooks()->readOriginalValueFromAdaptor();
+            if ($accessor = $this->getAccessor()) {
+                $value = $accessor($this->adaptor->getModel(), $originalValue->getOrElse(null));
+                if ($value !== null) {
+                    $field->values()->setOriginalValue($value);
+                }
+            } elseif ($originalValue->isDefined()) {
+                $field->values()->setOriginalValue($originalValue->get());
+            }
 
-            // sync original value from model
-            $originalValue = $this->adaptor->getFieldValue($input->getFieldName());
-            $this->setFieldOriginalValue($field, $originalValue);
+            // trigger input hook
+            $field->hooks()->beforeRender();
 
-            // sync input value from request
+            // sync input value from request (if submit)
             if ($isSubmit && $field->isInputAble()) {
                 $inputValue = $request->post($field->getInputName());
-                if ($inputValue !== null || $originalValue->isDefined()) {
-                    // 输入值不为空 or 原始值不为空，避免修改留空的字段，以便使用数据库默认值
-                    $field->setInputValue($inputValue);
+                // 输入值不为空 or 原始值不为空时才填充输入值
+                // 保证留空的输入框对应的字段，使用数据库默认值
+                if ($inputValue !== null || $field->values()->isOriginalValueExists()) {
+                    $field->values()->setInputValue($inputValue);
                 }
+
+                $field->hooks()->onSubmit($request);
             }
         }
 
         if ($isSubmit) {
             $this->runValidations();
-            $this->saveInputValuesToModel();
+            $this->saveInputValues();
         }
     }
 
-    /**
-     * 设置数据初始值到 input
-     *
-     * @param FormField|Input $field
-     * @param Option $originalValue
-     */
-    private function setFieldOriginalValue(FormField $field, Option $originalValue)
-    {
-        if ($accessor = $field->getAccessor()) {
-            $value = $accessor($this->data, $originalValue->getOrElse(null));
-            if ($value !== null) {
-                $field->setOriginalValue($value);
-            }
-        } elseif ($originalValue->isDefined()) {
-            $field->setOriginalValue($originalValue->get());
-        }
-    }
-
-    private function saveInputValuesToModel()
+    private function saveInputValues()
     {
         foreach ($this->fields as $field) {
-            if ($field->isInputAble() && $field->isInputValueExists()) {
+            if ($field->isInputAble() && $field->values()->isInputValueExists()) {
                 if ($mutator = $field->getMutator()) {
-                    $mutator($this->data, $field->getInputValue());
+                    $mutator($this->adaptor->getModel(), $field->values()->getInputValue());
                 } else {
-                    $this->adaptor->setFieldValue($field->getFieldName(), $field->getInputValue());
+                    $field->hooks()->writeInputValueToAdaptor($field->values()->getInputValue());
                 }
             }
         }
@@ -117,15 +103,14 @@ class Form implements Set
     {
         // run laravel rules
         $data = $rules = $customerAttributes = [];
-        foreach ($this->fields as $field) {
-            $name = $field->getFieldName()->getQualifiedColumnName();
+        foreach ($this->fields as $name => $field) {
             $customerAttributes[$name] = $field->getLabel();
             if ($field->isInputAble()) {
                 $field->rule($field->isRequired() ? 'required' : 'nullable');
-                $data[$name] = $field->getInputValue();
+                $data[$name] = $field->values()->getInputValue();
                 $rules[$name] = $field->getRules();
             } else {
-                $data[$name] = $field->getOriginalValue();
+                $data[$name] = $field->values()->getOriginalValue();
             }
         }
         $rulesValidator = $this->container->make(Factory::class)->make($data, $rules, [], $customerAttributes);
@@ -137,10 +122,10 @@ class Form implements Set
 
         // run validator closures
         foreach ($this->fields as $field) {
-            if ($field->isInputAble()) {
+            if ($field->isInputAble() && $field->values()->isInputValueExists()) {
                 foreach ($field->getValidators() as $closure) {
                     try {
-                        call_user_func_array($closure, [$field->getInputValue(), $data]);
+                        call_user_func_array($closure, [$field->values()->getInputValue(), $data]);
                     } catch (\Exception $exception) {
                         $field->messages()->error($exception->getMessage());
                     }
@@ -149,15 +134,21 @@ class Form implements Set
         }
     }
 
-    private function addField(string $inputClass, string $fieldName, string $fieldLabel)
+    private function addField(string $inputClass, string $name, string $label)
     {
-        $fieldName = new FieldName($fieldName);
+        $fieldName = new FieldName($name);
 
         /** @var Input $input */
         $input = $this->container->make($inputClass);
+        $input->setLabel($label);
+        $input->setFieldName($fieldName);
+        $input->setAdaptor($this->adaptor);
 
-        return $this->fields[$fieldName->getQualifiedColumnName()]
-            = new FormField($input, $fieldName, $fieldLabel, $this->adaptor);
+        $this->fields[$name] = $wrapper = new FormInputWrapper($input);
+
+        $input->hooks()->afterAdd();;
+
+        return $wrapper;
     }
 
     public function __call($method, $parameters)
@@ -187,7 +178,7 @@ class Form implements Set
     }
 
     /**
-     * @return \Lego\Set\Form\FormField[]|Input[]
+     * @return \Lego\Set\Form\FormInputWrapper[]|Input[]
      */
     public function getFields()
     {

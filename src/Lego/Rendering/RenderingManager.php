@@ -4,23 +4,14 @@ namespace Lego\Rendering;
 
 use Illuminate\Contracts\Container\Container;
 use InvalidArgumentException;
-use Lego\Input\AutoComplete;
-use Lego\Input\Hidden;
 use Lego\Input\Input;
-use Lego\Input\Text;
 use Lego\Rendering\Bootstrap3\FormSetRender;
-use Lego\Rendering\Bootstrap3\Input\AutoCompleteInputRender;
-use Lego\Rendering\Bootstrap3\Input\HiddenInputRender;
-use Lego\Rendering\Bootstrap3\TextInputRender;
 use Lego\Set\Form;
 use Lego\Set\Set;
 
 class RenderingManager
 {
     private const INPUTS = [
-        Text::class => TextInputRender::class,
-        Hidden::class => HiddenInputRender::class,
-        AutoComplete::class => AutoCompleteInputRender::class,
     ];
 
     private const SETS = [

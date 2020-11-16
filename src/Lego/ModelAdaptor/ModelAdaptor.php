@@ -1,6 +1,6 @@
 <?php
 
-namespace Lego\DataAdaptor;
+namespace Lego\ModelAdaptor;
 
 use Lego\Foundation\Exceptions\LegoException;
 use Lego\Foundation\FieldName;
@@ -8,18 +8,18 @@ use Lego\Foundation\Match\MatchQuery;
 use Lego\Foundation\Match\MatchResults;
 use PhpOption\Option;
 
-abstract class DataAdaptor
+abstract class ModelAdaptor
 {
-    protected $original;
+    protected $model;
 
-    public function __construct($data)
+    public function __construct($model)
     {
-        $this->original = $data;
+        $this->model = $model;
     }
 
-    public function getOriginal()
+    final public function getModel()
     {
-        return $this->original;
+        return $this->model;
     }
 
     /**
@@ -34,9 +34,13 @@ abstract class DataAdaptor
 
     abstract public function setFieldValue(FieldName $fieldName, $value): void;
 
+    abstract public function setRelated(FieldName $fieldName, $related): void;
+
+    abstract public function unsetRelated(FieldName $fieldName, $related = null): void;
+
     abstract public function save();
 
-    abstract public function queryMatch(FieldName $fieldName, MatchQuery $match): MatchResults;
+    abstract public function queryMatch(FieldName $fieldName, MatchQuery $query): MatchResults;
 
     public function createUniqueRule()
     {

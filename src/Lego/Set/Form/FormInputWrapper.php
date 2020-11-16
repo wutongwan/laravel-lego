@@ -2,53 +2,32 @@
 
 namespace Lego\Set\Form;
 
-use Lego\DataAdaptor\DataAdaptor;
-use Lego\Foundation\FieldName;
 use Lego\Foundation\Message\HasMessages;
 use Lego\Input\Input;
 use Lego\Set\Form\Concerns\FormFieldAccessorAndMutator;
 use Lego\Set\Form\Concerns\FormFieldValidations;
 
 /**
- * Class FormField
+ * Class FormInputWrapper
  * @package Lego\Foundation
  * @internal
  */
-class FormField
+class FormInputWrapper
 {
-    use HasMessages;
-    use FormFieldValidations;
-    use FormFieldAccessorAndMutator;
+    use HasMessages,
+        FormFieldValidations,
+        FormFieldAccessorAndMutator;
 
     /**
      * @var Input
      */
-    protected $input;
+    private $input;
 
-    /**
-     * @var DataAdaptor
-     */
-    protected $adaptor;
-
-    public function __construct(Input $input, FieldName $fieldName, string $label, DataAdaptor $adaptor)
+    public function __construct(Input $input)
     {
-        $this->initializeHasMessages();
-
-        $this->adaptor = $adaptor;
-
-        $input->setLabel($label);
-        $input->setAdaptor($adaptor);
-        $input->setFieldName($fieldName);
-        $input->initializeHook();
         $this->input = $input;
-    }
 
-    /**
-     * @return Input
-     */
-    public function getInput(): Input
-    {
-        return $this->input;
+        $this->initializeMessages();
     }
 
     public function __call($method, $parameters)

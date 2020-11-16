@@ -2,15 +2,47 @@
 
 namespace Lego\Input;
 
-use Lego\DataAdaptor\DataAdaptor;
 use Lego\Foundation\FieldName;
-use Lego\Rendering\RenderingManager;
-use PhpOption\None;
-use PhpOption\Option;
-use PhpOption\Some;
+use Lego\Foundation\Values;
+use Lego\ModelAdaptor\ModelAdaptor;
 
 abstract class Input
 {
+    /**
+     * @var Values
+     * @psalm-readonly
+     */
+    private $values;
+
+    /**
+     * @var InputHooks
+     */
+    private $hooks;
+
+    public function __construct()
+    {
+        $this->values = new Values();
+        $this->hooks = new (self::hooksClassName())($this);
+    }
+
+    protected static function hooksClassName(): string
+    {
+        return InputHooks::class;
+    }
+
+    /**
+     * @return Values
+     */
+    final public function values(): Values
+    {
+        return $this->values;
+    }
+
+    final public function hooks(): InputHooks
+    {
+        return $this->hooks;
+    }
+
     /**
      * 输入框是否被禁用，一般是通过 disabled 属性实现
      *
@@ -109,71 +141,6 @@ abstract class Input
     }
 
     /**
-     * 原始值
-     *
-     * 原始值和输入值的类型使用了 Option ，方便对是否设置过值进行判定
-     *
-     * @var Option
-     */
-    private $originalValue;
-
-    /**
-     * 输入值
-     * @var Option
-     */
-    private $inputValue;
-
-    final public function getOriginalValue()
-    {
-        if ($this->originalValue === null) {
-            $this->originalValue = None::create();
-            return null;
-        }
-
-        return $this->originalValue->getOrElse(null);
-    }
-
-    final public function setOriginalValue($originalValue)
-    {
-        $this->originalValue = new Some($originalValue);
-        return $this;
-    }
-
-    final public function isOriginalValueExists(): bool
-    {
-        return $this->originalValue instanceof Some;
-    }
-
-    final public function getInputValue()
-    {
-        if ($this->inputValue === null) {
-            $this->inputValue = None::create();
-            return null;
-        }
-
-        return $this->inputValue->getOrElse(null);
-    }
-
-    final public function setInputValue($inputValue)
-    {
-        $this->inputValue = new Some($inputValue);
-        return $this;
-    }
-
-    final public function isInputValueExists(): bool
-    {
-        return $this->inputValue instanceof Some;
-    }
-
-    /**
-     * 获取当前值，如果设置过 inputValue 则返回 inputValue，否则返回 originalValue
-     */
-    final public function getCurrentValue()
-    {
-        return $this->isInputValueExists() ? $this->getInputValue() : $this->getOriginalValue();
-    }
-
-    /**
      * 表单中的 name
      *
      * eg: <input name="username" /> 中的 `username`
@@ -193,23 +160,6 @@ abstract class Input
         return $this;
     }
 
-    public function initializeHook()
-    {
-    }
-
-    /**
-     * 渲染前触发
-     */
-    public function beforeRenderHook(): void
-    {
-    }
-
-    /**
-     * 表单提交后触发
-     */
-    public function afterSubmitHook(): void
-    {
-    }
 
     /**
      * @var FieldName
@@ -234,29 +184,24 @@ abstract class Input
     }
 
     /**
-     * @var DataAdaptor
+     * @var ModelAdaptor
      */
     private $adaptor;
 
     /**
-     * @param DataAdaptor $adaptor
+     * @param ModelAdaptor $adaptor
      */
-    final public function setAdaptor(DataAdaptor $adaptor)
+    final public function setAdaptor(ModelAdaptor $adaptor)
     {
         $this->adaptor = $adaptor;
         return $this;
     }
 
     /**
-     * @return DataAdaptor
+     * @return ModelAdaptor
      */
-    final public function getAdaptor(): DataAdaptor
+    final public function getAdaptor(): ModelAdaptor
     {
         return $this->adaptor;
-    }
-
-    public function render()
-    {
-        return app(RenderingManager::class)->render($this);
     }
 }

@@ -9,7 +9,7 @@ trait HasMessages
      */
     private $messages;
 
-    private function initializeHasMessages()
+    private function initializeMessages()
     {
         $this->messages = new Messages();
     }

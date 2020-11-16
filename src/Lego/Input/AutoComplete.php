@@ -4,13 +4,20 @@ namespace Lego\Input;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Lego\Contracts\Input\MatchAble;
-use Lego\Contracts\Input\Related;
+use Lego\Contracts\RenderViewAble;
+use Lego\Foundation\FieldName;
 use Lego\Foundation\Match\MatchQuery;
 use Lego\Foundation\Match\MatchResults;
 use Lego\Foundation\Response\ResponseManager;
 
-class AutoComplete extends Input implements MatchAble, Related
+/**
+ * Class AutoComplete
+ * @package Lego\Input
+ *
+ * value type:  array{label: scalar, value: scalar}
+ *
+ */
+class AutoComplete extends Input implements RenderViewAble
 {
     /**
      * 自动补全暴露给前端的请求地址
@@ -29,9 +36,24 @@ class AutoComplete extends Input implements MatchAble, Related
      */
     private $minInputLength = 1;
 
+    /**
+     * @var FieldName
+     */
+    private $valueFieldName;
+
     public function __construct(ResponseManager $responseManager)
     {
+        parent::__construct();
+
         $this->responseManager = $responseManager;
+        $this->valueFieldName = $this->getFieldName()->cloneWith(
+            $this->getAdaptor()->getKeyName($this->getFieldName())
+        );
+    }
+
+    protected static function hooksClassName(): string
+    {
+        return OneToOneRelationHooks::class;
     }
 
     /**
@@ -44,7 +66,7 @@ class AutoComplete extends Input implements MatchAble, Related
     public function match(callable $callable)
     {
         $url = $this->responseManager->registerHandler(
-            "Input:AutoComplete:{$this->getInputName()}",
+            sprintf("Input:%s:%s", static::class, $this->getInputName()),
             function (Request $request) use ($callable) {
                 $query = new MatchQuery();
                 $query->keyword = trim($request->query('__lego_auto_complete'));
@@ -77,6 +99,11 @@ class AutoComplete extends Input implements MatchAble, Related
         return $this->remoteUrl;
     }
 
+    /**
+     * 触发自动补全的字符数
+     * @param int $minInputLength
+     * @return $this
+     */
     public function setMinInputLength(int $minInputLength)
     {
         $this->minInputLength = $minInputLength;
@@ -91,22 +118,13 @@ class AutoComplete extends Input implements MatchAble, Related
         return $this->minInputLength;
     }
 
-    /**
-     * @return array
-     * @psalm-return array{label: scalar, value: scalar}
-     */
-    public function getCurrentValueArray()
+    public function getTextInputName()
     {
-        $value = $this->getCurrentValue();
-        if (is_array($value)) {
-            return array_key_exists('label', $value) && array_key_exists('value', $value)
-                ? $value
-                : [];
-        }
+        return $this->getInputName() . '__text';
+    }
 
-        return [
-            'label' => $value,
-            'value' => $value,
-        ];
+    public function getViewName(): string
+    {
+        return 'lego::bootstrap3.input.autocomplete';
     }
 }

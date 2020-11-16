@@ -2,6 +2,7 @@
 
 namespace Lego\Tests\Input;
 
+use Lego\Foundation\Values;
 use Lego\Input\Text;
 use PHPUnit\Framework\TestCase;
 
@@ -9,13 +10,13 @@ class InputTest extends TestCase
 {
     public function testValues()
     {
-        $input = new Text();
+        $input = new Values();
         self::assertFalse($input->isInputValueExists());
         self::assertFalse($input->isOriginalValueExists());
         self::assertSame(null, $input->getOriginalValue());
         self::assertSame(null, $input->getInputValue());
 
-        $input = new Text();
+        $input = new Values();
         $input->setOriginalValue(null);
         $input->setInputValue(null);
         self::assertTrue($input->isInputValueExists());
@@ -23,7 +24,7 @@ class InputTest extends TestCase
         self::assertSame(null, $input->getOriginalValue());
         self::assertSame(null, $input->getInputValue());
 
-        $input = new Text();
+        $input = new Values();
         $input->setOriginalValue(0);
         $input->setInputValue(0);
         self::assertTrue($input->isInputValueExists());
@@ -34,7 +35,7 @@ class InputTest extends TestCase
 
     public function testGetValue()
     {
-        $input = new Text();
+        $input = new Values();
         self::assertNull($input->getCurrentValue());
 
         $input->setOriginalValue(1);
@@ -46,7 +47,7 @@ class InputTest extends TestCase
         $input->setOriginalValue(10);
         self::assertSame(100, $input->getCurrentValue());
 
-        $input = new Text();
+        $input = new Values();
         $input->setInputValue(null);
         $input->setOriginalValue(100);
         self::assertSame(null, $input->getCurrentValue());

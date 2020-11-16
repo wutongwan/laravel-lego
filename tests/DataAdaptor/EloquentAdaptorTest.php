@@ -2,7 +2,7 @@
 
 namespace Lego\Tests\DataAdaptor;
 
-use Lego\DataAdaptor\EloquentAdaptor;
+use Lego\ModelAdaptor\EloquentAdaptor;
 use Lego\Demo\Models\Street;
 use Lego\Demo\Models\Suite;
 use Lego\Foundation\FieldName;

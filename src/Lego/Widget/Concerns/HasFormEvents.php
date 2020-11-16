@@ -8,7 +8,7 @@ namespace Lego\Widget\Concerns;
  * Eloquent 的事件是注册到类变量中的，会影响到所有同类型 Model ，
  * 所以在这里提供了基于 Widget 的事件机制
  *
- * @property \Lego\Foundation\Event $events
+ * @property \Lego\Foundation\Events $events
  */
 trait HasFormEvents
 {

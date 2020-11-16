@@ -15,7 +15,7 @@
         }
     ],
     "require": {
-        "php": "^7.1",
+        "php": "^7.2",
         "ext-json": "*",
         "ezyang/htmlpurifier": "^4.13",
         "illuminate/support": "^6.0 || ^7.0",

@@ -171,7 +171,7 @@ class FieldName
         return $this->pipelines;
     }
 
-    public function clone(string $column, string $jsonPath = '', array $pipelines = []): FieldName
+    public function cloneWith(string $column, string $jsonPath = '', array $pipelines = []): FieldName
     {
         $new = clone $this;
         $new->column = $column;
@@ -182,5 +182,10 @@ class FieldName
             . ($pipelines ? ('|' . join('|', $pipelines)) : '');
 
         return $new;
+    }
+
+    public function __toString()
+    {
+        return $this->original;
     }
 }

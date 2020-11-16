@@ -1,6 +1,6 @@
 <?php
 
-namespace Lego\DataAdaptor;
+namespace Lego\ModelAdaptor;
 
 use Illuminate\Database\Eloquent\Model;
 use Lego\Foundation\Exceptions\LegoSaveFail;

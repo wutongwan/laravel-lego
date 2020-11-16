@@ -9,6 +9,11 @@ class TextInputRender
 {
     public function render(Text $input)
     {
-        return HtmlUtility::input('text', $input->getInputName(), $input->getCurrentValue(), ['class' => 'form-control']);
+        return HtmlUtility::input(
+            'text',
+            $input->getInputName(),
+            $input->values()->getCurrentValue(),
+            ['class' => 'form-control']
+        );
     }
 }

@@ -2,27 +2,34 @@
 
 namespace Lego\Foundation;
 
+use Closure;
+
 /**
- * Lego Simple Event.
+ * Lego Simple Events.
  */
-class Event
+class Events
 {
     /**
-     * @var \Closure[]|array
+     * @var Closure[]|array
      */
     protected $events = [];
+
+
+    /**
+     * @var Closure[]
+     */
     protected $once = [];
 
     /**
      * Register event.
      *
-     * @param string   $event    event name
-     * @param string   $listener listener name
-     * @param \Closure $callback call when fire
+     * @param string $event     event name
+     * @param string $listener  listener name
+     * @param Closure $callback call when fire
      *
      * @return string|int
      */
-    public function register($event, $listener, \Closure $callback)
+    public function register(string $event, string $listener, Closure $callback)
     {
         if (!isset($this->events[$event])) {
             $this->events[$event] = [];
@@ -41,14 +48,15 @@ class Event
 
     /**
      * fire only once.
+     * @param $event
+     * @param $listener
+     * @param Closure $callback
+     * @return int|string
      */
-    public function once($event, $listener, \Closure $callback)
+    public function once(string $event, string $listener, Closure $callback)
     {
         $realListener = $this->register($event, $listener, $callback);
 
-        if (!isset($this->once[$event])) {
-            $this->once[$event] = [];
-        }
         $this->once[$event][$realListener] = true;
 
         return $realListener;
@@ -74,7 +82,7 @@ class Event
     /**
      * 所有事件.
      *
-     * @return \Closure[]
+     * @return Closure[]
      */
     public function getEvents()
     {
@@ -84,7 +92,7 @@ class Event
     /**
      * 所有一次性事件.
      *
-     * @return \Closure[]
+     * @return Closure[]
      */
     public function getOnceEvents()
     {
