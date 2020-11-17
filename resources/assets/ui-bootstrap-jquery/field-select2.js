@@ -14,37 +14,26 @@ function loadSelect2Locale(locale, callback) {
 }
 
 export function initSelect2(field) {
-    const $field = jQuery(field)
-    loadSelect2Locale($field.data('language'), () => {
-        $field.select2({
-            placeholder: $field.data('placeholder'),
-            theme: "bootstrap",
-            width: "100%",
-            language: $field.data('language'),
-            allowClear: $field.data('allow-clear'),
-        })
-    })
+    if (field.getAttribute('data-lego-url')) {
+        initSelect2Autocomplete(field)
+    } else {
+        loadSelect2Locale(field.getAttribute('data-language'), () => jQuery(field).select2())
+    }
 }
 
-export function initSelect2Autocomplete(field) {
+function initSelect2Autocomplete(field) {
     const $field = jQuery(field)
 
     // 监听事件，修改文本输入框
-    const textInput = document.getElementsByName($field.data('text-input-name'))[0]
+    const textInput = document.getElementsByName($field.data('lego-text-input-name'))[0]
     $field.on('select2:select', (event) => textInput.value = event.params.data.text)
     $field.on('select2:unselect', () => textInput.value = null)
 
     loadSelect2Locale($field.data('language'), () => {
         // 构建 select2 组件
         $field.select2({
-            placeholder: $field.data('placeholder'),
-            theme: "bootstrap",
-            width: "100%",
-            language: $field.data('language'),
-            allowClear: $field.data('allow-clear'),
-            minimumInputLength: $field.data('min-input-length'),
             ajax: {
-                url: decodeURIComponent($field.data('url')),
+                url: decodeURIComponent($field.data('lego-url')),
                 dataType: 'json',
                 delay: 700,
                 cache: true,
