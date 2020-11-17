@@ -1,8 +1,8 @@
 <?php
 
-namespace Lego\Set\Form\Concerns;
+namespace Lego\Set\Form;
 
-trait FormFieldValidations
+trait FormInputValidations
 {
     /**
      * laravel validation rules
@@ -15,13 +15,6 @@ trait FormFieldValidations
      * @var array
      */
     private $validators = [];
-
-    /**
-     * 是否必填
-     *
-     * @var bool
-     */
-    private $required = false;
 
     /**
      * @return array
@@ -71,16 +64,5 @@ trait FormFieldValidations
     {
         $this->validators[] = $validator;
         return $this;
-    }
-
-    public function required(bool $required = true)
-    {
-        $this->required = $required;
-        return $this;
-    }
-
-    public function isRequired()
-    {
-        return $this->required;
     }
 }

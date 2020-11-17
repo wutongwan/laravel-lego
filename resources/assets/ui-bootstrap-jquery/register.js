@@ -2,7 +2,7 @@ import initGridBatch from "./grid-batch"
 import initCascadeSelect from "./field-cascade-select";
 import initConditionGroup from "./form-condition-group";
 import initDatetimePicker from "./field-datatimepicker";
-import {initSelect2, initSelect2Autocomplete} from './field-select2'
+import {initSelect2} from './field-select2'
 import {initButtonCountdown, initButtonPreventRepeat} from './button'
 import {initFilterInlineStyle} from './filter'
 
@@ -33,9 +33,6 @@ export default function register() {
 
     // field: select2
     document.querySelectorAll('.lego-field-select2').forEach(el => initSelect2(el))
-
-    // field: auto complete
-    document.querySelectorAll('.lego-field-autocomplete').forEach(el => initSelect2Autocomplete(el))
 
     // 防止按钮重复点击
     document.querySelectorAll('.lego-button-prevent-repeat').forEach(btn => initButtonPreventRepeat(btn))

@@ -2,7 +2,7 @@
 
 namespace Lego\Rendering\Bootstrap3;
 
-use Lego\Set\Form;
+use Lego\Set\Form\Form;
 
 class FormSetRender
 {

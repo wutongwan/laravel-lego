@@ -2,41 +2,26 @@
 
 namespace Lego\Set\Form;
 
-use Lego\Contracts\Input\HiddenInput;
 use Lego\Foundation\Message\HasMessages;
 use Lego\Input\Input;
-use Lego\Set\Form\Concerns\FormFieldAccessorAndMutator;
-use Lego\Set\Form\Concerns\FormFieldValidations;
+use Lego\Set\Common\InputWrapper;
 
 /**
  * Class FormInputWrapper
  * @package Lego\Foundation
  * @internal
  */
-class FormInputWrapper
+class FormInputWrapper extends InputWrapper
 {
     use HasMessages,
-        FormFieldValidations,
-        FormFieldAccessorAndMutator;
+        FormInputValidations,
+        FormInputAccessorAndMutator;
 
-    /**
-     * @var Input
-     */
-    private $input;
 
     public function __construct(Input $input)
     {
-        $this->input = $input;
-
+        parent::__construct($input);
         $this->initializeMessages();
-    }
-
-    /**
-     * @return Input
-     */
-    public function getInput(): Input
-    {
-        return $this->input;
     }
 
     /**
@@ -55,21 +40,5 @@ class FormInputWrapper
     public function isFormOnly(): bool
     {
         return $this->formOnly;
-    }
-
-    public function isHiddenInput(): bool
-    {
-        return $this->input instanceof HiddenInput;
-    }
-
-    public function __call($method, $parameters)
-    {
-        // forward calls to $input
-        if (method_exists($this->input, $method)) {
-            $result = call_user_func_array([$this->input, $method], $parameters);
-            return $result === $this->input ? $this : $result; // 根据返回值判定是否返回 $this
-        }
-
-        throw new \BadMethodCallException($method);
     }
 }

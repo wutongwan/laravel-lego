@@ -3,7 +3,7 @@
 namespace Lego;
 
 use Lego\Foundation\Response\ResponseManager;
-use Lego\Set\Form as FormSet;
+use Lego\Set\Form\Form as FormSet;
 use Lego\Widget\Confirm;
 use Lego\Widget\Filter;
 use Lego\Widget\Form;
@@ -31,11 +31,21 @@ class Lego
         return new Form($source);
     }
 
-    public static function formV2($data)
+    public static function formV2($model): FormSet
     {
-        $form = app(FormSet::class, ['model' => $data]);
-        app(ResponseManager::class)->registerWidget($form);
-        return $form;
+        return self::make(FormSet::class, ['model' => $model]);
+    }
+
+    public static function filterV2($query): \Lego\Set\Filter\Filter
+    {
+        return self::make(\Lego\Set\Filter\Filter::class, ['query' => $query]);
+    }
+
+    private static function make($setClass, array $parameters)
+    {
+        $set = app($setClass, $parameters);
+        app(ResponseManager::class)->registerWidget($set);
+        return $set;
     }
 
     public static function confirm($message, callable $action, $delay = null, string $view = null)

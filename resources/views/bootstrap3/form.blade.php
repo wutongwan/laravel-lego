@@ -1,5 +1,5 @@
 <?php
-/** @var \Lego\Set\Form $form */
+/** @var \Lego\Set\Form\Form $form */
 ?>
 
 <div class="clearfix" style="margin-bottom: 5px;">

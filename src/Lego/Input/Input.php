@@ -221,6 +221,24 @@ abstract class Input
     }
 
     /**
+     * 是否必填
+     *
+     * @var bool
+     */
+    private $required = false;
+
+    public function required(bool $required = true)
+    {
+        $this->required = $required;
+        return $this;
+    }
+
+    public function isRequired(): bool
+    {
+        return $this->required;
+    }
+
+    /**
      * @return string|HtmlString
      */
     abstract public function render();

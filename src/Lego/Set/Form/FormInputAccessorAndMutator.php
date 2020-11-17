@@ -1,18 +1,18 @@
 <?php
 
-namespace Lego\Set\Form\Concerns;
+namespace Lego\Set\Form;
 
 use Closure;
 
 /**
- * Trait FormFieldAccessorAndMutator
- * @package  Lego\Set\Form
+ * Trait FormInputAccessorAndMutator
+ * @package  Lego\Set\Form\Form
  *
  * @template A of Closure(\Illuminate\Database\Eloquent\Model|mixed, mixed):mixed
  * @template M of Closure(\Illuminate\Database\Eloquent\Model|mixed, mixed):void
  *
  */
-trait FormFieldAccessorAndMutator
+trait FormInputAccessorAndMutator
 {
     /**
      * 使用 accessor 重写从 model 获取初始值的行为

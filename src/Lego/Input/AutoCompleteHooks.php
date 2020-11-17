@@ -19,13 +19,8 @@ class AutoCompleteHooks extends InputHooks
         }
 
         if ($v = $this->input->values()->getOriginalValue()) {
-            $this->setText($v);
+            $this->input->setTextValue($v);
         }
-    }
-
-    protected function setText(string $text)
-    {
-        $this->input->values()->setExtra('text', $text);
     }
 
     public function onSubmit(Request $request): void
@@ -33,7 +28,7 @@ class AutoCompleteHooks extends InputHooks
         parent::onSubmit($request);
 
         if ($textValue = $request->input($this->input->getTextInputName())) {
-            $this->setText($textValue);
+            $this->input->setTextValue($textValue);
         }
     }
 }

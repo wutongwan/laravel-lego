@@ -3,6 +3,7 @@
 namespace Lego\Field;
 
 use Illuminate\Support\Facades\Config;
+use Lego\Contracts\QueryOperators;
 use Lego\Foundation\Concerns as FoundationConcerns;
 use Lego\Operator\Query;
 use Lego\Widget\Concerns\Operable;
@@ -12,7 +13,7 @@ use Lego\Widget\Concerns\Operable;
  */
 abstract class Field implements
     FoundationConcerns\HasMode,
-    FoundationConcerns\QueryOperators,
+    QueryOperators,
     \JsonSerializable
 {
     use FoundationConcerns\MessageOperator,

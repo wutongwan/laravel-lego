@@ -6,7 +6,7 @@ use Illuminate\Contracts\Container\Container;
 use InvalidArgumentException;
 use Lego\Input\Input;
 use Lego\Rendering\Bootstrap3\FormSetRender;
-use Lego\Set\Form;
+use Lego\Set\Form\Form;
 use Lego\Set\Set;
 
 class RenderingManager

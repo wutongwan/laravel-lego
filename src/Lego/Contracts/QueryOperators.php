@@ -1,6 +1,6 @@
 <?php
 
-namespace Lego\Foundation\Concerns;
+namespace Lego\Contracts;
 
 interface QueryOperators
 {

@@ -3,6 +3,8 @@
 
 return [
     'formv2' => 'test',
+    'filterv2' => 'test filter',
+
     'fields' => 'Form: 表单支持的输入类型',
     'city-list' => 'Filter & Grid：城市列表',
     'city' => 'Form：新建/编辑城市',

@@ -6,7 +6,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Lego\Contracts\RenderViewAble;
 use Lego\Foundation\Match\MatchQuery;
 use Lego\Foundation\Match\MatchResults;
 use Lego\Foundation\Response\ResponseManager;
@@ -119,6 +118,16 @@ class AutoComplete extends Input
     public function getTextInputName()
     {
         return $this->getInputName() . '__text';
+    }
+
+    public function getTextValue()
+    {
+        return $this->values()->getExtra('text');
+    }
+
+    public function setTextValue($value)
+    {
+        $this->values()->setExtra('text', $value);
     }
 
     public function render()

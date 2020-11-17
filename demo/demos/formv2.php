@@ -23,7 +23,8 @@ $form->addAutoComplete('ac', 'auto complete')
     ->match(function () {
         return array_combine($keys = range(1, 100), $keys);
     })
-    ->default(1000)
+//    ->default(1000)
+    ->placeholder('this is placeholder')
     ->formOnly();
 $form->addColumnAutoComplete('status', 'Status');
 $form->addOneToOneRelation('street.name', 'Street');

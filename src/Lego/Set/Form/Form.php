@@ -1,30 +1,37 @@
 <?php
 
-namespace Lego\Set;
+namespace Lego\Set\Form;
 
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Validation\Factory;
 use Illuminate\Http\Request;
 use Lego\Contracts\ButtonLocations;
 use Lego\Foundation\Button\Button;
-use Lego\Foundation\Button\Buttons;
+use Lego\Foundation\FieldName;
+use Lego\Input as InputNamespace;
 use Lego\Input\Input;
 use Lego\Lego;
 use Lego\ModelAdaptor\ModelAdaptor;
 use Lego\ModelAdaptor\ModelAdaptorFactory;
 use Lego\Rendering\RenderingManager;
-use Lego\Set\Form\FormButtons;
-use Lego\Set\Form\FormFields;
-use Lego\Set\Form\FormInputWrapper;
+use Lego\Set\Common\HasButtons;
+use Lego\Set\Common\HasFields;
+use Lego\Set\Set;
 
 /**
  * Class Form
  * @package Lego\Widget
+ *
+ * @method InputNamespace\Text|FormInputWrapper addText($name, $label)
+ * @method InputNamespace\Hidden|FormInputWrapper addHidden($name, $label)
+ * @method InputNamespace\AutoComplete|FormInputWrapper addAutoComplete($name, $label)
+ * @method InputNamespace\ColumnAutoComplete|FormInputWrapper addColumnAutoComplete($name, $label)
+ * @method InputNamespace\OneToOneRelation|FormInputWrapper addOneToOneRelation($name, $label)
  */
 class Form implements Set
 {
-    use FormButtons;
-    use FormFields;
+    use HasButtons;
+    use HasFields;
 
     /**
      * @var Container
@@ -43,11 +50,6 @@ class Form implements Set
     private $fields = [];
 
     /**
-     * @var Buttons
-     */
-    private $buttons;
-
-    /**
      * @var Button
      */
     private $buttonSubmit;
@@ -57,7 +59,7 @@ class Form implements Set
         $this->container = $container;
         $this->adaptor = $factory->make($model);
 
-        $this->buttons = new Buttons();
+        $this->initializeButtons();
         $this->buttonSubmit = $this->buttons->new(ButtonLocations::BOTTOM, '提交');
         $this->buttonSubmit->attrs()->setAttribute('type', 'submit');
     }
@@ -176,19 +178,45 @@ class Form implements Set
         }
     }
 
+    protected function buttonLocations(): array
+    {
+        return [
+            ButtonLocations::BTN_RIGHT_TOP,
+            ButtonLocations::BTN_RIGHT_BOTTOM,
+            ButtonLocations::BTN_LEFT_TOP,
+            ButtonLocations::BTN_LEFT_BOTTOM,
+            ButtonLocations::BOTTOM,
+        ];
+    }
+
+
+    protected function addField(string $inputClass, string $name, string $label)
+    {
+        $fieldName = new FieldName($name);
+
+        /** @var Input $input */
+        $input = $this->container->make($inputClass);
+        $input->setLabel($label);
+        $input->setFieldName($fieldName);
+        $input->setAdaptor($this->adaptor);
+        $input->setInputName($fieldName->toInputName());
+
+        $this->fields[$name] = $wrapper = new FormInputWrapper($input);
+
+        $input->hooks()->afterAdd();;
+
+        return $wrapper;
+    }
 
     public function __call($method, $parameters)
     {
-        if (str_starts_with($method, 'add')) {
-            // button, eg: addRightTopButton(text, url)
-            if (str_ends_with($method, 'Button') && $btn = $this->callAddButton($method, $parameters)) {
-                return $btn;
-            }
+        // button, eg: addRightTopButton(text, url)
+        if ($btn = $this->callAddButton($method, $parameters)) {
+            return $btn;
+        }
 
-            // field: eg: addText(fieldName, fieldLabel)
-            if ($field = $this->callAddField($method, $parameters)) {
-                return $field;
-            }
+        if ($field = $this->callAddField($method, $parameters)) {
+            return $field;
         }
 
         throw new \BadMethodCallException("Method `{$method}` not found");
@@ -220,10 +248,5 @@ class Form implements Set
             }
         }
         return true;
-    }
-
-    public function buttons(): Buttons
-    {
-        return $this->buttons;
     }
 }

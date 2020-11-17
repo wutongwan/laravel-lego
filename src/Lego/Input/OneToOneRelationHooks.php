@@ -28,7 +28,7 @@ class OneToOneRelationHooks extends ColumnAutoCompleteHooks
 
         $text = $this->input->getAdaptor()->getFieldValue($this->input->getFieldName());
         if ($text->isDefined()) {
-            $this->setText($text->get());
+            $this->input->setTextValue($text->get());
         }
     }
 

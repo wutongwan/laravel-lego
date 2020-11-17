@@ -1,7 +1,7 @@
 <?php
 /** @var \Lego\Input\AutoComplete $input */
 $value = $input->values()->getCurrentValue();
-$text = $input->values()->getExtra('text');
+$text = $input->getTextValue();
 $textInputName = $input->getTextInputName();
 ?>
 <select name="{{ $input->getInputName() }}"
