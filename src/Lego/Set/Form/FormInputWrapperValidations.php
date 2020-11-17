@@ -2,7 +2,7 @@
 
 namespace Lego\Set\Form;
 
-trait FormInputValidations
+trait FormInputWrapperValidations
 {
     /**
      * laravel validation rules

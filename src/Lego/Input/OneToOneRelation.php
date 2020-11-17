@@ -11,9 +11,9 @@ class OneToOneRelation extends AutoComplete
      */
     private $valueFieldName;
 
-    protected static function hooksClassName(): string
+    public function formInputHandler()
     {
-        return OneToOneRelationHooks::class;
+        return Form\OneToOneRelationHandler::class;
     }
 
     /**

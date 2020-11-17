@@ -2,8 +2,10 @@
 
 namespace Lego\Set\Form;
 
+use Lego\Contracts\Input\FormInput;
 use Lego\Foundation\Message\HasMessages;
 use Lego\Input\Input;
+use Lego\ModelAdaptor\ModelAdaptor;
 use Lego\Set\Common\InputWrapper;
 
 /**
@@ -14,14 +16,32 @@ use Lego\Set\Common\InputWrapper;
 class FormInputWrapper extends InputWrapper
 {
     use HasMessages,
-        FormInputValidations,
-        FormInputAccessorAndMutator;
+        FormInputWrapperValidations,
+        FormInputWrapperAccessorAndMutator;
 
+    /**
+     * @var FormInputHandler
+     */
+    private $handler;
 
-    public function __construct(Input $input)
+    /**
+     * @var ModelAdaptor
+     */
+    private $adaptor;
+
+    public function __construct(Input $input, ModelAdaptor $adaptor)
     {
         parent::__construct($input);
+
+        $this->adaptor = $adaptor;
         $this->initializeMessages();
+
+        if (!$input instanceof FormInput) {
+            throw new \InvalidArgumentException('Input cannot use in form: ' . get_class($input));
+        }
+
+        $handlerClass = $input->formInputHandler();
+        $this->handler = new $handlerClass($input, $this);
     }
 
     /**
@@ -40,5 +60,18 @@ class FormInputWrapper extends InputWrapper
     public function isFormOnly(): bool
     {
         return $this->formOnly;
+    }
+
+    /**
+     * @return ModelAdaptor
+     */
+    public function getAdaptor(): ModelAdaptor
+    {
+        return $this->adaptor;
+    }
+
+    public function handler(): FormInputHandler
+    {
+        return $this->handler;
     }
 }

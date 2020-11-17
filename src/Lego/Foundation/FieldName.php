@@ -170,6 +170,11 @@ class FieldName
         return $this->jsonPath;
     }
 
+    public function getJsonPathList()
+    {
+        return explode('.', $this->jsonPath);
+    }
+
     /**
      * @return array
      */

@@ -5,14 +5,14 @@ namespace Lego\Set\Form;
 use Closure;
 
 /**
- * Trait FormInputAccessorAndMutator
+ * Trait FormInputWrapperAccessorAndMutator
  * @package  Lego\Set\Form\Form
  *
  * @template A of Closure(\Illuminate\Database\Eloquent\Model|mixed, mixed):mixed
  * @template M of Closure(\Illuminate\Database\Eloquent\Model|mixed, mixed):void
  *
  */
-trait FormInputAccessorAndMutator
+trait FormInputWrapperAccessorAndMutator
 {
     /**
      * 使用 accessor 重写从 model 获取初始值的行为

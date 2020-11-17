@@ -2,12 +2,12 @@
 
 namespace Lego\Tests\DataAdaptor;
 
-use Lego\ModelAdaptor\EloquentAdaptor;
 use Lego\Demo\Models\Street;
 use Lego\Demo\Models\Suite;
 use Lego\Foundation\FieldName;
 use Lego\Foundation\Match\MatchQuery;
 use Lego\Foundation\Match\MatchResults;
+use Lego\ModelAdaptor\Eloquent\EloquentAdaptor;
 use PhpOption\None;
 use PhpOption\Some;
 

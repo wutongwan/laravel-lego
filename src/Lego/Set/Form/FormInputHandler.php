@@ -1,23 +1,26 @@
 <?php
 
-namespace Lego\Input;
+namespace Lego\Set\Form;
 
 use Illuminate\Http\Request;
+use Lego\Input\Input;
 use PhpOption\Option;
 
-/**
- * Class InputHooks
- * @package  Lego\Input
- */
-class InputHooks
+abstract class FormInputHandler
 {
+    /**
+     * @var FormInputWrapper
+     */
+    protected $wrapper;
+
     /**
      * @var Input
      */
     protected $input;
 
-    public function __construct(Input $input)
+    public function __construct(Input $input, FormInputWrapper $wrapper)
     {
+        $this->wrapper = $wrapper;
         $this->input = $input;
     }
 
@@ -42,18 +45,32 @@ class InputHooks
     {
     }
 
+    /**
+     * 从 model 中读取原始值
+     *
+     * @return Option
+     */
     public function readOriginalValueFromAdaptor(): Option
     {
-        return $this->input->getAdaptor()->getFieldValue($this->input->getFieldName());
+        return $this->wrapper->getAdaptor()->getFieldValue($this->input->getFieldName());
     }
 
+    /**
+     * 从请求对象中获取最新值
+     * @param Request $request
+     * @return array|string|null
+     */
     public function readInputValueFromRequest(Request $request)
     {
         return $request->post($this->input->getInputName());
     }
 
+    /**
+     * 将最新值写回 model
+     * @param $value
+     */
     public function writeInputValueToAdaptor($value): void
     {
-        $this->input->getAdaptor()->setFieldValue($this->input->getFieldName(), $value);
+        $this->wrapper->getAdaptor()->setFieldValue($this->input->getFieldName(), $value);
     }
 }

@@ -16,6 +16,7 @@ use Lego\ModelAdaptor\ModelAdaptorFactory;
 use Lego\Rendering\RenderingManager;
 use Lego\Set\Common\HasButtons;
 use Lego\Set\Common\HasFields;
+use Lego\Set\Common\HasViewShortcut;
 use Lego\Set\Set;
 
 /**
@@ -27,11 +28,18 @@ use Lego\Set\Set;
  * @method InputNamespace\AutoComplete|FormInputWrapper addAutoComplete($name, $label)
  * @method InputNamespace\ColumnAutoComplete|FormInputWrapper addColumnAutoComplete($name, $label)
  * @method InputNamespace\OneToOneRelation|FormInputWrapper addOneToOneRelation($name, $label)
+ *
+ * @method Button addRightTopButton(string $text, string $url = null)
+ * @method Button addRightBottomButton(string $text, string $url = null)
+ * @method Button addLeftTopButton(string $text, string $url = null)
+ * @method Button addLeftBottomButton(string $text, string $url = null)
+ * @method Button addBottomButton(string $text, string $url = null)
  */
 class Form implements Set
 {
     use HasButtons;
     use HasFields;
+    use HasViewShortcut;
 
     /**
      * @var Container
@@ -57,7 +65,7 @@ class Form implements Set
     public function __construct(Container $container, ModelAdaptorFactory $factory, $model)
     {
         $this->container = $container;
-        $this->adaptor = $factory->make($model);
+        $this->adaptor = $factory->makeModel($model);
 
         $this->initializeButtons();
         $this->buttonSubmit = $this->buttons->new(ButtonLocations::BOTTOM, '提交');
@@ -73,7 +81,7 @@ class Form implements Set
             $this->fillOriginalValueFromAdaptor($field);
 
             // trigger input hook
-            $field->hooks()->beforeRender();
+            $field->handler()->beforeRender();
 
             // sync input value from request (if submit)
             if ($isSubmit && $field->isInputAble()) {
@@ -84,7 +92,7 @@ class Form implements Set
                     $field->values()->setInputValue($inputValue);
                 }
 
-                $field->hooks()->onSubmit($request);
+                $field->handler()->onSubmit($request);
             }
         }
 
@@ -99,7 +107,7 @@ class Form implements Set
      */
     private function fillOriginalValueFromAdaptor($field)
     {
-        $originalValue = $field->hooks()->readOriginalValueFromAdaptor();
+        $originalValue = $field->handler()->readOriginalValueFromAdaptor();
         if ($accessor = $field->getAccessor()) {
             $value = $accessor($this->adaptor->getModel(), $originalValue->getOrElse(null));
             if ($value !== null) {
@@ -119,7 +127,7 @@ class Form implements Set
                     $mutator($this->adaptor->getModel(), $field->values()->getInputValue());
                     $hasMutator = true;
                 } else {
-                    $field->hooks()->writeInputValueToAdaptor($field->values()->getInputValue());
+                    $field->handler()->writeInputValueToAdaptor($field->values()->getInputValue());
                 }
             }
         }
@@ -198,12 +206,10 @@ class Form implements Set
         $input = $this->container->make($inputClass);
         $input->setLabel($label);
         $input->setFieldName($fieldName);
-        $input->setAdaptor($this->adaptor);
         $input->setInputName($fieldName->toInputName());
 
-        $this->fields[$name] = $wrapper = new FormInputWrapper($input);
-
-        $input->hooks()->afterAdd();;
+        $this->fields[$name] = $wrapper = new FormInputWrapper($input, $this->adaptor);
+        $wrapper->handler()->afterAdd();;
 
         return $wrapper;
     }
@@ -220,11 +226,6 @@ class Form implements Set
         }
 
         throw new \BadMethodCallException("Method `{$method}` not found");
-    }
-
-    public function view($view = null, $data = [], $mergeData = [])
-    {
-        return Lego::view($view, $data, $mergeData);
     }
 
     public function render()

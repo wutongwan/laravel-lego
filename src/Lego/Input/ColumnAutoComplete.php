@@ -4,8 +4,8 @@ namespace Lego\Input;
 
 class ColumnAutoComplete extends AutoComplete
 {
-    protected static function hooksClassName(): string
+    public function formInputHandler()
     {
-        return ColumnAutoCompleteHooks::class;
+        return Form\ColumnAutoCompleteHandler::class;
     }
 }

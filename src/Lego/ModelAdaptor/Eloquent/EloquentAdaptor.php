@@ -1,6 +1,6 @@
 <?php
 
-namespace Lego\ModelAdaptor;
+namespace Lego\ModelAdaptor\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,6 +12,8 @@ use InvalidArgumentException;
 use Lego\Foundation\FieldName;
 use Lego\Foundation\Match\MatchQuery;
 use Lego\Foundation\Match\MatchResults;
+use Lego\ModelAdaptor\LegoSaveModelFail;
+use Lego\ModelAdaptor\ModelAdaptor;
 use Lego\Utility\EloquentUtility;
 use PhpOption\None;
 use PhpOption\Option;

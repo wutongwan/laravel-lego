@@ -1,11 +1,13 @@
 <?php
 
-namespace Lego\Input;
+namespace Lego\Input\Form;
 
 use Illuminate\Http\Request;
 use InvalidArgumentException;
+use Lego\Input\AutoComplete;
+use Lego\Set\Form\FormInputHandler;
 
-class AutoCompleteHooks extends InputHooks
+class AutoCompleteHandler extends FormInputHandler
 {
     /**
      * @var AutoComplete

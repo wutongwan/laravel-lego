@@ -2,57 +2,51 @@
 
 namespace Lego\Set\Filter;
 
+use Lego\Contracts\Input\FilterInput;
+use Lego\Input\Input;
+use Lego\ModelAdaptor\QueryAdaptor;
 use Lego\Set\Common\InputWrapper;
 
 class FilterInputWrapper extends InputWrapper
 {
-    private $scope;
-
-    private $queryOperator;
-
+    use FilterInputWrapperScope;
+    use FilterInputWrapperQueryOperator;
 
     /**
-     * 自定义的过滤逻辑.
-     *
-     * $scope 可以为 string 或 Closure
-     *  - string ：见 Eloquent Query Scopes
-     *  - null ：同上 string ，自动使用当前 field name 作为 scope 函数名
-     *  - Closure ：传入的 Closure 接收两个参数
-     *      - $query , instanceof \Lego\Operator\Query ，注意：此处不是 Laravel 中的 Query Builder
-     *      - $value , 此项的输入值
-     *
-     *
-     * Example:
-     *
-     * $field = $filter->addSelect('floor', 'Floor')->values(['low', 'high']);
-     *
-     * - $scope is string
-     *  $field->scope('height');
-     *      => call model method `scopeHeight($value)`
-     *      => $value could be `low` or `high`
-     *
-     * - $scope is Closure
-     *  $field->scope(function (Query $filter, $value) {
-     *      if ($value == 'low') {
-     *          return $filter->whereLte('floor', 10);
-     *      } else {
-     *          return $filter->whereGt('floor', 10);
-     *      }
-     *  });
-     *
-     * @param string|\Closure $scope
-     *
-     * @return $this
-     * @throws \Lego\Foundation\Exceptions\LegoException
-     *
+     * @var QueryAdaptor
      */
-    public function scope($scope = null)
+    private $adaptor;
+
+    /**
+     * @var FilterInputHandler
+     */
+    private $handler;
+
+    /**
+     * FilterInputWrapper constructor.
+     * @param Input|FilterInput $input
+     * @param QueryAdaptor $adaptor
+     */
+    public function __construct(Input $input, QueryAdaptor $adaptor)
     {
-        lego_assert(is_null($scope) || is_string($scope) || $scope instanceof \Closure, 'illegal $scope');
+        parent::__construct($input);
 
-        $this->scope = $scope ?: $this->name();
+        $this->adaptor = $adaptor;
 
-        return $this;
+        $handlerClass = $input->filterInputHandler();
+        $this->handler = new $handlerClass($input, $this);
     }
 
+    /**
+     * @return QueryAdaptor
+     */
+    public function getAdaptor(): QueryAdaptor
+    {
+        return $this->adaptor;
+    }
+
+    public function handler(): FilterInputHandler
+    {
+        return $this->handler;
+    }
 }

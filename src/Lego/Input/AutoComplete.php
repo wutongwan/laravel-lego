@@ -6,6 +6,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Lego\Contracts\Input\FormInput;
 use Lego\Foundation\Match\MatchQuery;
 use Lego\Foundation\Match\MatchResults;
 use Lego\Foundation\Response\ResponseManager;
@@ -17,7 +18,7 @@ use Lego\Foundation\Response\ResponseManager;
  * value type:  array{label: scalar, value: scalar}
  *
  */
-class AutoComplete extends Input
+class AutoComplete extends Input implements FormInput
 {
     /**
      * 自动补全暴露给前端的请求地址
@@ -48,9 +49,9 @@ class AutoComplete extends Input
         $this->view = $view;
     }
 
-    protected static function hooksClassName(): string
+    public function formInputHandler()
     {
-        return AutoCompleteHooks::class;
+        return Form\AutoCompleteHandler::class;
     }
 
     /**

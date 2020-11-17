@@ -1,10 +1,11 @@
 <?php
 
-namespace Lego\Input;
+namespace Lego\Input\Form;
 
+use Lego\Input\OneToOneRelation;
 use PhpOption\Option;
 
-class OneToOneRelationHooks extends ColumnAutoCompleteHooks
+class OneToOneRelationHandler extends ColumnAutoCompleteHandler
 {
     /**
      * @var OneToOneRelation
@@ -17,7 +18,7 @@ class OneToOneRelationHooks extends ColumnAutoCompleteHooks
 
         $this->input->setValueFieldName(
             $this->input->getFieldName()->cloneWith(
-                $this->input->getAdaptor()->getKeyName($this->input->getFieldName())
+                $this->wrapper->getAdaptor()->getKeyName($this->input->getFieldName())
             )
         );
     }
@@ -26,7 +27,7 @@ class OneToOneRelationHooks extends ColumnAutoCompleteHooks
     {
         parent::beforeRender();
 
-        $text = $this->input->getAdaptor()->getFieldValue($this->input->getFieldName());
+        $text = $this->wrapper->getAdaptor()->getFieldValue($this->input->getFieldName());
         if ($text->isDefined()) {
             $this->input->setTextValue($text->get());
         }
@@ -34,13 +35,13 @@ class OneToOneRelationHooks extends ColumnAutoCompleteHooks
 
     public function readOriginalValueFromAdaptor(): Option
     {
-        return $this->input->getAdaptor()->getFieldValue(
+        return $this->wrapper->getAdaptor()->getFieldValue(
             $this->input->getValueFieldName()
         );
     }
 
     public function writeInputValueToAdaptor($value): void
     {
-        $this->input->getAdaptor()->setRelated($this->input->getFieldName(), $value);
+        $this->wrapper->getAdaptor()->setRelated($this->input->getFieldName(), $value);
     }
 }

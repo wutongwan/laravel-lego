@@ -5,7 +5,6 @@ namespace Lego\Input;
 use Illuminate\Support\HtmlString;
 use Lego\Foundation\FieldName;
 use Lego\Foundation\Values;
-use Lego\ModelAdaptor\ModelAdaptor;
 
 abstract class Input
 {
@@ -15,22 +14,9 @@ abstract class Input
      */
     private $values;
 
-    /**
-     * @var InputHooks
-     */
-    private $hooks;
-
     public function __construct()
     {
         $this->values = new Values();
-
-        $hooksClassName = static::hooksClassName();
-        $this->hooks = new $hooksClassName($this);
-    }
-
-    protected static function hooksClassName(): string
-    {
-        return InputHooks::class;
     }
 
     /**
@@ -39,11 +25,6 @@ abstract class Input
     final public function values(): Values
     {
         return $this->values;
-    }
-
-    final public function hooks(): InputHooks
-    {
-        return $this->hooks;
     }
 
     /**
@@ -184,28 +165,6 @@ abstract class Input
     {
         $this->fieldName = $fieldName;
         return $this;
-    }
-
-    /**
-     * @var ModelAdaptor
-     */
-    private $adaptor;
-
-    /**
-     * @param ModelAdaptor $adaptor
-     */
-    final public function setAdaptor(ModelAdaptor $adaptor)
-    {
-        $this->adaptor = $adaptor;
-        return $this;
-    }
-
-    /**
-     * @return ModelAdaptor
-     */
-    final public function getAdaptor(): ModelAdaptor
-    {
-        return $this->adaptor;
     }
 
     /**

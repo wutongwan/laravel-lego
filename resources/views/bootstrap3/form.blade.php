@@ -1,19 +1,6 @@
-<?php
-/** @var \Lego\Set\Form\Form $form */
-?>
+<?php /** @var \Lego\Set\Form\Form $form */ ?>
 
-<div class="clearfix" style="margin-bottom: 5px;">
-    <div class="pull-left">
-        @foreach($form->buttons()->getByPosition('LeftTop') as $button)
-            {{ $button->render('lego-button btn btn-default') }}
-        @endforeach
-    </div>
-    <div class="pull-right">
-        @foreach($form->buttons()->getByPosition('RightTop') as $button)
-            {{ $button->render('lego-button btn btn-default') }}
-        @endforeach
-    </div>
-</div>
+@include('lego::bootstrap3.snippet.button-pair', ['set' => $form, 'left' => 'LeftTop', 'right' => 'RightTop'])
 
 <form method="post" class="form-horizontal" action="">
     @foreach($form->getFields() as $field)
@@ -48,15 +35,4 @@
     @endif
 </form>
 
-<div class="clearfix">
-    <div class="pull-left">
-        @foreach($form->buttons()->getByPosition('LeftBottom') as $button)
-            {{ $button->render('lego-button btn btn-default') }}
-        @endforeach
-    </div>
-    <div class="pull-right">
-        @foreach($form->buttons()->getByPosition('RightBottom') as $button)
-            {{ $button->render('lego-button btn btn-default') }}
-        @endforeach
-    </div>
-</div>
+@include('lego::bootstrap3.snippet.button-pair', ['set' => $form, 'left' => 'LeftBottom', 'right' => 'RightBottom'])

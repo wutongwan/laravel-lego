@@ -7,5 +7,4 @@ use Lego\Lego;
 $filter = Lego::filterV2(Suite::query());
 $filter->addText('address', 'Address');
 
-
 return $filter;

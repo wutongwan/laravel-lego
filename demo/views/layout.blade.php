@@ -44,6 +44,7 @@
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="/init-database?back={{ urlencode(request()->fullUrl()) }}" style="color: red;">Reset Database</a></li>
+                <li><a href="javascript:;" data-toggle="modal" data-target="#debugModal">Debug</a></li>
                 <li><a href="https://github.com/wutongwan/laravel-lego" target="_blank">GitHub</a></li>
                 <li><a href="https://github.com/zhwei" target="_blank">Author：@zhwei</a></li>
             </ul>
@@ -78,6 +79,39 @@
         Author：<a href="https://github.com/zhwei" target="_blank">@zhwei</a>
     </p>
 </footer>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="debugModal" aria-labelledby="debugModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="width: 90%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">SQL Log</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered">
+                    <tbody>
+                    <tr>
+                        <th style="width: 12em;">Time</th>
+                        <th style="width: 10em;">Connection</th>
+                        <th style="width: 5em;">Cost</th>
+                        <th>SQL</th>
+                    </tr>
+                    @foreach($sqlList as $event)
+                        <tr>
+                            <td>{{ $event->queryAt }}</td>
+                            <td>{{ $event->connectionName }}</td>
+                            <td>{{ $event->time }}</td>
+                            <td>
+                                <pre style="white-space: inherit;"><code class="sql">{{ $event->sql }}</code></pre>
+                            </td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 
 @include('lego::scripts')
 

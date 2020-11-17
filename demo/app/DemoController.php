@@ -2,8 +2,12 @@
 
 namespace Lego\Demo;
 
+use Carbon\Carbon;
+use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class DemoController
 {
@@ -12,10 +16,20 @@ class DemoController
      */
     private $demos;
 
-    public function __construct(Factory $view)
+    private $sqlList;
+
+    public function __construct(Factory $view, Dispatcher $event)
     {
         $this->demos = require __DIR__ . '/../demos/0.register.php';
+        $this->sqlList = new Collection();
+
         $view->share('demos', $this->demos);
+        $view->share('sqlList', $this->sqlList);
+
+        $event->listen(QueryExecuted::class, function (QueryExecuted $event) {
+            $event->queryAt = Carbon::now()->toDateTimeString();
+            $this->sqlList->push($event);
+        });
     }
 
     public function demo(string $item = '')
