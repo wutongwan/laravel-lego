@@ -16,10 +16,6 @@
 
         pre code {
             line-height: 2em;
-            /** disable like break **/
-            white-space: pre;
-            word-break: normal;
-            word-wrap: normal;
         }
     </style>
 </head>
@@ -85,9 +81,14 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">SQL Log</h4>
+                <h4 class="modal-title" id="myModalLabel">Debug</h4>
             </div>
             <div class="modal-body">
+                <?php $jsonFlag = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES; ?>
+                <h2>Request</h2>
+                <pre><code class="json">{!! json_encode(request()->all(), $jsonFlag | JSON_PRETTY_PRINT) !!}</code></pre>
+                <hr>
+                <h2>SQL Log</h2>
                 <table class="table table-bordered">
                     <tbody>
                     <tr>
@@ -102,7 +103,10 @@
                             <td>{{ $event->connectionName }}</td>
                             <td>{{ $event->time }}</td>
                             <td>
-                                <pre style="white-space: inherit;"><code class="sql">{{ $event->sql }}</code></pre>
+                                <pre><code class="sql">{{ $event->sql }}</code></pre>
+                                @if($event->bindings)
+                                    <pre><code class="php">{{ json_encode($event->bindings, $jsonFlag) }}</code></pre>
+                                @endif
                             </td>
                         </tr>
                     @endforeach

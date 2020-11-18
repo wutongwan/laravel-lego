@@ -93,7 +93,7 @@ abstract class QueryAdaptor
 
     abstract public function limit(int $limit);
 
-    abstract public function orderBy(FieldName $name, bool $desc = false);
+    abstract public function orderBy(string $column, bool $desc = false);
 
     abstract public function getLengthAwarePaginator(int $perPage, int $page);
 

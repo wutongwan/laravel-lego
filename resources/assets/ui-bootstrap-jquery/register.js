@@ -1,3 +1,4 @@
+import {initGridSort} from "./grid";
 import initGridBatch from "./grid-batch"
 import initCascadeSelect from "./field-cascade-select";
 import initConditionGroup from "./form-condition-group";
@@ -18,6 +19,9 @@ export default function register() {
 
     // filter inline style
     document.querySelectorAll('.lego-filter-style-inline').forEach(el => initFilterInlineStyle(el));
+
+    // grid sort
+    document.querySelectorAll('.lego-grid-header [data-sort]').forEach(el => initGridSort(el))
 
     // grid-batch
     document.querySelectorAll('.lego-grid-batch').forEach(el => initGridBatch(el))

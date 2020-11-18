@@ -16,23 +16,24 @@ use Lego\ModelAdaptor\QueryAdaptor;
 use Lego\Set\Common\HasButtons;
 use Lego\Set\Common\HasFields;
 use Lego\Set\Common\HasViewShortcut;
-use Lego\Set\Form\FormInputWrapper;
 use Lego\Set\Set;
+use Lego\Utility\StringUtility;
 
 /**
  * Class Filter
  * @package Lego\Set\Filter
  *
- * @method InputNamespace\Text|FormInputWrapper addText($name, $label)
- * @method InputNamespace\Hidden|FormInputWrapper addHidden($name, $label)
- * @method InputNamespace\AutoComplete|FormInputWrapper addAutoComplete($name, $label)
- * @method InputNamespace\ColumnAutoComplete|FormInputWrapper addColumnAutoComplete($name, $label)
- * @method InputNamespace\OneToOneRelation|FormInputWrapper addOneToOneRelation($name, $label)
+ * @method InputNamespace\Text|FilterInputWrapper addText($name, $label)
+ * @method InputNamespace\Hidden|FilterInputWrapper addHidden($name, $label)
+ * @method InputNamespace\AutoComplete|FilterInputWrapper addAutoComplete($name, $label)
+ * @method InputNamespace\ColumnAutoComplete|FilterInputWrapper addColumnAutoComplete($name, $label)
+ * @method InputNamespace\OneToOneRelation|FilterInputWrapper addOneToOneRelation($name, $label)
  *
  * @method Button addRightTopButton(string $text, string $url = null)
  * @method Button addRightBottomButton(string $text, string $url = null)
  * @method Button addLeftTopButton(string $text, string $url = null)
  * @method Button addLeftBottomButton(string $text, string $url = null)
+ * @method Button addBottomButton(string $text, string $url = null)
  */
 class Filter implements Set
 {
@@ -55,6 +56,16 @@ class Filter implements Set
      */
     private $view;
 
+    /**
+     * @var Button
+     */
+    private $buttonSubmit;
+
+    /**
+     * @var Button
+     */
+    private $buttonReset;
+
     public function __construct(Container $container, ModelAdaptorFactory $factory, Factory $view, $query)
     {
         $this->view = $view;
@@ -62,6 +73,17 @@ class Filter implements Set
         $this->adaptor = $factory->makeQuery($query);
 
         $this->initializeButtons();
+        $this->buttonSubmit = $this->addBottomButton('提交');
+        $this->buttonSubmit->attrs()->setAttribute('type', 'submit');
+        $this->buttonReset = $this->addBottomButton('重置', '?');
+    }
+
+    /**
+     * @return QueryAdaptor
+     */
+    public function getAdaptor()
+    {
+        return $this->adaptor;
     }
 
     protected function buttonLocations(): array
@@ -120,20 +142,23 @@ class Filter implements Set
     public function process(Request $request)
     {
         foreach ($this->fields as $field) {
-//            dump($field->getInput()->getPlaceholder());
             if (!$field->getInput()->getPlaceholder()) {
                 $field->getInput()->placeholder($field->getInput()->getLabel());
             }
 
-            if ($field->isInputAble()) {
-                $field->values()->setInputValue($request->query($field->getInputName()));
+            if ($field->isInputAble()
+                && StringUtility::isEmpty($input = $request->query($field->getInputName())) === false
+            ) {
+                $field->values()->setInputValue($input);
             }
 
             $value = $field->getInput()->values()->getCurrentValue();
-            if ($scope = $field->getScope()) {
-                $scope instanceof Closure ? $scope($value) : $this->adaptor->whereScope($scope, $value);
-            } else {
-                $field->handler()->query($field->getQueryOperator(), $value);
+            if (StringUtility::isEmpty($value) === false) {
+                if ($scope = $field->getScope()) {
+                    $scope instanceof Closure ? $scope($value) : $this->adaptor->whereScope($scope, $value);
+                } else {
+                    $field->handler()->query($field->getQueryOperator(), $value);
+                }
             }
         }
     }

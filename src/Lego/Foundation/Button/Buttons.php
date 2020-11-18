@@ -32,9 +32,9 @@ class Buttons
         $this->positions[$position][$key] = $button;
     }
 
-    public function new(string $position, string $text)
+    public function new(string $position, string $text, string $url = null)
     {
-        $button = new Button($text);
+        $button = new Button($text, $url);
         $this->add($position, $text, $button);
         return $button;
     }

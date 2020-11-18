@@ -114,9 +114,9 @@ class EloquentBuilderAdaptor extends QueryAdaptor
         $this->query->limit($limit);
     }
 
-    public function orderBy(FieldName $name, bool $desc = false)
+    public function orderBy(string $column, bool $desc = false)
     {
-        $this->query->orderBy($name->getQualifiedColumnName(), $desc ? 'desc' : 'asc');
+        $this->query->orderBy($column, $desc ? 'desc' : 'asc');
     }
 
     public function getPaginator(int $perPage, int $page)

@@ -8,6 +8,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Lego\Lego;
 
 class DemoController
 {
@@ -49,9 +50,7 @@ class DemoController
             'widget' => $widget = require $path,
             'code' => trim(implode("\n", array_slice(explode("\n", file_get_contents($path)), 1))),
         ];
-        return method_exists($widget, 'view')
-            ? $widget->view('lego-demo::demo', $data)
-            : view('lego-demo::demo', $data);
+        return Lego::view('lego-demo::demo', $data);
     }
 
     public function initDatabase(Request $request)

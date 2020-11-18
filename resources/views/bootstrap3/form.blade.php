@@ -2,7 +2,7 @@
 
 @include('lego::bootstrap3.snippet.button-pair', ['set' => $form, 'left' => 'LeftTop', 'right' => 'RightTop'])
 
-<form method="post" class="form-horizontal" action="">
+<form method="post" class="form-horizontal lego-form" action="">
     @foreach($form->getFields() as $field)
         <div class="form-group" style="{{ $field->isHiddenInput() ? 'display: none;' : '' }}">
             <label for="lego-form-field-id-{{ $field->getInputName() }}" class="col-sm-2 control-label">

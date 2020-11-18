@@ -41,6 +41,15 @@ class Lego
         return self::make(\Lego\Set\Filter\Filter::class, ['query' => $query]);
     }
 
+    public static function gridV2($query): \Lego\Set\Grid\Grid
+    {
+        if ($query instanceof \Lego\Set\Filter\Filter) {
+            return self::make(\Lego\Set\Grid\FilterGrid::class, ['filter' => $query]);
+        }
+        return self::make(\Lego\Set\Grid\Grid::class, ['query' => $query]);
+    }
+
+
     private static function make($setClass, array $parameters)
     {
         $set = app($setClass, $parameters);

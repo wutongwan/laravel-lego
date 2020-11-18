@@ -41,6 +41,24 @@ use Symfony\Component\Console\Input\ArgvInput;
     @unlink($link);
     symlink(__DIR__ . '/../public', $link);
 
+    // php ini
+    $args = '';
+    if (ini_get('xdebug.remote_enable')) {
+        foreach ([
+                     'xdebug.remote_enable',
+                     'xdebug.remote_mode',
+                     'xdebug.mode',
+                     'xdebug.remote_port',
+                     'xdebug.client_port',
+                     'xdebug.remote_host',
+                     'xdebug.client_host',
+                 ] as $name) {
+            $args .= " -d{$name}=" . ini_get($name);
+        }
+    }
+
     chdir($laravel . '/public');
-    passthru("APP_ENV=lego php -S {$host}:{$port} {$laravel}/server.php");
+    $cmd = "APP_ENV=lego php {$args} -S {$host}:{$port} {$laravel}/server.php";
+    echo $cmd . PHP_EOL;
+    passthru($cmd);
 })();
