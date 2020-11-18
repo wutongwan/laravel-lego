@@ -53,7 +53,7 @@ class Lego
     private static function make($setClass, array $parameters)
     {
         $set = app($setClass, $parameters);
-        app(ResponseManager::class)->registerWidget($set);
+        app(ResponseManager::class)->registerSet($set);
         return $set;
     }
 

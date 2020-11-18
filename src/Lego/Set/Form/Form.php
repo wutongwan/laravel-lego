@@ -4,16 +4,15 @@ namespace Lego\Set\Form;
 
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Validation\Factory;
+use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Http\Request;
 use Lego\Contracts\ButtonLocations;
 use Lego\Foundation\Button\Button;
 use Lego\Foundation\FieldName;
 use Lego\Input as InputNamespace;
 use Lego\Input\Input;
-use Lego\Lego;
 use Lego\ModelAdaptor\ModelAdaptor;
 use Lego\ModelAdaptor\ModelAdaptorFactory;
-use Lego\Rendering\RenderingManager;
 use Lego\Set\Common\HasButtons;
 use Lego\Set\Common\HasFields;
 use Lego\Set\Common\HasViewShortcut;
@@ -62,14 +61,27 @@ class Form implements Set
      */
     private $buttonSubmit;
 
-    public function __construct(Container $container, ModelAdaptorFactory $factory, $model)
+    /**
+     * @var Button
+     */
+    private $buttonReset;
+
+    /**
+     * @var ViewFactory
+     */
+    private $view;
+
+    public function __construct(Container $container, ModelAdaptorFactory $factory, ViewFactory $view, $model)
     {
         $this->container = $container;
+        $this->view = $view;
         $this->adaptor = $factory->makeModel($model);
 
         $this->initializeButtons();
         $this->buttonSubmit = $this->buttons->new(ButtonLocations::BOTTOM, '提交');
         $this->buttonSubmit->attrs()->setAttribute('type', 'submit');
+        $this->buttonReset = $this->addBottomButton('重置');
+        $this->buttonReset->attrs()->setAttribute('type', 'reset');
     }
 
     public function process(Request $request)
@@ -230,7 +242,7 @@ class Form implements Set
 
     public function render()
     {
-        return app(RenderingManager::class)->render($this);
+        return $this->view->make('lego::bootstrap3.form', ['form' => $this]);
     }
 
     /**

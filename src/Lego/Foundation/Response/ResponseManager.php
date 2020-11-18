@@ -6,6 +6,8 @@ use Closure;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
+use Lego\Set\Set;
+use SplObjectStorage;
 
 /**
  * Lego Response 管理器
@@ -30,9 +32,9 @@ class ResponseManager
     private $handlers = [];
 
     /**
-     * @var \SplObjectStorage
+     * @var SplObjectStorage
      */
-    private $widgets;
+    private $sets;
 
     /**
      * @var Container
@@ -42,7 +44,7 @@ class ResponseManager
     public function __construct(Container $container)
     {
         $this->container = $container;
-        $this->widgets = new \SplObjectStorage();
+        $this->sets = new SplObjectStorage();
     }
 
     public function view($view = null, $data = [], $mergeData = [])
@@ -64,9 +66,9 @@ class ResponseManager
         }
 
         // 调用组件处理逻辑
-        foreach ($this->widgets as $widget) {
-            if (method_exists($widget, 'process')) {
-                $this->container->call([$widget, 'process']); // 调用组件的处理逻辑
+        foreach ($this->sets as $set) {
+            if (method_exists($set, 'process')) {
+                $this->container->call([$set, 'process']); // 调用组件的处理逻辑
             }
         }
 
@@ -91,10 +93,10 @@ class ResponseManager
     /**
      * 注册需要处理的组件
      *
-     * @param $widget
+     * @param Set $set
      */
-    public function registerWidget($widget)
+    public function registerSet(Set $set)
     {
-        $this->widgets->contains($this->widgets) || $this->widgets->attach($widget);
+        $this->sets->contains($set) || $this->sets->attach($set);
     }
 }
