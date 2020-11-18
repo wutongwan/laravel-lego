@@ -2,8 +2,9 @@
 // zhangwei@danke.com
 
 return [
-    'formv2' => 'test',
-    'filterv2' => 'test filter',
+    'v2-form' => '新版 Form',
+    'v2-filter' => '新版 Filter',
+    'v2-grid' => '新版 Grid',
 
     'fields' => 'Form: 表单支持的输入类型',
     'city-list' => 'Filter & Grid：城市列表',

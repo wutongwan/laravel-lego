@@ -10,7 +10,6 @@ $paginator = $grid->getPaginator();
     @if($paginator instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator)
         <h5>共找到 {{ $grid->getPaginator()->total() }} 条符合条件的记录</h5>
     @endif
-    <hr>
 @endif
 
 <div class="lego-grid-container">
