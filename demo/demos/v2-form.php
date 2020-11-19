@@ -3,7 +3,7 @@
 use Lego\Demo\Models\Suite;
 use Lego\Lego;
 
-$form = Lego::formV2(Suite::query()->first());
+$form = Lego::form(Suite::query()->first());
 
 $form->addLeftTopButton('hello');
 $form->addLeftBottomButton('world');

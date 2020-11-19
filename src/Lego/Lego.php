@@ -2,12 +2,12 @@
 
 namespace Lego;
 
+use Illuminate\Database\Eloquent\Model;
 use Lego\Foundation\Response\ResponseManager;
-use Lego\Set\Form\Form as FormSet;
-use Lego\Widget\Confirm;
-use Lego\Widget\Filter;
-use Lego\Widget\Form;
-use Lego\Widget\Grid\Grid;
+use Lego\Set\Filter\Filter;
+use Lego\Set\Form\Form;
+use Lego\Set\Grid\FilterGrid;
+use Lego\Set\Grid\Grid;
 
 class Lego
 {
@@ -16,37 +16,60 @@ class Lego
      */
     const VERSION = '1.0';
 
-    public static function filter($source)
+    /**
+     * Create Filter
+     *
+     * @param $query
+     * @return Filter
+     */
+    public static function filter($query): Filter
     {
-        return new Filter($source);
+        return self::make(Filter::class, ['query' => $query]);
     }
 
-    public static function grid($source = [])
+    /**
+     * Create Grid
+     *
+     * @param $query
+     * @return Grid|FilterGrid
+     */
+    public static function grid($query): Grid
     {
-        return new Grid($source);
+        return $query instanceof Filter
+            ? self::make(FilterGrid::class, ['filter' => $query])
+            : self::make(Grid::class, ['query' => $query]);
     }
 
-    public static function form($source = [])
+    /**
+     * Create Form
+     *
+     * @param Model|array|object $model
+     * @return Form
+     */
+    public static function form($model): Form
     {
-        return new Form($source);
+        return self::make(Form::class, ['model' => $model]);
     }
 
-    public static function formV2($model): FormSet
+    /**
+     * Create Form from eloquent model class name and id.
+     *
+     * eg: Lego::formFindModelById(Suite::class, 1);
+     *
+     * @param class-string<Model> $modelName
+     * @param scalar $id
+     */
+    public static function formFindModelById(string $modelName, $id = null)
     {
-        return self::make(FormSet::class, ['model' => $model]);
-    }
+        lego_assert(is_subclass_of($modelName, Model::class), '$modelName should be subclass of Eloquent Model');
 
-    public static function filterV2($query): \Lego\Set\Filter\Filter
-    {
-        return self::make(\Lego\Set\Filter\Filter::class, ['query' => $query]);
-    }
-
-    public static function gridV2($query): \Lego\Set\Grid\Grid
-    {
-        if ($query instanceof \Lego\Set\Filter\Filter) {
-            return self::make(\Lego\Set\Grid\FilterGrid::class, ['filter' => $query]);
+        if ($id === null) {
+            $model = new $modelName;
+        } else {
+            $model = (new $modelName)->find($id);
+            abort_unless($model, 404);
         }
-        return self::make(\Lego\Set\Grid\Grid::class, ['query' => $query]);
+        return self::form($model);
     }
 
     private static function make($setClass, array $parameters)
@@ -56,25 +79,31 @@ class Lego
         return $set;
     }
 
-    public static function confirm($message, callable $action, $delay = null, string $view = null)
-    {
-        return (new Confirm($message, $action, $delay, $view))->response();
-    }
-
-    public static function message($message, $level = 'default')
-    {
-        return view('lego::default.message', compact('message', 'level'));
-    }
-
+    /**
+     * Render view but handled by Response Manager
+     *
+     * @see view()
+     */
     public static function view($view = null, $data = [], $mergeData = [])
     {
         return app(ResponseManager::class)->view($view, $data, $mergeData);
     }
 
     /**
-     * 重置全局状态
+     * Lego Response Endpoint
+     *
+     * @param callable():Response $response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public static function resetGlobalStates()
+    public static function response(callable $response)
+    {
+        return app(ResponseManager::class)->response($response);
+    }
+
+    /**
+     * Reset Global States
+     */
+    public static function resetGlobalStates(): void
     {
         app(ResponseManager::class)->reset();
     }

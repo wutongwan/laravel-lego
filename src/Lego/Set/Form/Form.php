@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Lego\Contracts\ButtonLocations;
 use Lego\Foundation\Button\Button;
+use Lego\Foundation\Exceptions\LegoException;
 use Lego\Foundation\FieldName;
 use Lego\Foundation\Response\ResponseManager;
 use Lego\Input as InputNamespace;
@@ -252,31 +253,44 @@ class Form implements Set
         return $wrapper;
     }
 
+    /**
+     * 根据名称获取输入框
+     * @param string $name
+     * @return Input|FormInputWrapper
+     * @throws LegoException
+     */
+    public function getField(string $name)
+    {
+        if (array_key_exists($name, $this->fields)) {
+            return $this->fields[$name];
+        }
+        throw new LegoException('Field not exists: ' . $name);
+    }
+
+    /**
+     * 获取表单所有输入框
+     * @return array<string, FormInputWrapper|Input>
+     */
+    public function getFields()
+    {
+        return $this->fields;
+    }
+
     public function __call($method, $parameters)
     {
         // button, eg: addRightTopButton(text, url)
         if ($btn = $this->callAddButton($method, $parameters)) {
             return $btn;
         }
-
         if ($field = $this->callAddField($method, $parameters)) {
             return $field;
         }
-
         throw new \BadMethodCallException("Method `{$method}` not found");
     }
 
     public function render()
     {
         return $this->view->make('lego::bootstrap3.form', ['form' => $this]);
-    }
-
-    /**
-     * @return \Lego\Set\Form\FormInputWrapper[]|Input[]
-     */
-    public function getFields()
-    {
-        return $this->fields;
     }
 
     public function isEditable(): bool
@@ -319,5 +333,14 @@ class Form implements Set
     {
         $this->success = $closure;
         return $this;
+    }
+
+    /**
+     * 获取表单原始数据
+     * @return M
+     */
+    public function getModel()
+    {
+        return $this->adaptor->getModel();
     }
 }

@@ -66,7 +66,7 @@ class ResponseManager
     }
 
     /**
-     * @param callable $response
+     * @param callable():Response $response
      * @return Response
      */
     public function response(callable $response)

@@ -4,7 +4,7 @@ use Lego\Demo\Models\Suite;
 use Lego\Lego;
 use Lego\Set\Form\Form;
 
-$filter = Lego::filterV2(Suite::query());
+$filter = Lego::filter(Suite::query());
 $filter->addText('address', 'Address')
     ->whereStartsWith();
 
@@ -13,7 +13,7 @@ $filter->addRightBottomButton('filter rb');
 $filter->addLeftTopButton('filter lt');
 $filter->addLeftBottomButton('filter lb');
 
-$grid = Lego::gridV2($filter);
+$grid = Lego::grid($filter);
 $grid->add('id', 'ID', true);
 $grid->add('status', 'Status', true);
 $grid->add('address', 'Address');
