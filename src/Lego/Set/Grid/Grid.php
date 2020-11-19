@@ -129,9 +129,11 @@ class Grid implements Set
             : $this->getAdaptor()->getPaginator($this->paginatorPerPage, $page);
 
         // 渲染前预处理
+        $keyName = null;
+        if ($hasBatch = count($this->getBatches()) > 0) {
+            $keyName = $this->getBatchKeyName();
+        }
         $this->rows = [];
-        $keyName = $this->getAdaptor()->getKeyName();
-        $hasBatch = count($this->getBatches()) > 0;
         foreach ($this->paginator->items() as $record) {
             $row = [];
             foreach ($this->cells as $cell) {

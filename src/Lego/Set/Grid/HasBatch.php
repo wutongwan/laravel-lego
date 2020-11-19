@@ -12,14 +12,14 @@ trait HasBatch
      */
     private $batches = [];
 
-    public function addBatch(string $name, string $keyName = null): Batch
+    public function addBatch(string $name): Batch
     {
         return $this->batches[$name] = $this->container->make(Batch::class, [
             'name' => $name,
-            'rowsRetriever' => function (array $ids) use ($keyName) {
-                $keyName = $keyName ?: $this->getAdaptor()->getKeyName();
+            'rowsRetriever' => function (array $ids) {
+                $name = new FieldName($this->getBatchKeyName());
                 $adaptor = $this->getAdaptor();
-                $adaptor->where(new FieldName($keyName), QueryOperators::IN, $ids);
+                $adaptor->where($name, QueryOperators::IN, $ids);
                 return $adaptor->get();
             },
         ]);
@@ -31,5 +31,28 @@ trait HasBatch
     public function getBatches(): array
     {
         return $this->batches;
+    }
+
+    /**
+     * 批处理中使用的主键字段名，默认使用 model 的 getKeyName()
+     *
+     * @var string
+     */
+    private $batchKeyName;
+
+    /**
+     * 设定批处理使用的主键字段名称
+     * @param string $batchKeyName
+     * @return $this
+     */
+    public function setBatchKeyName(string $batchKeyName)
+    {
+        $this->batchKeyName = $batchKeyName;
+        return $this;
+    }
+
+    private function getBatchKeyName()
+    {
+        return $this->batchKeyName ?: $this->getAdaptor()->getKeyName();
     }
 }

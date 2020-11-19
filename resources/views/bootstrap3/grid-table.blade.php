@@ -50,9 +50,9 @@ $hasBatch = count($grid->getBatches()) > 0
                 </div>
                 &middot;
                 <form method="get" class="lego-batch-form" target="lego-grid-batch-frame" style="display: inline">
+                    <input type="hidden" name="__lego_resp_id" value="">
                     <input type="hidden" name="__lego_ids_count" value="0">
                     <input type="hidden" name="__lego_ids" value="">
-                    <input type="hidden" name="__lego_resp_id" value="">
                     @foreach($grid->getBatches() as $batch)
                         <button data-action="{{ rawurlencode($batch->getUrl()) }}"
                                 data-name="{{ $batch->getName() }}"

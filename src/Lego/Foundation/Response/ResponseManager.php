@@ -2,6 +2,7 @@
 
 namespace Lego\Foundation\Response;
 
+use Closure;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
@@ -32,9 +33,14 @@ class ResponseManager
     private $container;
 
     /**
-     * @var array<string, \Closure>
+     * @var array<string, Closure>
      */
     private $handlers = [];
+
+    /**
+     * @var string
+     */
+    private $handled = [];
 
     /**
      * @var SplObjectStorage|Set[]
@@ -61,12 +67,12 @@ class ResponseManager
 
     public function view($view = null, $data = [], $mergeData = [])
     {
-        return $this->response(
-            $this->container->make(Factory::class)->make($view, $data, $mergeData)
-        );
+        return $this->response(function () use ($view, $data, $mergeData) {
+            return $this->container->make(Factory::class)->make($view, $data, $mergeData);
+        });
     }
 
-    public function response($response)
+    public function response(Closure $response)
     {
         if ($this->intercept) {
             return $this->intercept;
@@ -74,9 +80,9 @@ class ResponseManager
 
         // 检查是否触发自定义 handler
         $respKey = $this->container->make(Request::class)->query(self::QUERY_NAME);
-        if ($respKey) {
-            $respKey = urldecode($respKey);
-            if (isset($this->handlers[$respKey])) {
+        if ($respKey && $respKey = urldecode($respKey)) {
+            if (isset($this->handlers[$respKey]) && !in_array($respKey, $this->handled)) {
+                $this->handled[] = $respKey;
                 return $this->container->call($this->handlers[$respKey]);
             }
         }
@@ -92,7 +98,7 @@ class ResponseManager
         if ($this->intercept) {
             return $this->intercept;
         }
-        return $response;
+        return $response();
     }
 
     public function process($instance)
@@ -130,6 +136,7 @@ class ResponseManager
     public function registerSet(Set $set)
     {
         $this->sets->contains($set) || $this->sets->attach($set);
+        return $this;
     }
 
     public function intercept(Response $response)

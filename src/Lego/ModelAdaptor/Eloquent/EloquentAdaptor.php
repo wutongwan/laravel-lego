@@ -15,11 +15,10 @@ use Lego\Foundation\Match\MatchResults;
 use Lego\ModelAdaptor\LegoSaveModelFail;
 use Lego\ModelAdaptor\ModelAdaptor;
 use Lego\Utility\EloquentUtility;
+use Lego\Utility\JsonUtility;
 use PhpOption\None;
 use PhpOption\Option;
 use SplObjectStorage;
-use function json_decode;
-use function json_encode;
 
 class EloquentAdaptor extends ModelAdaptor
 {
@@ -67,7 +66,7 @@ class EloquentAdaptor extends ModelAdaptor
         }
 
         if ($fieldName->getJsonPath()) {
-            $value = data_get(is_string($value) ? json_decode($value) : $value, $fieldName->getJsonPath());
+            $value = JsonUtility::get($value, $fieldName->getJsonPath());
         }
 
         return Option::fromValue($value);
@@ -84,9 +83,7 @@ class EloquentAdaptor extends ModelAdaptor
 
         if ($fieldName->getJsonPath()) {
             $columnValue = $model->getAttribute($fieldName->getColumn());
-            $columnValue = ($isString = is_string($columnValue)) ? json_decode($columnValue) : $columnValue;
-            data_set($columnValue, $fieldName->getJsonPath(), $value);
-            $isString && ($columnValue = json_encode($columnValue)); // 保证类型一致
+            $columnValue = JsonUtility::set($columnValue, $fieldName->getJsonPath(), $value);
         } else {
             $columnValue = $value;
         }

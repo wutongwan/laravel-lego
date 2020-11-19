@@ -2,6 +2,7 @@
 
 namespace Lego\ModelAdaptor;
 
+use ArrayAccess;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 use InvalidArgumentException;
@@ -11,11 +12,19 @@ class ModelAdaptorFactory
 {
     public function makeModel($model): ModelAdaptor
     {
-        if ($model instanceof Model) {
-            return new Eloquent\EloquentAdaptor($model);
-        }
+        switch (true) {
+            default:
+                throw new InvalidArgumentException('Unsupported $model type');
 
-        throw new InvalidArgumentException('Unsupported $model type');
+            case $model instanceof Model:
+                return new Eloquent\EloquentAdaptor($model);
+
+            case is_array($model) || $model instanceof ArrayAccess:
+                return new Native\ArrayAdaptor($model);
+
+            case is_object($model):
+                return new Native\StdClassAdaptor($model);
+        }
     }
 
     public function makeQuery($query)

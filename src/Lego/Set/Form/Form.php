@@ -20,6 +20,7 @@ use Lego\Set\Common\HasButtons;
 use Lego\Set\Common\HasFields;
 use Lego\Set\Common\HasViewShortcut;
 use Lego\Set\Set;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 /**
  * Class Form
@@ -125,7 +126,7 @@ class Form implements Set
             // 检查是否有自定义提交行为
             if ($this->submit) {
                 $response = call_user_func_array($this->submit, [$this, $this->adaptor->getModel()]);
-                lego_assert($response instanceof Response, "onSubmit callback must return `\Illuminate\Http\Response` instance.");
+                lego_assert($response instanceof SymfonyResponse, "onSubmit callback must return Symfony Response");
                 $responseManager->intercept($response);
                 return;
             } else {
@@ -134,7 +135,7 @@ class Form implements Set
             // 检查是否有自定义成功行为
             if ($this->success) {
                 $response = call_user_func_array($this->success, [$this->adaptor->getModel()]);
-                lego_assert($response instanceof Response, "onSuccess callback must return `\Illuminate\Http\Response` instance.");
+                lego_assert($response instanceof SymfonyResponse, "onSuccess callback must return Symfony Response");
                 $responseManager->intercept($response);
             }
         }

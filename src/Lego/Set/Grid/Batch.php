@@ -159,7 +159,7 @@ class Batch
         return $this;
     }
 
-    public function response(Request $request)
+    public function response(Request $request, ResponseManager $responseManager)
     {
         $idsCount = (int)$request->query('__lego_ids_count');
         $ids = array_unique(explode(',', $request->query('__lego_ids')));
@@ -170,13 +170,14 @@ class Batch
         $rows = $this->container->call($this->rowsRetriever, ['ids' => $ids]);
 
         if ($this->form) {
-            $data = new stdClass();
-            $form = $this->container->make(Form::class, ['model' => $data]);
+            $form = $this->container->make(Form::class, ['model' => new stdClass()]);
             call_user_func_array($this->form, [$form, $rows]);
             $form->onSubmit(function (Form $form) use ($rows) {
                 return $this->callHandler($rows, $form);
             });
-            return $this->view->make('lego::bootstrap3.internal', ['set' => $form]);
+            return $responseManager
+                ->registerSet($form)
+                ->view('lego::bootstrap3.internal', ['set' => $form]);
         }
 
         return $this->callHandler($rows);

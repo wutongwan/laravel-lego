@@ -28,9 +28,10 @@ $grid->addBatch('message')
     });
 $grid->addBatch('form')
     ->form(function (Form $form) {
-
+        $form->addText('hello', 'world')->required();
     })
     ->handle(function () {
+        $args = func_get_args();
         return 'hello world';
     });
 

@@ -49,13 +49,13 @@ class GridBatch {
         for (const btn of this.element.getElementsByClassName('lego-batch-submit')) {
             btn.addEventListener('click', function (event) {
                 event.preventDefault()
-                that.submit(
-                    decodeURIComponent(this.getAttribute('data-action')),
-                    this.getAttribute('data-open-target'),
-                    this.getAttribute('data-name'),
-                )
+                that.submit(decodeURIComponent(this.getAttribute('data-action')))
             })
         }
+
+        this.$modal.on('hidden.bs.modal', function () {
+            that.$modal.find('iframe').attr('src', '')
+        })
     }
 
     _toggleBatchMode(yes) {
@@ -81,7 +81,7 @@ class GridBatch {
         }
     }
 
-    submit(action, target, name) {
+    submit(action) {
         if (this.getInputIds().length === 0) {
             alert("尚未选中任何记录！")
             return false;
