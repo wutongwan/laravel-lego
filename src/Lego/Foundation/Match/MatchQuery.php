@@ -14,7 +14,7 @@ class MatchQuery
      * 单页数目限制
      * @var int
      */
-    public $limit = 20;
+    public $perPage = 20;
 
     /**
      * 页码

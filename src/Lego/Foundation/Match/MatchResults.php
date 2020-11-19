@@ -6,61 +6,48 @@ use Illuminate\Support\Arr;
 
 class MatchResults implements \JsonSerializable
 {
-    /**
-     * @var array
-     */
-    private $options;
-
     private $items = [];
 
-    private $totalCount = 0;
+    /**
+     * @var bool
+     */
+    private $hasMore;
 
-    public function __construct(array $items = [])
+    /**
+     * MatchResults constructor.
+     * @param array<scalar, scalar>|array<array{id:scalar, text:scalar}> $items
+     * @param false $hasMore
+     */
+    public function __construct(array $items = [], $hasMore = false)
     {
         if (Arr::isAssoc($items)) {
-            foreach ($items as $value => $label) {
-                $this->add($value, $label);
+            foreach ($items as $id => $text) {
+                $this->add($id, $text);
             }
         } else {
             $this->items = $items;
-            $this->totalCount = count($items);
         }
+        $this->hasMore = $hasMore;
     }
 
-    public function add($value, $label)
+    public function add($id, $text)
     {
-        $this->items[] = [
-            'label' => $label,
-            'value' => $value,
-        ];
-        $this->totalCount++;
+        $this->items[] = ['text' => $text, 'id' => $id];
     }
 
     /**
-     * @param int $totalCount
+     * @param bool $hasMore
      */
-    public function setTotalCount(int $totalCount): void
+    public function setHasMore(bool $hasMore): void
     {
-        $this->totalCount = $totalCount;
-    }
-
-    public function all()
-    {
-        $options = [];
-        foreach ($this->options as $value => $label) {
-            $options[] = [
-                'label' => $label,
-                'value' => $value,
-            ];
-        }
-        return $options;
+        $this->hasMore = $hasMore;
     }
 
     public function jsonSerialize()
     {
         return [
             'items' => $this->items,
-            'totalCount' => $this->totalCount,
+            'hasMore' => $this->hasMore,
         ];
     }
 }

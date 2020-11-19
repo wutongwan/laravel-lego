@@ -40,20 +40,14 @@ function initSelect2Autocomplete(field) {
                 data: function (params) {
                     return {
                         '__lego_auto_complete': params.term,
-                        "page": params.page
+                        "__lego_auto_complete_page": params.page
                     };
                 },
-                processResults: function (data, params) {
-                    params.page = params.page || 1;
+                processResults: function (data) {
                     return {
-                        results: data.items.map(function (item) {
-                            return {
-                                id: item.value,
-                                text: item.label,
-                            }
-                        }),
+                        results: data.items,
                         pagination: {
-                            more: (params.page * 30) < data.total_count
+                            more: data.hasMore
                         }
                     };
                 }

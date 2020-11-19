@@ -19,12 +19,9 @@ class EloquentUtility
 
         $paginator = $query
             ->where($columnName, 'like', "%{$match->keyword}%")
-            ->limit($match->limit)
-            ->offset($match->limit * max(($match->page - 1), 0))
-            ->paginate($match->limit, $columns, 'page', $match->page);
+            ->simplePaginate($match->perPage, $columns, 'page', $match->page);
 
-        $results = new MatchResults();
-        $results->setTotalCount($paginator->total());
+        $results = new MatchResults([], $paginator->hasMorePages());
         foreach ($paginator->items() as $item) {
             $results->add($item[$keyName], $item[$columnName]);
         }

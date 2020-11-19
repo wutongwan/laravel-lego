@@ -14,6 +14,11 @@ class EloquentBuilderAdaptor extends QueryAdaptor
      */
     protected $query;
 
+    public function getKeyName(): string
+    {
+        return $this->query->getModel()->getKeyName();
+    }
+
     public function whereScope(string $scope, $value)
     {
         $this->query->{'scope' . ucfirst($scope)}($value);
@@ -127,5 +132,10 @@ class EloquentBuilderAdaptor extends QueryAdaptor
     public function getLengthAwarePaginator(int $perPage, int $page)
     {
         return $this->query->paginate($perPage, ['*'], 'page', $page);
+    }
+
+    public function get(): array
+    {
+        return $this->query->get()->all();
     }
 }

@@ -60,14 +60,14 @@ class EloquentAdaptorTest extends \Lego\Tests\TestCase
     {
         $args = new MatchQuery();
         $args->keyword = '1';
-        $args->limit = 10;
+        $args->perPage = 10;
         $adaptor = new EloquentAdaptor(new Suite());
         $options = $adaptor->queryMatch(new FieldName('address'), $args);
         self::assertInstanceOf(MatchResults::class, $options);
 
         $args = new MatchQuery();
         $args->keyword = '胡同';
-        $args->limit = 100;
+        $args->perPage = 100;
         $args->setPage(1);
         $options = $adaptor->queryMatch(new FieldName('street.name'), $args);
         self::assertInstanceOf(MatchResults::class, $options);
