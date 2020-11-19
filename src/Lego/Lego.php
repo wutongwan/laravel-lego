@@ -49,7 +49,6 @@ class Lego
         return self::make(\Lego\Set\Grid\Grid::class, ['query' => $query]);
     }
 
-
     private static function make($setClass, array $parameters)
     {
         $set = app($setClass, $parameters);
@@ -70,5 +69,13 @@ class Lego
     public static function view($view = null, $data = [], $mergeData = [])
     {
         return app(ResponseManager::class)->view($view, $data, $mergeData);
+    }
+
+    /**
+     * 重置全局状态
+     */
+    public static function resetGlobalStates()
+    {
+        app(ResponseManager::class)->reset();
     }
 }

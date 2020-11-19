@@ -20,7 +20,7 @@ class LegoServiceProvider extends ServiceProvider
     public function register()
     {
         // singleton
-        $this->app->singleton(ResponseManager::class, ResponseManager::class);
+        $this->app->singleton(ResponseManager::class);
 
         // alias
         $this->app->singleton('lego-fields', FieldLoader::class);

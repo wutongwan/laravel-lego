@@ -21,6 +21,12 @@ abstract class QueryAdaptor
     }
 
     /**
+     * 主键字段名
+     * @return string
+     */
+    abstract public function getKeyName(): string;
+
+    /**
      * Laravel scope query
      */
     abstract public function whereScope(string $scope, $value);
@@ -98,4 +104,6 @@ abstract class QueryAdaptor
     abstract public function getLengthAwarePaginator(int $perPage, int $page);
 
     abstract public function getPaginator(int $perPage, int $page);
+
+    abstract public function get(): array;
 }

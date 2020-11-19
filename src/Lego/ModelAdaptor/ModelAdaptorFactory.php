@@ -5,6 +5,7 @@ namespace Lego\ModelAdaptor;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 use InvalidArgumentException;
+use Lego\Contracts\HasQueryAdaptor;
 
 class ModelAdaptorFactory
 {
@@ -20,10 +21,17 @@ class ModelAdaptorFactory
     public function makeQuery($query)
     {
         switch (true) {
+            default:
+                throw new InvalidArgumentException('Unsupported $query type');
+
             case $query instanceof EloquentBuilder:
                 return new Eloquent\EloquentBuilderAdaptor($query);
-        }
 
-        throw new InvalidArgumentException('Unsupported $query type');
+            case $query instanceof HasQueryAdaptor:
+                return $query->getQueryAdaptor();
+
+            case $query instanceof QueryAdaptor:
+                return $query;
+        }
     }
 }

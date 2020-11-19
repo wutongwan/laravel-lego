@@ -2,6 +2,11 @@ class GridBatch {
     constructor(element) {
         this.element = element
         this.ids = []
+        this.$modal = jQuery(document.getElementById('lego-grid-modal'))
+
+        this.idsInput = this.element.querySelector('input[name="__lego_ids"]')
+        this.idsCountInput = this.element.querySelector('input[name="__lego_ids_count"]')
+        this.respIdInput = this.element.querySelector('input[name="__lego_resp_id"]')
     }
 
     listen() {
@@ -82,10 +87,12 @@ class GridBatch {
             return false;
         }
 
+        const url = new URL(action)
+        this.respIdInput.value = url.searchParams.get('__lego_resp_id')
         const form = this.element.getElementsByClassName('lego-batch-form')[0]
-        form.action = action
-        form.target = target
         form.submit()
+
+        this.$modal.modal()
     }
 
     getAllIds() {
@@ -107,11 +114,12 @@ class GridBatch {
 
     setInputIdsValue(ids) {
         this.element.getElementsByClassName('lego-selected-count')[0].innerText = ids.length
-        this.element.querySelector('input[name="ids"]').value = [].join.call(ids, ',')
+        this.idsInput.value = [].join.call(ids, ',')
+        this.idsCountInput.value = ids.length
     }
 
     getInputIds() {
-        const value = this.element.querySelector('input[name="ids"]').value
+        const value = this.idsInput.value
         return value.trim(',').split(',').filter(val => val)
     }
 

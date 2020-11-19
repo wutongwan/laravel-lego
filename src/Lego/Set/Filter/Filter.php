@@ -7,6 +7,7 @@ use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Lego\Contracts\ButtonLocations;
+use Lego\Contracts\HasQueryAdaptor;
 use Lego\Foundation\Button\Button;
 use Lego\Foundation\FieldName;
 use Lego\Input as InputNamespace;
@@ -35,7 +36,7 @@ use Lego\Utility\StringUtility;
  * @method Button addLeftBottomButton(string $text, string $url = null)
  * @method Button addBottomButton(string $text, string $url = null)
  */
-class Filter implements Set
+class Filter implements Set, HasQueryAdaptor
 {
     use HasButtons;
     use HasFields;
@@ -81,7 +82,7 @@ class Filter implements Set
     /**
      * @return QueryAdaptor
      */
-    public function getAdaptor()
+    public function getQueryAdaptor(): QueryAdaptor
     {
         return $this->adaptor;
     }

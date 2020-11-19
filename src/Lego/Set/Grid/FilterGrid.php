@@ -2,7 +2,9 @@
 
 namespace Lego\Set\Grid;
 
+use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\View\Factory;
+use Lego\Foundation\Response\ResponseManager;
 use Lego\ModelAdaptor\ModelAdaptorFactory;
 use Lego\Set\Filter\Filter;
 
@@ -13,11 +15,15 @@ class FilterGrid extends Grid
      */
     private $filter;
 
-    public function __construct(Factory $view, ModelAdaptorFactory $factory, Filter $filter)
-    {
+    public function __construct(
+        Container $container,
+        Factory $view,
+        ResponseManager $responseManager,
+        ModelAdaptorFactory $factory,
+        Filter $filter
+    ) {
         $this->filter = $filter;
-
-        parent::__construct($view, $factory, $filter->getAdaptor());
+        parent::__construct($container, $view, $responseManager, $factory, $filter);
     }
 
     /**

@@ -2,10 +2,10 @@
 
 namespace Lego\Foundation\Response;
 
-use Closure;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Lego\Set\Set;
 use SplObjectStorage;
 
@@ -27,24 +27,36 @@ class ResponseManager
     private const QUERY_NAME = '__lego_resp_id';
 
     /**
+     * @var Container
+     */
+    private $container;
+
+    /**
      * @var array<string, \Closure>
      */
     private $handlers = [];
 
     /**
-     * @var SplObjectStorage
+     * @var SplObjectStorage|Set[]
      */
     private $sets;
 
     /**
-     * @var Container
+     * @var SplObjectStorage
      */
-    private $container;
+    private $processed;
+
+    /**
+     * 高优先级响应对象，优先级高于正常响应
+     * @var Response|null
+     */
+    private $intercept;
 
     public function __construct(Container $container)
     {
         $this->container = $container;
         $this->sets = new SplObjectStorage();
+        $this->processed = new SplObjectStorage();
     }
 
     public function view($view = null, $data = [], $mergeData = [])
@@ -56,6 +68,10 @@ class ResponseManager
 
     public function response($response)
     {
+        if ($this->intercept) {
+            return $this->intercept;
+        }
+
         // 检查是否触发自定义 handler
         $respKey = $this->container->make(Request::class)->query(self::QUERY_NAME);
         if ($respKey) {
@@ -67,22 +83,38 @@ class ResponseManager
 
         // 调用组件处理逻辑
         foreach ($this->sets as $set) {
-            if (method_exists($set, 'process')) {
-                $this->container->call([$set, 'process']); // 调用组件的处理逻辑
+            $this->process($set);
+            if ($this->intercept) {
+                return $this->intercept;
             }
         }
 
+        if ($this->intercept) {
+            return $this->intercept;
+        }
         return $response;
+    }
+
+    public function process($instance)
+    {
+        if ($this->processed->contains($instance)) {
+            return;
+        }
+
+        if (method_exists($instance, 'process')) {
+            $this->container->call([$instance, 'process']);
+        }
+        $this->processed->attach($instance);
     }
 
     /**
      * 注册 response handler，注意需自行保证 `$key` 唯一，否则会覆盖之前的注册
      *
      * @param string $key
-     * @param Closure $handler
+     * @param callable $handler
      * @return string 请求链接
      */
-    public function registerHandler(string $key, Closure $handler)
+    public function registerHandler(string $key, callable $handler)
     {
         $this->handlers[$key] = $handler;
         return $this->container->make(Request::class)->fullUrlWithQuery([
@@ -98,5 +130,18 @@ class ResponseManager
     public function registerSet(Set $set)
     {
         $this->sets->contains($set) || $this->sets->attach($set);
+    }
+
+    public function intercept(Response $response)
+    {
+        $this->intercept = $response;
+    }
+
+    public function reset()
+    {
+        $this->intercept = null;
+        $this->handlers = [];
+        $this->sets = new SplObjectStorage();
+        $this->processed = new SplObjectStorage();
     }
 }

@@ -64,7 +64,7 @@ class AutoComplete extends Input implements FormInput
     public function match(callable $callable)
     {
         $url = $this->responseManager->registerHandler(
-            sprintf("Input:%s:%s", static::class, $this->getInputName()),
+            sprintf("Input-AutoComplete-%s", $this->getInputName()),
             function (Request $request) use ($callable) {
                 $query = new MatchQuery();
                 $query->keyword = trim($request->query('__lego_auto_complete'));
@@ -80,7 +80,7 @@ class AutoComplete extends Input implements FormInput
                 return new JsonResponse($options->jsonSerialize());
             }
         );
-        $this->remoteUrl = $url . '&__lego_auto_complete=';
+        $this->remoteUrl = $url;
 
         return $this;
     }

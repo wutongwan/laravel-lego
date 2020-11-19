@@ -2,11 +2,13 @@
 
 namespace Lego\Set\Grid;
 
+use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Lego\Contracts\ButtonLocations;
 use Lego\Foundation\Button\Button;
 use Lego\Foundation\FieldName;
+use Lego\Foundation\Response\ResponseManager;
 use Lego\ModelAdaptor\ModelAdaptorFactory;
 use Lego\ModelAdaptor\QueryAdaptor;
 use Lego\Set\Common\HasButtons;
@@ -25,6 +27,7 @@ class Grid implements Set
 {
     use HasButtons;
     use HasPagination;
+    use HasBatch;
 
     /**
      * @var Factory
@@ -35,16 +38,21 @@ class Grid implements Set
      * @var QueryAdaptor
      */
     private $adaptor;
+    /**
+     * @var Container
+     */
+    private $container;
+    /**
+     * @var ResponseManager
+     */
+    private $responseManager;
 
-    public function __construct(Factory $view, ModelAdaptorFactory $factory, $query)
+    public function __construct(Container $container, Factory $view, ResponseManager $responseManager, ModelAdaptorFactory $factory, $query)
     {
         $this->view = $view;
-
-        if ($query instanceof QueryAdaptor) {
-            $this->adaptor = $query;
-        } else {
-            $this->adaptor = $factory->makeQuery($query);
-        }
+        $this->container = $container;
+        $this->adaptor = $factory->makeQuery($query);
+        $this->responseManager = $responseManager;
 
         $this->initializeButtons();
     }
@@ -122,10 +130,15 @@ class Grid implements Set
 
         // 渲染前预处理
         $this->rows = [];
+        $keyName = $this->getAdaptor()->getKeyName();
+        $hasBatch = count($this->getBatches()) > 0;
         foreach ($this->paginator->items() as $record) {
             $row = [];
             foreach ($this->cells as $cell) {
                 $row[$cell->getName()->getOriginal()] = $cell->render($record);
+            }
+            if ($hasBatch) {
+                $row['__lego_batch_id'] = data_get($record, $keyName);
             }
             $this->rows[] = $row;
         }

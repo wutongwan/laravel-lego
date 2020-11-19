@@ -2,6 +2,8 @@
 
 namespace Lego\Set\Form;
 
+use Closure;
+
 trait FormInputWrapperValidations
 {
     /**
@@ -58,9 +60,10 @@ trait FormInputWrapperValidations
     /**
      * add customer validator
      *
+     * @param Closure(scalar, array):void $validator accept two argument: this input's value, all input's value
      * @return $this
      */
-    public function validator(\Closure $validator)
+    public function validator(Closure $validator)
     {
         $this->validators[] = $validator;
         return $this;

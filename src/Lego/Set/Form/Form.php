@@ -2,13 +2,16 @@
 
 namespace Lego\Set\Form;
 
+use Closure;
 use Illuminate\Contracts\Container\Container;
-use Illuminate\Contracts\Validation\Factory;
+use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Lego\Contracts\ButtonLocations;
 use Lego\Foundation\Button\Button;
 use Lego\Foundation\FieldName;
+use Lego\Foundation\Response\ResponseManager;
 use Lego\Input as InputNamespace;
 use Lego\Input\Input;
 use Lego\ModelAdaptor\ModelAdaptor;
@@ -20,7 +23,9 @@ use Lego\Set\Set;
 
 /**
  * Class Form
- * @package Lego\Widget
+ * @package  Lego\Widget
+ *
+ * @template M
  *
  * @method InputNamespace\Text|FormInputWrapper addText($name, $label)
  * @method InputNamespace\Hidden|FormInputWrapper addHidden($name, $label)
@@ -71,6 +76,13 @@ class Form implements Set
      */
     private $view;
 
+    /**
+     * Form constructor.
+     * @param Container $container
+     * @param ModelAdaptorFactory $factory
+     * @param ViewFactory $view
+     * @param M $model
+     */
     public function __construct(Container $container, ModelAdaptorFactory $factory, ViewFactory $view, $model)
     {
         $this->container = $container;
@@ -84,7 +96,7 @@ class Form implements Set
         $this->buttonReset->attrs()->setAttribute('type', 'reset');
     }
 
-    public function process(Request $request)
+    public function process(Request $request, ResponseManager $responseManager)
     {
         $isSubmit = $request->isMethod('POST');
 
@@ -110,7 +122,21 @@ class Form implements Set
 
         if ($isSubmit) {
             $this->runValidations();
-            $this->saveInputValues();
+            // 检查是否有自定义提交行为
+            if ($this->submit) {
+                $response = call_user_func_array($this->submit, [$this, $this->adaptor->getModel()]);
+                lego_assert($response instanceof Response, "onSubmit callback must return `\Illuminate\Http\Response` instance.");
+                $responseManager->intercept($response);
+                return;
+            } else {
+                $this->saveInputValues();
+            }
+            // 检查是否有自定义成功行为
+            if ($this->success) {
+                $response = call_user_func_array($this->success, [$this->adaptor->getModel()]);
+                lego_assert($response instanceof Response, "onSuccess callback must return `\Illuminate\Http\Response` instance.");
+                $responseManager->intercept($response);
+            }
         }
     }
 
@@ -177,7 +203,7 @@ class Form implements Set
                 $data[$name] = $field->values()->getOriginalValue();
             }
         }
-        $rulesValidator = $this->container->make(Factory::class)->make($data, $rules, [], $customerAttributes);
+        $rulesValidator = $this->container->make(ValidationFactory::class)->make($data, $rules, [], $customerAttributes);
         if ($rulesValidator->fails()) {
             foreach ($rulesValidator->errors() as $name => $errors) {
                 $this->fields[$name]->messages()->errors($errors);
@@ -208,7 +234,6 @@ class Form implements Set
             ButtonLocations::BOTTOM,
         ];
     }
-
 
     protected function addField(string $inputClass, string $name, string $label)
     {
@@ -261,5 +286,37 @@ class Form implements Set
             }
         }
         return true;
+    }
+
+    /**
+     * @var Closure(Form, M):Response
+     */
+    private $submit;
+
+    /**
+     * 数据校验完成后触发，覆盖原有的写入 model 行为
+     *
+     * @param Closure(Form, M):Response $closure
+     * @return $this
+     */
+    public function onSubmit(Closure $closure)
+    {
+        $this->submit = $closure;
+        return $this;
+    }
+
+    /**
+     * @var Closure(M):Response
+     */
+    private $success;
+
+    /**
+     * 数据写入 model 完成后触发
+     * @param Closure(M):Response $closure
+     */
+    public function onSuccess(Closure $closure)
+    {
+        $this->success = $closure;
+        return $this;
     }
 }

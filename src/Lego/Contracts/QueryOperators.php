@@ -9,10 +9,10 @@ interface QueryOperators
     const QUERY_GTE = '>=';
     const QUERY_LT = '<';
     const QUERY_LTE = '<=';
+
     const QUERY_CONTAINS = 'Contains';
     const QUERY_STARTS_WITH = 'StartsWith';
     const QUERY_ENDS_WITH = 'EndsWith';
-
     const IN = 'In';
     const JSON_CONTAINS = 'JsonContains';
     const BETWEEN = 'Between';
