@@ -49,7 +49,7 @@ class GridBatch {
         for (const btn of this.element.getElementsByClassName('lego-batch-submit')) {
             btn.addEventListener('click', function (event) {
                 event.preventDefault()
-                that.submit(decodeURIComponent(this.getAttribute('data-action')))
+                that.submit(decodeURIComponent(this.getAttribute('data-resp-id')))
             })
         }
 
@@ -81,14 +81,13 @@ class GridBatch {
         }
     }
 
-    submit(action) {
+    submit(respId) {
         if (this.getInputIds().length === 0) {
             alert("尚未选中任何记录！")
             return false;
         }
 
-        const url = new URL(action)
-        this.respIdInput.value = url.searchParams.get('__lego_resp_id')
+        this.respIdInput.value = respId
         const form = this.element.getElementsByClassName('lego-batch-form')[0]
         form.submit()
 

@@ -23,16 +23,24 @@ $grid->addBatch('response')
         return redirect('/');
     });
 $grid->addBatch('message')
-    ->handle(function () {
-        return 'hello world';
+    ->handle(function (array $rows) {
+        return 'hello count: ' . count($rows);
     });
 $grid->addBatch('form')
     ->form(function (Form $form) {
-        $form->addText('hello', 'world')->required();
+        $form->addText('name', 'Name')->required();
     })
-    ->handle(function () {
-        $args = func_get_args();
-        return 'hello world';
+    ->handle(function (array $rows, array $formData) {
+        return 'hello ' . $formData['name'] . ', rows count: ' . count($rows);
+    });
+$grid->addBatch('confirm')
+    ->confirm('hello world')
+    // or
+    ->confirm(function (array $rows) {
+        return 'total count: ' . count($rows);
+    })
+    ->handle(function (array $rows) {
+        return 'confirmed';
     });
 
 $grid->addLeftTopButton('grid left top');

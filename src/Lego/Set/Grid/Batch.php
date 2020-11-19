@@ -10,8 +10,8 @@ use Illuminate\Http\Response;
 use InvalidArgumentException;
 use Lego\Foundation\Exceptions\LegoException;
 use Lego\Foundation\Response\ResponseManager;
+use Lego\Set\Confirm;
 use Lego\Set\Form\Form;
-use stdClass;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class Batch
@@ -60,6 +60,11 @@ class Batch
     private $url;
 
     /**
+     * @var string
+     */
+    private $respId;
+
+    /**
      * 批处理行为执行前的初始化逻辑
      * @var Closure(int[]|string[]):array
      */
@@ -78,7 +83,8 @@ class Batch
         $this->view = $view;
 
         // 注册批处理响应
-        $this->url = $responseManager->registerHandler("Grid-Batch-{$name}", [$this, 'response']);
+        $this->respId = "Grid-Batch-{$name}";
+        $responseManager->registerHandler($this->respId, [$this, 'response']);
     }
 
     /**
@@ -95,6 +101,11 @@ class Batch
     public function getUrl(): string
     {
         return $this->url;
+    }
+
+    public function getRespId()
+    {
+        return $this->respId;
     }
 
     /**
@@ -170,33 +181,47 @@ class Batch
         $rows = $this->container->call($this->rowsRetriever, ['ids' => $ids]);
 
         if ($this->form) {
-            $form = $this->container->make(Form::class, ['model' => new stdClass()]);
-            call_user_func_array($this->form, [$form, $rows]);
-            $form->onSubmit(function (Form $form) use ($rows) {
-                return $this->callHandler($rows, $form);
-            });
-            return $responseManager
-                ->registerSet($form)
-                ->view('lego::bootstrap3.internal', ['set' => $form]);
+            return $this->formResponse($rows, $responseManager);
         }
 
-        return $this->callHandler($rows);
+        if ($this->confirm) {
+            return $this->confirmResponse($rows);
+        }
+
+        return $this->runHandler($rows);
     }
 
-    private function callHandler(array $rows, Form $form = null): SymfonyResponse
+    private function formResponse(array $rows, ResponseManager $responseManager)
     {
-        $response = $this->container->call($this->handler, ['rows' => $rows, 'form' => $form]);
+        $form = $this->container->make(Form::class, ['model' => []]);
+        call_user_func_array($this->form, [$form, $rows]);
+        $form->onSuccess(function (array $formData) use ($rows) {
+            return $this->runHandler($rows, $formData);
+        });
+        return $responseManager
+            ->registerSet($form)
+            ->view('lego::bootstrap3.internal', ['set' => $form]);
+    }
 
+    private function confirmResponse(array $rows)
+    {
+        $message = is_string($this->confirm) ? $this->confirm : call_user_func_array($this->confirm, [$rows]);
+        $confirm = new Confirm($message, function () use ($rows) {
+            return $this->runHandler($rows);
+        });
+        $this->container->call([$confirm, 'process']);
+        return $confirm->response();
+    }
+
+    private function runHandler(array $rows, array $formData = []): SymfonyResponse
+    {
+        $response = call_user_func_array($this->handler, [$rows, $formData]);
         if (is_string($response)) {
-            return new Response(
-                $this->view->make('lego::bootstrap3.message', ['message' => $response])
-            );
+            return new Response($this->view->make('lego::bootstrap3.message', ['message' => $response]));
         }
-
         if ($response instanceof SymfonyResponse) {
             return $response;
         }
-
         throw new LegoException('handle() callback must return string message or Symfony Response Object');
     }
 }

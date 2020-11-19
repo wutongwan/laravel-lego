@@ -2,45 +2,79 @@
 
 namespace Lego\Set;
 
-use Closure;
 use Illuminate\Contracts\Routing\UrlGenerator;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
-use ReflectionFunction;
+use Illuminate\Http\Response;
 
-class Confirm
+class Confirm implements Set
 {
     /**
      * @var string
      */
     private $message;
+
     /**
      * @var int
      */
     private $delay;
+
     /**
-     * @var Closure
+     * @var callable
      */
-    private $callback;
+    private $confirmed;
+
+    /**
+     * @var callable|null
+     */
+    private $canceled;
 
     /**
      * @var string
      */
     private $expectedConfirmValue;
 
-    public function __construct(string $message, Closure $callback, int $delay = 0)
+    /**
+     * Confirm constructor.
+     * @param string $message         确认信息文案
+     * @param callable $confirmed     确认后的回调
+     * @param callable|null $canceled 取消后的回调
+     * @param int $delay              确认按钮的延迟时间
+     */
+    public function __construct(string $message, callable $confirmed, callable $canceled = null, int $delay = 0)
     {
         $this->message = $message;
-        $this->callback = $callback;
-        $this->delay = $delay;
+        $this->confirmed = $confirmed;
+        $this->canceled = $canceled;
 
+        $this->delay = $delay;
         $this->expectedConfirmValue = md5($message);
     }
 
     private const NAME = '__lego_confirm';
     private const FROM = '__lego_confirm_from';
 
-    public function response(Request $request, UrlGenerator $url, Factory $view)
+    /**
+     * @var Factory
+     */
+    private $viewFactory;
+
+    /**
+     * @var string
+     */
+    private $confirmUrl;
+
+    /**
+     * @var string
+     */
+    private $cancelUrl;
+
+    /**
+     * @var string
+     */
+    private $actualConfirmValue;
+
+    public function process(Request $request, UrlGenerator $url, Factory $view)
     {
         // 解析来源地址
         if (!$from = $request->query(self::FROM)) {
@@ -49,31 +83,40 @@ class Confirm
             $from = $query[self::FROM] ?? $previous;
         }
 
-        if ($confirmValue = $request->query(self::NAME)) {
-            $confirmed = $confirmValue === $this->expectedConfirmValue;
-            if ((new ReflectionFunction($this->callback))->getNumberOfParameters() > 0) {
-                // 回调函数接收参数时, 用户的取消行为也交由回调控制
-                $response = call_user_func($this->callback, $confirmed);
-            } elseif ($confirmed) {
-                // 用户确认时, 调用回调
-                $response = call_user_func($this->callback);
-            }
-            // 其他情况返回来源页
-            return isset($response) ? $response : redirect($from);
+        $this->viewFactory = $view;
+        $this->actualConfirmValue = $request->query(self::NAME);
+        $this->confirmUrl = $request->fullUrlWithQuery([
+            self::NAME => $this->expectedConfirmValue,
+            self::FROM => $from,
+        ]);
+        $this->cancelUrl = $request->fullUrlWithQuery([
+            self::NAME => 'no',
+            self::FROM => $from,
+        ]);
+
+        if (!$this->canceled) {
+            $this->canceled = function () {
+                return new Response(
+                    $this->viewFactory->make('lego::bootstrap3.message', ['message' => '已取消'])
+                );
+            };
+        }
+    }
+
+    public function response()
+    {
+        if ($this->actualConfirmValue) {
+            $callback = $this->actualConfirmValue === $this->expectedConfirmValue ? $this->confirmed : $this->canceled;
+            return call_user_func_array($callback, []);
         }
 
-        return $view->make('lego::bootstrap3.confirm', [
-            'message' => $this->message,
-            'delay' => $this->delay,
-
-            'confirm' => $request->fullUrlWithQuery([
-                self::NAME => $this->expectedConfirmValue,
-                self::FROM => $from,
-            ]),
-            'cancel' => $request->fullUrlWithQuery([
-                self::NAME => 'no',
-                self::FROM => $from,
-            ]),
-        ]);
+        return new Response(
+            $this->viewFactory->make('lego::bootstrap3.confirm', [
+                'message' => $this->message,
+                'delay' => $this->delay,
+                'confirm' => $this->confirmUrl,
+                'cancel' => $this->cancelUrl,
+            ])
+        );
     }
 }

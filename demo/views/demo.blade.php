@@ -19,7 +19,11 @@
         <div class="panel panel-default">
             <div class="panel-heading text-center">{{ $title }} &middot; Demo</div>
             <div class="panel-body">
-                {!! $widget->render() !!}
+                @if(method_exists($widget, 'render'))
+                    {{ $widget->render() }}
+                @else
+                    {{ $widget }}
+                @endif
             </div>
         </div>
     </div>
