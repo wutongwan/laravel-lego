@@ -30,7 +30,7 @@ class HtmlAttributes
         ]);
     }
 
-    public function setAttribute(string $name, $value): self
+    public function set(string $name, $value): self
     {
         if ($name === 'class') {
             $this->classSet = array_flip((array)$value);
@@ -50,7 +50,7 @@ class HtmlAttributes
         return $this;
     }
 
-    public function getAttribute(string $name)
+    public function get(string $name)
     {
         if ('class' === $name) {
             return array_keys($this->classSet);
@@ -59,6 +59,17 @@ class HtmlAttributes
             return $this->styleMap;
         }
         return $this->items[$name] ?? null;
+    }
+
+    public function has(string $name): bool
+    {
+        if ('class' === $name) {
+            return count($this->classSet) > 0;
+        }
+        if ('style' === $name) {
+            return count($this->styleMap) > 0;
+        }
+        return array_key_exists($name, $this->items);
     }
 
     public function addClass(string $class): self
@@ -92,27 +103,27 @@ class HtmlAttributes
         return $this;
     }
 
-    public function __toString()
+    public function merge(self $attributes)
+    {
+        $this->classSet += $attributes->classSet;
+        $this->styleMap += $attributes->styleMap;
+        $this->items = array_merge($this->items, $attributes->items);
+    }
+
+    public function getClassString(): string
+    {
+        return join(' ', array_keys($this->classSet));
+    }
+
+    public function toString(array $ignore = []): string
     {
         $parts = [];
-        foreach ($this->items as $key => $value) {
-            if ($value === null) {
-                $parts[] = $key;
-                continue;
-            }
 
-            // Treat boolean attributes as HTML properties
-            if (is_bool($value) && $key !== 'value') {
-                $parts[] = $value ? $key : '';
-                continue;
-            }
+        // class
+        in_array('class', $ignore) || $parts[] = "class=\"{$this->getClassString()}\"";
 
-            $parts[] = $key . '="' . e($value) . '"';
-        }
-
-        $parts[] = 'class="' . join(' ', array_keys($this->classSet)) . '"';
-
-        if ($this->styleMap) {
+        // style
+        if ($this->styleMap && !in_array('style', $ignore)) {
             $style = 'style="';
             foreach ($this->styleMap as $name => $value) {
                 $style .= "{$name}: {$value};";
@@ -121,6 +132,28 @@ class HtmlAttributes
             $parts[] = $style;
         }
 
+        // other attributes
+        foreach ($this->items as $key => $value) {
+            if (in_array($key, $ignore)) {
+                continue;
+            }
+            if ($value === null) {
+                $parts[] = $key;
+                continue;
+            }
+            // Treat boolean attributes as HTML properties
+            if (is_bool($value) && $key !== 'value') {
+                $parts[] = $value ? $key : '';
+                continue;
+            }
+            $parts[] = $key . '="' . e($value) . '"';
+        }
+
         return join(' ', $parts);
+    }
+
+    public function __toString()
+    {
+        return $this->toString();
     }
 }

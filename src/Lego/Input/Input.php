@@ -4,6 +4,7 @@ namespace Lego\Input;
 
 use Illuminate\Support\HtmlString;
 use Lego\Foundation\FieldName;
+use Lego\Foundation\Html\HtmlAttributes;
 use Lego\Foundation\Values;
 
 abstract class Input
@@ -14,9 +15,15 @@ abstract class Input
      */
     private $values;
 
+    /**
+     * @var HtmlAttributes
+     */
+    private $attributes;
+
     public function __construct()
     {
         $this->values = new Values();
+        $this->attributes = new HtmlAttributes();
     }
 
     /**
@@ -25,6 +32,11 @@ abstract class Input
     final public function values(): Values
     {
         return $this->values;
+    }
+
+    final public function attributes(): HtmlAttributes
+    {
+        return $this->attributes;
     }
 
     /**
@@ -112,7 +124,7 @@ abstract class Input
      */
     final public function getPlaceholder(): string
     {
-        return $this->placeholder;
+        return (string)$this->attributes->get('placeholder');
     }
 
     /**
@@ -120,7 +132,7 @@ abstract class Input
      */
     final public function placeholder(string $placeholder)
     {
-        $this->placeholder = $placeholder;
+        $this->attributes->set('placeholder', $placeholder);
         return $this;
     }
 

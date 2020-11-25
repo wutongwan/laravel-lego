@@ -75,7 +75,7 @@ class Filter implements Set, HasQueryAdaptor
 
         $this->initializeButtons();
         $this->buttonSubmit = $this->addBottomButton('提交');
-        $this->buttonSubmit->attrs()->setAttribute('type', 'submit');
+        $this->buttonSubmit->attrs()->set('type', 'submit');
         $this->buttonReset = $this->addBottomButton('重置', '?');
     }
 

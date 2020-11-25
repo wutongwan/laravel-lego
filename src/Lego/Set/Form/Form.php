@@ -22,6 +22,7 @@ use Lego\Set\Common\HasFields;
 use Lego\Set\Common\HasViewShortcut;
 use Lego\Set\Set;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
+use UnexpectedValueException;
 
 /**
  * Class Form
@@ -30,10 +31,15 @@ use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
  * @template M
  *
  * @method InputNamespace\Text|FormInputWrapper addText($name, $label)
+ * @method InputNamespace\Number|FormInputWrapper addNumber($name, $label)
+ * @method InputNamespace\Select|FormInputWrapper addSelect($name, $label)
  * @method InputNamespace\Hidden|FormInputWrapper addHidden($name, $label)
+ * @method InputNamespace\Textarea|FormInputWrapper addTextarea($name, $label)
  * @method InputNamespace\AutoComplete|FormInputWrapper addAutoComplete($name, $label)
  * @method InputNamespace\ColumnAutoComplete|FormInputWrapper addColumnAutoComplete($name, $label)
  * @method InputNamespace\OneToOneRelation|FormInputWrapper addOneToOneRelation($name, $label)
+ * @method InputNamespace\Radios|FormInputWrapper addRadios($name, $label)
+ * @method InputNamespace\Checkboxes|FormInputWrapper addCheckboxes($name, $label)
  *
  * @method Button addRightTopButton(string $text, string $url = null)
  * @method Button addRightBottomButton(string $text, string $url = null)
@@ -93,9 +99,9 @@ class Form implements Set
 
         $this->initializeButtons();
         $this->buttonSubmit = $this->buttons->new(ButtonLocations::BOTTOM, '提交');
-        $this->buttonSubmit->attrs()->setAttribute('type', 'submit');
+        $this->buttonSubmit->attrs()->set('type', 'submit');
         $this->buttonReset = $this->addBottomButton('重置');
-        $this->buttonReset->attrs()->setAttribute('type', 'reset');
+        $this->buttonReset->attrs()->set('type', 'reset');
     }
 
     public function process(Request $request, ResponseManager $responseManager)
@@ -111,11 +117,10 @@ class Form implements Set
 
             // sync input value from request (if submit)
             if ($isSubmit && $field->isInputAble()) {
-                $inputValue = $request->post($field->getInputName());
-                // 输入值不为空 or 原始值不为空时才填充输入值
-                // 保证留空的输入框对应的字段，使用数据库默认值
-                if ($inputValue !== null || $field->values()->isOriginalValueExists()) {
-                    $field->values()->setInputValue($inputValue);
+                if ($request->request->has($field->getInputName())) {
+                    $field->values()->setInputValue(
+                        $request->request->get($field->getInputName())
+                    );
                 }
 
                 $field->handler()->onSubmit($request);
@@ -153,21 +158,22 @@ class Form implements Set
             if ($value !== null) {
                 $field->values()->setOriginalValue($value);
             }
-        } elseif ($originalValue->isDefined()) {
-            $field->values()->setOriginalValue($originalValue->get());
+        } elseif ($originalValue->isDefined() || $field->values()->isOriginalValueExists()) {
+            $field->values()->setOriginalValue($originalValue->getOrElse(null));
         }
     }
 
     private function saveInputValues()
     {
-        $hasMutator = false;
         foreach ($this->fields as $field) {
             if ($field->isInputAble() && $field->values()->isInputValueExists() && $field->isFormOnly() === false) {
+                $inputValue = $field->values()->getInputValue();
                 if ($mutator = $field->getMutator()) {
-                    $mutator($this->adaptor->getModel(), $field->values()->getInputValue());
-                    $hasMutator = true;
-                } else {
-                    $field->handler()->writeInputValueToAdaptor($field->values()->getInputValue());
+                    $mutator($this->adaptor->getModel(), $inputValue);
+                } elseif ($inputValue !== null || $field->values()->isOriginalValueExists()) {
+                    // 输入值不为空 or 原始值不为空时才填充输入值
+                    // 保证留空的输入框对应的字段，使用数据库默认值
+                    $field->handler()->writeInputValueToAdaptor($inputValue);
                 }
             }
         }
@@ -177,16 +183,14 @@ class Form implements Set
 
         /// mutator 会导致表单显示/提交的值和数据库中值不一致
         /// 所以需要先从 model 同步一次数据
-        if ($hasMutator) {
-            foreach ($this->fields as $field) {
-                if ($field->isFormOnly()) {
-                    continue;
-                }
-                $this->fillOriginalValueFromAdaptor($field);
-                $values = $field->values();
-                if (($original = $values->getOriginalValue()) !== $values->getInputValue()) {
-                    $values->setInputValue($original);
-                }
+        foreach ($this->fields as $field) {
+            if ($field->isFormOnly()) {
+                continue;
+            }
+            $this->fillOriginalValueFromAdaptor($field);
+            $values = $field->values();
+            if (($original = $values->getOriginalValue()) !== $values->getInputValue()) {
+                $values->setInputValue($original);
             }
         }
     }
@@ -218,7 +222,7 @@ class Form implements Set
                 foreach ($field->getValidators() as $closure) {
                     try {
                         call_user_func_array($closure, [$field->values()->getInputValue(), $data]);
-                    } catch (\Exception $exception) {
+                    } catch (UnexpectedValueException $exception) {
                         $field->messages()->error($exception->getMessage());
                     }
                 }

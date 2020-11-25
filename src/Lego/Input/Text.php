@@ -6,26 +6,24 @@ use Lego\Contracts\Input\FilterInput;
 use Lego\Contracts\Input\FormInput;
 use Lego\Input\Filter\TextFilterHandler;
 use Lego\Input\Form\TextHandler;
-use Lego\Utility\HtmlUtility;
 
 class Text extends Input implements FormInput, FilterInput
 {
-    protected function inputType(): string
+    public function getInputType(): string
     {
         return 'text';
     }
 
+    protected function viewName(): string
+    {
+        return 'lego::bootstrap3.input.text';
+    }
+
     public function render()
     {
-        return HtmlUtility::input(
-            $this->inputType(),
-            $this->getInputName(),
-            $this->values()->getCurrentValue(),
-            [
-                'class' => 'form-control',
-                'placeholder' => $this->getPlaceholder(),
-            ]
-        );
+        return ($view = $this->viewName())
+            ? view($view, ['input' => $this])
+            : '';
     }
 
     public function formInputHandler()

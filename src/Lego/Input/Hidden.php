@@ -6,7 +6,7 @@ use Lego\Contracts\Input\HiddenInput;
 
 class Hidden extends Text implements HiddenInput
 {
-    protected function inputType(): string
+    public function getInputType(): string
     {
         return 'hidden';
     }

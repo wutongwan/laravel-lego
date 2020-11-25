@@ -21,7 +21,7 @@ trait HasHtmlAttributes
 
     public function attribute(string $name, $value)
     {
-        $this->htmlAttributes->setAttribute($name, $value);
+        $this->htmlAttributes->set($name, $value);
         return $this;
     }
 
