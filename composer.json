@@ -27,7 +27,7 @@
         "box/spout": "^2.7",
         "fzaninotto/faker": "^1.9",
         "laravel/laravel": "@stable",
-        "ongr/elasticsearch-dsl": "^6.0",
+        "ongr/elasticsearch-dsl": "^7.1",
         "phpunit/phpunit": "^7.5.15 || ^8.4 || ^9.0"
     },
     "autoload": {
