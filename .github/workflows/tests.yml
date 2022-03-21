@@ -19,7 +19,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2.3.2
       - name: Cache dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.composer/cache/files
           key: dependencies-laravel-${{ matrix.laravel }}-php-${{ matrix.php }}-composer-${{ hashFiles('composer.json') }}
@@ -42,7 +42,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2.3.2
       - name: Cache dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.composer/cache/files
           key: dependencies-integration-composer-${{ hashFiles('composer.json') }}
