@@ -55,7 +55,7 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-interaction
       - name: Cypress run
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v4
         with:
           start: php demo/run.php
           wait-on: 'http://127.0.0.1:8080'
